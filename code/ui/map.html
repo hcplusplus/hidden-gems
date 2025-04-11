@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>NorCal Hidden Gems - Vintage Map</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="window">
+    <div class="title-bar">
+      <div class="title-bar-text">NorCal Hidden Gems - Map</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close"></button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="menu">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="map.html">Map</a></li>
+          <li><a href="places.html">Special Places</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      
+      <div class="map-container">
+        <h1>Northern California Road Map</h1>
+        <div class="loading-text">
+          <img src="loading.gif" alt="Loading">
+          MAP LOADING... PLEASE WAIT!
+        </div>
+        
+        <table border="1" cellpadding="5" cellspacing="0" class="legend-table">
+          <tr>
+            <th colspan="2">MAP LEGEND</th>
+          </tr>
+          <tr>
+            <td><img src="highway.gif" alt="highway"></td>
+            <td>Highways</td>
+          </tr>
+          <tr>
+            <td><img src="city.gif" alt="city"></td>
+            <td>Major Cities</td>
+          </tr>
+          <tr>
+            <td><img src="restaurant.gif" alt="restaurant"></td>
+            <td>Popular Restaurant</td>
+          </tr>
+          <tr>
+            <td><img src="hidden.gif" alt="hidden gem"></td>
+            <td>Hidden Gem</td>
+          </tr>
+        </table>
+        
+        <div class="static-map">
+          <!-- SVG Map would go here in a more advanced implementation -->
+          <img src="vintage_map.png" alt="Northern California Map" usemap="#ncalmap">
+          <map name="ncalmap">
+            <!-- These would be actual coordinates based on your data -->
+            <area shape="circle" coords="200,150,5" alt="Hidden Gem Restaurant" href="javascript:showRestaurant(1)">
+            <area shape="circle" coords="300,200,5" alt="Popular Restaurant" href="javascript:showRestaurant(2)">
+            <!-- More area tags for each point of interest -->
+          </map>
+        </div>
+        
+        <div class="restaurant-details" id="restaurantInfo">
+          <table border="1" cellpadding="3" cellspacing="0">
+            <tr>
+              <th colspan="2">RESTAURANT INFORMATION</th>
+            </tr>
+            <tr>
+              <td>Name:</td>
+              <td id="rest-name">The Hidden Valley</td>
+            </tr>
+            <tr>
+              <td>Type:</td>
+              <td id="rest-type">Farm-to-Table</td>
+            </tr>
+            <tr>
+              <td>Cost:</td>
+              <td id="rest-cost">$$</td>
+            </tr>
+            <tr>
+              <td>Rating:</td>
+              <td id="rest-rating">★★★★☆</td>
+            </tr>
+            <tr>
+              <td>Hidden Gem?</td>
+              <td id="rest-hidden">YES! Off the beaten path!</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      
+      <div class="footer">
+        <p>Download this map as: <a href="#">[GIF]</a> <a href="#">[PDF]</a> <a href="#">[BMP]</a></p>
+        <p>Map last updated: March 31, 2025</p>
+        <p>Created using MapMaker 2.0</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="map-script.js"></script>
+</body>
+</html>
