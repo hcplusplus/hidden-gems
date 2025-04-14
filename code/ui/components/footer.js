@@ -16,7 +16,7 @@ document.write(`
           </td>
         </tr>
       </table>
-      <p>Best viewed in Netscape Navigator 4.0 at 800x600 resolution</p>
+      <p>Best viewed in mobile 800x600 resolution</p>
       <p>© 2025 - Email the <a href="mailto:webmaster@norcalhiddengems.com">Webmaster</a></p>
     </div>
   `);

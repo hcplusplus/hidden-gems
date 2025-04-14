@@ -1,0 +1,77 @@
+hiddengems/
+│
+├── public/
+│   ├── index.html
+│   ├── favicon.ico
+│   └── assets/
+│       ├── images/
+│       └── data/
+│           └── locations.json
+│
+├── src/
+│   ├── components/
+│   │   ├── layout/
+│   │   │   ├── Header.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   └── Layout.jsx
+│   │   │
+│   │   ├── map/
+│   │   │   ├── InteractiveMap.jsx
+│   │   │   ├── MapMarker.jsx
+│   │   │   └── RegionOverlay.jsx
+│   │   │
+│   │   ├── recommendations/
+│   │   │   ├── RecommendationCard.jsx
+│   │   │   ├── RecommendationList.jsx
+│   │   │   └── PreferenceSelector.jsx
+│   │   │
+│   │   └── ui/
+│   │       ├── Button.jsx
+│   │       ├── Card.jsx
+│   │       ├── Modal.jsx
+│   │       └── Tooltip.jsx
+│   │
+│   ├── pages/
+│   │   ├── HomePage.jsx
+│   │   ├── DiscoverPage.jsx
+│   │   ├── ProfilePage.jsx
+│   │   └── LocationDetailPage.jsx
+│   │
+│   ├── contexts/
+│   │   ├── UserContext.jsx
+│   │   ├── PreferencesContext.jsx
+│   │   └── TripContext.jsx
+│   │
+│   ├── hooks/
+│   │   ├── useRecommendations.js
+│   │   ├── useTrip.js
+│   │   └── useMap.js
+│   │
+│   ├── services/
+│   │   ├── api.js
+│   │   ├── recommendationEngine.js
+│   │   ├── tripService.js
+│   │   └── userService.js
+│   │
+│   ├── utils/
+│   │   ├── dataProcessing.js
+│   │   ├── mapUtils.js
+│   │   └── storageUtils.js
+│   │
+│   ├── styles/
+│   │   ├── global.css
+│   │   └── theme.js
+│   │
+│   ├── models/
+│   │   ├── user.js
+│   │   ├── location.js
+│   │   └── trip.js
+│   │
+│   ├── App.jsx
+│   ├── index.jsx
+│   └── routes.js
+│
+├── .gitignore
+├── package.json
+├── README.md
+└── tailwind.config.js
