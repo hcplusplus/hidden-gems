@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Northern California Food Destinations</title>
+  <!-- MapLibre GL JS -->
+<link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+<script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+  <!-- Lodash -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f5eb;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .container {
+      max-width: 900px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    h1 {
+      font-size: 1.75rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #713f12;
+      text-align: center;
+    }
+    
+    .map-container {
+      width: 800px;
+      height: 600px;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid #713f12;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .vintage-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background-color: rgba(254, 243, 199, 0.1);
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d6cfc7' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+      z-index: 10;
+    }
+    
+    .map-title {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 20;
+      pointer-events: none;
+    }
+    
+    .map-title h2 {
+      font-family: 'Times New Roman', serif;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #713f12;
+      margin: 0;
+    }
+    
+    .map-title h3 {
+      font-family: 'Times New Roman', serif;
+      font-size: 1.1rem;
+      color: #854d0e;
+    }
+    
+    .legend {
+      position: absolute;
+      left: 15px;
+      bottom: 15px;
+      background-color: rgba(254, 243, 199, 0.9);
+      padding: 10px;
+      border: 1px solid #713f12;
+      border-radius: 4px;
+      z-index: 20;
+    }
+    
+    .legend h3 {
+      font-size: 0.9rem;
+      font-weight: bold;
+      border-bottom: 1px solid #713f12;
+      margin-bottom: 5px;
+      padding-bottom: 3px;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      font-size: 0.75rem;
+      margin-bottom: 5px;
+    }
+    
+    .legend-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .legend-color {
+      width: 15px;
+      height: 15px;
+      margin-right: 8px;
+    }
+    
+    .legend-color.city {
+      background-color: #1e40af;
+      border-radius: 50%;
+    }
+    
+    .legend-color.highway {
+      background-color: #ef4444;
+      height: 2px;
+    }
+    
+    .legend-color.popular {
+      background-color: #eab308;
+      border-radius: 50%;
+      border: 1px solid black;
+    }
+    
+    .legend-color.hidden {
+      background-color: #65a30d;
+      border-radius: 50%;
+      border: 1px solid black;
+    }
+    
+    .info-box {
+      position: absolute;
+      padding: 12px;
+      background-color: rgba(254, 243, 199, 0.95);
+      border: 1px solid #713f12;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      z-index: 30;
+      max-width: 220px;
+      display: none;
+    }
+    
+    .info-box h3 {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #713f12;
+      margin-bottom: 6px;
+    }
+    
+    .info-box p {
+      font-size: 0.75rem;
+      margin-bottom: 4px;
+      color: #57534e;
+    }
+    
+    .info-box p:last-child {
+      margin-bottom: 0;
+      font-style: italic;
+    }
+    
+    .compass-rose {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      width: 70px;
+      height: 70px;
+      z-index: 20;
+      pointer-events: none;
+    }
+    
+    .footer-note {
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: #57534e;
+    }
+    
+    .footer-note span {
+      font-weight: bold;
+    }
+    
+    .title-decoration {
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 400px;
+      height: 6px;
+      z-index: 5;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Northern California Food Destinations</h1>
+    
+    <div class="map-container">
+      <div id="map"></div>
+      
+      <div class="vintage-overlay"></div>
+      
+      <div class="map-title">
+        <h2>Northern California</h2>
+        <h3>Culinary Discoveries</h3>
+      </div>
+      
+      <svg class="title-decoration" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 6">
+        <path d="M 0 0 L 400 0" stroke="#8b5cf6" stroke-width="2" fill="none" />
+        <path d="M 0 4 L 400 4" stroke="#8b5cf6" stroke-width="1" fill="none" />
+      </svg>
+      
+      <div class="legend">
+        <h3>Legend</h3>
+        <div class="legend-item">
+          <div class="legend-color city"></div>
+          <span>Major Cities</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color highway"></div>
+          <span>Highways</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color popular"></div>
+          <span>Popular Restaurants</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color hidden"></div>
+          <span>Hidden Gems ★</span>
+        </div>
+      </div>
+      
+      <svg class="compass-rose" xmlns="http://www.w3.org/2000/svg" viewBox="-30 -30 60 60">
+        <circle cx="0" cy="0" r="25" fill="none" stroke="#334155" stroke-width="1" />
+        <path d="M 0 -20 L 5 0 L 0 20 L -5 0 Z" fill="#334155" />
+        <path d="M 20 0 L 0 5 L -20 0 L 0 -5 Z" fill="#94a3b8" />
+        <text x="0" y="-28" fill="#334155" font-size="12" text-anchor="middle">N</text>
+        <text x="28" y="0" fill="#334155" font-size="12" text-anchor="middle" dominant-baseline="middle">E</text>
+        <text x="0" y="28" fill="#334155" font-size="12" text-anchor="middle">S</text>
+        <text x="-28" y="0" fill="#334155" font-size="12" text-anchor="middle" dominant-baseline="middle">W</text>
+      </svg>
+      
+      <div id="info-box" class="info-box"></div>
+    </div>
+    
+    <div class="footer-note">
+      <p><span>★</span> Green markers indicate less-visited "hidden gem" restaurants</p>
+    </div>
+  </div>
+
+  <script>
+    // Bounding box for Northern California
+    const bounds = {
+      minLat: 37.336962631031504, // San Jose (bottom left)
+      maxLat: 41.74746217345373,  // Crescent City (top left)
+      minLng: -124.1095344585807, // Crescent City (top left)
+      maxLng: -118.28222302824624 // Bishop (bottom right)
+    };
+    
+    // Main highways in Northern California
+    const highways = [
+      { name: "1", points: [
+        { lat: 37.8, lng: -122.5 }, { lat: 38.3, lng: -123.0 }, 
+        { lat: 39.3, lng: -123.8 }, { lat: 40.0, lng: -124.1 }
+      ]},
+      { name: "5", points: [
+        { lat: 37.5, lng: -121.3 }, { lat: 38.5, lng: -121.5 }, 
+        { lat: 39.5, lng: -122.2 }, { lat: 40.5, lng: -122.3 }, 
+        { lat: 41.5, lng: -122.4 }
+      ]},
+      { name: "80", points: [
+        { lat: 37.8, lng: -122.3 }, { lat: 38.5, lng: -121.5 }, 
+        { lat: 39.3, lng: -120.2 }
+      ]},
+      { name: "101", points: [
+        { lat: 37.4, lng: -122.1 }, { lat: 38.3, lng: -122.6 }, 
+        { lat: 39.0, lng: -123.3 }, { lat: 40.0, lng: -123.8 }, 
+        { lat: 41.0, lng: -124.0 }
+      ]}
+    ];
+    
+    // Major cities
+    const cities = [
+      { name: "San Francisco", lat: 37.7749, lng: -122.4194, size: 8 },
+      { name: "Sacramento", lat: 38.5816, lng: -121.4944, size: 7 },
+      { name: "Eureka", lat: 40.8021, lng: -124.1637, size: 5 },
+      { name: "Redding", lat: 40.5865, lng: -122.3917, size: 5 },
+      { name: "Santa Rosa", lat: 38.4404, lng: -122.7141, size: 5 },
+      { name: "Ukiah", lat: 39.1502, lng: -123.2078, size: 4 },
+      { name: "South Lake Tahoe", lat: 38.9399, lng: -119.9772, size: 4 }
+    ];
+    
+    // Generate synthetic restaurant data
+    function generateSyntheticData() {
+      const cuisineTypes = ["Italian", "Mexican", "Japanese", "Farm-to-Table", "Seafood", "Brewpub"];
+      const nameElements = ["Table", "Bistro", "Kitchen", "Grill", "House", "Café"];
+      const nameAdjectives = ["Golden", "Rustic", "Coastal", "Mountain", "Wine Country", "Redwood"];
+      const regions = ["Napa Valley", "Sonoma County", "Mendocino Coast", "Sierra Foothills", "Tahoe Area"];
+      const cities = ["Healdsburg", "Calistoga", "Nevada City", "Truckee", "Mendocino"];
+      const ambianceTypes = ["Casual", "Upscale", "Romantic", "Farm-to-Table", "Rustic"];
+      const costLevels = ["$", "$$", "$$$", "$$$$"];
+      const highways = ["1", "5", "20", "29", "49", "80", "101"];
+      
+      const data = [];
+      
+      for (let i = 0; i < 15; i++) {
+        const latitude = bounds.minLat + Math.random() * (bounds.maxLat - bounds.minLat);
+        const longitude = bounds.minLng + Math.random() * (bounds.maxLng - bounds.minLng);
+        
+        data.push({
+          id: i + 1,
+          name: `The ${_.sample(nameAdjectives)} ${_.sample(nameElements)}`,
+          coordinates: {
+            latitude: Math.round(latitude * 1000000) / 1000000,
+            longitude: Math.round(longitude * 1000000) / 1000000
+          },
+          region: _.sample(regions),
+          city: _.sample(cities),
+          ambiance: [_.sample(ambianceTypes)],
+          cost: _.sample(costLevels),
+          cuisine: _.sample(cuisineTypes),
+          rating: Math.round((3 + Math.random() * 2) * 10) / 10,
+          highway: _.sample(highways),
+          popularity_score: Math.floor(Math.random() * 100) + 1
+        });
+      }
+      
+      return data;
+    }
+    
+    // Initialize map and data
+    document.addEventListener('DOMContentLoaded', () => {
+      // Center coordinates for Northern California
+      const centerLng = (bounds.minLng + bounds.maxLng) / 2;
+      const centerLat = (bounds.minLat + bounds.maxLat) / 2;
+      
+      // Generate restaurant data
+      const restaurants = generateSyntheticData();
+      
+      // Initialize map
+      const map = new maplibregl.Map({
+        container: 'map',
+        style: {
+          version: 8,
+          sources: {
+            'raster-tiles': {
+              type: 'raster',
+              tiles: [
+                'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png'
+              ],
+              tileSize: 256,
+              attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }
+          },
+          layers: [
+            {
+              id: 'simple-tiles',
+              type: 'raster',
+              source: 'raster-tiles',
+              minzoom: 0,
+              maxzoom: 22
+            }
+          ],
+          glyphs: "https://font.americanamap.org/{fontstack}/{range}.pbf",
+          sprite: "https://americanamap.org/sprites/sprite"
+      },
+        center: [centerLng, centerLat],
+        zoom: 5.5
+      });
+      
+   
+        
+      // Add map features when loaded
+map.on('load', () => {
+  // Use the vintage overlay div that's already in the HTML instead of a canvas layer
+  
+  // Add coastal outline
+  map.addSource('coastal-outline', {
+    type: 'geojson',
+    data: {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'LineString',
+        coordinates: [
+          [-124.1, 41.5],
+          [-124.0, 41.0],
+          [-123.8, 40.0],
+          [-123.3, 39.0],
+          [-123.0, 38.3],
+          [-122.5, 37.8],
+          [-122.3, 37.5]
+        ]
+      }
+    }
+  });
+        
+       
+        
+        // Add highways
+        highways.forEach((highway, index) => {
+          const highwayCoordinates = highway.points.map(point => [point.lng, point.lat]);
+          
+          map.addSource(`highway-${highway.name}`, {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              properties: { name: highway.name },
+              geometry: {
+                type: 'LineString',
+                coordinates: highwayCoordinates
+              }
+            }
+          });
+          
+          map.addLayer({
+            id: `highway-${highway.name}`,
+            type: 'line',
+            source: `highway-${highway.name}`,
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            paint: {
+              'line-color': '#ef4444',
+              'line-width': 3
+            }
+          });
+          
+          // Add highway label
+          const midPoint = highway.points[Math.floor(highway.points.length / 2)];
+          
+          map.addSource(`highway-label-${highway.name}`, {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              properties: { name: highway.name },
+              geometry: {
+                type: 'Point',
+                coordinates: [midPoint.lng, midPoint.lat]
+              }
+            }
+          });
+          
+          map.addLayer({
+            id: `highway-label-${highway.name}`,
+            type: 'symbol',
+            source: `highway-label-${highway.name}`,
+            layout: {
+              'text-field': ['get', 'name'],
+              'text-size': 12,
+              'text-font': ['Arial Unicode MS Bold'],
+              'text-offset': [0, -1],
+              'text-anchor': 'center'
+            },
+            paint: {
+              'text-color': '#b91c1c',
+              'text-halo-color': '#ffffff',
+              'text-halo-width': 1
+            }
+          });
+        });
+        
+        // Add cities
+        cities.forEach((city, index) => {
+          map.addSource(`city-${city.name}`, {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              properties: { name: city.name, size: city.size },
+              geometry: {
+                type: 'Point',
+                coordinates: [city.lng, city.lat]
+              }
+            }
+          });
+          
+          map.addLayer({
+            id: `city-${city.name}`,
+            type: 'circle',
+            source: `city-${city.name}`,
+            paint: {
+              'circle-radius': ['get', 'size'],
+              'circle-color': '#1e40af'
+            }
+          });
+          
+          map.addLayer({
+            id: `city-label-${city.name}`,
+            type: 'symbol',
+            source: `city-${city.name}`,
+            layout: {
+              'text-field': ['get', 'name'],
+              'text-size': 12,
+              'text-font': ['Arial Unicode MS Bold'],
+              'text-offset': [0, -1.5],
+              'text-anchor': 'center'
+            },
+            paint: {
+              'text-color': '#1e3a8a',
+              'text-halo-color': '#ffffff',
+              'text-halo-width': 1
+            }
+          });
+        });
+        
+        // Add restaurants
+        restaurants.forEach((restaurant, index) => {
+          const isLowPopularity = restaurant.popularity_score < 30;
+          
+          map.addSource(`restaurant-${restaurant.id}`, {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              properties: {
+                ...restaurant,
+                isLowPopularity
+              },
+              geometry: {
+                type: 'Point',
+                coordinates: [restaurant.coordinates.longitude, restaurant.coordinates.latitude]
+              }
+            }
+          });
+          
+          map.addLayer({
+            id: `restaurant-${restaurant.id}`,
+            type: 'circle',
+            source: `restaurant-${restaurant.id}`,
+            paint: {
+              'circle-radius': 6,
+              'circle-color': ['case', ['get', 'isLowPopularity'], '#65a30d', '#eab308'],
+              'circle-stroke-color': '#000000',
+              'circle-stroke-width': 1
+            }
+          });
+          
+          // Add star for hidden gems
+          if (isLowPopularity) {
+            map.addLayer({
+              id: `restaurant-star-${restaurant.id}`,
+              type: 'symbol',
+              source: `restaurant-${restaurant.id}`,
+              layout: {
+                'text-field': '★',
+                'text-size': 10,
+                'text-offset': [1, 0],
+                'text-font': ['Arial Unicode MS Bold']
+              },
+              paint: {
+                'text-color': '#166534'
+              }
+            });
+          }
+        });
+        
+        // Add info box popup functionality
+        const infoBox = document.getElementById('info-box');
+        
+        restaurants.forEach((restaurant) => {
+          map.on('mouseenter', `restaurant-${restaurant.id}`, () => {
+            map.getCanvas().style.cursor = 'pointer';
+            
+            const coordinates = [restaurant.coordinates.longitude, restaurant.coordinates.latitude];
+            const isLowPopularity = restaurant.popularity_score < 30;
+            
+            // Populate info box
+            infoBox.innerHTML = `
+              <h3>${restaurant.name}</h3>
+              <p>${restaurant.city}, ${restaurant.region}</p>
+              <p>${restaurant.cuisine} • ${restaurant.cost}</p>
+              <p>Rating: ${restaurant.rating}/5.0</p>
+              <p>Near Highway ${restaurant.highway}</p>
+              <p>${isLowPopularity 
+                ? "A hidden gem off the beaten path!" 
+                : "A well-known destination"}</p>
+            `;
+            
+            // Position the info box
+            const point = map.project(coordinates);
+            infoBox.style.left = `${point.x + 10}px`;
+            infoBox.style.top = `${point.y - 120}px`;
+            infoBox.style.display = 'block';
+          });
+          
+          map.on('mouseleave', `restaurant-${restaurant.id}`, () => {
+            map.getCanvas().style.cursor = '';
+            infoBox.style.display = 'none';
+          });
+        });
+      });
+    });
+  </script>
+</body>
+</html>

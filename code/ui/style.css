@@ -196,6 +196,9 @@ body {
   
   blink {
     animation: blinker 1s linear infinite;
+    background: linear-gradient(in hsl longer hue 45deg, red 0 100%);
+    border-radius: 5px;
+
   }
   
   @keyframes blinker {
