@@ -1,4 +1,4 @@
-hiddengems/
+hidden-gems/code
 │
 ├── public/
 │   ├── index.html
@@ -10,68 +10,40 @@ hiddengems/
 │
 ├── src/
 │   ├── components/
+|   |   |
 │   │   ├── layout/
-│   │   │   ├── Header.jsx
-│   │   │   ├── Footer.jsx
-│   │   │   └── Layout.jsx
+│   │   │   ├── Header.js
+│   │   │   ├── Footer.js
+│   │   │   └── Layout.js
 │   │   │
 │   │   ├── map/
-│   │   │   ├── InteractiveMap.jsx
-│   │   │   ├── MapMarker.jsx
-│   │   │   └── RegionOverlay.jsx
+│   │   │   ├── InteractiveMap.js
+│   │   │   ├── MapMarker.js
 │   │   │
 │   │   ├── recommendations/
-│   │   │   ├── RecommendationCard.jsx
-│   │   │   ├── RecommendationList.jsx
-│   │   │   └── PreferenceSelector.jsx
+│   │   │   ├── RecommendationCard.js
+│   │   │   ├── RecommendationList.js
+│   │   │   └── PreferenceSelector.js
 │   │   │
 │   │   └── ui/
-│   │       ├── Button.jsx
-│   │       ├── Card.jsx
-│   │       ├── Modal.jsx
-│   │       └── Tooltip.jsx
+│   │       ├── Button.js
+│   │       ├── Card.js
+│   │       ├── Modal.js
+│   │       └── Tooltip.js
 │   │
 │   ├── pages/
-│   │   ├── HomePage.jsx
-│   │   ├── DiscoverPage.jsx
-│   │   ├── ProfilePage.jsx
-│   │   └── LocationDetailPage.jsx
+│   │   ├── HomePage
+│   │   ├── DiscoverPage
+│   │   ├── ProfilePage.js
+│   │   └── LocationDetailPage
 │   │
-│   ├── contexts/
-│   │   ├── UserContext.jsx
-│   │   ├── PreferencesContext.jsx
-│   │   └── TripContext.jsx
-│   │
-│   ├── hooks/
-│   │   ├── useRecommendations.js
-│   │   ├── useTrip.js
-│   │   └── useMap.js
-│   │
-│   ├── services/
-│   │   ├── api.js
-│   │   ├── recommendationEngine.js
-│   │   ├── tripService.js
-│   │   └── userService.js
-│   │
-│   ├── utils/
-│   │   ├── dataProcessing.js
-│   │   ├── mapUtils.js
-│   │   └── storageUtils.js
 │   │
 │   ├── styles/
-│   │   ├── global.css
+│   │   ├── style.css
 │   │   └── theme.js
 │   │
-│   ├── models/
-│   │   ├── user.js
-│   │   ├── location.js
-│   │   └── trip.js
-│   │
-│   ├── App.jsx
-│   ├── index.jsx
+│   ├── index.js
 │   └── routes.js
 │
 ├── .gitignore
-├── package.json
 ├── README.md
-└── tailwind.config.js
