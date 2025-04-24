@@ -1,0 +1,283 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.quiz-container {
+    max-width: 390px;
+    margin: 0 auto;
+    background-color: white;
+    min-height: 100vh;
+    position: relative;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+.quiz-header {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.quiz-title {
+    font-size: 18px;
+    font-weight: 600;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.close-button {
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.close-button:hover {
+    background-color: #f0f0f0;
+}
+
+.progress-bar {
+    height: 4px;
+    background-color: #eaeaea;
+    position: relative;
+}
+
+.progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0; /* Set dynamically via JS */
+    background-color: #4caf50;
+    transition: width 0.3s ease;
+}
+
+.quiz-step {
+    display: none;
+    padding: 24px 16px;
+}
+
+.quiz-step.active {
+    display: block;
+}
+
+.step-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.step-description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 24px;
+}
+
+.quiz-form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 16px;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: #333;
+}
+
+.error-message {
+    color: #e53935;
+    font-size: 12px;
+    margin-top: -12px;
+    margin-bottom: 16px;
+    display: none;
+}
+
+.options-container {
+    margin-bottom: 16px;
+}
+
+.option-group {
+    margin-bottom: 24px;
+}
+
+.option-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.option-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.option-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.option-button {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: white;
+    font-size: 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.option-button:hover {
+    background-color: #f5f5f5;
+}
+
+.option-button.selected {
+    background-color: #222;
+    color: white;
+    border-color: #222;
+}
+
+.option-radio {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.option-radio input[type="radio"] {
+    margin-right: 12px;
+}
+
+.quiz-navigation {
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #f0f0f0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 390px;
+    margin: 0 auto;
+    background-color: white;
+}
+
+.nav-button {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border: none;
+}
+
+.back-button {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.back-button:hover {
+    background-color: #e0e0e0;
+}
+
+.back-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.next-button, .finish-button {
+    background-color: #222;
+    color: white;
+}
+
+.next-button:hover, .finish-button:hover {
+    background-color: #333;
+}
+
+.next-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background-color: #555;
+}
+
+/* Additional styles for visual elements */
+.destination-images {
+    display: flex;
+    margin: 16px 0;
+    position: relative;
+    height: 120px;
+}
+
+.destination-image {
+    width: 50%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: #bbb;
+}
+
+.destination-arrow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    font-size: 20px;
+}
+
+.activity-icon {
+    font-size: 24px;
+    margin-right: 8px;
+}
+
+.footer-note {
+    font-size: 12px;
+    color: #666;
+    margin-top: 16px;
+    margin-bottom: 80px; /* Space for the navigation buttons */
+    text-align: center;
+    padding: 0 16px;
+}

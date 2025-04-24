@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting to Know You - Hidden Gems</title>
+    <link rel="stylesheet" href="css/quiz.css">
+   
+</head>
+<body>
+    <div class="quiz-container">
+        <!-- Quiz Header -->
+        <div class="quiz-header">
+            <button class="close-button" id="close-quiz">×</button>
+            <div class="quiz-title">Find Hidden Gems</div>
+            <div style="width:40px"></div> <!-- Spacer for centering title -->
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress" id="quiz-progress"></div>
+        </div>
+
+        <!-- Step 1: Origin & Destination -->
+        <div class="quiz-step active" id="step-1">
+            <h2 class="step-title">Where are you going?</h2>
+            <p class="step-description">Let us know your starting point and destination to find hidden gems along your route.</p>
+
+            <form class="quiz-form">
+                <label for="origin">From</label>
+                <input type="text" id="origin" placeholder="Enter starting location">
+                <div class="error-message" id="origin-error">Please enter a starting location</div>
+
+                <label for="destination">To</label>
+                <input type="text" id="destination" placeholder="Enter destination">
+                <div class="error-message" id="destination-error">Please enter a destination</div>
+            </form>
+
+            <div class="destination-images">
+                <div class="destination-image" id="origin-image">🏠</div>
+                <div class="destination-arrow">→</div>
+                <div class="destination-image" id="destination-image">🏞️</div>
+            </div>
+
+            <p class="footer-note">We'll find the best hidden gems between these locations that match your preferences.</p>
+        </div>
+
+        <!-- Step 2: Activity Preferences -->
+        <div class="quiz-step" id="step-4">
+            <h2 class="step-title">What do you want to explore?</h2>
+            <p class="step-description">Select the activities and experiences that interest you most.</p>
+
+            <div class="options-container">
+                <div class="option-flex">
+                 
+                    <div class="option-button" data-value="nature">
+                        <span class="activity-icon">🌿</span> Nature
+                    </div>
+                    <div class="option-button" data-value="hiking">
+                        <span class="activity-icon">🥾</span> Hiking
+                    </div>
+                    <div class="option-button" data-value="food">
+                        <span class="activity-icon">🍽️</span> Food
+                    </div>
+                    <div class="option-button" data-value="photography">
+                        <span class="activity-icon">📸</span> Photography
+                    </div>
+                    <div class="option-button" data-value="history">
+                        <span class="activity-icon">🏛️</span> Historical
+                    </div>
+                    <div class="option-button" data-value="coffee">
+                        <span class="activity-icon">☕</span> Coffee Shops
+                    </div>
+                    <div class="option-button" data-value="scenic">
+                        <span class="activity-icon">🌄</span> Scenic Views
+                    </div>
+                    <div class="option-button" data-value="swimming">
+                        <span class="activity-icon">🏊</span> Swimming
+                    </div>
+                    <div class="option-button" data-value="picnic">
+                        <span class="activity-icon">🧺</span> Picnicking
+                    </div>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <div class="option-title">Essential amenities?</div>
+                <div class="option-flex">
+                    <div class="option-button" data-value="restrooms">
+                        <span class="activity-icon">🚻</span> Restrooms
+                    </div>
+                    <div class="option-button" data-value="parking">
+                        <span class="activity-icon">🅿️</span> Parking
+                    </div>
+                    <div class="option-button" data-value="gas">
+                        <span class="activity-icon">⛽</span> Gas Station
+                    </div>
+                </div>
+            </div>
+
+            <p class="footer-note">We'll customize your hidden gem recommendations based on your activity preferences.</p>
+        </div>
+
+        <!-- Step 3: Accessibility & Effort Level -->
+        <div class="quiz-step" id="step-3">
+            <h2 class="step-title">What's your adventure style?</h2>
+            <p class="step-description">Help us understand your preferred activity level and accessibility needs.</p>
+
+            <div class="option-group">
+                <div class="option-title">Preferred effort level</div>
+                <div class="option-flex">
+                    <div class="option-button" data-value="easy">
+                        <span class="activity-icon">😌</span> Easy &amp; Relaxed
+                    </div>
+                    <div class="option-button" data-value="moderate">
+                        <span class="activity-icon">🚶</span> Moderate Activity
+                    </div>
+                    <div class="option-button" data-value="challenging">
+                        <span class="activity-icon">🏃</span> Challenging &amp; Active
+                    </div>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <div class="option-title">Accessibility requirements</div>
+                <div class="option-flex">
+                    <div class="option-button" data-value="wheelchair">
+                        <span class="activity-icon">♿</span> Wheelchair Accessible
+                    </div>
+                    <div class="option-button" data-value="stroller">
+                        <span class="activity-icon">👶</span> Stroller Friendly
+                    </div>
+                    <div class="option-button" data-value="elderly">
+                        <span class="activity-icon">🧓</span> Senior Friendly
+                    </div>
+                    <div class="option-button" data-value="none">
+                        <span class="activity-icon">🧗</span> No Special Requirements
+                    </div>
+                </div>
+            </div>
+
+            <p class="footer-note">We'll make sure the recommended spots match your physical preferences and needs.</p>
+        </div>
+
+        <!-- Step 4: Time Available -->
+        <div class="quiz-step" id="step-2">
+            <h2 class="step-title">How much time do you have?</h2>
+            <p class="step-description">Let us know how long you'd like to spend discovering hidden gems on this trip.</p>
+
+            <div class="options-container">
+                <div class="option-radio">
+                    <input type="radio" id="time-1" name="time" value="quick">
+                    <label for="time-1">Quick grab (<1 hour)</label>
+                </div>
+                <div class="option-radio">
+                    <input type="radio" id="time-2" name="time" value="short">
+                    <label for="time-2">A little detour (1-2 hours)</label>
+                </div>
+                <div class="option-radio">
+                    <input type="radio" id="time-3" name="time" value="half-day">
+                    <label for="time-3">Mini Adventure (2-4 hours)</label>
+                </div>
+                <div class="option-radio">
+                    <input type="radio" id="time-4" name="time" value="full-day">
+                    <label for="time-4">Full Day Quest (4+ hours)</label>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <div class="option-title">Maximum detour distance</div>
+                <div class="option-flex">
+                    <div class="option-button" data-value="5">
+                        <span class="activity-icon">🔄</span> Minimal (5 miles)
+                    </div>
+                    <div class="option-button" data-value="15">
+                        <span class="activity-icon">🔄</span> Small (15 miles)
+                    </div>
+                    <div class="option-button" data-value="30">
+                        <span class="activity-icon">🔄</span> Medium (30 miles)
+                    </div>
+                    <div class="option-button" data-value="50+">
+                        <span class="activity-icon">🔄</span> Any Distance
+                    </div>
+                </div>
+            </div>
+
+            <p class="footer-note">We'll adjust recommendations based on your available time and detour preferences.</p>
+        </div>
+
+        <!-- Quiz Navigation -->
+        <div class="quiz-navigation">
+            <button class="nav-button back-button" id="back-button" disabled>Back</button>
+            <button class="nav-button next-button" id="next-button">Next</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Quiz state
+            const quizState = {
+                currentStep: 1,
+                totalSteps: 4,
+                answers: {
+                    origin: '',
+                    destination: '',
+                    activities: [],
+                    amenities: [],
+                    effortLevel: '',
+                    accessibility: [],
+                    time: '',
+                    maxDetour: ''
+                }
+            };
+
+            // DOM Elements
+            const progressBar = document.getElementById('quiz-progress');
+            const backButton = document.getElementById('back-button');
+            const nextButton = document.getElementById('next-button');
+            const closeButton = document.getElementById('close-quiz');
+            const quizSteps = document.querySelectorAll('.quiz-step');
+            
+            // Location inputs
+            const originInput = document.getElementById('origin');
+            const destinationInput = document.getElementById('destination');
+            const originError = document.getElementById('origin-error');
+            const destinationError = document.getElementById('destination-error');
+
+            // Update progress bar
+            function updateProgress() {
+                const progress = (quizState.currentStep / quizState.totalSteps) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
+
+            // Navigate to a specific step
+            function goToStep(step) {
+                // Hide all steps
+                quizSteps.forEach(element => {
+                    element.classList.remove('active');
+                });
+                
+                // Show the current step
+                document.getElementById(`step-${step}`).classList.add('active');
+                
+                // Update state
+                quizState.currentStep = step;
+                
+                // Update buttons
+                backButton.disabled = step === 1;
+                
+                if (step === quizState.totalSteps) {
+                    nextButton.textContent = 'Finish';
+                } else {
+                    nextButton.textContent = 'Next';
+                }
+                
+                // Update progress
+                updateProgress();
+            }
+
+            // Validate the current step
+            function validateCurrentStep() {
+                switch (quizState.currentStep) {
+                    case 1:
+                        // Validate origin and destination
+                        let isValid = true;
+                        
+                        if (!originInput.value.trim()) {
+                            originError.style.display = 'block';
+                            isValid = false;
+                        } else {
+                            originError.style.display = 'none';
+                            quizState.answers.origin = originInput.value.trim();
+                        }
+                        
+                        if (!destinationInput.value.trim()) {
+                            destinationError.style.display = 'block';
+                            isValid = false;
+                        } else {
+                            destinationError.style.display = 'none';
+                            quizState.answers.destination = destinationInput.value.trim();
+                        }
+                        
+                        return isValid;
+                        
+                    case 2:
+                        // Activities are optional, but collect selected ones
+                        const activityButtons = document.querySelectorAll('#step-2 .option-button.selected');
+                        quizState.answers.activities = Array.from(activityButtons)
+                            .filter(btn => !['restrooms', 'parking', 'gas'].includes(btn.getAttribute('data-value')))
+                            .map(btn => btn.getAttribute('data-value'));
+                        
+                        // Collect selected amenities
+                        const amenityButtons = document.querySelectorAll('#step-2 .option-button.selected');
+                        quizState.answers.amenities = Array.from(amenityButtons)
+                            .filter(btn => ['restrooms', 'parking', 'gas'].includes(btn.getAttribute('data-value')))
+                            .map(btn => btn.getAttribute('data-value'));
+                        
+                        return true;
+                        
+                    case 3:
+                        // Collect effort level and accessibility preferences
+                        const effortButtons = document.querySelectorAll('#step-3 .option-button[data-value="easy"], #step-3 .option-button[data-value="moderate"], #step-3 .option-button[data-value="challenging"]');
+                        const selectedEffort = Array.from(effortButtons).find(btn => btn.classList.contains('selected'));
+                        quizState.answers.effortLevel = selectedEffort ? selectedEffort.getAttribute('data-value') : '';
+                        
+                        const accessibilityButtons = document.querySelectorAll('#step-3 .option-button.selected');
+                        quizState.answers.accessibility = Array.from(accessibilityButtons)
+                            .filter(btn => ['wheelchair', 'stroller', 'elderly', 'none'].includes(btn.getAttribute('data-value')))
+                            .map(btn => btn.getAttribute('data-value'));
+                        
+                        return true;
+                        
+                    case 4:
+                        // Collect time preference and max detour
+                        const selectedTime = document.querySelector('input[name="time"]:checked');
+                        quizState.answers.time = selectedTime ? selectedTime.value : '';
+                        
+                        const detourButtons = document.querySelectorAll('#step-4 .option-button.selected');
+                        const selectedDetour = Array.from(detourButtons).find(btn => ['5', '15', '30', '50+'].includes(btn.getAttribute('data-value')));
+                        quizState.answers.maxDetour = selectedDetour ? selectedDetour.getAttribute('data-value') : '';
+                        
+                        return true;
+                }
+                
+                return true;
+            }
+
+            // Save answers to session storage
+            function saveAnswers() {
+                sessionStorage.setItem('userPreferences', JSON.stringify(quizState.answers));
+            }
+
+            // Complete the quiz
+            function finishQuiz() {
+                saveAnswers();
+                
+                // Redirect to results page
+                window.location.href = 'results.html';
+            }
+
+            // Handle next button
+            nextButton.addEventListener('click', function() {
+                if (validateCurrentStep()) {
+                    if (quizState.currentStep === quizState.totalSteps) {
+                        finishQuiz();
+                    } else {
+                        goToStep(quizState.currentStep + 1);
+                    }
+                }
+            });
+
+            // Handle back button
+            backButton.addEventListener('click', function() {
+                if (quizState.currentStep > 1) {
+                    goToStep(quizState.currentStep - 1);
+                }
+            });
+
+            // Handle close button
+            closeButton.addEventListener('click', function() {
+                if (confirm('Are you sure you want to exit the quiz? Your progress will be lost.')) {
+                    window.location.href = 'index.html';
+                }
+            });
+
+            // Handle option buttons
+            const optionButtons = document.querySelectorAll('.option-button');
+            
+            optionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Check if this is a effort level button (only one can be selected)
+                    if (['easy', 'moderate', 'challenging'].includes(this.getAttribute('data-value'))) {
+                        // Deselect other effort level buttons
+                        document.querySelectorAll('.option-button[data-value="easy"], .option-button[data-value="moderate"], .option-button[data-value="challenging"]')
+                            .forEach(btn => btn.classList.remove('selected'));
+                    }
+                    
+                    // Check if this is a detour button (only one can be selected)
+                    if (['5', '15', '30', '50+'].includes(this.getAttribute('data-value'))) {
+                        // Deselect other detour buttons
+                        document.querySelectorAll('.option-button[data-value="5"], .option-button[data-value="15"], .option-button[data-value="30"], .option-button[data-value="50+"]')
+                            .forEach(btn => btn.classList.remove('selected'));
+                    }
+                    
+                    // Toggle selected state
+                    this.classList.toggle('selected');
+                });
+            });
+
+            // Initialize progress
+            updateProgress();
+
+            // Check if we have saved answers
+            const savedPreferences = sessionStorage.getItem('userPreferences');
+            if (savedPreferences) {
+                const savedAnswers = JSON.parse(savedPreferences);
+                
+                // Pre-fill form fields if available
+                if (savedAnswers.origin) {
+                    originInput.value = savedAnswers.origin;
+                }
+                
+                if (savedAnswers.destination) {
+                    destinationInput.value = savedAnswers.destination;
+                }
+                
+                // We could also restore other selections, but for simplicity,
+                // we'll just pre-fill the first step
+            }
+        });
+    </script>
+</body>
+</html>

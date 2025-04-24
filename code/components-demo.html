@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Component Demo - Hidden Gems</title>
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        /* Demo Page Specific Styles */
+        .demo-section {
+            padding: 20px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .component-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #222;
+        }
+
+        .component-description {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .controls {
+            margin: 20px 0;
+            padding: 12px;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+        }
+
+        .component-container {
+            margin-top: 20px;
+            position: relative;
+        }
+
+        /* Recommendation Card Styles */
+        .recommendation-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 16px;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            max-width: 350px;
+        }
+
+        .recommendation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .recommendation-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .recommendation-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .recommendation-badge.hidden-gem {
+            background-color: #e6f4ea;
+            color: #137333;
+        }
+
+        .recommendation-badge.popular {
+            background-color: #fef7e0;
+            color: #b07800;
+        }
+
+        .recommendation-image {
+            width: 100%;
+            height: 180px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .recommendation-image-placeholder {
+            font-size: 40px;
+            color: #bbb;
+        }
+
+        .recommendation-favorite {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 32px;
+            height: 32px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .recommendation-details {
+            padding: 12px 16px;
+        }
+
+        .recommendation-detail {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .recommendation-detail-icon {
+            margin-right: 8px;
+            color: #777;
+        }
+
+        .recommendation-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .recommendation-tag {
+            padding: 4px 12px;
+            border-radius: 16px;
+            background-color: #f0f0f0;
+            font-size: 12px;
+            color: #444;
+        }
+
+        .recommendation-actions {
+            display: flex;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .recommendation-action {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: #444;
+            cursor: pointer;
+            background-color: white;
+            transition: background-color 0.2s;
+        }
+
+        .recommendation-action:hover {
+            background-color: #f9f9f9;
+        }
+
+        .recommendation-action.primary {
+            color: #1a73e8;
+        }
+
+        .recommendation-action + .recommendation-action {
+            border-left: 1px solid #f0f0f0;
+        }
+
+        /* Navigation Wheel Styles */
+        .nav-wheel-container {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            z-index: 100;
+        }
+
+        .nav-wheel-button {
+            background-color: #222;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+            font-size: 24px;
+        }
+
+        .nav-wheel-button:hover, .nav-wheel-button.active {
+            transform: scale(1.1);
+        }
+
+        .nav-wheel {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 16px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateY(20px);
+        }
+
+        .nav-wheel.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-label {
+            background-color: #222;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-icon {
+            background-color: #222;
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .nav-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Temporary fixed position for demo */
+        #nav-wheel-demo {
+            position: relative; 
+            height: 300px;
+            border: 1px dashed #ddd;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        #nav-wheel-demo .nav-wheel-container {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .demo-note {
+            color: #666;
+            font-style: italic;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="page-header">
+            <div class="page-title">Component Demo</div>
+        </header>
+
+        <main>
+            <!-- Recommendation Card Demo -->
+            <section class="demo-section">
+                <h2 class="component-title">Recommendation Card</h2>
+              
+                <div class="controls">
+                    <button id="toggle-gem-type">Shuffle Gem Type</button>
+                   
+                    <button id="change-emoji">Shuffle Icon</button>
+                </div>
+
+                <div class="component-container">
+                    <div class="recommendation-card" id="demo-card">
+                        <div class="recommendation-header">
+                            <div class="recommendation-title">Placeholder Gem</div>
+                            <div class="recommendation-badge hidden-gem">
+                                <span style="margin-right: 4px;">★</span> Hidden Gem
+                            </div>
+                        </div>
+                        <div class="recommendation-image">
+                            <div class="recommendation-image-placeholder" id="gem-icon">🌲</div>
+                            <div class="recommendation-favorite" id="favorite-icon">🤍</div>
+                        </div>
+                        <div class="recommendation-details">
+                            <div class="recommendation-detail">
+                                <span class="recommendation-detail-icon">📍</span>
+                                <span>Mendocino County, Near Highway 101</span>
+                            </div>
+                            <div class="recommendation-detail">
+                                <span class="recommendation-detail-icon">🕒</span>
+                                <span>8:00 AM - 6:00 PM • Free</span>
+                            </div>
+                            <div class="recommendation-detail">
+                                <span class="recommendation-detail-icon">⭐</span>
+                                <span>4.8/5.0 (12 reviews)</span>
+                            </div>
+                            <div class="recommendation-detail">
+                                <span class="recommendation-detail-icon">⏱️</span>
+                                <span>Typical visit: 1-2 hours</span>
+                            </div>
+                            <div class="recommendation-tags">
+                                <div class="recommendation-tag">Nature</div>
+                                <div class="recommendation-tag">Short hike</div>
+                                <div class="recommendation-tag">Photography</div>
+                            </div>
+                        </div>
+                        <div class="recommendation-actions">
+                            <div class="recommendation-action view-details">View Details</div>
+                         
+                        </div>
+                    </div>
+                </div>
+
+                <!--<div class="code-usage mt-lg">
+                    <h3>HTML Structure:</h3>
+                    <pre><code>&lt;div class="recommendation-card"&gt;
+    &lt;div class="recommendation-header"&gt;
+        &lt;div class="recommendation-title"&gt;Secret Redwood Grove&lt;/div&gt;
+        &lt;div class="recommendation-badge hidden-gem"&gt;
+            &lt;span&gt;★&lt;/span&gt; Hidden Gem
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;!-- Rest of the structure... --&gt;
+&lt;/div&gt;</code></pre>
+                </div>-->
+            </section>
+
+            <!-- Navigation Wheel Demo -->
+            <section class="demo-section">
+                <h2 class="component-title">Navigation Wheel</h2>
+             
+             
+
+                <div class="component-container" id="nav-wheel-demo">
+                    <p class="demo-note">[trip page]</p>
+
+                    <!-- Navigation wheel component -->
+                    <div class="nav-wheel-container">
+                        <div class="nav-wheel" id="nav-wheel">
+                            <div class="nav-item">
+                                <div class="nav-label">Add a Gem</div>
+                                <div class="nav-icon" data-action="add-gem">💎</div>
+                            </div>
+                            <div class="nav-item">
+                                <div class="nav-label">Profile</div>
+                                <div class="nav-icon" data-action="profile">👤</div>
+                            </div>
+                            <div class="nav-item">
+                                <div class="nav-label">Start a Trip</div>
+                                <div class="nav-icon" data-action="trip">🗺️</div>
+                            </div>
+                            <div class="nav-item">
+                                <div class="nav-label">Toolbox</div>
+                                <div class="nav-icon" data-action="toolbox">🧰</div>
+                            </div>
+                        </div>
+                        <div class="nav-wheel-button" id="nav-wheel-toggle">☰</div>
+                    </div>
+                </div>
+
+                <div class="overlay" id="overlay"></div>
+
+             <!-- <div class="code-usage mt-lg">
+                    <h3>HTML Structure:</h3>
+                    <pre><code>&lt;div class="nav-wheel-container"&gt;
+    &lt;div class="nav-wheel" id="nav-wheel"&gt;
+        &lt;div class="nav-item"&gt;
+            &lt;div class="nav-label"&gt;Add a Gem&lt;/div&gt;
+            &lt;div class="nav-icon" data-action="add-gem"&gt;💎&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;!-- More nav items... --&gt;
+    &lt;/div&gt;
+    &lt;div class="nav-wheel-button" id="nav-wheel-toggle"&gt;☰&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="overlay" id="overlay"&gt;&lt;/div&gt;</code></pre>
+                </div>
+            </section>
+        </main>
+    </div>-->  
+
+    <!-- JavaScript for Component Interaction -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Recommendation Card Demo
+            const toggleGemTypeButton = document.getElementById('toggle-gem-type');
+          
+            const changeEmojiButton = document.getElementById('change-emoji');
+            const badgeElement = document.querySelector('.recommendation-badge');
+            const favoriteIcon = document.getElementById('favorite-icon');
+            const gemIcon = document.getElementById('gem-icon');
+            
+            const emojis = ['🌲', '🏞️', '🏖️', '🏛️', '🍽️', '🥾', '🍷'];
+            let currentEmojiIndex = 0;
+            
+            toggleGemTypeButton.addEventListener('click', function() {
+                if (badgeElement.classList.contains('hidden-gem')) {
+                    badgeElement.classList.remove('hidden-gem');
+                    badgeElement.classList.add('popular');
+                    badgeElement.innerHTML = 'Popular Spot';
+                } else {
+                    badgeElement.classList.remove('popular');
+                    badgeElement.classList.add('hidden-gem');
+                    badgeElement.innerHTML = '<span style="margin-right: 4px;">★</span> Hidden Gem';
+                }
+            });
+            
+            favoriteIcon.addEventListener('click', function() {
+                this.classList.toggle('active');
+                if (this.classList.contains('active')) {
+                    this.innerHTML = '❤️';
+                } else {
+                    this.innerHTML = '🤍';
+                }
+            });
+            
+            changeEmojiButton.addEventListener('click', function() {
+                currentEmojiIndex = (currentEmojiIndex + 1) % emojis.length;
+                gemIcon.textContent = emojis[currentEmojiIndex];
+            });
+            
+            // Navigation Wheel Demo
+            const navWheelToggle = document.getElementById('nav-wheel-toggle');
+            const navWheel = document.getElementById('nav-wheel');
+            const overlay = document.getElementById('overlay');
+            const toggleWheelButton = document.getElementById('toggle-wheel');
+            
+            function toggleWheel(show) {
+                navWheel.classList.toggle('active', show);
+                overlay.classList.toggle('active', show);
+                navWheelToggle.classList.toggle('active', show);
+            }
+            
+            navWheelToggle.addEventListener('click', function() {
+                toggleWheel(true);
+            });
+            
+            overlay.addEventListener('click', function() {
+                toggleWheel(false);
+            });
+            
+            toggleWheelButton.addEventListener('click', function() {
+                toggleWheel(!navWheel.classList.contains('active'));
+            });
+            
+            // Handle nav item clicks
+            const navIcons = document.querySelectorAll('.nav-icon');
+            navIcons.forEach(icon => {
+                icon.addEventListener('click', function() {
+                    const action = this.getAttribute('data-action');
+                    alert(`Action triggered: ${action}`);
+                    toggleWheel(false);
+                });
+            });
+            
+            // Recommendation Card Actions
+            const viewDetailsButton = document.querySelector('.view-details');
+            const addToItineraryButton = document.querySelector('.add-to-itinerary');
+            
+            viewDetailsButton.addEventListener('click', function() {
+                alert('View Details clicked');
+            });
+            
+            addToItineraryButton.addEventListener('click', function() {
+                this.textContent = 'Added!';
+                setTimeout(() => {
+                    this.textContent = 'Add to Itinerary';
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
