@@ -1,49 +1,42 @@
-hidden-gems/code
+code
+├── index.html                  # Home/landing page
+├── quiz.html                   # Onboarding quiz page
+├── results.html                # Gem recommendations page
+├── trip.html                   # Trip planning page
+├── add-gem.html                # Form to add a gem
 │
-├── public/
-│   ├── index.html
-│   ├── favicon.ico
-│   └── assets/
-│       ├── images/
-│       └── data/
-│           └── locations.json
+├── css/
+│   ├── main.css                # Common styles
+│   ├── navigation-wheel.css    # Navigation wheel styles
+│   ├── recommendation-card.css # Recommendation card styles
+│   ├── filters.css             # Filters component styles
+│   └── quiz.css                # Quiz styles
 │
-├── src/
-│   ├── components/
-|   |   |
-│   │   ├── layout/
-│   │   │   ├── Header.js
-│   │   │   ├── Footer.js
-│   │   │   └── Layout.js
-│   │   │
-│   │   ├── map/
-│   │   │   ├── InteractiveMap.js
-│   │   │   ├── MapMarker.js
-│   │   │
-│   │   ├── recommendations/
-│   │   │   ├── RecommendationCard.js
-│   │   │   ├── RecommendationList.js
-│   │   │   └── PreferenceSelector.js
-│   │   │
-│   │   └── ui/
-│   │       ├── Button.js
-│   │       ├── Card.js
-│   │       ├── Modal.js
-│   │       └── Tooltip.js
-│   │
-│   ├── pages/
-│   │   ├── HomePage
-│   │   ├── DiscoverPage
-│   │   ├── ProfilePage.js
-│   │   └── LocationDetailPage
-│   │
-│   │
-│   ├── styles/
-│   │   ├── style.css
-│   │   └── theme.js
-│   │
-│   ├── index.js
-│   └── routes.js
+├── js/
+│   ├── main.js                 # Common functionality
+│   ├── components.js           # Component loader utility
+│   ├── navigation-wheel.js     # Navigation wheel functionality
+│   ├── recommendation-card.js  # Recommendation card functionality
+│   ├── filters.js              # Filters functionality
+│   ├── quiz.js                 # Quiz functionality
+│   ├── map.js                  # Map display and interaction
+│   └── mock-data.js            # Mock data for demo purposes
 │
-├── .gitignore
-├── README.md
+├── components/                 # HTML snippets for components
+│   ├── navigation-wheel.html   # Navigation wheel markup
+│   ├── recommendation-card.html # Recommendation card markup
+│   └── filters.html            # Filters markup
+│
+├── assets/
+│   ├── images/
+│   │   └── placeholders/       # Placeholder images for gems
+│   ├── icons/                  # UI icons
+│   └── data/                   # JSON data files
+│       ├── gems.json           # gem data
+│       ├── routes.json         # route data
+│       └── regions.json        # Geographic region data
+│
+└── demo-api/                   # Simple mock API for demo
+    ├── recommendations.json    # recommendations response
+    ├── routes.json             # route planning response
+    └── demo-server.js          # Simple server for local testing
