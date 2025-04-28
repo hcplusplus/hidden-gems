@@ -1,0 +1,665 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+    background-color: #f5f5f5;
+}
+
+/* Phone frame for demo */
+.phone-frame {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 375px;
+    height: 812px;
+    background-color: white;
+    border-radius: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    border: 10px solid #111;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Notch */
+.phone-frame::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+    height: 30px;
+    background-color: #111;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    z-index: 100;
+}
+
+/* App header */
+.app-header {
+    display: flex;
+    padding: 15px 20px 10px;
+    overflow-x: auto;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+.filter-button {
+    flex: 0 0 auto;
+    padding: 8px 15px;
+    margin-right: 10px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    background-color: #f0f0f0;
+    white-space: nowrap;
+    color: #333;
+}
+
+.filter-button.active {
+    background-color: #333;
+    color: white;
+}
+
+/* Map container */
+#map {
+    flex: 1;
+    width: 100%;
+    position: relative;
+}
+
+/* Cards container */
+.cards-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 170px;
+    z-index: 10;
+    overflow: hidden;
+}
+
+.gem-card {
+    position: absolute;
+    bottom: 0;
+    left: 15px;
+    right: 15px;
+    height: 170px;
+    background-color: white;
+    border-radius: 15px 15px 0 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-out;
+}
+
+.gem-card.prev {
+    transform: translateX(-100%);
+    z-index: 1;
+}
+
+.gem-card.active {
+    transform: translateX(0);
+    z-index: 2;
+}
+
+.gem-card.next {
+    transform: translateX(100%);
+    z-index: 1;
+}
+
+.card-handle {
+    width: 40px;
+    height: 4px;
+    background-color: #ccc;
+    border-radius: 2px;
+    margin: 0 auto 15px;
+}
+
+.card-content {
+    display: flex;
+    flex: 1;
+}
+
+.card-image {
+    width: 100px;
+    height: 100px;
+    background-color: #eee;
+    border-radius: 8px;
+    margin-right: 15px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    color: #999;
+}
+
+.card-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.card-address {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.card-address svg {
+    width: 14px;
+    height: 14px;
+    margin-right: 5px;
+    fill: #666;
+}
+
+.card-hours {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.card-hours svg {
+    width: 14px;
+    height: 14px;
+    margin-right: 5px;
+    fill: #666;
+}
+
+.add-to-filter-btn {
+    background-color: #3a3a3a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    width: 100%;
+    margin-top: auto;
+    cursor: pointer;
+}
+
+/* Itinerary button */
+.view-itinerary-btn {
+    position: absolute;
+    top: 80px;
+    right: 15px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    z-index: 5;
+}
+
+.view-itinerary-btn svg {
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+    fill: white;
+}
+
+/* Bottom navigation */
+.bottom-nav {
+    display: flex;
+    height: 60px;
+    background-color: white;
+    border-top: 1px solid #eee;
+}
+
+.bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 12px;
+}
+
+.bottom-nav-item.active {
+    color: #333;
+}
+
+.bottom-nav-item svg {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+    fill: currentColor;
+}
+
+/* Card swipe controls - we'll hide these since we're implementing true swiping */
+.swipe-controls {
+    position: absolute;
+    bottom: 190px;
+    left: 0;
+    right: 0;
+    display: none; /* Hide the buttons since we'll use swipe gestures */
+    justify-content: center;
+    z-index: 5;
+}
+
+.swipe-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    margin: 0 10px;
+    border: none;
+    font-size: 20px;
+    color: #333;
+}
+
+/* Swipe indicators */
+.swipe-indicator {
+    position: absolute;
+    bottom: 180px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    z-index: 5;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: 0 5px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dot.active {
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+/* Hidden gem marker styles */
+.marker {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    border: 3px solid white;
+}
+
+.marker.nature {
+    background-color: #27ae60;
+}
+
+.marker.food {
+    background-color: #e74c3c;
+}
+
+.marker.cultural {
+    background-color: #9b59b6;
+}
+
+.marker.active {
+    width: 35px;
+    height: 35px;
+    z-index: 10;
+    animation: pulse 1.5s infinite;
+}
+
+.current-location-marker {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #000;
+    box-shadow: 0 0 0 5px rgba(0,0,0,0.1);
+    border: 3px solid white;
+}
+
+.destination-marker {
+    width: 30px;
+    height: 30px;
+    background-color: #6366F1;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    border: 3px solid white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255,255,255,0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255,255,255,0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255,255,255,0);
+    }
+}
+
+/* User Preferences UI */
+.preferences-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    display: none;
+}
+
+.preferences-panel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70%;
+    background-color: white;
+    border-radius: 20px 20px 0 0;
+    padding: 20px;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-out;
+}
+
+.preferences-panel.active {
+    transform: translateY(0);
+}
+
+.preferences-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.preferences-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.close-preferences {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #999;
+}
+
+.preferences-section {
+    margin-bottom: 25px;
+}
+
+.preferences-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.preferences-option-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.preference-checkbox {
+    display: none;
+}
+
+.preference-label {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.preference-checkbox:checked + .preference-label {
+    background-color: #333;
+    color: white;
+}
+
+.preference-slider-container {
+    margin-bottom: 15px;
+}
+
+.preference-slider-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.preference-slider {
+    width: 100%;
+    height: 5px;
+    background: #f0f0f0;
+    border-radius: 5px;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.preference-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #333;
+    cursor: pointer;
+}
+
+.save-preferences-btn {
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-weight: 600;
+    font-size: 16px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* Game Elements - Achievement Notification */
+.achievement-notification {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    z-index: 100;
+    width: 80%;
+    max-width: 300px;
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+}
+
+.achievement-notification.show {
+    opacity: 1;
+    transform: translate(-50%, 20px);
+}
+
+.achievement-icon {
+    width: 40px;
+    height: 40px;
+    background-color: gold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    font-size: 20px;
+}
+
+.achievement-details {
+    flex: 1;
+}
+
+.achievement-title {
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.achievement-description {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* Achievements Badge UI */
+.achievements-button {
+    position: absolute;
+    top: 80px;
+    left: 15px;
+    background-color: #f39c12;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    z-index: 5;
+}
+
+.achievements-button svg {
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+    fill: white;
+}
+
+.achievements-panel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-height: 80%;
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    z-index: 110;
+    display: none;
+    overflow-y: auto;
+}
+
+.achievements-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.achievements-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.close-achievements {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #999;
+}
+
+.achievement-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.achievement-item {
+    display: flex;
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    padding: 15px;
+    transition: transform 0.2s;
+}
+
+.achievement-item.locked {
+    opacity: 0.5;
+}
+
+.achievement-item-icon {
+    width: 50px;
+    height: 50px;
+    background-color: #f1c40f;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-size: 24px;
+}
+
+.achievement-item-details {
+    flex: 1;
+}
+
+.achievement-item-title {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.achievement-item-description {
+    font-size: 14px;
+    color: #666;
+}
+
+.achievement-locked-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin-left: 10px;
+}
