@@ -64,7 +64,7 @@ HiddenGems.cards = {
                             <span>${gem.hours}</span>
                         </div>
                         <button class="add-to-trip-btn" data-gem-id="${gem.id}" ${isVisited ? 'style="background-color: #27ae60;"' : ''}>
-                            ${isVisited ? 'Added to Itinerary' : 'Add to Itinerary'}
+                            ${isVisited ? 'Mined Gem' : 'Mine this Gem'}
                         </button>
                     </div>
                 </div>
@@ -73,7 +73,7 @@ HiddenGems.cards = {
             cardsContainer.appendChild(card);
         });
         
-        // Add event listeners to all "Add to Itinerary" buttons
+        // Add event listeners to all "Mine this Gem" buttons
         document.querySelectorAll('.add-to-trip-btn').forEach(button => {
             button.addEventListener('click', function() {
                 const gemId = this.getAttribute('data-gem-id');
@@ -97,7 +97,7 @@ HiddenGems.cards = {
             userPreferences.visitedGems.push(gemId);
             
             // Update button style
-            buttonEl.textContent = 'Added to Itinerary';
+            buttonEl.textContent = 'Mined Gem';
             buttonEl.style.backgroundColor = '#27ae60';
             
             // Save preferences
