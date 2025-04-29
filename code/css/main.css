@@ -1,6 +1,26 @@
 /* main.css - Common styles for Northern California Hidden Gems app */
 
 /* CSS Reset & Base Styles */
+:root {
+    --gem-hidden: #6A0DAD;    /* deep purple for “hidden” */
+    --gem-common: #008080;    /* teal for “common” */
+    --gem-popular: #FFCC00;   /* gold for “popular” */
+  }
+
+/* Map-marker base sizing */
+.marker {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    cursor: pointer;
+  }
+  
+  /* Tier classes */
+  .gem-tier-hidden  { background-color: var(--gem-hidden); }
+  .gem-tier-common  { background-color: var(--gem-common); }
+  .gem-tier-popular { background-color: var(--gem-popular); }
 * {
     margin: 0;
     padding: 0;
