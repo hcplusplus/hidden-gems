@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add a Gem - Hidden Gems</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+    <style>
+
+        .progress-bar {
+            height: 20px;
+            border-radius: 10px;
+            margin: 25px 40px 10px 40px;
+            background-color: lightgray;
+            display: flex;
+        }
+        .recommendation-card {
+            margin: 15px 15px 15px 15px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        .recommendation-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .recommendation-image {
+            width: 100%;
+            height: 200px;
+            background-color: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .recommendation-details {
+            padding: 12px;
+        }
+
+        .recommendation-detail {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+            
+        }
+
+        .quiz-option {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 16px;
+            margin: 6px 6px 6px 0;
+            border-radius: 20px;
+            background-color: #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .moving-progress {
+            height: 20px;
+            width:30%;  /*dynamic */
+            border-radius: 10px;
+            background-color: lightcoral;
+        }
+
+
+    </style>
+
+</head>
+
+<body>
+    <div class="page-container">
+        <!-- Header -->
+        <header class="page-header">
+            <h1 class="page-title">Trip Mode</h1>
+        </header>
+
+        <div class="flex flex-column">
+            <div>
+                <image src="./assets/city.jpg" style="width:100%;height:30%"/>
+            </div>
+            <div>
+                <div class="progress-bar">
+                    <div class="moving-progress">
+                        <!-- progress div -->
+                         <i class="fas fa-car-side" style="text-align: right; display: block; padding-right: 7px; padding-top: 3px;"></i>
+                    </div>
+                    <i class="fas fa-gem" style="text-align: right; display: block;"></i>
+                </div>
+                <span style="font-weight:bold; display:block; text-align: right; margin-right: 40px" >time left</span>
+            </div>
+
+
+            <div class="recommendation-card">
+                <div class="recommendation-header">
+                    <div class="recommendation-title">Mission Peak</div>
+                </div>
+            
+                <div class="recommendation-details">
+                    <div class="recommendation-detail">
+                        <i class="fas fa-map-pin"></i>
+                        <span style="font-weight: 500">43600 Mission Blvd, Fremont, CA</span>
+                    </div>
+                    <div class="recommendation-detail">
+                        <span class="recommendation-detail-icon">🕒</span>
+                        <span style="font-weight: 500">6:00 AM - 10:00 PM | $</span>
+                    </div>
+                    <div style="display: flex; gap: 8px; margin-top: 12px;">
+                        <div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;">Outdoor</div>
+                        <div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;">Nature</div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <!-- what others have said -->
+            </div>
+            
+
+        </div>
+
+        
+
+        <!-- Navigation wheel component will be loaded here -->
+        <div id="nav-wheel-container"></div>
+    </div>
+
+    <script>
+        let time_left = 60; 
+
+        function updateProgress(percent) {
+            const progressBar = document.getElementById('moving-progress');
+            progressBar.style.width = percent + '%';
+        }
+
+        // Example usage:
+        updateProgress(30); // sets progress bar to 30%
+        updateProgress(70); // sets progress bar to 70%
+
+    </script>
+</body>
+</html>
