@@ -146,7 +146,7 @@ button.secondary:hover, .button.secondary:hover {
     flex-grow: 1;
     text-align: center;
 }
-
+/*
 .back-button {
     background: none;
     border: none;
@@ -160,7 +160,7 @@ button.secondary:hover, .button.secondary:hover {
     justify-content: center;
     padding: 0;
 }
-
+*/
 /* Cards & Containers */
 .card {
     background-color: white;
