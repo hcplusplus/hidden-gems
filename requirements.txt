@@ -8,3 +8,4 @@ matplotlib==3.8.2
 flask==3.1.0
 ollama
 flask-cors==5.0.1
+openai

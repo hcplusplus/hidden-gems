@@ -1,0 +1,83 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import requests
+import json
+import re
+
+app = Flask(__name__)
+CORS(app)  # ✅ Allow CORS from frontend
+
+OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
+OLLAMA_MODEL = "mistral:7b"
+
+def build_prompt(data):
+    def fmt(field):
+        return ", ".join(data.get(field, [])) or "None"
+
+    return f"""
+You are a local travel expert. Recommend 5 hidden gems based on the following user preferences.
+
+Trip Route:
+- From: {data.get('origin', 'Unknown')}
+- To: {data.get('destination', 'Unknown')}
+
+Preferences:
+- Activities: {fmt('activities')}
+- Essential Amenities: {fmt('amenities')}
+- Effort Level: {data.get('effortLevel', 'Any')}
+- Accessibility Needs: {fmt('accessibility')}
+- Time Available: {data.get('time', 'Any')}
+- Max Detour: {data.get('maxDetour', 'Any')} miles
+
+Return the output in this exact JSON format:
+[
+  {{
+    "name": "Hidden Gem Name",
+    "coordinates": [LATITUDE, LONGITUDE],
+    "category": "nature|food|scenic|historic|...",
+    "description": "Why this place is special",
+    "color": "red|blue|purple"
+  }}
+]
+"""
+    
+@app.route("/generate_gems", methods=["POST"])
+def generate_gems():
+    data = request.get_json()
+    prompt = build_prompt(data)
+    print("🔍 Prompt sent to LLM:\n", prompt)
+
+    raw = ""  # ✅ avoid UnboundLocalError
+    try:
+        response = requests.post(OLLAMA_URL, json={
+            "model": OLLAMA_MODEL,
+            "prompt": prompt,
+            "stream": False
+        })
+
+        print("📡 Response status code:", response.status_code)
+        print("📄 Raw response:", response.text[:500])
+
+        raw = response.json().get("response", "")
+        # Try to extract only the JSON part
+        match = re.search(r'\[\s*{.*?}\s*\]', raw, re.DOTALL)
+        if not match:
+            print("❌ No valid JSON array found in LLM response.")
+            return jsonify({"error": "No valid JSON found", "raw": raw}), 500
+
+        json_string = match.group(0)
+        gems = json.loads(json_string)
+
+        return jsonify(gems)  # ✅ THIS LINE WAS MISSING
+
+    except Exception as e:
+        print("❌ Error during LLM generation:", e)
+        return jsonify({"error": "LLM failed", "raw": raw}), 500
+        
+
+    except Exception as e:
+        print("❌ Error during LLM generation:", e)
+        return jsonify({"error": "LLM failed", "raw": raw}), 500
+
+if __name__ == "__main__":
+    app.run(debug=True, port=5000)

@@ -2,29 +2,31 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests
 import json
+import os
 
 app = Flask(__name__)
 CORS(app)
 
-OLLAMA_URL = "http://localhost:11434/api/generate"
-OLLAMA_URL = "http://127.0.0.1:11434"
-OLLAMA_MODEL = "mistral:7b"
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")  # Make sure this is set!
 
 def build_prompt(data):
+    def fmt(field):
+        return ", ".join(data.get(field, [])) or "None"
+
     return f"""
 You are a local travel expert. Recommend 5 hidden gems based on the following user preferences.
 
 Trip Route:
-- From: {data['origin']}
-- To: {data['destination']}
+- From: {data.get('origin', 'Unknown')}
+- To: {data.get('destination', 'Unknown')}
 
 Preferences:
-- Activities: {', '.join(data['activities'])}
-- Essential Amenities: {', '.join(data['amenities'])}
-- Effort Level: {data['effortLevel']}
-- Accessibility Needs: {', '.join(data['accessibility'])}
-- Time Available: {data['time']}
-- Max Detour: {data['maxDetour']} miles
+- Activities: {fmt('activities')}
+- Essential Amenities: {fmt('amenities')}
+- Effort Level: {data.get('effortLevel', 'Any')}
+- Accessibility Needs: {fmt('accessibility')}
+- Time Available: {data.get('time', 'Any')}
+- Max Detour: {data.get('maxDetour', 'Any')} miles
 
 Return the output in this exact JSON format:
 [
@@ -34,8 +36,7 @@ Return the output in this exact JSON format:
     "category": "nature|food|scenic|historic|...",
     "description": "Why this place is special",
     "color": "red|blue|purple"
-  }},
-  ...more items
+  }}
 ]
 """
 
@@ -43,25 +44,40 @@ Return the output in this exact JSON format:
 def generate_gems():
     data = request.get_json()
     prompt = build_prompt(data)
-    print("🔍 Prompt sent to LLM:\n", prompt)
+    print("🔍 Prompt:\n", prompt)
 
     try:
-        response = requests.post(OLLAMA_URL, json={
-            "model": OLLAMA_MODEL,
-            "prompt": prompt,
-            "stream": False
-        })
+        response = requests.post(
+            "https://api.openai.com/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {OPENAI_API_KEY}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": "gpt-4o",
+                "messages": [
+                    {"role": "system", "content": "You are a travel assistant that returns hidden gems in JSON."},
+                    {"role": "user", "content": prompt}
+                ],
+                "temperature": 0.7
+            },
+            timeout=10
+        )
 
-        print("Response status code:", response.status_code)
-        print("Raw response:", response.text[:500])  # limit to 500 chars
+        response.raise_for_status()
+        raw = response.json()["choices"][0]["message"]["content"]
 
-        raw = response.json().get("response", "")
-        gems = json.loads(raw.strip()) if raw.strip().startswith("[") else eval(raw.strip())
+        # Extract valid JSON
+        json_start = raw.find("[")
+        json_end = raw.rfind("]") + 1
+        json_block = raw[json_start:json_end]
+        gems = json.loads(json_block)
+
         return jsonify(gems)
 
     except Exception as e:
-        print("Error during LLM generation:", e)
-        return jsonify({"error": "LLM failed", "raw": raw}), 500
+        print("❌ Error calling OpenAI:", e)
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

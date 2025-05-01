@@ -221,7 +221,7 @@
 		</div>
 
 		<script>
-			document.addEventListener('DOMContentLoaded', function () { // Quiz state
+			document.addEventListener('DOMContentLoaded', function () {
 				const quizState = {
 					currentStep: 1,
 					totalSteps: 4,
@@ -237,57 +237,35 @@
 					}
 				};
 
-				// DOM Elements
 				const progressBar = document.getElementById('quiz-progress');
 				const backButton = document.getElementById('back-button');
 				const nextButton = document.getElementById('next-button');
 				const closeButton = document.getElementById('close-quiz');
 				const quizSteps = document.querySelectorAll('.quiz-step');
 
-				// Location inputs
 				const originInput = document.getElementById('origin');
 				const destinationInput = document.getElementById('destination');
 				const originError = document.getElementById('origin-error');
 				const destinationError = document.getElementById('destination-error');
 
-				// Update progress bar
 				function updateProgress() {
 					const progress = (quizState.currentStep / quizState.totalSteps) * 100;
 					progressBar.style.width = `${progress}%`;
 				}
 
-				// Navigate to a specific step
-				function goToStep(step) { // Hide all steps
-					quizSteps.forEach(element => {
-						element.classList.remove('active');
-					});
-
-					// Show the current step
+				function goToStep(step) {
+					quizSteps.forEach(el => el.classList.remove('active'));
 					document.getElementById(`step-${step}`).classList.add('active');
-
-					// Update state
 					quizState.currentStep = step;
-
-					// Update buttons
 					backButton.disabled = step === 1;
-
-					if (step === quizState.totalSteps) {
-						nextButton.textContent = 'Finish';
-					} else {
-						nextButton.textContent = 'Next';
-					}
-
-					// Update progress
+					nextButton.textContent = step === quizState.totalSteps ? 'Finish' : 'Next';
 					updateProgress();
 				}
 
-				// Validate the current step
 				function validateCurrentStep() {
 					switch (quizState.currentStep) {
 						case 1:
-							// Validate origin and destination
 							let isValid = true;
-
 							if (! originInput.value.trim()) {
 								originError.style.display = 'block';
 								isValid = false;
@@ -303,22 +281,18 @@
 								destinationError.style.display = 'none';
 								quizState.answers.destination = destinationInput.value.trim();
 							}
-
 							return isValid;
 
 						case 2:
-							// Activities are optional, but collect selected ones
-							const activityButtons = document.querySelectorAll('#step-2 .option-button.selected');
+							// ✅ FIXED: pull from correct step (#step-4)
+							const activityButtons = document.querySelectorAll('#step-4 .option-button.selected');
 							quizState.answers.activities = Array.from(activityButtons).filter(btn => !['restrooms', 'parking', 'gas'].includes(btn.getAttribute('data-value'))).map(btn => btn.getAttribute('data-value'));
 
-							// Collect selected amenities
-							const amenityButtons = document.querySelectorAll('#step-2 .option-button.selected');
-							quizState.answers.amenities = Array.from(amenityButtons).filter(btn => ['restrooms', 'parking', 'gas'].includes(btn.getAttribute('data-value'))).map(btn => btn.getAttribute('data-value'));
+							quizState.answers.amenities = Array.from(activityButtons).filter(btn => ['restrooms', 'parking', 'gas'].includes(btn.getAttribute('data-value'))).map(btn => btn.getAttribute('data-value'));
 
 							return true;
 
 						case 3:
-							// Collect effort level and accessibility preferences
 							const effortButtons = document.querySelectorAll('#step-3 .option-button[data-value="easy"], #step-3 .option-button[data-value="moderate"], #step-3 .option-button[data-value="challenging"]');
 							const selectedEffort = Array.from(effortButtons).find(btn => btn.classList.contains('selected'));
 							quizState.answers.effortLevel = selectedEffort ? selectedEffort.getAttribute('data-value') : '';
@@ -329,7 +303,6 @@
 							return true;
 
 						case 4:
-							// Collect time preference and max detour
 							const selectedTime = document.querySelector('input[name="time"]:checked');
 							quizState.answers.time = selectedTime ? selectedTime.value : '';
 
@@ -343,16 +316,13 @@
 					return true;
 				}
 
-				// Save answers to session storage
 				function saveAnswers() {
 					sessionStorage.setItem('userPreferences', JSON.stringify(quizState.answers));
 				}
 
-				// Complete the quiz
 				function finishQuiz() {
 					const userData = quizState.answers;
 					console.log("Sending this to /generate_gems:", userData);
-
 
 					fetch("http://127.0.0.1:5000/generate_gems", {
 						method: "POST",
@@ -360,17 +330,34 @@
 							"Content-Type": "application/json"
 						},
 						body: JSON.stringify(userData)
-					}).then(res => res.json()).then(gems => {
-						console.log("Gems received from LLM:", gems);
+					}).then(async res => {
+						const contentType = res.headers.get("Content-Type");
+						const isJSON = contentType && contentType.includes("application/json");
+
+						if (!res.ok) {
+							const errorText = await res.text();
+							throw new Error(`Server error (${
+								res.status
+							}): ${errorText}`);
+						}
+
+						if (! isJSON) {
+							const text = await res.text();
+							throw new Error(`Expected JSON but got: ${text}`);
+						}
+
+						return res.json();
+					}).then(gems => {
+						console.log("✅ Gems received from server:", gems);
 						sessionStorage.setItem("gems", JSON.stringify(gems));
 						window.location.href = 'landing-page.html';
 					}).catch(err => {
-						console.error("Error generating gems:", err);
-						alert("Something went wrong. Please try again.");
+						console.error("❌ Error in finishQuiz:", err);
+						alert("Something went wrong. Please check console.");
 					});
 				}
 
-				// Handle next button
+
 				nextButton.addEventListener('click', function () {
 					if (validateCurrentStep()) {
 						if (quizState.currentStep === quizState.totalSteps) {
@@ -381,58 +368,46 @@
 					}
 				});
 
-				// Handle back button
 				backButton.addEventListener('click', function () {
 					if (quizState.currentStep > 1) {
 						goToStep(quizState.currentStep - 1);
 					}
 				});
 
-				// Handle close button
 				closeButton.addEventListener('click', function () {
 					if (confirm('Are you sure you want to exit the quiz? Your progress will be lost.')) {
 						window.location.href = 'index.html';
 					}
 				});
 
-				// Handle option buttons
 				const optionButtons = document.querySelectorAll('.option-button');
-
 				optionButtons.forEach(button => {
-					button.addEventListener('click', function () { // Check if this is a effort level button (only one can be selected)
-						if (['easy', 'moderate', 'challenging'].includes(this.getAttribute('data-value'))) { // Deselect other effort level buttons
+					button.addEventListener('click', function () {
+						if (['easy', 'moderate', 'challenging'].includes(this.getAttribute('data-value'))) {
 							document.querySelectorAll('.option-button[data-value="easy"], .option-button[data-value="moderate"], .option-button[data-value="challenging"]').forEach(btn => btn.classList.remove('selected'));
 						}
 
-						// Check if this is a detour button (only one can be selected)
-						if (['5', '15', '30', '50+'].includes(this.getAttribute('data-value'))) { // Deselect other detour buttons
+						if (['5', '15', '30', '50+'].includes(this.getAttribute('data-value'))) {
 							document.querySelectorAll('.option-button[data-value="5"], .option-button[data-value="15"], .option-button[data-value="30"], .option-button[data-value="50+"]').forEach(btn => btn.classList.remove('selected'));
 						}
 
-						// Toggle selected state
 						this.classList.toggle('selected');
 					});
 				});
 
-				// Initialize progress
 				updateProgress();
 
-				// Check if we have saved answers
 				const savedPreferences = sessionStorage.getItem('userPreferences');
 				if (savedPreferences) {
 					const savedAnswers = JSON.parse(savedPreferences);
-
-					// Pre-fill form fields if available
-					if (savedAnswers.origin) {
+					if (savedAnswers.origin) 
 						originInput.value = savedAnswers.origin;
-					}
+					
 
-					if (savedAnswers.destination) {
+					if (savedAnswers.destination) 
 						destinationInput.value = savedAnswers.destination;
-					}
+					
 
-					// We could also restore other selections, but for simplicity,
-					// we'll just pre-fill the first step
 				}
 			});
 		</script>

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<title>Hidden Gems - Northern California</title>
 		<link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet"/>
 		<script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
@@ -125,6 +125,19 @@
 				transform: rotate(45deg);
 				border-radius: 3px;
 			}
+			.spinner {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				font-size: 16px;
+				color: #666;
+				background: white;
+				padding: 10px 16px;
+				border-radius: 6px;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+				z-index: 999;
+			}
 		</style>
 	</head>
 	<body>
@@ -138,6 +151,7 @@
 				<div>
 					<span style="background:blue"></span>Least Hidden</div>
 			</div>
+			<div class="spinner" id="loading-spinner">Loading hidden gems...</div>
 			<div class="nav-wheel-container">
 				<div class="nav-wheel" id="nav-wheel">
 					<div class="nav-item">
@@ -177,40 +191,65 @@
 
 				if (stored) {
 					const gems = JSON.parse(stored);
-					renderGems(gems);
+					const validColors = ["red", "purple", "blue"];
+					const filtered = gems.filter(g => validColors.includes(g.color));
+					const finalGems = filtered.length > 0 ? filtered : gems;
+					renderGems(finalGems);
 				} else {
-					fetch("gems.json").then(res => res.json()).then(gems => {
-						renderGems(gems);
-					});
+					fetch("gems.json").then(res => res.json()).then(gems => renderGems(gems));
 				}
 			}
 
 			function renderGems(gems) {
+				const spinner = document.getElementById("loading-spinner");
+				if (spinner) 
+					spinner.style.display = "none";
+				
+
+				const validColors = ["red", "purple", "blue"];
+				const bounds = new maplibregl.LngLatBounds();
+
 				gems.forEach(gem => {
+					const coords = gem.coordinates || gem.coords;
+					if (! coords || coords.length !== 2 || coords.some(isNaN)) 
+						return;
+					
+
+					const lngLat = [
+						coords[1], coords[0]
+					];
+					const color = validColors.includes(gem.color) ? gem.color : "blue";
+
 					const el = document.createElement('div');
 					el.className = 'marker';
-					el.style.backgroundColor = gem.color;
+					el.style.backgroundColor = color;
 
 					const popupHTML = `
           <div style="min-width:200px">
             <strong>${
-						gem.name
+						gem.name || 'Unnamed Gem'
 					}</strong><br/>
             <small>${
-						gem.category || gem.type
+						gem.category || gem.type || 'Unknown type'
 					}</small><br/>
             <p style="font-size:13px;margin:6px 0">${
-						gem.description || ''
+						gem.description || 'No description provided.'
 					}</p>
             <button onclick="alert('Exploring ${
-						gem.name
+						gem.name || 'this gem'
 					}!')" style="
               background:#222;color:white;border:none;padding:6px 12px;
               border-radius:6px;font-size:14px;cursor:pointer;">Explore Now</button>
           </div>`;
 
-					new maplibregl.Marker(el).setLngLat(gem.coordinates || gem.coords).setPopup(new maplibregl.Popup().setHTML(popupHTML)).addTo(map);
+					new maplibregl.Marker(el).setLngLat(lngLat).setPopup(new maplibregl.Popup().setHTML(popupHTML)).addTo(map);
+
+					bounds.extend(lngLat);
 				});
+
+				if (! bounds.isEmpty()) {
+					map.fitBounds(bounds, {padding: 40});
+				}
 			}
 
 			loadGems();
