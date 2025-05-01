@@ -132,14 +132,11 @@
 			<div id="map"></div>
 			<div class="legend">
 				<div>
-					<span style="background:red"></span>
-					Most Hidden</div>
+					<span style="background:red"></span>Most Hidden</div>
 				<div>
-					<span style="background:purple"></span>
-					Moderately Hidden</div>
+					<span style="background:purple"></span>Moderately Hidden</div>
 				<div>
-					<span style="background:blue"></span>
-					Least Hidden</div>
+					<span style="background:blue"></span>Least Hidden</div>
 			</div>
 			<div class="nav-wheel-container">
 				<div class="nav-wheel" id="nav-wheel">
@@ -175,29 +172,44 @@
 			const navWheel = document.getElementById('nav-wheel');
 			navToggle.addEventListener('click', () => navWheel.classList.toggle('active'));
 
-			function loadGems(filterColor = null) {
-				fetch("gems.json").then(res => res.json()).then(data => {
-					const stored = sessionStorage.getItem("gems");
-					const gems = stored ? JSON.parse(stored) : data.sort(() => 0.5 - Math.random()).slice(0, 8);
-					if (! stored) 
-						sessionStorage.setItem("gems", JSON.stringify(gems));
-					
+			function loadGems() {
+				const stored = sessionStorage.getItem("gems");
 
-
-					gems.forEach(gem => {
-						if (filterColor && gem.color !== filterColor) 
-							return;
-						
-
-						const el = document.createElement('div');
-						el.className = 'marker';
-						el.style.backgroundColor = gem.color;
-						new maplibregl.Marker(el).setLngLat(gem.coords).setPopup(new maplibregl.Popup().setText(`${
-							gem.name
-						} - ${
-							gem.type
-						}`)).addTo(map);
+				if (stored) {
+					const gems = JSON.parse(stored);
+					renderGems(gems);
+				} else {
+					fetch("gems.json").then(res => res.json()).then(gems => {
+						renderGems(gems);
 					});
+				}
+			}
+
+			function renderGems(gems) {
+				gems.forEach(gem => {
+					const el = document.createElement('div');
+					el.className = 'marker';
+					el.style.backgroundColor = gem.color;
+
+					const popupHTML = `
+          <div style="min-width:200px">
+            <strong>${
+						gem.name
+					}</strong><br/>
+            <small>${
+						gem.category || gem.type
+					}</small><br/>
+            <p style="font-size:13px;margin:6px 0">${
+						gem.description || ''
+					}</p>
+            <button onclick="alert('Exploring ${
+						gem.name
+					}!')" style="
+              background:#222;color:white;border:none;padding:6px 12px;
+              border-radius:6px;font-size:14px;cursor:pointer;">Explore Now</button>
+          </div>`;
+
+					new maplibregl.Marker(el).setLngLat(gem.coordinates || gem.coords).setPopup(new maplibregl.Popup().setHTML(popupHTML)).addTo(map);
 				});
 			}
 

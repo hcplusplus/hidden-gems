@@ -351,14 +351,17 @@
 				// Complete the quiz
 				function finishQuiz() {
 					const userData = quizState.answers;
+					console.log("Sending this to /generate_gems:", userData);
 
-					fetch("/generate_gems", {
+
+					fetch("http://127.0.0.1:5000/generate_gems", {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json"
 						},
 						body: JSON.stringify(userData)
 					}).then(res => res.json()).then(gems => {
+						console.log("Gems received from LLM:", gems);
 						sessionStorage.setItem("gems", JSON.stringify(gems));
 						window.location.href = 'landing-page.html';
 					}).catch(err => {
