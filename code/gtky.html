@@ -6,6 +6,39 @@
 		<title>Getting to Know You - Hidden Gems</title>
 		<link rel="stylesheet" href="css/quiz.css">
 		<link rel="stylesheet" href="css/minerals.css">
+		<style>
+			.loading-overlay {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100vw;
+				height: 100vh;
+				background: rgba(255, 255, 255, 0.85);
+				display: none;
+				align-items: center;
+				justify-content: center;
+				z-index: 2000;
+			}
+			.spinner {
+				border: 6px solid #ccc;
+				border-top: 6px solid #333;
+				border-radius: 50%;
+				width: 40px;
+				height: 40px;
+				margin: 0 auto;
+				animation: spin 1s linear infinite;
+			}
+			@keyframes spin {
+				0% {
+					transform: rotate(0deg);
+				}
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+		</style>
+
+
 	</head>
 	<body>
 		<canvas id="mica-canvas"></canvas>
@@ -324,36 +357,32 @@
 					const userData = quizState.answers;
 					console.log("Sending this to /generate_gems:", userData);
 
+					const overlay = document.getElementById("loading-overlay");
+					overlay.style.display = "flex";
+					// Show spinner
+
+					// Fallback timeout: show message if it takes too long (15 sec)
+					const timeoutId = setTimeout(() => {
+						alert("This is taking longer than usual. Please check your connection or try again.");
+						overlay.style.display = "none";
+					}, 20000);
+
 					fetch("http://127.0.0.1:5000/generate_gems", {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json"
 						},
 						body: JSON.stringify(userData)
-					}).then(async res => {
-						const contentType = res.headers.get("Content-Type");
-						const isJSON = contentType && contentType.includes("application/json");
-
-						if (!res.ok) {
-							const errorText = await res.text();
-							throw new Error(`Server error (${
-								res.status
-							}): ${errorText}`);
-						}
-
-						if (! isJSON) {
-							const text = await res.text();
-							throw new Error(`Expected JSON but got: ${text}`);
-						}
-
-						return res.json();
-					}).then(gems => {
-						console.log("✅ Gems received from server:", gems);
+					}).then(res => res.json()).then(gems => {
+						clearTimeout(timeoutId); // Clear fallback timer
+						console.log("Gems received from LLM:", gems);
 						sessionStorage.setItem("gems", JSON.stringify(gems));
 						window.location.href = 'landing-page.html';
 					}).catch(err => {
-						console.error("❌ Error in finishQuiz:", err);
-						alert("Something went wrong. Please check console.");
+						clearTimeout(timeoutId); // Clear fallback timer
+						console.error("Error generating gems:", err);
+						alert("Something went wrong. Please try again.");
+						overlay.style.display = "none";
 					});
 				}
 
@@ -404,13 +433,24 @@
 						originInput.value = savedAnswers.origin;
 					
 
+
 					if (savedAnswers.destination) 
 						destinationInput.value = savedAnswers.destination;
 					
+
 
 				}
 			});
 		</script>
 		<script src="components/layout/minerals.js"></script>
+		<div class="loading-overlay" id="loading-overlay">
+			<div class="spinner"></div>
+		</div>
+		<div class="loading-overlay" id="loading-overlay">
+			<div style="text-align:center;">
+				<div class="spinner"></div>
+				<p style="margin-top: 12px; font-size: 16px; color: #333;">Generating your gems...</p>
+			</div>
+		</div>
 	</body>
 </html>

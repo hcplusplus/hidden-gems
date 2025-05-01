@@ -125,19 +125,6 @@
 				transform: rotate(45deg);
 				border-radius: 3px;
 			}
-			.spinner {
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				transform: translate(-50%, -50%);
-				font-size: 16px;
-				color: #666;
-				background: white;
-				padding: 10px 16px;
-				border-radius: 6px;
-				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-				z-index: 999;
-			}
 		</style>
 	</head>
 	<body>
@@ -151,7 +138,6 @@
 				<div>
 					<span style="background:blue"></span>Least Hidden</div>
 			</div>
-			<div class="spinner" id="loading-spinner">Loading hidden gems...</div>
 			<div class="nav-wheel-container">
 				<div class="nav-wheel" id="nav-wheel">
 					<div class="nav-item">
@@ -188,59 +174,48 @@
 
 			function loadGems() {
 				const stored = sessionStorage.getItem("gems");
-
 				if (stored) {
-					const gems = JSON.parse(stored);
-					const validColors = ["red", "purple", "blue"];
-					const filtered = gems.filter(g => validColors.includes(g.color));
-					const finalGems = filtered.length > 0 ? filtered : gems;
-					renderGems(finalGems);
+					renderGems(JSON.parse(stored), true);
 				} else {
-					fetch("gems.json").then(res => res.json()).then(gems => renderGems(gems));
+					fetch("gems.json").then(res => res.json()).then(data => renderGems(data, false));
 				}
 			}
 
 			function renderGems(gems) {
-				const spinner = document.getElementById("loading-spinner");
-				if (spinner) 
-					spinner.style.display = "none";
-				
-
-				const validColors = ["red", "purple", "blue"];
 				const bounds = new maplibregl.LngLatBounds();
 
 				gems.forEach(gem => {
-					const coords = gem.coordinates || gem.coords;
-					if (! coords || coords.length !== 2 || coords.some(isNaN)) 
+					let coords = gem.coords || gem.coordinates;
+
+					if (! coords || coords.length !== 2) 
 						return;
 					
 
-					const lngLat = [
-						coords[1], coords[0]
-					];
-					const color = validColors.includes(gem.color) ? gem.color : "blue";
+					// 🛠 Flip if coordinates look reversed
+					const [a, b] = coords;
+					const lngLat = (Math.abs(a) > 90 && Math.abs(b) <= 90) ? [a, b] : [b, a];
 
 					const el = document.createElement('div');
 					el.className = 'marker';
-					el.style.backgroundColor = color;
+					el.style.backgroundColor = ['red', 'blue', 'purple'].includes(gem.color) ? gem.color : 'blue';
 
 					const popupHTML = `
-          <div style="min-width:200px">
-            <strong>${
-						gem.name || 'Unnamed Gem'
+      <div style="min-width:200px">
+        <strong>${
+						gem.name
 					}</strong><br/>
-            <small>${
-						gem.category || gem.type || 'Unknown type'
+        <small>${
+						gem.category || gem.type
 					}</small><br/>
-            <p style="font-size:13px;margin:6px 0">${
-						gem.description || 'No description provided.'
+        <p style="font-size:13px;margin:6px 0">${
+						gem.description || ''
 					}</p>
-            <button onclick="alert('Exploring ${
-						gem.name || 'this gem'
+        <button onclick="alert('Exploring ${
+						gem.name
 					}!')" style="
-              background:#222;color:white;border:none;padding:6px 12px;
-              border-radius:6px;font-size:14px;cursor:pointer;">Explore Now</button>
-          </div>`;
+          background:#222;color:white;border:none;padding:6px 12px;
+          border-radius:6px;font-size:14px;cursor:pointer;">Explore Now</button>
+      </div>`;
 
 					new maplibregl.Marker(el).setLngLat(lngLat).setPopup(new maplibregl.Popup().setHTML(popupHTML)).addTo(map);
 
@@ -251,6 +226,7 @@
 					map.fitBounds(bounds, {padding: 40});
 				}
 			}
+
 
 			loadGems();
 		</script>
