@@ -401,16 +401,16 @@
                 selectedCostInput.value = '';
                 crowdednessSlider.value = 2;
                 crowdednessValue.value = 2;
-                
-                // In real app, redirect to a success page or back to home
-                // window.location.href = 'index.html';
             });
         });
     </script>
 	<script>
 		document.getElementById("back-button").addEventListener("click", function () {
-			window.location.href = "landing-page.html";
-		});
+      const confirmExit = confirm("Are you sure you want to exit? Your changes will not be saved.");
+      if (confirmExit) {
+        window.location.href = "landing-page.html";
+      }
+    });
 	</script>
 </body>
 </html>
