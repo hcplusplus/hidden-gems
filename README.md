@@ -10,7 +10,6 @@
 ```bash
     ollama pull mistral:7b
 ```
-**Optional**
 
 ## Usage
 
@@ -18,11 +17,13 @@ Before running the webpage, make sure to open your terminal and run this command
 ```bash
     python3 code/scripts/hidden_gems_generator_local.py
 ```
-or /n
-To use OpenAI instead of Ollama:
-```bash
+
+**Alternative**
+: To use OpenAI instead of Ollama
+```ssh
     export OPENAI_API_KEY = <Your OpenAI API Key>
 ```
+then
 ```bash
     python3 code/scripts/hidden_gems_generator.py
 ```
