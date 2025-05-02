@@ -132,11 +132,17 @@
 			<div id="map"></div>
 			<div class="legend">
 				<div>
-					<span style="background:red"></span>Most Hidden</div>
+					<img src="icons/gem-red.svg" class="legend-icon" alt="Most Hidden Gem"/>
+					Most Hidden
+				</div>
 				<div>
-					<span style="background:purple"></span>Moderately Hidden</div>
+					<img src="icons/gem-purple.svg" class="legend-icon" alt="Moderately Hidden Gem"/>
+					Moderately Hidden
+				</div>
 				<div>
-					<span style="background:blue"></span>Least Hidden</div>
+					<img src="icons/gem-blue.svg" class="legend-icon" alt="Least Hidden Gem"/>
+					Least Hidden
+				</div>
 			</div>
 			<div class="nav-wheel-container">
 				<div class="nav-wheel" id="nav-wheel">
@@ -257,10 +263,15 @@
 					const [a, b] = coords;
 					const lngLat = (Math.abs(a) > 90 && Math.abs(b) <= 90) ? [a, b] : [b, a];
 
-					const el = document.createElement('div');
-					el.className = 'marker';
-					el.style.backgroundColor = ['red', 'blue', 'purple'].includes(gem.color) ? gem.color : 'blue';
-					el.addEventListener('click', () => renderRoutes(lngLat));
+					const el = document.createElement('img');
+					el.src = {
+						red: 'icons/gem-red.svg',
+						purple: 'icons/gem-purple.svg',
+						blue: 'icons/gem-blue.svg'
+					}[gem.color] || 'icons/gem-blue.svg';
+					el.style.width = '28px';
+					el.style.height = '28px';
+					el.style.cursor = 'pointer';
 
 					const popupHTML = `
 				  <div style="min-width:200px">

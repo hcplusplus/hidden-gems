@@ -18,7 +18,7 @@ Before running the webpage, make sure to open your terminal and run this command
 ```bash
     python3 code/scripts/hidden_gems_generator_local.py
 ```
-or
+or /n
 To use OpenAI instead of Ollama:
 ```bash
     export OPENAI_API_KEY = <Your OpenAI API Key>
