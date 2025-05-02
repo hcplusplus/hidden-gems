@@ -5,7 +5,7 @@ import json
 import re
 
 app = Flask(__name__)
-CORS(app)  # ✅ Allow CORS from frontend
+CORS(app)  # Allow CORS from frontend
 
 OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
 OLLAMA_MODEL = "mistral:7b"

@@ -361,11 +361,11 @@
 					overlay.style.display = "flex";
 					// Show spinner
 
-					// Fallback timeout: show message if it takes too long (15 sec)
+					// Fallback timeout: show message if it takes too long (30 sec)
 					const timeoutId = setTimeout(() => {
 						alert("This is taking longer than usual. Please check your connection or try again.");
 						overlay.style.display = "none";
-					}, 20000);
+					}, 30000);
 
 					fetch("http://127.0.0.1:5000/generate_gems", {
 						method: "POST",
