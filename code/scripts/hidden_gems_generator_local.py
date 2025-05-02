@@ -29,6 +29,16 @@ Preferences:
 - Time Available: {data.get('time', 'Any')}
 - Max Detour: {data.get('maxDetour', 'Any')} miles
 
+Each gem must include a 'rarity' field that indicates how hidden the gem is:
+- "most hidden": very few people know about it
+- "moderately hidden": locals know it but it's not touristy
+- "least hidden": known by many but still underrated
+
+Map each rarity level to a color:
+- "most hidden" → red
+- "moderately hidden" → purple
+- "least hidden" → blue
+
 Return the output in this exact JSON format:
 [
   {{
@@ -36,6 +46,7 @@ Return the output in this exact JSON format:
     "coordinates": [LATITUDE, LONGITUDE],
     "category": "nature|food|scenic|historic|...",
     "description": "Why this place is special in one sentence",
+    "rarity": "most hidden|moderately hidden|least hidden",
     "color": "red|blue|purple",
     "review": "User review of the place in one sentence",
     "time": "The total time it takes to go from the origin to the destination with the gem added in route, in number of minutes only"
