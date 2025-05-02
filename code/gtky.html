@@ -4,44 +4,12 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Getting to Know You - Hidden Gems</title>
+		<link rel="stylesheet" href="css/main.css">
 		<link rel="stylesheet" href="css/quiz.css">
-		<link rel="stylesheet" href="css/minerals.css">
-		<style>
-			.loading-overlay {
-				position: fixed;
-				top: 0;
-				left: 0;
-				width: 100vw;
-				height: 100vh;
-				background: rgba(255, 255, 255, 0.85);
-				display: none;
-				align-items: center;
-				justify-content: center;
-				z-index: 2000;
-			}
-			.spinner {
-				border: 6px solid #ccc;
-				border-top: 6px solid #333;
-				border-radius: 50%;
-				width: 40px;
-				height: 40px;
-				margin: 0 auto;
-				animation: spin 1s linear infinite;
-			}
-			@keyframes spin {
-				0% {
-					transform: rotate(0deg);
-				}
-				100% {
-					transform: rotate(360deg);
-				}
-			}
-		</style>
 
 
 	</head>
 	<body>
-		<canvas id="mica-canvas"></canvas>
 		<div
 			class="quiz-container">
 			<!-- Quiz Header -->
@@ -330,7 +298,6 @@
 							return isValid;
 
 						case 2:
-							// ✅ FIXED: pull from correct step (#step-4)
 							const activityButtons = document.querySelectorAll('#step-4 .option-button.selected');
 							quizState.answers.activities = Array.from(activityButtons).filter(btn => !['restrooms', 'parking', 'gas'].includes(btn.getAttribute('data-value'))).map(btn => btn.getAttribute('data-value'));
 
@@ -378,8 +345,8 @@
 							geocode(userData.destination)
 						]);
 
-						console.log("📍 originCoords:", originCoords);
-						console.log("📍 destinationCoords:", destinationCoords);
+						console.log("originCoords:", originCoords);
+						console.log("destinationCoords:", destinationCoords);
 
 						if (!originCoords || !destinationCoords) 
 							throw new Error("Geocoding failed");

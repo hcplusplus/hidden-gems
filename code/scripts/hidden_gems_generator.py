@@ -7,14 +7,14 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")  # Make sure this is set!
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") 
 
 def build_prompt(data):
     def fmt(field):
         return ", ".join(data.get(field, [])) or "None"
 
     return f"""
-You are a local travel expert. Recommend 5 hidden gems based on the following user preferences.
+You are a local travel expert. Recommend 5 hidden gems (underrated places) that are not well known but worth exploring based on the following user preferences.
 
 Trip Route:
 - From: {data.get('origin', 'Unknown')}
@@ -35,10 +35,13 @@ Return the output in this exact JSON format:
     "coordinates": [LATITUDE, LONGITUDE],
     "category": "nature|food|scenic|historic|...",
     "description": "Why this place is special",
-    "color": "red|blue|purple"
+    "color": "red|blue|purple",
+    "review": "User review or feedback about the gem",
+    "time": "The total time it takes to go from the origin to the destination with the gem added in route"
   }}
 ]
 """
+
 
 @app.route("/generate_gems", methods=["POST"])
 def generate_gems():

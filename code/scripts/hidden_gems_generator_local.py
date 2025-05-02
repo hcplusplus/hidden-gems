@@ -15,7 +15,7 @@ def build_prompt(data):
         return ", ".join(data.get(field, [])) or "None"
 
     return f"""
-You are a local travel expert. Recommend 5 hidden gems based on the following user preferences.
+You are a local travel expert. Recommend 5 hidden gems (underrated places) that are not well known but worth exploring based on the following user preferences.
 
 Trip Route:
 - From: {data.get('origin', 'Unknown')}
@@ -35,11 +35,14 @@ Return the output in this exact JSON format:
     "name": "Hidden Gem Name",
     "coordinates": [LATITUDE, LONGITUDE],
     "category": "nature|food|scenic|historic|...",
-    "description": "Why this place is special",
-    "color": "red|blue|purple"
+    "description": "Why this place is special in one sentence",
+    "color": "red|blue|purple",
+    "review": "User review of the place in one sentence",
+    "time": "The total time it takes to go from the origin to the destination with the gem added in route, in number of minutes only"
   }}
 ]
 """
+
     
 @app.route("/generate_gems", methods=["POST"])
 def generate_gems():
@@ -47,12 +50,16 @@ def generate_gems():
     prompt = build_prompt(data)
     print("🔍 Prompt sent to LLM:\n", prompt)
 
-    raw = ""  # ✅ avoid UnboundLocalError
+    raw = ""  
     try:
         response = requests.post(OLLAMA_URL, json={
             "model": OLLAMA_MODEL,
             "prompt": prompt,
-            "stream": False
+            "stream": False,
+            "options": {
+                "temperature": 0.7,
+                "max_tokens": 5000
+            }
         })
 
         print("📡 Response status code:", response.status_code)
@@ -68,12 +75,7 @@ def generate_gems():
         json_string = match.group(0)
         gems = json.loads(json_string)
 
-        return jsonify(gems)  # ✅ THIS LINE WAS MISSING
-
-    except Exception as e:
-        print("❌ Error during LLM generation:", e)
-        return jsonify({"error": "LLM failed", "raw": raw}), 500
-        
+        return jsonify(gems)  
 
     except Exception as e:
         print("❌ Error during LLM generation:", e)

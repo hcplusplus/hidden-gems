@@ -180,6 +180,7 @@
 					return;
 				
 
+
 				const baseRoute = {
 					type: 'Feature',
 					geometry: {
@@ -252,6 +253,7 @@
 						return;
 					
 
+
 					const [a, b] = coords;
 					const lngLat = (Math.abs(a) > 90 && Math.abs(b) <= 90) ? [a, b] : [b, a];
 
@@ -271,18 +273,18 @@
 					<p style="font-size:13px;margin:6px 0">${
 						gem.description || ''
 					}</p>
-					<button onclick="window.location.href='trip.html'" style="background:#222;color:white;border:none;padding:6px 12px;border-radius:6px;font-size:14px;cursor:pointer;">Explore Now</button>
+					<button onclick="window.location.href='trip-select.html'" style="background:#222;color:white;border:none;padding:6px 12px;border-radius:6px;font-size:14px;cursor:pointer;">Explore Now</button>
 				  </div>`;
 
 					new maplibregl.Marker(el).setLngLat(lngLat).setPopup(new maplibregl.Popup().setHTML(popupHTML)).addTo(map);
 					bounds.extend(lngLat);
 				});
-
 				if (! bounds.isEmpty()) 
 					map.fitBounds(bounds, {padding: 40});
 				
-			}
 
+
+			}
 			map.on('load', loadGems);
 		</script>
 	</body>
