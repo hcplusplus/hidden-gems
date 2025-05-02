@@ -252,6 +252,19 @@
 				<button class="nav-button next-button" id="next-button">Next</button>
 			</div>
 		</div>
+		<script>
+			const GEOCODE_API = 'https://api.opencagedata.com/geocode/v1/json';
+			const GEOCODE_KEY = 'fa00c10bb490481abc0614f3d6c9af3b';
+
+			async function geocode(location) {
+				const res = await fetch(`${GEOCODE_API}?q=${
+					encodeURIComponent(location)
+				}&key=${GEOCODE_KEY}`);
+				const data = await res.json();
+				const coords = data.results[0] ?. geometry;
+				return coords ? [coords.lng, coords.lat] : null;
+			}
+		</script>
 
 		<script>
 			document.addEventListener('DOMContentLoaded', function () {
@@ -352,38 +365,50 @@
 				function saveAnswers() {
 					sessionStorage.setItem('userPreferences', JSON.stringify(quizState.answers));
 				}
+				async function finishQuiz() {
+					console.log("🎯 Running finishQuiz");
 
-				function finishQuiz() {
 					const userData = quizState.answers;
-					console.log("Sending this to /generate_gems:", userData);
-
 					const overlay = document.getElementById("loading-overlay");
 					overlay.style.display = "flex";
-					// Show spinner
 
-					// Fallback timeout: show message if it takes too long (30 sec)
-					const timeoutId = setTimeout(() => {
-						alert("This is taking longer than usual. Please check your connection or try again.");
-						overlay.style.display = "none";
-					}, 30000);
+					try {
+						const [originCoords, destinationCoords] = await Promise.all([
+							geocode(userData.origin),
+							geocode(userData.destination)
+						]);
 
-					fetch("http://127.0.0.1:5000/generate_gems", {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json"
-						},
-						body: JSON.stringify(userData)
-					}).then(res => res.json()).then(gems => {
-						clearTimeout(timeoutId); // Clear fallback timer
-						console.log("Gems received from LLM:", gems);
+						console.log("📍 originCoords:", originCoords);
+						console.log("📍 destinationCoords:", destinationCoords);
+
+						if (!originCoords || !destinationCoords) 
+							throw new Error("Geocoding failed");
+						
+
+
+						userData.originCoords = originCoords;
+						userData.destinationCoords = destinationCoords;
+
+						sessionStorage.setItem("originCoords", JSON.stringify(originCoords));
+						sessionStorage.setItem("destinationCoords", JSON.stringify(destinationCoords));
+
+						const res = await fetch("http://127.0.0.1:5000/generate_gems", {
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json"
+							},
+							body: JSON.stringify(userData)
+						});
+
+						const gems = await res.json();
 						sessionStorage.setItem("gems", JSON.stringify(gems));
+						sessionStorage.setItem("userPreferences", JSON.stringify(userData));
 						window.location.href = 'landing-page.html';
-					}).catch(err => {
-						clearTimeout(timeoutId); // Clear fallback timer
+					} catch (err) {
 						console.error("Error generating gems:", err);
 						alert("Something went wrong. Please try again.");
 						overlay.style.display = "none";
-					});
+					}
 				}
 
 
@@ -444,13 +469,10 @@
 		</script>
 		<script src="components/layout/minerals.js"></script>
 		<div class="loading-overlay" id="loading-overlay">
-			<div class="spinner"></div>
-		</div>
-		<div class="loading-overlay" id="loading-overlay">
 			<div style="text-align:center;">
 				<div class="spinner"></div>
 				<p style="margin-top: 12px; font-size: 16px; color: #333;">Generating your gems...</p>
 			</div>
 		</div>
 	</body>
-</html>
+</html></body></html>

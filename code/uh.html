@@ -261,18 +261,18 @@
 					el.addEventListener('click', () => renderRoutes(lngLat));
 
 					const popupHTML = `
-				  <div style="min-width:200px">
-					<strong>${
+          <div style="min-width:200px">
+            <strong>${
 						gem.name
 					}</strong><br/>
-					<small>${
+            <small>${
 						gem.category || gem.type
 					}</small><br/>
-					<p style="font-size:13px;margin:6px 0">${
+            <p style="font-size:13px;margin:6px 0">${
 						gem.description || ''
 					}</p>
-					<button onclick="window.location.href='trip.html'" style="background:#222;color:white;border:none;padding:6px 12px;border-radius:6px;font-size:14px;cursor:pointer;">Explore Now</button>
-				  </div>`;
+            <button onclick="window.location.href='trip.html'" style="background:#222;color:white;border:none;padding:6px 12px;border-radius:6px;font-size:14px;cursor:pointer;">Explore Now</button>
+          </div>`;
 
 					new maplibregl.Marker(el).setLngLat(lngLat).setPopup(new maplibregl.Popup().setHTML(popupHTML)).addTo(map);
 					bounds.extend(lngLat);
