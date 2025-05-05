@@ -303,6 +303,64 @@
 
 			}
 			map.on('load', loadGems);
+			function showWelcomeMessage() {
+				const welcomeOverlay = document.createElement('div');
+				welcomeOverlay.style.position = 'fixed';
+				welcomeOverlay.style.top = '0';
+				welcomeOverlay.style.left = '0';
+				welcomeOverlay.style.right = '0';
+				welcomeOverlay.style.bottom = '0';
+				welcomeOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+				welcomeOverlay.style.display = 'flex';
+				welcomeOverlay.style.flexDirection = 'column';
+				welcomeOverlay.style.justifyContent = 'center';
+				welcomeOverlay.style.alignItems = 'center';
+				welcomeOverlay.style.zIndex = '2000';
+				welcomeOverlay.style.transition = 'opacity 0.5s';
+
+				const welcomeMessage = document.createElement('div');
+				welcomeMessage.style.color = 'white';
+				welcomeMessage.style.fontSize = '28px';
+				welcomeMessage.style.fontWeight = 'bold';
+				welcomeMessage.style.marginBottom = '20px';
+				welcomeMessage.style.textAlign = 'center';
+				welcomeMessage.style.padding = '0 30px';
+				welcomeMessage.innerText = 'Discover Hidden Gems in Northern California';
+
+				const welcomeSubMessage = document.createElement('div');
+				welcomeSubMessage.style.color = 'white';
+				welcomeSubMessage.style.fontSize = '16px';
+				welcomeSubMessage.style.marginBottom = '30px';
+				welcomeSubMessage.style.textAlign = 'center';
+				welcomeSubMessage.style.padding = '0 30px';
+				welcomeSubMessage.innerText = 'Find off-the-beaten-path adventures for seasoned travelers';
+
+				const startButton = document.createElement('button');
+				startButton.style.padding = '12px 40px';
+				startButton.style.backgroundColor = 'white';
+				startButton.style.color = 'black';
+				startButton.style.border = 'none';
+				startButton.style.borderRadius = '24px';
+				startButton.style.fontSize = '18px';
+				startButton.style.cursor = 'pointer';
+				startButton.innerText = 'Get Started';
+
+				welcomeOverlay.appendChild(welcomeMessage);
+				welcomeOverlay.appendChild(welcomeSubMessage);
+				welcomeOverlay.appendChild(startButton);
+
+				document.body.appendChild(welcomeOverlay);
+
+				startButton.addEventListener('click', () => {
+					welcomeOverlay.style.opacity = '0';
+					setTimeout(() => {
+						welcomeOverlay.remove();
+					}, 500);
+				});
+			}
+
+			// Show welcome message after a short delay
+			setTimeout(showWelcomeMessage, 500);
 		</script>
 	</body>
 </html>
