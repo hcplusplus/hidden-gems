@@ -1,273 +1,273 @@
 /* Windows 95 Style CSS */
 body {
-    background-color: #008080;
-    font-family: "MS Sans Serif", Arial, sans-serif;
-    font-size: 12px;
-    margin: 20px;
-    color: #000000;
-  }
-  
-  .window {
-    background-color: #c0c0c0;
-    border: 2px solid;
-    border-top-color: #dfdfdf;
-    border-left-color: #dfdfdf;
-    border-right-color: #000000;
-    border-bottom-color: #000000;
-    padding: 2px;
-    margin: 0 auto;
-    max-width: 800px;
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
-  }
-  
-  .title-bar {
-    background: linear-gradient(90deg, #000080, #1084d0);
-    padding: 3px 2px 3px 3px;
-    margin-bottom: 2px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .title-bar-text {
-    color: white;
-    font-weight: bold;
-    font-size: 12px;
-  }
-  
-  .title-bar-controls {
-    display: flex;
-  }
-  
-  .title-bar-controls button {
-    width: 16px;
-    height: 14px;
-    background-color: #c0c0c0;
-    margin-left: 2px;
-    border: 1px solid;
-    border-top-color: white;
-    border-left-color: white;
-    border-right-color: black;
-    border-bottom-color: black;
-    padding: 0;
-  }
-  
-  .window-body {
-    background-color: #c0c0c0;
-    padding: 10px;
-  }
-  
-  /* Menu Styling */
-  .menu ul {
-    list-style-type: none;
-    background-color: #c0c0c0;
-    padding: 2px;
-    margin: 5px 0;
-    display: flex;
-    justify-content: center;
-    border: 2px solid;
-    border-top-color: #dfdfdf;
-    border-left-color: #dfdfdf;
-    border-right-color: #000000;
-    border-bottom-color: #000000;
-  }
-  
-  .menu li {
-    margin: 0 10px;
-  }
-  
-  .menu a {
-    color: #000000;
-    text-decoration: none;
-    font-weight: bold;
-    padding: 5px 10px;
-    border: 1px solid;
-    border-top-color: white;
-    border-left-color: white;
-    border-right-color: black;
-    border-bottom-color: black;
-    background-color: #c0c0c0;
-    display: inline-block;
-  }
-  
-  .menu a:hover {
-    background-color: #a9a9a9;
-  }
-  
-  .menu a:active {
-    border-top-color: black;
-    border-left-color: black;
-    border-right-color: white;
-    border-bottom-color: white;
-  }
-  
-  /* Headers */
-  h1 {
-    font-size: 16px;
-    color: navy;
-    text-align: center;
-    margin-top: 5px;
-    margin-bottom: 10px;
-  }
-  
-  h2 {
-    font-size: 14px;
-    color: navy;
-  }
-  
-  /* Links */
-  a {
-    color: #0000FF;
-    text-decoration: underline;
-  }
-  
-  a:visited {
-    color: #800080;
-  }
-  
-  a:hover {
-    color: #FF0000;
-  }
-  
-  /* Form Elements */
-  input[type="button"], input[type="reset"], input[type="submit"] {
-    background-color: #c0c0c0;
-    border: 2px solid;
-    border-top-color: white;
-    border-left-color: white;
-    border-right-color: black;
-    border-bottom-color: black;
-    padding: 3px 8px;
-    font-family: "MS Sans Serif", Arial, sans-serif;
-    font-size: 12px;
-  }
-  
-  input[type="text"], select {
-    border: 2px solid;
-    border-top-color: #808080;
-    border-left-color: #808080;
-    border-right-color: white;
-    border-bottom-color: white;
-    background-color: white;
-    padding: 2px;
-    font-family: "MS Sans Serif", Arial, sans-serif;
-    font-size: 12px;
-  }
-  
-  /* Special Elements */
-  .counter {
-    text-align: center;
-    margin: 10px 0;
-  }
-  
-  .float-right {
-    float: right;
-    margin-left: 10px;
-    margin-bottom: 10px;
-    border: 1px solid black;
-  }
-  
-  .main-content {
-    clear: both;
-    margin: 20px 0;
-  }
-  
-  .footer {
-    font-size: 10px;
-    text-align: center;
-    margin-top: 20px;
-    color: #404040;
-  }
-  
-  hr {
-    border: 1px solid #808080;
-    margin: 15px 0;
-  }
-  
-  /* Retro Animations */
-  marquee {
-    background-color: yellow;
-    color: #FF0000;
-    font-weight: bold;
-    margin: 10px 0;
-    padding: 5px;
-    border: 1px solid black;
-  }
-  
-  blink {
-    animation: blinker 1s linear infinite;
-    background: linear-gradient(in hsl longer hue 45deg, red 0 100%);
-    border-radius: 5px;
+  background-color: #008080;
+  font-family: "MS Sans Serif", Arial, sans-serif;
+  font-size: 12px;
+  margin: 20px;
+  color: #000000;
+}
 
+.window {
+  background-color: #c0c0c0;
+  border: 2px solid;
+  border-top-color: #dfdfdf;
+  border-left-color: #dfdfdf;
+  border-right-color: #000000;
+  border-bottom-color: #000000;
+  padding: 2px;
+  margin: 0 auto;
+  max-width: 800px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+.title-bar {
+  background: linear-gradient(90deg, #000080, #1084d0);
+  padding: 3px 2px 3px 3px;
+  margin-bottom: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title-bar-text {
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.title-bar-controls {
+  display: flex;
+}
+
+.title-bar-controls button {
+  width: 16px;
+  height: 14px;
+  background-color: #c0c0c0;
+  margin-left: 2px;
+  border: 1px solid;
+  border-top-color: white;
+  border-left-color: white;
+  border-right-color: black;
+  border-bottom-color: black;
+  padding: 0;
+}
+
+.window-body {
+  background-color: #c0c0c0;
+  padding: 10px;
+}
+
+/* Menu Styling */
+.menu ul {
+  list-style-type: none;
+  background-color: #c0c0c0;
+  padding: 2px;
+  margin: 5px 0;
+  display: flex;
+  justify-content: center;
+  border: 2px solid;
+  border-top-color: #dfdfdf;
+  border-left-color: #dfdfdf;
+  border-right-color: #000000;
+  border-bottom-color: #000000;
+}
+
+.menu li {
+  margin: 0 10px;
+}
+
+.menu a {
+  color: #000000;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px 10px;
+  border: 1px solid;
+  border-top-color: white;
+  border-left-color: white;
+  border-right-color: black;
+  border-bottom-color: black;
+  background-color: #c0c0c0;
+  display: inline-block;
+}
+
+.menu a:hover {
+  background-color: #a9a9a9;
+}
+
+.menu a:active {
+  border-top-color: black;
+  border-left-color: black;
+  border-right-color: white;
+  border-bottom-color: white;
+}
+
+/* Headers */
+h1 {
+  font-size: 16px;
+  color: navy;
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+h2 {
+  font-size: 14px;
+  color: navy;
+}
+
+/* Links */
+a {
+  color: #0000FF;
+  text-decoration: underline;
+}
+
+a:visited {
+  color: #800080;
+}
+
+a:hover {
+  color: #FF0000;
+}
+
+/* Form Elements */
+input[type="button"], input[type="reset"], input[type="submit"] {
+  background-color: #c0c0c0;
+  border: 2px solid;
+  border-top-color: white;
+  border-left-color: white;
+  border-right-color: black;
+  border-bottom-color: black;
+  padding: 3px 8px;
+  font-family: "MS Sans Serif", Arial, sans-serif;
+  font-size: 12px;
+}
+
+input[type="text"], select {
+  border: 2px solid;
+  border-top-color: #808080;
+  border-left-color: #808080;
+  border-right-color: white;
+  border-bottom-color: white;
+  background-color: white;
+  padding: 2px;
+  font-family: "MS Sans Serif", Arial, sans-serif;
+  font-size: 12px;
+}
+
+/* Special Elements */
+.counter {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.float-right {
+  float: right;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  border: 1px solid black;
+}
+
+.main-content {
+  clear: both;
+  margin: 20px 0;
+}
+
+.footer {
+  font-size: 10px;
+  text-align: center;
+  margin-top: 20px;
+  color: #404040;
+}
+
+hr {
+  border: 1px solid #808080;
+  margin: 15px 0;
+}
+
+/* Retro Animations */
+marquee {
+  background-color: yellow;
+  color: #FF0000;
+  font-weight: bold;
+  margin: 10px 0;
+  padding: 5px;
+  border: 1px solid black;
+}
+
+blink {
+  animation: blinker 1s linear infinite;
+  background: linear-gradient(in hsl longer hue 45deg, red 0 100%);
+  border-radius: 5px;
+
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
   }
-  
-  @keyframes blinker {
-    50% {
-      opacity: 0;
-    }
-  }
-  
-  /* Map Page Specific */
-  .map-container {
-    margin: 10px 0;
-    text-align: center;
-  }
-  
-  .loading-text {
-    margin: 10px 0;
-    font-weight: bold;
-    color: #FF0000;
-  }
-  
-  .static-map {
-    border: 3px double #000000;
-    padding: 5px;
-    background-color: #FFFFCC;
-    margin: 10px auto;
-    display: inline-block;
-  }
-  
-  .legend-table {
-    margin: 10px auto;
-    background-color: #FFFFFF;
-    border-collapse: collapse;
-    font-size: 11px;
-    width: 200px;
-  }
-  
-  .restaurant-details {
-    margin: 10px auto;
-    max-width: 300px;
-  }
-  
-  /* Places Page Specific */
-  .places-list {
-    margin: 10px 0;
-  }
-  
-  .search-form {
-    margin: 20px 0;
-    padding: 10px;
-    border: 1px solid #808080;
-    background-color: #EEEEEE;
-  }
-  
-  .sign-guestbook {
-    text-align: center;
-    margin: 15px 0;
-    font-weight: bold;
-  }
-  
-  /* About Page Specific */
-  .about-content {
-    margin: 10px 0;
-  }
-  
-  .about-content table {
-    margin: 10px 0;
-    border-collapse: collapse;
-  }
-  
-  .about-content ul {
-    margin-left: 20px;
-  }
+}
+
+/* Map Page Specific */
+.map-container {
+  margin: 10px 0;
+  text-align: center;
+}
+
+.loading-text {
+  margin: 10px 0;
+  font-weight: bold;
+  color: #FF0000;
+}
+
+.static-map {
+  border: 3px double #000000;
+  padding: 5px;
+  background-color: #FFFFCC;
+  margin: 10px auto;
+  display: inline-block;
+}
+
+.legend-table {
+  margin: 10px auto;
+  background-color: #FFFFFF;
+  border-collapse: collapse;
+  font-size: 11px;
+  width: 200px;
+}
+
+.restaurant-details {
+  margin: 10px auto;
+  max-width: 300px;
+}
+
+/* Places Page Specific */
+.places-list {
+  margin: 10px 0;
+}
+
+.search-form {
+  margin: 20px 0;
+  padding: 10px;
+  border: 1px solid #808080;
+  background-color: #EEEEEE;
+}
+
+.sign-guestbook {
+  text-align: center;
+  margin: 15px 0;
+  font-weight: bold;
+}
+
+/* About Page Specific */
+.about-content {
+  margin: 10px 0;
+}
+
+.about-content table {
+  margin: 10px 0;
+  border-collapse: collapse;
+}
+
+.about-content ul {
+  margin-left: 20px;
+}

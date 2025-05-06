@@ -148,7 +148,8 @@ HiddenGems.map = {
         gems.forEach((gem, index) => {
             // Create marker element
             const markerEl = document.createElement('div');
-            markerEl.className = `marker ${gem.category}`;
+            markerEl.className = `marker gem-tier-${gem.tier}`;
+
             if (index === this.activeGemIndex) {
                 markerEl.classList.add('active');
             }
@@ -220,7 +221,8 @@ HiddenGems.map = {
                 'visibility': visibility
             },
             'paint': {
-                'line-color': HiddenGems.utils.getCategoryColor(gem.category),
+                'line-color': getComputedStyle(document.documentElement)
+               .getPropertyValue(`--gem-${gem.tier}`).trim(),
                 'line-width': 3,
                 'line-dasharray': [2, 2]
             }

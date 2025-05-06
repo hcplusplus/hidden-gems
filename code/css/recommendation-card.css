@@ -1,0 +1,22 @@
+.recommendation-card {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  /* Accent the header border to match tier */
+  .recommendation-card .recommendation-header {
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid var(--gem-common); /* default */
+  }
+  
+  .recommendation-card.hidden .recommendation-header  { border-bottom-color: var(--gem-hidden);  }
+  .recommendation-card.common .recommendation-header  { border-bottom-color: var(--gem-common);  }
+  .recommendation-card.popular .recommendation-header { border-bottom-color: var(--gem-popular); }
+  

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<title>Hidden Gems — Recommendations</title>
+
+		<!-- Global styles -->
+		<link
+		rel="stylesheet" href="css/main.css">
+		<!-- Recommendation card styles -->
+		<link rel="stylesheet" href="css/recommendation-card.css">
+	</head>
+	<body>
+		<div
+			class="page-container">
+			<!-- Page header with back button -->
+			<header class="page-header">
+				<button class="back-button" onclick="history.back()">←</button>
+				<div class="page-title">Your Recommended Gems</div>
+			</header>
+
+			<!-- Recommendations listing -->
+			<div class="section">
+				<div
+					class="cards-container" id="recommendations-container"><!-- recommendation-card.js will append cards here -->
+				</div>
+			</div>
+		</div>
+
+		<!-- Mock data & card-renderer -->
+		<script src="js/mock-data.js"></script>
+		<script src="js/recommendation-card.js"></script>
+	</body>
+</html>

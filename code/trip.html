@@ -1,180 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Northern California Hidden Gems</title>
-    
-    <!-- MapLibre CSS -->
-    <link href="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.css" rel="stylesheet" />
-    <link href="components/map/css/styles.css" rel="stylesheet" />
-</head>
-<body>
-    <div class="phone-frame">
-        <!-- App header with filters selection -->
-        <div class="app-header">
-            <button class="filter-button active">Filter1</button>
-            <button class="filter-button">Filter2</button>
-            <button class="filter-button">Filter3</button>
-            <button class="filter-button">Filter4</button>
-        </div>
-        
-        <!-- Map container -->
-        <div id="map"></div>
-        
-        <!-- Itinerary button -->
-        <button class="view-itinerary-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
-            View Itinerary
-        </button>
-        
-        <!-- Achievements button -->
-        <button class="achievements-button">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
-            Achievements
-        </button>
-        
-        <!-- Swipe indicators -->
-        <div class="swipe-indicator">
-            <!-- Will be populated by JavaScript -->
-        </div>
-        
-        <!-- Hidden gem cards container -->
-        <div class="cards-container">
-            <!-- Cards will be generated dynamically -->
-        </div>
-        
-        <!-- Bottom navigation -->
-        <div class="bottom-nav">
-            <div class="bottom-nav-item">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                Explore
-            </div>
-            <div class="bottom-nav-item active">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                Map
-            </div>
-            <div class="bottom-nav-item">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                Add
-            </div>
-            <div class="bottom-nav-item" id="profile-button">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                Profile
-            </div>
-        </div>
-        
-        <!-- User Preferences Overlay -->
-        <div class="preferences-overlay">
-            <div class="preferences-panel">
-                <div class="preferences-header">
-                    <div class="preferences-title">Your Preferences</div>
-                    <button class="close-preferences">×</button>
-                </div>
-                
-                <div class="preferences-section">
-                    <div class="preferences-section-title">Favorite Activities</div>
-                    <div class="preferences-option-group">
-                        <input type="checkbox" id="hiking" class="preference-checkbox" data-preference="activities" value="hiking">
-                        <label for="hiking" class="preference-label">Hiking</label>
-                        
-                        <input type="checkbox" id="wine-tasting" class="preference-checkbox" data-preference="activities" value="wine-tasting">
-                        <label for="wine-tasting" class="preference-label">Wine Tasting</label>
-                        
-                        <input type="checkbox" id="photography" class="preference-checkbox" data-preference="activities" value="photography">
-                        <label for="photography" class="preference-label">Photography</label>
-                        
-                        <input type="checkbox" id="history" class="preference-checkbox" data-preference="activities" value="history">
-                        <label for="history" class="preference-label">History</label>
-                        
-                        <input type="checkbox" id="food" class="preference-checkbox" data-preference="activities" value="food">
-                        <label for="food" class="preference-label">Food & Dining</label>
-                        
-                        <input type="checkbox" id="views" class="preference-checkbox" data-preference="activities" value="views">
-                        <label for="views" class="preference-label">Scenic Views</label>
-                        
-                        <input type="checkbox" id="swimming" class="preference-checkbox" data-preference="activities" value="swimming">
-                        <label for="swimming" class="preference-label">Swimming</label>
-                    </div>
-                </div>
-                
-                <div class="preferences-section">
-                    <div class="preferences-section-title">Accessibility Needs</div>
-                    <div class="preferences-option-group">
-                        <input type="checkbox" id="wheelchair" class="preference-checkbox" data-preference="accessibility" value="wheelchair">
-                        <label for="wheelchair" class="preference-label">Wheelchair Access</label>
-                        
-                        <input type="checkbox" id="easy-trails" class="preference-checkbox" data-preference="accessibility" value="easy-trails">
-                        <label for="easy-trails" class="preference-label">Easy Trails Only</label>
-                        
-                        <input type="checkbox" id="stroller" class="preference-checkbox" data-preference="accessibility" value="stroller">
-                        <label for="stroller" class="preference-label">Stroller Friendly</label>
-                    </div>
-                </div>
-                
-                <div class="preferences-section">
-                    <div class="preferences-section-title">Maximum Detour Time</div>
-                    <div class="preference-slider-container">
-                        <div class="preference-slider-header">
-                            <span>15 min</span>
-                            <span id="detour-time-value">30 min</span>
-                            <span>60+ min</span>
-                        </div>
-                        <input type="range" min="15" max="60" value="30" class="preference-slider" id="detour-time-slider" data-preference="detour-time">
-                    </div>
-                </div>
-                
-                <div class="preferences-section">
-                    <div class="preferences-section-title">Popularity Preference</div>
-                    <div class="preference-slider-container">
-                        <div class="preference-slider-header">
-                            <span>Hidden Gems</span>
-                            <span id="popularity-value">Balanced</span>
-                            <span>Popular Spots</span>
-                        </div>
-                        <input type="range" min="1" max="5" value="3" class="preference-slider" id="popularity-slider" data-preference="popularity">
-                    </div>
-                </div>
-                
-                <button class="save-preferences-btn">Save Preferences</button>
-            </div>
-        </div>
-        
-        <!-- Achievements Panel -->
-        <div class="preferences-overlay" id="achievements-overlay">
-            <div class="achievements-panel">
-                <div class="achievements-header">
-                    <div class="achievements-title">Your Achievements</div>
-                    <button class="close-achievements">×</button>
-                </div>
-                
-                <div class="achievement-list">
-                    <!-- Will be populated by JavaScript -->
-                </div>
-            </div>
-        </div>
-        
-        <!-- Achievement Notification -->
-        <div class="achievement-notification">
-            <div class="achievement-icon">🏆</div>
-            <div class="achievement-details">
-                <div class="achievement-title">Achievement Unlocked!</div>
-                <div class="achievement-description">Explorer: Discovered your first hidden gem</div>
-            </div>
-        </div>
-    </div>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Northern California Hidden Gems</title>
 
-    <!-- MapLibre JS -->
-    <script src="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.js"></script>
-    
-    <!-- App JavaScript -->
-    <script src="components/map/js/utils.js"></script>
-    <script src="components/map/js/data.js"></script>
-    <script src="components/map/js/map.js"></script>
-    <script src="components/map/js/cards.js"></script>
-    <script src="components/map/js/swipe.js"></script>
-    <script src="components/map/js/preferences.js"></script>
-    <script src="components/map/js/achievements.js"></script>
-    <script src="components/map/js/main.js"></script>
-</body>
+		<!-- MapLibre CSS -->
+		<link href="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.css" rel="stylesheet"/>
+		<link href="components/map/css/styles.css" rel="stylesheet"/>
+	</head>
+	<body>
+		<div
+			class="phone-frame">
+			<!-- App header with filters selection -->
+			<div class="app-header">
+				<!-- <button class="filter-button active">Filter1</button>
+				<button class="filter-button">Filter2</button>
+				<button class="filter-button">Filter3</button>
+				<button class="filter-button">Filter4</button> -->
+			</div>
+
+			<!-- Map container -->
+			<div id="map" style="margin-top: 40px"></div>
+
+			<!-- Itinerary button
+			<button class="view-itinerary-btn">
+				<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+				View Itinerary
+			</button> -->
+
+			<!-- Achievements button
+			<button class="achievements-button">
+				<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+				Achievements
+			</button> -->
+
+			<!-- Swipe indicators -->
+			<div
+				class="swipe-indicator"><!-- Will be populated by JavaScript -->
+			</div>
+
+			<!-- Hidden gem cards container -->
+			<div
+				class="cards-container"><!-- Cards will be generated dynamically -->
+			</div>
+
+			<!-- Bottom navigation -->
+			<div class="bottom-nav">
+				<div class="bottom-nav-item">
+					<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+					Explore
+				</div>
+				<div class="bottom-nav-item active">
+					<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+					Map
+				</div>
+				<div class="bottom-nav-item">
+					<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+					Add
+				</div>
+				<div class="bottom-nav-item" id="profile-button">
+					<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+					Profile
+				</div>
+			</div>
+
+			<!-- User Preferences Overlay -->
+			<div class="preferences-overlay">
+				<div class="preferences-panel">
+					<div class="preferences-header">
+						<div class="preferences-title">Your Preferences</div>
+						<button class="close-preferences">×</button>
+					</div>
+
+					<div class="preferences-section">
+						<div class="preferences-section-title">Favorite Activities</div>
+						<div class="preferences-option-group">
+							<input type="checkbox" id="hiking" class="preference-checkbox" data-preference="activities" value="hiking">
+							<label for="hiking" class="preference-label">Hiking</label>
+
+							<input type="checkbox" id="wine-tasting" class="preference-checkbox" data-preference="activities" value="wine-tasting">
+							<label for="wine-tasting" class="preference-label">Wine Tasting</label>
+
+							<input type="checkbox" id="photography" class="preference-checkbox" data-preference="activities" value="photography">
+							<label for="photography" class="preference-label">Photography</label>
+
+							<input type="checkbox" id="history" class="preference-checkbox" data-preference="activities" value="history">
+							<label for="history" class="preference-label">History</label>
+
+							<input type="checkbox" id="food" class="preference-checkbox" data-preference="activities" value="food">
+							<label for="food" class="preference-label">Food & Dining</label>
+
+							<input type="checkbox" id="views" class="preference-checkbox" data-preference="activities" value="views">
+							<label for="views" class="preference-label">Scenic Views</label>
+
+							<input type="checkbox" id="swimming" class="preference-checkbox" data-preference="activities" value="swimming">
+							<label for="swimming" class="preference-label">Swimming</label>
+						</div>
+					</div>
+
+					<div class="preferences-section">
+						<div class="preferences-section-title">Accessibility Needs</div>
+						<div class="preferences-option-group">
+							<input type="checkbox" id="wheelchair" class="preference-checkbox" data-preference="accessibility" value="wheelchair">
+							<label for="wheelchair" class="preference-label">Wheelchair Access</label>
+
+							<input type="checkbox" id="easy-trails" class="preference-checkbox" data-preference="accessibility" value="easy-trails">
+							<label for="easy-trails" class="preference-label">Easy Trails Only</label>
+
+							<input type="checkbox" id="stroller" class="preference-checkbox" data-preference="accessibility" value="stroller">
+							<label for="stroller" class="preference-label">Stroller Friendly</label>
+						</div>
+					</div>
+
+					<div class="preferences-section">
+						<div class="preferences-section-title">Maximum Detour Time</div>
+						<div class="preference-slider-container">
+							<div class="preference-slider-header">
+								<span>15 min</span>
+								<span id="detour-time-value">30 min</span>
+								<span>60+ min</span>
+							</div>
+							<input type="range" min="15" max="60" value="30" class="preference-slider" id="detour-time-slider" data-preference="detour-time">
+						</div>
+					</div>
+
+					<div class="preferences-section">
+						<div class="preferences-section-title">Popularity Preference</div>
+						<div class="preference-slider-container">
+							<div class="preference-slider-header">
+								<span>Hidden Gems</span>
+								<span id="popularity-value">Balanced</span>
+								<span>Popular Spots</span>
+							</div>
+							<input type="range" min="1" max="5" value="3" class="preference-slider" id="popularity-slider" data-preference="popularity">
+						</div>
+					</div>
+
+					<button class="save-preferences-btn">Save Preferences</button>
+				</div>
+			</div>
+
+			<!-- Achievements Panel -->
+			<div class="preferences-overlay" id="achievements-overlay">
+				<div class="achievements-panel">
+					<div class="achievements-header">
+						<div class="achievements-title">Your Achievements</div>
+						<button class="close-achievements">×</button>
+					</div>
+
+					<div
+						class="achievement-list"><!-- Will be populated by JavaScript -->
+					</div>
+				</div>
+			</div>
+
+			<!-- Achievement Notification -->
+			<div class="achievement-notification">
+				<div class="achievement-icon">🏆</div>
+				<div class="achievement-details">
+					<div class="achievement-title">Achievement Unlocked!</div>
+					<div class="achievement-description">Explorer: Discovered your first hidden gem</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- MapLibre JS -->
+		<script src="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.js"></script>
+
+		<!-- App JavaScript -->
+		<script src="components/map/js/utils.js"></script>
+		<script src="components/map/js/data.js"></script>
+		<script src="components/map/js/map.js"></script>
+		<script src="components/map/js/cards.js"></script>
+		<script src="components/map/js/swipe.js"></script>
+		<script src="components/map/js/preferences.js"></script>
+		<script src="components/map/js/achievements.js"></script>
+		<script src="components/map/js/main.js"></script>
+	</body>
 </html>
