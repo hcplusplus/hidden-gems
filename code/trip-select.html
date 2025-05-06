@@ -6,22 +6,36 @@
     <title>Trip Mode - Hidden Gems</title>
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
         <!-- MapLibre GL JS -->
     <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet"/>
     <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
 
 
     <style>
+        *,
+        *::before,
+        *::after {
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+    
+        body {
+            font-family: 'Nunito', sans-serif;
+        }
 
         .progress-bar {
             height: 20px;
             border-radius: 10px;
-            margin: 25px 40px 10px 40px;
+            margin: 0px 40px 10px 40px;
             background-color: lightgray;
             display: flex;
         }
         .place-container {
-            margin: 15px 20px 15px 20px;
+            margin: 15px 0px 0px 40px;
         }
         .title {
             font-size: 24px;
@@ -39,21 +53,21 @@
 
         .detail {
             margin-bottom: 5px;
-            font-size: 12px;
-            font-weight:450;
+            font-size: 14px;
+            font-weight: 700;
         }
 
         .recommendation-detail-icon {
-            margin-right: 5px;
+            margin-right: 3px;
         }
 
         .quiz-option {
             display: inline-flex;
             align-items: center;
             padding: 10px 16px;
-            margin: 6px 6px 6px 0;
+            margin: 0px 40px 10px 20px;
             border-radius: 20px;
-            background-color: #f0f0f0;
+            background-color: #f6d375;
             cursor: pointer;
             transition: background-color 0.2s;
         }
@@ -61,16 +75,15 @@
             height: 20px;
             width:30%;  /*dynamic */
             border-radius: 10px;
-            background-color: #CC9493;
+            background-color: green;
         }
         .review-box {
             height: 200px;
-            margin: 30px 20px 15px 20px;
-            background-color: rgba(226, 229, 239, 0.637);
+            margin: 30px 60px 60px 40px;
+            background-color: rgba(255, 255, 255, 0.637);
             border-radius: 10px;
             padding: 10px 10px 10px 10px;
         }
-
 
     </style>
 
@@ -78,53 +91,54 @@
 
 <body>
     <div class="page-container">
-        <!-- Header -->
-        <header class="page-header">
-            <h1 class="page-title">Trip Mode</h1>
-        </header>
 
         <div class="flex flex-column">
             <!-- <div id="map" style="width:100%;height:200px"></div> -->
             <div>
-                <image src="./assets/city.jpg" style="width:100%;height:300px"/>
+                <image src="./assets/trip_mode.jpg" style="width:100%;height:250px;margin-top: 40px"/>
             </div>
             <div>
                 <div class="progress-bar">
                     <div class="moving-progress">
                         <!-- progress div -->
-                         <i class="fas fa-car-side" style="color: white; text-align: right; display: block; padding-right: 7px; padding-top: 3px;"></i>
+                         <!-- <i class="fas fa-car-side" style="color: white; text-align: right; display: block; padding-right: 7px; padding-top: 3px;"></i> -->
                     </div>
-                    <!-- <i class="fas fa-gem" style="text-align: right; display: block;"></i> -->
+                    <svg style="position: absolute; right: 45;" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15.375 1.5H8.625L0.75 7.5375L12 22.5L23.25 7.5375L15.375 1.5Z" fill="#E0505C"/>
+                        <path d="M12 22.5L16.6875 7.5375H7.05L12 22.5ZM3.5625 3.5625L0.75 7.5375H7.05L8.625 1.5L3.5625 3.5625ZM20.4375 3.5625L15.375 1.5L16.6875 7.5375H23.25L20.4375 3.5625Z" fill="#EF8F91"/>
+                        </svg>
+                        
                 </div>
-                <span style="font-weight:bold; display:block; text-align: right; margin-right: 40px" >time left</span>
+                <!-- <span style="font-weight:bold; display:block; text-align: right; margin-right: 40px" >time left</span> -->
             </div>
 
 
             <div class="place-container">
                 <div>
-                    <div class="title">Mission Peak</div>
+                    <div class="title" style="font-weight: 800; font-size: xx-large;">Mission Peak</div>
                 </div>
             
                 <div class="">
+                    <div class="quiz-option" style="font-size: 14px; font-weight: 700; color:rgb(255, 255, 255); padding: 6px 12px; margin-left: 0;">Super Rare Gem</div>
                     <div class="detail">
-                        <i class="fas fa-map-pin recommendation-detail-icon"></i>
+                        <i class="fas fa-location-dot" style="color:#f6d375"></i>
                         <span>43600 Mission Blvd, Fremont, CA</span>
                     </div>
                     <div class="detail">
-                        <span class="recommendation-detail-icon">🕒</span>
+                        <i class="fas fa-clock" style="color:#f6d375"></i>
                         <span>6:00 AM - 10:00 PM | $</span>
                     </div>
-                    <div style="display: flex; gap: 8px; margin-top: 12px;">
+                    <!-- <div style="display: flex; gap: 8px; margin-top: 12px;">
                         <div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;">Outdoor</div>
                         <div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;">Nature</div>
-                    </div>
+                    </div> -->
                 </div>
 
 
             </div>
 
             <div class="review-box">
-                <span style="font-size: 12px; font-weight: 500;">"Most hidden trail with beautiful views"</span>
+                <span style="font-size: 16px; font-weight: 700;">"This trail has amazing views especially for sunset."</span>
                 <span style="font-size: 12px; font-weight: 500; text-align: right; display: block;">"Most hidden trail with beautiful views"</span>
                 <!-- what others have said -->
 
@@ -140,6 +154,13 @@
     </div>
 
     <script>
+        fetch('./assets/data/gem.json')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data); // Use your data here
+                console.log(data[rarity]);
+            })
+            .catch(error => console.error('Error loading JSON:', error));
         let latitude = 0;
         let longitude = 0;
         if (navigator.geolocation) {
