@@ -372,7 +372,7 @@
 						const gems = await res.json();
 						sessionStorage.setItem("gems", JSON.stringify(gems));
 						sessionStorage.setItem("userPreferences", JSON.stringify(userData));
-						window.location.href = 'landing-page.html';
+						window.location.href = "landing-page.html?skipWelcome=1";
 					} catch (err) {
 						console.error("Error generating gems:", err);
 						alert("Something went wrong. Please try again.");
@@ -399,7 +399,7 @@
 
 				closeButton.addEventListener('click', function () {
 					if (confirm('Are you sure you want to exit the quiz? Your progress will be lost.')) {
-						window.location.href = 'landing-page.html';
+						window.location.href = "landing-page.html?skipWelcome=1";
 					}
 				});
 
