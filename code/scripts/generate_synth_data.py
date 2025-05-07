@@ -490,7 +490,7 @@ def download_and_prepare_hidden_gems(n_samples=15, include_reviews=True):
     
     return gems_data
 
-def save_gems_for_web_app(gems_data, output_path="assets/data/gems.json"):
+def save_gems_for_web_app(gems_data, output_path="assets/data/synth_gems.json"):
     """
     Save the prepared gems data to a JSON file for the web app.
     
@@ -533,7 +533,7 @@ if __name__ == "__main__":
     if gems_data and gems_data["gems"]:
         save_gems_for_web_app(gems_data)
 
-# Example usage
-if __name__ == "__main__":
-    poi_data = generate_synthetic_poi_data()
-    print(poi_data)
+# # Example usage
+# if __name__ == "__main__":
+#     poi_data = generate_synthetic_poi_data()
+#     print(poi_data)

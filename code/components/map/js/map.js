@@ -40,17 +40,32 @@ HiddenGems.map = {
                 }
                 
                 // Get route data
-                const routeData = HiddenGems.data.routes.current;
+                //const routeData = HiddenGems.data.routes.current;
+
+                const routeData = HiddenGems.geojsonAdapter
+                console.log('Route data:', routeData);
                 
+                const origin = JSON.parse(sessionStorage.getItem("originCoords"));
+			    const destination = JSON.parse(sessionStorage.getItem("destinationCoords"));
+                console.log(sessionStorage);
+                console.log('Origin:', origin);
+                console.log('Destination:', destination);
+
                 // Calculate center of route
-                const centerLng = (routeData.origin.coordinates[0] + routeData.destination.coordinates[0]) / 2;
-                const centerLat = (routeData.origin.coordinates[1] + routeData.destination.coordinates[1]) / 2;
+                const centerLng = (origin[1] + destination[1]) / 2;
+                const centerLat = (origin[0] + destination[0]) / 2;
+
+                console.log('Center:', centerLng,);
+
+
                 
                 // Initialize the map
                 this.mapInstance = new maplibregl.Map({
                     container: 'map',
-                    style: 'https://demotiles.maplibre.org/style.json',
-                    center: [centerLng, centerLat],
+                    style: 'https://api.maptiler.com/maps/basic-v2/style.json?key=hbvo5fWE9HuC6JUHKB9q',
+                    center: [
+                        centerLat, centerLng
+                    ],
                     zoom: 11,
                     pitch: 0,
                     attributionControl: false
@@ -125,9 +140,9 @@ HiddenGems.map = {
      * @private
      */
     _createMarkers: function() {
-        const routeData = HiddenGems.data.routes.current;
-        const gems = HiddenGems.data.gems;
-        
+        //const routeData = HiddenGems.geojsonAdapter;
+        const gems = HiddenGems.geojsonAdapter.loadGemsData();
+        console.log('Gems:', gems);
         // Create origin marker
         const originEl = document.createElement('div');
         originEl.className = 'current-location-marker';
@@ -262,7 +277,7 @@ HiddenGems.map = {
      * @param {number} gemIndex - Index of the gem to fly to
      */
     flyToGem: function(gemIndex) {
-        const gem = HiddenGems.data.gems[gemIndex];
+        const gem = HiddenGems.geojsonAdapter.gems[gemIndex];
         
         this.mapInstance.flyTo({
             center: gem.coordinates,

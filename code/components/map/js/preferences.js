@@ -67,30 +67,12 @@ HiddenGems.preferences = {
      * @private
      */
     _setupPreferencesUI: function() {
-        const profileButton = document.getElementById('profile-button');
         const preferencesOverlay = document.querySelector('.preferences-overlay');
         const preferencesPanel = document.querySelector('.preferences-panel');
-        const closeButton = document.querySelector('.close-preferences');
         const saveButton = document.querySelector('.save-preferences-btn');
         
-        // Show preferences when profile button is clicked
-        profileButton.addEventListener('click', () => {
-            // Update UI with current preferences
-            this._updatePreferencesUI();
-            
-            preferencesOverlay.style.display = 'block';
-            setTimeout(() => {
-                preferencesPanel.classList.add('active');
-            }, 50);
-        });
-        
-        // Close preferences when close button is clicked
-        closeButton.addEventListener('click', () => {
-            preferencesPanel.classList.remove('active');
-            setTimeout(() => {
-                preferencesOverlay.style.display = 'none';
-            }, 300);
-        });
+
+    
         
         // Save preferences when save button is clicked
         saveButton.addEventListener('click', () => {
@@ -113,8 +95,9 @@ HiddenGems.preferences = {
         });
         
         // Initialize sliders
-        this._initSliders();
+        //this._initSliders();
     },
+    
     
     /**
      * Initialize preference sliders
@@ -129,32 +112,9 @@ HiddenGems.preferences = {
             detourValue.textContent = `${value} min`;
         });
         
-        const popularitySlider = document.getElementById('popularity-slider');
-        const popularityValue = document.getElementById('popularity-value');
-        
-        popularitySlider.addEventListener('input', () => {
-            const value = popularitySlider.value;
-            this._updatePopularityLabel(value);
-        });
     },
     
-    /**
-     * Update popularity label based on slider value
-     * @param {string|number} value - Slider value
-     * @private
-     */
-    _updatePopularityLabel: function(value) {
-        const popularityValue = document.getElementById('popularity-value');
-        const labels = {
-            '1': 'Only Hidden Gems',
-            '2': 'Mostly Hidden',
-            '3': 'Balanced',
-            '4': 'Some Popular',
-            '5': 'Popular Spots'
-        };
-        
-        popularityValue.textContent = labels[value] || 'Balanced';
-    },
+
     
     /**
      * Update preferences UI with current preferences
@@ -208,8 +168,7 @@ HiddenGems.preferences = {
         
         // Collect slider values
         const detourSlider = document.getElementById('detour-time-slider');
-        const popularitySlider = document.getElementById('popularity-slider');
-        
+   
         prefs.detourTime = parseInt(detourSlider.value);
         prefs.popularity = parseInt(popularitySlider.value);
         

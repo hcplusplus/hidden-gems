@@ -107,33 +107,23 @@ def get_common_osm_tags():
     # Common tag values compiled from OSM Wiki
     return {
         'leisure': [
-            'park', 'garden', 'nature_reserve', 'playground', 'pitch',
-            'sports_centre', 'swimming_pool', 'track', 'dog_park',
-            'fitness_station', 'common', 'picnic_table', 'marina',
+            'park', 'garden', 'nature_reserve', 'playground',
+            'sports_centre', 'swimming_pool',
+            'fitness_station', 'picnic_table', 'marina',
             'slipway', 'bird_hide', 'beach_resort', 'fishing', 'firepit',
             'outdoor_seating', 'swimming_area', 'recreation_ground'
         ],
         'amenity': [
             # Food & Drink
-            'restaurant', 'cafe', 'pub', 'bar', 'fast_food', 'food_court', 'ice_cream',
+            'restaurant', 'cafe',
             
             # Education & Culture
-            'library', 'school', 'university', 'college', 'museum', 'theatre', 'arts_centre',
+            'library', 'museum', 'theatre', 'arts_centre',
             'community_centre',
             
-            # Health & Emergency
-            'hospital', 'doctors', 'dentist', 'pharmacy', 'veterinary', 'fire_station', 'police',
-            
-            # Transportation
-            'parking', 'bicycle_parking', 'bicycle_rental', 'charging_station', 'fuel', 
-            'bus_station',
-            
-            # Utilities & Services
-            'post_office', 'bank', 'atm', 'toilets', 'shower', 'drinking_water', 'recycling',
-            'marketplace',
-            
+
             # Recreation
-            'bbq', 'bench', 'picnic_site', 'viewpoint'
+            'picnic_site', 'viewpoint'
         ],
         'natural': [
             'beach', 'water', 'wood', 'tree', 'cliff', 'cave_entrance', 'peak',
@@ -282,7 +272,7 @@ def convert_osm_to_geodataframe(data, keep_tags=None):
     else:
         return gpd.GeoDataFrame()
 
-def filter_for_hidden_gems(gdf, popularity_threshold=30, categories=None):
+def filter_for_hidden_gems(gdf, popularity_threshold=30, categories=None, required_properties=None):
     """
     Filter the GeoDataFrame to find potential hidden gems.
     
@@ -294,7 +284,8 @@ def filter_for_hidden_gems(gdf, popularity_threshold=30, categories=None):
         Maximum popularity score for hidden gems.
     categories: dict, optional
         Dictionary with keys as category tags and values as lists of types to keep.
-        Example: {'leisure': ['park', 'garden'], 'amenity': ['cafe', 'library']}
+    required_properties: list, optional
+        List of properties that must be present for a gem to be included.
         
     Returns:
     --------
@@ -307,9 +298,13 @@ def filter_for_hidden_gems(gdf, popularity_threshold=30, categories=None):
     # Copy the DataFrame to avoid modifying the original
     filtered_gdf = gdf.copy()
     
-    # Add a popularity score if it doesn't exist
+    # Filter out places missing required properties
+    if required_properties:
+        for prop in required_properties:
+            filtered_gdf = filtered_gdf[filtered_gdf[prop].notna() & (filtered_gdf[prop] != '')]
+    
+    # Add popularity scores
     if 'popularity_score' not in filtered_gdf.columns:
-        # 80% get random scores, 20% get NaN (truly undiscovered)
         filtered_gdf['popularity_score'] = [
             random.randint(1, 100) if random.random() > 0.2 else None 
             for _ in range(len(filtered_gdf))
@@ -318,7 +313,6 @@ def filter_for_hidden_gems(gdf, popularity_threshold=30, categories=None):
     print(len(filtered_gdf), "places before filtering")
     
     # Filter by popularity threshold
-    # Include places with low scores OR missing scores
     mask = (filtered_gdf['popularity_score'] < popularity_threshold) | filtered_gdf['popularity_score'].isna()
     filtered_gdf = filtered_gdf[mask]
     

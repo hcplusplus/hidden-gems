@@ -1,251 +1,377 @@
-// hiddenGems.js - Example for reading and filtering hidden gems data
-
-/**
- * Loads and filters hidden gems data
- */
+// HiddenGemsService class
 class HiddenGemsService {
-    constructor() {
+  constructor() {
       this.data = null;
-    }
-  
-    /**
-     * Load hidden gems data from a JSON file
-     * @param {string} filePath - Path to the JSON file
-     * @returns {Promise<Object>} - The loaded data
-     */
-    async loadData(filePath) {
+      this.subcategories = {
+          leisure: [],
+          amenity: [],
+          natural: [],
+          historic: []
+      };
+  }
+
+  async loadData(filePath) {
       try {
-        const response = await fetch(filePath);
-        if (!response.ok) {
-          throw new Error(`Failed to load data: ${response.status} ${response.statusText}`);
-        }
-        this.data = await response.json();
-        console.log(`Loaded ${this.data.gems.length} hidden gems`);
-        return this.data;
+          const response = await fetch(filePath);
+          if (!response.ok) {
+              throw new Error(`Failed to load data: ${response.status} ${response.statusText}`);
+          }
+          
+          // For GeoJSON format
+          const rawData = await response.json();
+          
+          // Transform GeoJSON to our data model if needed
+          if (rawData.type === 'FeatureCollection') {
+              this.data = {
+                  gems: rawData.features.map(feature => {
+                      // Extract properties
+                      const props = feature.properties;
+                      
+                      // Create gem object
+                      return {
+                          id: props.id,
+                          name: props.name || 'Unnamed Location',
+                          type: props.type,
+                          coordinates: {
+                              latitude: feature.geometry.coordinates[1],
+                              longitude: feature.geometry.coordinates[0]
+                          },
+                          amenity: props.amenity,
+                          leisure: props.leisure,
+                          natural: props.natural,
+                          historic: props.historic,
+                          popularity_score: props.popularity_score,
+                          // Add any other properties
+                          ...props
+                      };
+                  })
+              };
+          } else {
+              // Assume it's already in our format
+              this.data = rawData;
+          }
+          
+          // Extract subcategories
+          this.extractSubcategories();
+          
+          console.log(`Loaded ${this.data.gems.length} hidden gems`);
+          return this.data;
       } catch (error) {
-        console.error('Error loading hidden gems data:', error);
-        throw error;
+          console.error('Error loading hidden gems data:', error);
+          throw error;
       }
-    }
+  }
   
-    /**
-     * Get all gems
-     * @returns {Array} - All gems
-     */
-    getAllGems() {
-      return this.data?.gems || [];
-    }
-  
-    /**
-     * Filter gems by maximum popularity score (lower = more hidden)
-     * @param {number} maxScore - Maximum popularity score
-     * @returns {Array} - Filtered gems
-     */
-    getGemsByPopularity(maxScore) {
-      if (!this.data?.gems) return [];
+  extractSubcategories() {
+      // Clear existing subcategories
+      for (let category in this.subcategories) {
+          this.subcategories[category] = [];
+      }
       
-      return this.data.gems.filter(gem => 
-        gem.popularity_score === null || gem.popularity_score <= maxScore
-      );
-    }
-  
-    /**
-     * Filter gems by category and subcategory
-     * @param {string} category - Primary category (leisure, amenity, etc.)
-     * @param {string|null} subcategory - Optional subcategory
-     * @returns {Array} - Filtered gems
-     */
-    getGemsByCategory(category, subcategory = null) {
-      if (!this.data?.gems) return [];
+      // Extract unique subcategories
+      this.data.gems.forEach(gem => {
+          for (let category in this.subcategories) {
+              if (gem[category] && !this.subcategories[category].includes(gem[category])) {
+                  this.subcategories[category].push(gem[category]);
+              }
+          }
+      });
       
-      return this.data.gems.filter(gem => {
+      // Sort subcategories
+      for (let category in this.subcategories) {
+          this.subcategories[category].sort();
+      }
+  }
+
+  filterValidGems(gems) {
+      // Define required properties
+      const requiredProperties = ['coordinates']; 
+      
+      return gems.filter(gem => {
+          // Check that all required properties exist and are not empty
+          return requiredProperties.every(prop => {
+              if (prop === 'coordinates') {
+                  return gem.coordinates && 
+                         gem.coordinates.latitude !== undefined && 
+                         gem.coordinates.longitude !== undefined;
+              }
+              return gem[prop] !== undefined && 
+                     gem[prop] !== null && 
+                     gem[prop] !== '';
+          });
+      });
+  }
+
+  getAllGems() {
+      // Filter out gems missing essential properties
+      return this.filterValidGems(this.data?.gems || []);
+  }
+
+  getGemsByCategory(category, subcategory = null, limit = 20, randomize = false) {
+    let validGems = [];
+    
+    if (!this.data?.gems) {
+        return [];
+    }
+    
+    // Filter all valid gems first
+    const allValidGems = this.filterValidGems(this.data.gems);
+    
+    if (category === 'all') {
+        // If category is 'all', we need to get gems from each category
+        if (randomize) {
+            return this.getRandomGemsPerCategory(allValidGems, limit);
+        } else {
+            return this.limitGemsPerCategory(allValidGems, limit);
+        }
+    }
+    
+    // Filter by specific category
+    validGems = allValidGems.filter(gem => {
         // Check if the gem has this category
         const hasCategory = gem[category] !== undefined;
         
-        // If subcategory is specified, check if it matches
-        if (subcategory && hasCategory) {
-          return gem[category] === subcategory;
+        // If subcategory is specified and not "all", check if it matches
+        if (subcategory && subcategory !== 'all' && hasCategory) {
+            return gem[category] === subcategory;
         }
         
         return hasCategory;
-      });
-    }
-  
-    /**
-     * Filter gems by activity
-     * @param {string|Array} activities - Activity or array of activities
-     * @returns {Array} - Filtered gems
-     */
-    getGemsByActivity(activities) {
-      if (!this.data?.gems) return [];
-      
-      const activityList = Array.isArray(activities) ? activities : [activities];
-      
-      return this.data.gems.filter(gem => 
-        gem.activities && activityList.some(activity => 
-          gem.activities.includes(activity)
-        )
-      );
-    }
-  
-    /**
-     * Filter gems by accessibility requirement
-     * @param {string} requirement - Accessibility requirement (e.g., 'wheelchair', 'parking')
-     * @returns {Array} - Filtered gems
-     */
-    getAccessibleGems(requirement) {
-      if (!this.data?.gems) return [];
-      
-      return this.data.gems.filter(gem => 
-        gem.accessibility && 
-        (gem.accessibility[requirement] === true || gem.accessibility[requirement] === 'yes')
-      );
-    }
-  
-    /**
-     * Filter gems by region
-     * @param {string|Array} regions - Region or array of regions
-     * @returns {Array} - Filtered gems
-     */
-    getGemsByRegion(regions) {
-      if (!this.data?.gems) return [];
-      
-      const regionList = Array.isArray(regions) ? regions : [regions];
-      
-      return this.data.gems.filter(gem => 
-        gem.region && regionList.includes(gem.region)
-      );
-    }
-  
-    /**
-     * Filter gems by maximum distance from a point
-     * @param {number} lat - Latitude
-     * @param {number} lng - Longitude
-     * @param {number} maxDistanceKm - Maximum distance in kilometers
-     * @returns {Array} - Filtered gems
-     */
-    getGemsByDistance(lat, lng, maxDistanceKm) {
-      if (!this.data?.gems) return [];
-      
-      return this.data.gems.filter(gem => {
-        const distance = this.calculateDistance(
-          lat, lng, 
-          gem.coordinates.latitude, 
-          gem.coordinates.longitude
-        );
-        return distance <= maxDistanceKm;
-      });
-    }
-  
-    /**
-     * Calculate distance between two points using the Haversine formula
-     * @param {number} lat1 - Latitude of point 1
-     * @param {number} lon1 - Longitude of point 1
-     * @param {number} lat2 - Latitude of point 2
-     * @param {number} lon2 - Longitude of point 2
-     * @returns {number} - Distance in kilometers
-     */
-    calculateDistance(lat1, lon1, lat2, lon2) {
-      const R = 6371; // Earth's radius in km
-      const dLat = this.toRadians(lat2 - lat1);
-      const dLon = this.toRadians(lon2 - lon1);
-      
-      const a = 
-        Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.cos(this.toRadians(lat1)) * Math.cos(this.toRadians(lat2)) * 
-        Math.sin(dLon/2) * Math.sin(dLon/2);
-      
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-      return R * c;
-    }
-  
-    /**
-     * Convert degrees to radians
-     * @param {number} degrees - Angle in degrees
-     * @returns {number} - Angle in radians
-     */
-    toRadians(degrees) {
-      return degrees * (Math.PI / 180);
-    }
-  
-    /**
-     * Combine multiple filters with AND logic
-     * @param {Array} filters - Array of filter functions
-     * @returns {Array} - Gems that pass all filters
-     */
-    combineFilters(...filters) {
-      if (!this.data?.gems) return [];
-      
-      return this.data.gems.filter(gem => 
-        filters.every(filterFn => filterFn(gem))
-      );
-    }
-  
-    /**
-     * Sort gems by rating
-     * @param {Array} gems - Gems to sort
-     * @param {boolean} ascending - Sort direction
-     * @returns {Array} - Sorted gems
-     */
-    sortByRating(gems, ascending = false) {
-      return [...gems].sort((a, b) => {
-        // Calculate average rating if there are reviews
-        const ratingA = a.reviews && a.reviews.length 
-          ? a.reviews.reduce((sum, review) => sum + review.rating, 0) / a.reviews.length 
-          : 0;
-        
-        const ratingB = b.reviews && b.reviews.length 
-          ? b.reviews.reduce((sum, review) => sum + review.rating, 0) / b.reviews.length 
-          : 0;
-        
-        return ascending ? ratingA - ratingB : ratingB - ratingA;
-      });
-    }
-  }
-  
-  // Example usage
-  async function exampleUsage() {
-    const gemsService = new HiddenGemsService();
+    });
     
-    try {
-      // Load data
-      await gemsService.loadData('../../assets/data/berkeley_hidden_gems.geojson');
-      
-      // Get all gems
-      const allGems = gemsService.getAllGems();
-      console.log(`Total gems: ${allGems.length}`);
-      
-      // Get hidden gems (popularity score below 20)
-      const hiddenGems = gemsService.getGemsByPopularity(20);
-      console.log(`Hidden gems (popularity < 20): ${hiddenGems.length}`);
-      
-      // Get parks
-      const parks = gemsService.getGemsByCategory('leisure', 'park');
-      console.log(`Parks: ${parks.length}`);
-      
-      // Get wheelchair accessible restaurants
-      const accessibleRestaurants = gemsService.combineFilters(
-        gem => gem.amenity === 'restaurant',
-        gem => gem.accessibility && (gem.accessibility.wheelchair === true || gem.accessibility.wheelchair === 'yes')
-      );
-      console.log(`Wheelchair accessible restaurants: ${accessibleRestaurants.length}`);
-      
-      // Get hiking spots within 5km of Berkeley
-      const nearbyHiking = gemsService.combineFilters(
-        gem => gem.activities && gem.activities.includes('hiking'),
-        gem => gemsService.calculateDistance(37.87, -122.27, gem.coordinates.latitude, gem.coordinates.longitude) <= 5
-      );
-      console.log(`Hiking spots within 5km: ${nearbyHiking.length}`);
-      
-      // Sort results by rating
-      const topRatedGems = gemsService.sortByRating(allGems);
-      console.log("Top 3 highest-rated gems:");
-      topRatedGems.slice(0, 3).forEach(gem => console.log(`- ${gem.name}: ${gem.rating || 'No rating'}`));
-      
-    } catch (error) {
-      console.error('Example usage error:', error);
+    // Randomize if requested
+    if (randomize && validGems.length > limit) {
+        return this.getRandomSample(validGems, limit);
     }
+    
+    // Otherwise just limit the results
+    return validGems.slice(0, limit);
+}
+
+// New method to get random gems from each category
+getRandomGemsPerCategory(gems, totalLimit) {
+    // Group gems by their primary category
+    const categorized = {
+        leisure: [],
+        amenity: [],
+        natural: [],
+        historic: []
+    };
+    
+    // Put each gem in its primary category
+    gems.forEach(gem => {
+        if (gem.leisure) categorized.leisure.push(gem);
+        else if (gem.amenity) categorized.amenity.push(gem);
+        else if (gem.natural) categorized.natural.push(gem);
+        else if (gem.historic) categorized.historic.push(gem);
+    });
+    
+    // Calculate limit per category based on available gems in each category
+    const totalGems = Object.values(categorized).reduce(
+        (sum, catGems) => sum + catGems.length, 0
+    );
+    
+    // Random sample from each category and combine
+    const randomSamples = [];
+    
+    for (const category in categorized) {
+        if (categorized[category].length > 0) {
+            // Calculate proportional limit for this category
+            const categoryRatio = categorized[category].length / totalGems;
+            const categoryLimit = Math.ceil(totalLimit * categoryRatio);
+            
+            // Get random sample from this category
+            const sample = this.getRandomSample(
+                categorized[category], 
+                Math.min(categoryLimit, categorized[category].length)
+            );
+            
+            randomSamples.push(...sample);
+        }
+    }
+    
+    // If we have too many samples, do a final random selection
+    if (randomSamples.length > totalLimit) {
+        return this.getRandomSample(randomSamples, totalLimit);
+    }
+    
+    return randomSamples;
+}
+
+// Helper method to get a random sample from an array
+getRandomSample(array, sampleSize) {
+    if (array.length <= sampleSize) {
+        return [...array]; // Return a copy of the entire array
+    }
+    
+    // Fisher-Yates shuffle algorithm for efficient random sampling
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    
+    return shuffled.slice(0, sampleSize);
+}
+
+
+  getGemsByPopularity(maxScore) {
+      // First filter by validity
+      const validGems = this.filterValidGems(this.data?.gems || []);
+      
+      if (maxScore === 0) {
+          // Only return undiscovered places (null or 0 popularity)
+          return validGems.filter(gem => gem.popularity_score === null || gem.popularity_score === 0);
+      }
+      
+      return validGems.filter(gem => 
+          gem.popularity_score === null || 
+          gem.popularity_score === 0 || 
+          gem.popularity_score <= maxScore
+      );
+  }
+
+  combineFilters(gems, filters) {
+      return gems.filter(gem => 
+          filters.every(filterFn => filterFn(gem))
+      );
+  }
+}
+
+// Main application code
+document.addEventListener('DOMContentLoaded', () => {
+  window.filtersApplied = false;
+  const gemsService = new HiddenGemsService();
+  const categoryFilter = document.getElementById('category-filter');
+  const subcategoryFilter = document.getElementById('subcategory-filter');
+  const filterButton = document.getElementById('filter-button');
+  const resultsContainer = document.getElementById('results');
+  
+  // Load the data
+  gemsService.loadData('./assets/data/berkeley_hidden_gems.geojson')
+      .then(() => {
+          // Update UI
+          updateSubcategoryOptions();
+          applyFilters();
+      })
+      .catch(error => {
+          resultsContainer.innerHTML = `
+              <div class="error">
+                  <p>Error loading data: ${error.message}</p>
+                  <p>Make sure the file path is correct: ./assets/data/berkeley_hidden_gems.geojson</p>
+              </div>
+          `;
+      });
+  
+  // Event listeners
+  categoryFilter.addEventListener('change', updateSubcategoryOptions);
+  filterButton.addEventListener('click', applyFilters);
+  
+  // Update subcategory options based on category selection
+  function updateSubcategoryOptions() {
+      const category = categoryFilter.value;
+      subcategoryFilter.innerHTML = '<option value="all">All Subcategories</option>';
+      
+      if (category !== 'all' && gemsService.subcategories[category]) {
+          gemsService.subcategories[category].forEach(subcategory => {
+              const option = document.createElement('option');
+              option.value = subcategory;
+              option.textContent = subcategory.charAt(0).toUpperCase() + subcategory.slice(1);
+              subcategoryFilter.appendChild(option);
+          });
+      }
   }
   
-  // Run the example
-  exampleUsage();
+  // Apply filters and update results
+  function applyFilters() {
+    const category = categoryFilter.value;
+    const subcategory = subcategoryFilter.value;
+    const gemsLimit = 20; // Limit to 20 gems total
+    
+    // Whether to randomize results (true for initial load, false for filters)
+    const randomize = !window.filtersApplied;
+    window.filtersApplied = true; // Set flag after first load
+    
+    // Get filtered gems with limit and randomization
+    let filteredGems = gemsService.getGemsByCategory(category, subcategory, gemsLimit, randomize);
+    
+    
+    // Display results
+    displayResults(filteredGems);
+}
+  
+  // Display results in the UI
+  function displayResults(gems) {
+      if (!gems || gems.length === 0) {
+          resultsContainer.innerHTML = '<p>No hidden gems found matching your criteria.</p>';
+          return;
+      }
+      
+      // Display counter
+      const counterHtml = `<div class="counter">Found ${gems.length} hidden gems</div>`;
+      
+      // Generate HTML for each gem
+      const gemsHtml = gems.map(gem => {
+          // If no name, ensure it's considered undiscovered
+          const isUnnamed = !gem.name || gem.name.trim() === '';
+          if (isUnnamed && gem.popularity_score !== 0) {
+              gem.popularity_score = 0; // Ensure unnamed places are marked as undiscovered
+          }
+          
+          // Determine primary category
+          let primaryCategory = '';
+          let subcategory = '';
+          
+          if (gem.leisure) {
+              primaryCategory = 'Leisure';
+              subcategory = gem.leisure;
+          } else if (gem.amenity) {
+              primaryCategory = 'Amenity';
+              subcategory = gem.amenity;
+          } else if (gem.natural) {
+              primaryCategory = 'Natural';
+              subcategory = gem.natural;
+          } else if (gem.historic) {
+              primaryCategory = 'Historic';
+              subcategory = gem.historic;
+          }
+          
+          // Format subcategory
+          subcategory = subcategory.charAt(0).toUpperCase() + subcategory.slice(1).replace('_', ' ');
+          
+          // Generate details HTML
+          const details = [];
+          if (gem.wheelchair) details.push(`<span class="gem-detail">♿ Wheelchair: ${gem.wheelchair}</span>`);
+          if (gem.access) details.push(`<span class="gem-detail">🚪 Access: ${gem.access}</span>`);
+          if (gem.opening_hours) details.push(`<span class="gem-detail">🕒 Hours: ${gem.opening_hours}</span>`);
+          
+          // Generate popularity badge
+          let popularityHtml = '';
+          if (gem.popularity_score === null || gem.popularity_score === 0) {
+              popularityHtml = '<span class="popularity undiscovered">Undiscovered</span>';
+          } else {
+              popularityHtml = `<span class="popularity low-popularity">Recent Visitors: ${gem.popularity_score}</span>`;
+          }
+          
+          // Use a special class for unnamed places
+          const nameClass = isUnnamed ? 'gem-name unnamed' : 'gem-name';
+          
+          return `
+              <div class="gem-card">
+                  <div class="${nameClass}">${isUnnamed ? 'Unnamed Location' : gem.name}</div>
+                  <div class="gem-category">${primaryCategory}: ${subcategory}</div>
+                  <div class="gem-details">
+                      ${details.join('')}
+                      ${popularityHtml}
+                  </div>
+                  <div>
+                      <small>Coordinates: ${gem.coordinates.latitude.toFixed(6)}, ${gem.coordinates.longitude.toFixed(6)}</small>
+                  </div>
+              </div>
+          `;
+      }).join('');
+      
+      // Update the results container
+      resultsContainer.innerHTML = counterHtml + gemsHtml;
+  }
+});

@@ -5,6 +5,12 @@
 // Ensure namespace exists
 var HiddenGems = window.HiddenGems || {};
 
+   // TODO: generate route data
+   const test_origin = JSON.parse(sessionStorage.getItem("originCoords"));
+   const test_destination = JSON.parse(sessionStorage.getItem("destinationCoords"));
+
+   console.log('Test Origin:', test_origin);
+    console.log('Test Destination:', test_destination); 
 // Data sub-namespace
 HiddenGems.data = {
     // Hidden gems data
@@ -71,7 +77,8 @@ HiddenGems.data = {
         }
     ],
 
-    // Route data
+ 
+
     routes: {
         current: {
             origin: {
@@ -102,76 +109,12 @@ HiddenGems.data = {
         }
     },
 
-    // Achievement definitions
-    achievements: [
-        {
-            id: 'first-gem',
-            title: 'Novice Explorer',
-            description: 'Discovered your first hidden gem',
-            icon: '🏆',
-            condition: (prefs) => prefs.visitedGems.length >= 1
-        },
-        {
-            id: 'nature-fan',
-            title: 'Nature Enthusiast',
-            description: 'Added 2 nature spots to your trips',
-            icon: '🌲',
-            condition: (prefs) => {
-                const natureGems = prefs.visitedGems.filter(id => {
-                    const gem = HiddenGems.data.gems.find(g => g.id === id);
-                    return gem && gem.category === 'nature';
-                });
-                return natureGems.length >= 2;
-            }
-        },
-        {
-            id: 'cultural-buff',
-            title: 'Cultural Buff',
-            description: 'Explored historic and cultural sites',
-            icon: '🏛️',
-            condition: (prefs) => {
-                const culturalGems = prefs.visitedGems.filter(id => {
-                    const gem = HiddenGems.data.gems.find(g => g.id === id);
-                    return gem && gem.category === 'cultural';
-                });
-                return culturalGems.length >= 1;
-            }
-        },
-        {
-            id: 'foodie',
-            title: 'Local Foodie',
-            description: 'Discovered local food and drink spots',
-            icon: '🍷',
-            condition: (prefs) => {
-                const foodGems = prefs.visitedGems.filter(id => {
-                    const gem = HiddenGems.data.gems.find(g => g.id === id);
-                    return gem && gem.category === 'food';
-                });
-                return foodGems.length >= 1;
-            }
-        },
-        {
-            id: 'adventurer',
-            title: 'Adventurous Spirit',
-            description: 'Added a location with over 30 min detour',
-            icon: '🧭',
-            condition: (prefs) => {
-                return prefs.visitedGems.some(id => {
-                    const gem = HiddenGems.data.gems.find(g => g.id === id);
-                    return gem && parseInt(gem.detourTime) >= 30;
-                });
-            }
-        }
-    ],
-
     // Default user preferences
     defaultPreferences: {
         activities: [],
         accessibility: [],
-        detourTime: 30,
-        popularity: 3,
-        visitedGems: [],
-        achievements: []
+        detourTime: 60,
+        popularity: 3
     }
 };
 

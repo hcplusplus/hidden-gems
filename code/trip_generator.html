@@ -361,7 +361,7 @@
 
 						console.log("userData:", userData);
 						console.log("sessionStorage:", sessionStorage.getItem("originCoords"));
-						const res = await fetch("http://127.0.0.1:5000/generate_gems", {
+						const res = await fetch("http://127.0.0.1:5000/generate_trip_gems", {
 							method: "POST",
 							headers: {
 								"Content-Type": "application/json"
@@ -372,7 +372,8 @@
 						const gems = await res.json();
 						sessionStorage.setItem("gems", JSON.stringify(gems));
 						sessionStorage.setItem("userPreferences", JSON.stringify(userData));
-						window.location.href = 'landing-page.html';
+						window.location.href = 'trip.html';
+
 					} catch (err) {
 						console.error("Error generating gems:", err);
 						alert("Something went wrong. Please try again.");

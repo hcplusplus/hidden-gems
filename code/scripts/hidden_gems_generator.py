@@ -43,7 +43,7 @@ Return the output in this exact JSON format:
 """
 
 
-@app.route("/generate_gems", methods=["POST"])
+@app.route("/generate_hg_custom", methods=["POST"])
 def generate_gems():
     data = request.get_json()
     prompt = build_prompt(data)
