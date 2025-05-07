@@ -8,7 +8,8 @@ app = Flask(__name__)
 CORS(app)  # Allow CORS from frontend
 
 OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
-OLLAMA_MODEL = "mistral:7b"
+# OLLAMA_MODEL = "mistral:7b"
+OLLAMA_MODEL = "gemma3:4b"
 
 def build_prompt(data):
     def fmt(field):
@@ -47,7 +48,7 @@ Return the output in this exact JSON format:
     "address": "Street Address, City, State, Zip",
     "opening_hours": "Opening hours in HH:MM format",
     "dolar_sign": "Dollar sign indicating price level ($, $$, $$$)",
-    "category": "nature|food|scenic|historic|...",
+    "category": "nature, food, scenic, historic, etc...",
     "description": "Why this place is special in one sentence",
     "rarity": "most hidden|moderately hidden|least hidden",
     "color": "red|blue|purple",
