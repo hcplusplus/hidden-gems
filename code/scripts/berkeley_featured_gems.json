@@ -1,0 +1,318 @@
+[
+  {
+    "id": "gem-157",
+    "title": "Peet's Coffee",
+    "category": "amenity",
+    "subcategory": "cafe",
+    "formatted_subcategory": "Cafe",
+    "coordinates": [
+      -122.252655,
+      37.8511251
+    ],
+    "description": "A hidden gem known to few locals. A local amenity that tourists often miss.",
+    "popularity": NaN,
+    "tags": [
+      "coffee"
+    ]
+  },
+  {
+    "id": "gem-794",
+    "title": "Phosho Dough",
+    "category": "amenity",
+    "subcategory": "restaurant",
+    "formatted_subcategory": "Restaurant",
+    "coordinates": [
+      -122.2604607,
+      37.8521025
+    ],
+    "description": "A hidden gem known to few locals. A local amenity that tourists often miss.",
+    "popularity": 22.0,
+    "tags": [
+      "food"
+    ]
+  },
+  {
+    "id": "gem-1076",
+    "title": NaN,
+    "category": "leisure",
+    "subcategory": "fitness_station",
+    "formatted_subcategory": "Fitness Station",
+    "coordinates": [
+      -122.2631358,
+      37.8580015
+    ],
+    "description": "A hidden gem known to few locals. A peaceful spot perfect for unwinding.",
+    "popularity": NaN,
+    "tags": []
+  },
+  {
+    "id": "gem-531",
+    "title": "Physics-Astronomy Library",
+    "category": "amenity",
+    "subcategory": "library",
+    "formatted_subcategory": "Library",
+    "coordinates": [
+      -122.2569047,
+      37.8726634
+    ],
+    "description": "A hidden gem known to few locals. A local amenity that tourists often miss.",
+    "popularity": 9.0,
+    "tags": []
+  },
+  {
+    "id": "gem-1755",
+    "title": "Hans Kelsen",
+    "category": "historic",
+    "subcategory": "memorial",
+    "formatted_subcategory": "Memorial",
+    "coordinates": [
+      -122.2577279,
+      37.8712697
+    ],
+    "description": "A hidden gem known to few locals. A piece of history waiting to be discovered.",
+    "popularity": NaN,
+    "tags": [
+      "history"
+    ]
+  },
+  {
+    "id": "gem-1353",
+    "title": NaN,
+    "category": "natural",
+    "subcategory": "tree",
+    "formatted_subcategory": "Tree",
+    "coordinates": [
+      -122.2489847,
+      37.8533119
+    ],
+    "description": "A hidden gem known to few locals. A natural feature worth exploring.",
+    "popularity": 6.0,
+    "tags": [
+      "nature"
+    ]
+  },
+  {
+    "id": "gem-1696",
+    "title": "North Beach Pizza",
+    "category": "amenity",
+    "subcategory": "restaurant",
+    "formatted_subcategory": "Restaurant",
+    "coordinates": [
+      -122.2678442,
+      37.8652828
+    ],
+    "description": "A hidden gem known to few locals. A local amenity that tourists often miss.",
+    "popularity": 12.0,
+    "tags": [
+      "food"
+    ]
+  },
+  {
+    "id": "gem-1194",
+    "title": NaN,
+    "category": "natural",
+    "subcategory": "tree",
+    "formatted_subcategory": "Tree",
+    "coordinates": [
+      -122.2598756,
+      37.8732189
+    ],
+    "description": "A hidden gem known to few locals. A natural feature worth exploring.",
+    "popularity": 28.0,
+    "tags": [
+      "nature"
+    ]
+  },
+  {
+    "id": "gem-1626",
+    "title": NaN,
+    "category": "historic",
+    "subcategory": "memorial",
+    "formatted_subcategory": "Memorial",
+    "coordinates": [
+      -122.2564449,
+      37.8713643
+    ],
+    "description": "A hidden gem known to few locals. A piece of history waiting to be discovered.",
+    "popularity": NaN,
+    "tags": [
+      "history"
+    ]
+  },
+  {
+    "id": "gem-1228",
+    "title": NaN,
+    "category": "natural",
+    "subcategory": "tree",
+    "formatted_subcategory": "Tree",
+    "coordinates": [
+      -122.2598887,
+      37.8731776
+    ],
+    "description": "A hidden gem known to few locals. A natural feature worth exploring.",
+    "popularity": NaN,
+    "tags": [
+      "nature"
+    ]
+  },
+  {
+    "id": "gem-362",
+    "title": NaN,
+    "category": "natural",
+    "subcategory": "tree",
+    "formatted_subcategory": "Tree",
+    "coordinates": [
+      -122.2577437,
+      37.8723308
+    ],
+    "description": "A hidden gem known to few locals. A natural feature worth exploring.",
+    "popularity": NaN,
+    "tags": [
+      "nature"
+    ]
+  },
+  {
+    "id": "gem-685",
+    "title": "4 Dreams Nepali Indian Cuisine",
+    "category": "amenity",
+    "subcategory": "restaurant",
+    "formatted_subcategory": "Restaurant",
+    "coordinates": [
+      -122.2672202,
+      37.8652637
+    ],
+    "description": "A hidden gem known to few locals. A local amenity that tourists often miss.",
+    "popularity": 28.0,
+    "tags": [
+      "food"
+    ]
+  },
+  {
+    "id": "gem-1249",
+    "title": NaN,
+    "category": "natural",
+    "subcategory": "tree",
+    "formatted_subcategory": "Tree",
+    "coordinates": [
+      -122.2590368,
+      37.8717258
+    ],
+    "description": "A hidden gem known to few locals. A natural feature worth exploring.",
+    "popularity": 10.0,
+    "tags": [
+      "nature"
+    ]
+  },
+  {
+    "id": "gem-1732",
+    "title": "State Flour Pizza Company",
+    "category": "amenity",
+    "subcategory": "restaurant",
+    "formatted_subcategory": "Restaurant",
+    "coordinates": [
+      -122.2528699,
+      37.8564444
+    ],
+    "description": "A hidden gem known to few locals. A local amenity that tourists often miss.",
+    "popularity": NaN,
+    "tags": [
+      "food"
+    ]
+  },
+  {
+    "id": "gem-748",
+    "title": "Pasta bene",
+    "category": "amenity",
+    "subcategory": "restaurant",
+    "formatted_subcategory": "Restaurant",
+    "coordinates": [
+      -122.258387,
+      37.8640641
+    ],
+    "description": "A hidden gem known to few locals. A local amenity that tourists often miss.",
+    "popularity": NaN,
+    "tags": [
+      "food"
+    ]
+  },
+  {
+    "id": "gem-588",
+    "title": NaN,
+    "category": "natural",
+    "subcategory": "tree",
+    "formatted_subcategory": "Tree",
+    "coordinates": [
+      -122.2689063,
+      37.8683988
+    ],
+    "description": "A hidden gem known to few locals. A natural feature worth exploring.",
+    "popularity": 25.0,
+    "tags": [
+      "nature"
+    ]
+  },
+  {
+    "id": "gem-1136",
+    "title": NaN,
+    "category": "natural",
+    "subcategory": "tree",
+    "formatted_subcategory": "Tree",
+    "coordinates": [
+      -122.2618629,
+      37.8579337
+    ],
+    "description": "A hidden gem known to few locals. A natural feature worth exploring.",
+    "popularity": NaN,
+    "tags": [
+      "nature"
+    ]
+  },
+  {
+    "id": "gem-316",
+    "title": "Nikko Sushi",
+    "category": "amenity",
+    "subcategory": "restaurant",
+    "formatted_subcategory": "Restaurant",
+    "coordinates": [
+      -122.267327,
+      37.865935
+    ],
+    "description": "A hidden gem known to few locals. A local amenity that tourists often miss.",
+    "popularity": 25.0,
+    "tags": [
+      "food"
+    ]
+  },
+  {
+    "id": "gem-394",
+    "title": "Tightwad Hill",
+    "category": "natural",
+    "subcategory": "peak",
+    "formatted_subcategory": "Peak",
+    "coordinates": [
+      -122.2508317,
+      37.8726181
+    ],
+    "description": "A hidden gem known to few locals. A natural feature worth exploring.",
+    "popularity": 12.0,
+    "tags": [
+      "views",
+      "nature",
+      "photography"
+    ]
+  },
+  {
+    "id": "gem-1447",
+    "title": NaN,
+    "category": "leisure",
+    "subcategory": "playground",
+    "formatted_subcategory": "Playground",
+    "coordinates": [
+      -122.2573371,
+      37.851142
+    ],
+    "description": "A hidden gem known to few locals. A peaceful spot perfect for unwinding.",
+    "popularity": NaN,
+    "tags": []
+  }
+]

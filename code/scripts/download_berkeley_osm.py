@@ -366,7 +366,7 @@ def download_area_hidden_gems(area_bbox, category_tags=None, popularity_threshol
     
     # Convert to GeoDataFrame
     if category_tags:
-        keep_tags = list(category_tags.keys()) + ['name']
+        keep_tags = list(category_tags.keys()) + ['name', 'opening_hours', 'addr:street', 'addr:postcode']
     else:
         keep_tags = ['amenity', 'leisure', 'natural', 'historic', 'name']
     
@@ -394,6 +394,220 @@ def download_area_hidden_gems(area_bbox, category_tags=None, popularity_threshol
     
     return hidden_gems, tag_analysis
 
+
+def generate_featured_gems_json(area_bbox, output_file, max_points=100):
+    """
+    Generate a simplified featured_gems.json file from OSM data
+    
+    Parameters:
+    -----------
+    output_file: str
+        Path to the output JSON file
+    max_points: int
+        Maximum number of points to include
+    """
+    print(f"Generating featured gems JSON file: {output_file}")
+    
+    # Define bounding box for Northern California
+    # (This covers the area described in your requirements)
+    north_cal_bbox = area_bbox
+    
+    # Define categories to search
+    category_tags = {
+        'leisure': None,
+        'amenity': None,
+        'natural': None,
+        'historic': None
+    }
+    
+    # Get common OSM tags
+    common_tags = get_common_osm_tags()
+    
+    # Download OSM data
+    data = download_osm_data(north_cal_bbox, tags=category_tags)
+    
+    # Convert to GeoDataFrame
+    keep_tags = list(category_tags.keys()) + ['name', 'opening_hours', 'addr:street', 'addr:postcode']
+    gdf = convert_osm_to_geodataframe(data, keep_tags=keep_tags)
+    
+    # Filter for hidden gems
+    hidden_gems = filter_for_hidden_gems(
+        gdf,
+        popularity_threshold=30,
+        categories=common_tags
+    )
+    
+    # Randomly sample to limit to max_points
+    if len(hidden_gems) > max_points:
+        hidden_gems = hidden_gems.sample(max_points, random_state=42)
+    
+    # Convert to featured gems format
+    featured_gems = []
+    
+    for idx, gem in hidden_gems.iterrows():
+        # Determine category and subcategory
+        category = None
+        subcategory = None
+        
+        if pd.notna(gem.get('leisure')):
+            category = 'leisure'
+            subcategory = gem['leisure']
+        elif pd.notna(gem.get('amenity')):
+            category = 'amenity'
+            subcategory = gem['amenity']
+        elif pd.notna(gem.get('natural')):
+            category = 'natural'
+            subcategory = gem['natural']
+        elif pd.notna(gem.get('historic')):
+            category = 'historic'
+            subcategory = gem['historic']
+        
+        # Format subcategory string
+        formatted_subcategory = ' '.join(word.capitalize() for word in subcategory.split('_')) if subcategory else 'Unknown'
+        
+        # Generate tags based on category
+        tags = []
+        
+        if category == 'leisure':
+            if subcategory in ['park', 'garden']:
+                tags.extend(['nature', 'relaxing'])
+            elif subcategory in ['swimming_pool', 'swimming_area']:
+                tags.append('swimming')
+        elif category == 'natural':
+            tags.append('nature')
+            if subcategory == 'beach':
+                tags.append('swimming')
+            elif subcategory in ['peak', 'viewpoint']:
+                tags.extend(['views', 'photography'])
+        elif category == 'historic':
+            tags.append('history')
+        elif category == 'amenity':
+            if subcategory == 'cafe':
+                tags.append('coffee')
+            elif subcategory == 'restaurant':
+                tags.append('food')
+        
+        
+        # Generate description based on popularity
+        if gem.get('popularity_score') is None or gem.get('popularity_score') == 0:
+            description_intro = "An undiscovered local secret."
+        else:
+            description_intro = "A hidden gem known to few locals."
+        
+        if category == 'leisure':
+            description_detail = "A peaceful spot perfect for unwinding."
+        elif category == 'natural':
+            description_detail = "A natural feature worth exploring."
+        elif category == 'historic':
+            description_detail = "A piece of history waiting to be discovered."
+        elif category == 'amenity':
+            description_detail = "A local amenity that tourists often miss."
+        else:
+            description_detail = "Worth visiting when in the area."
+        
+        # Create featured gem object
+        featured_gem = {
+            "id": f"gem-{idx}",
+            "title": gem.get('name', f"Unnamed {formatted_subcategory}"),
+            "category": category,
+            "subcategory": subcategory,
+            "formatted_subcategory": formatted_subcategory,
+            "coordinates": [float(gem.geometry.x), float(gem.geometry.y)],
+            "description": f"{description_intro} {description_detail}",
+            "popularity": gem.get('popularity_score', 0),
+            "tags": list(set(tags))  # Remove duplicates
+        }
+        
+        featured_gems.append(featured_gem)
+    
+    # Save to JSON file
+    with open(output_file, 'w') as f:
+        json.dump(featured_gems, f, indent=2)
+    
+    print(f"Generated {len(featured_gems)} featured gems and saved to {output_file}")
+    return featured_gems
+
+def save_hidden_gems_with_custom_schema(gdf, output_file):
+    """
+    Save hidden gems with a custom schema as JSON
+    
+    Parameters:
+    -----------
+    gdf: GeoDataFrame
+        GeoDataFrame containing the hidden gems
+    output_file: str
+        Path to the output JSON file
+    """
+    print(f"Saving hidden gems with custom schema to: {output_file}")
+    
+    # Initialize list to hold gems with custom schema
+    custom_gems = []
+    
+    # Process each gem
+    for idx, gem in gdf.iterrows():
+        # Determine rarity and color based on popularity score
+        if gem.get('popularity_score') is None or gem.get('popularity_score') == 0:
+            rarity = "most hidden"
+            color = "purple"
+        elif gem.get('popularity_score', 0) < 30:
+            rarity = "moderately hidden"
+            color = "blue"
+        else:
+            rarity = "least hidden"
+            color = "red"
+        
+        # Generate random time (30-360 minutes in 30 minute intervals)
+        time = random.choice([30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360])
+
+        # Generate random cost (0-5)- map to 'free' for 0 and/or number of dollar signs if 1-5
+        cost = random.choice([0, 1, 2, 3, 4, 5])
+        if cost == 0:
+            dollar_cost = "Free"
+        else:
+            dollar_cost = "$" * cost
+        
+        # Function to handle NaN values
+        def nan_to_needs_polishing(value, default=""):
+            if pd.isna(value):
+                return default
+            return value
+        
+        def name_polish(value, default="Unnamed location"):
+            if pd.isna(value):
+                return default
+            return value
+        
+        # Create gem with custom schema
+        custom_gem = {
+            "name": name_polish(gem.get('name')),
+            "coordinates": [float(gem.geometry.x), float(gem.geometry.y)],
+            "address": {
+                "number": nan_to_needs_polishing(gem.get('addr:housenumber')),
+                "street": nan_to_needs_polishing(gem.get('addr:street')),
+                "city": nan_to_needs_polishing(gem.get('addr:city')),
+                "postcode": nan_to_needs_polishing(gem.get('addr:postcode'))
+            },
+            "opening_hours": nan_to_needs_polishing(gem.get('opening_hours')),
+            "activity_cost": dollar_cost,
+            "natural": nan_to_needs_polishing(gem.get('natural')),
+            "amenity": nan_to_needs_polishing(gem.get('amenity')),
+            "historic": nan_to_needs_polishing(gem.get('historic')),
+            "leisure": nan_to_needs_polishing(gem.get('leisure')),
+            "popularity_score": 0 if pd.isna(gem.get('popularity_score')) else gem.get('popularity_score'),
+            "rarity": rarity,
+            "color": color,
+            "time": time
+        }
+        
+        custom_gems.append(custom_gem)
+    
+    # Save to JSON file
+    with open(output_file, 'w') as f:
+        json.dump(custom_gems, f, indent=2)
+    
+    print(f"Saved {len(custom_gems)} gems with custom schema to {output_file}")
+    return custom_gems
+
 # Example of how to use these functions
 if __name__ == "__main__":
     # Bounding box for Berkeley
@@ -408,6 +622,9 @@ if __name__ == "__main__":
         category_tags=category_tags,
         popularity_threshold=30
     )
+
+    # Generate featured gems JSON
+    generate_featured_gems_json(berkeley_bbox, "berkeley_featured_gems.json", max_points=20)
     
     # Print tag analysis
     print("\nTag analysis:")
@@ -420,7 +637,10 @@ if __name__ == "__main__":
     # Print hidden gem stats
     print(f"\nFound {len(hidden_gems)} potential hidden gems")
     
-    # Example: Save the hidden gems to a file
+# Save in GeoJSON format
     if not hidden_gems.empty:
-        hidden_gems.to_file("berkeley_hidden_gems.geojson", driver="GeoJSON")
-        print("Hidden gems saved to berkeley_hidden_gems.geojson")
+        #hidden_gems.to_file("berkeley_hidden_gems.geojson", driver="GeoJSON")
+        #print("Hidden gems saved to berkeley_hidden_gems.geojson")
+        
+        # Save with custom schema
+        save_hidden_gems_with_custom_schema(hidden_gems, "berkeley_hidden_gems_custom.json")
