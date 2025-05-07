@@ -9,6 +9,9 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 
 
 		<style>
@@ -23,20 +26,25 @@
 				font-family: 'Nunito', sans-serif;
 			}
 
-        .progress-bar {
-            height: 23px;
-            border-radius: 10px;
-            margin: 0px 40px 10px 40px;
-            background-color: rgb(226, 226, 226);
-            display: flex;
-        }
-        .place-container {
-            margin: 15px 0px 0px 40px;
-        }
-        .title {
-            font-size: 24px;
-            font-weight: 500;
-        }
+            .fade {
+                opacity: 1;
+                transition: opacity 1s ease;
+            }
+
+            .progress-bar {
+                height: 23px;
+                border-radius: 10px;
+                margin: 0px 40px 10px 40px;
+                background-color: rgb(226, 226, 226);
+                display: flex;
+            }
+            .place-container {
+                margin: 15px 0px 0px 40px;
+            }
+            .title {
+                font-size: 24px;
+                font-weight: 500;
+            }
 
 			.recommendation-image {
 				width: 100%;
@@ -60,43 +68,41 @@
 				margin-right: 3px;
 			}
 
-        .quiz-option {
-            display: inline-flex;
-            align-items: center;
-            padding: 10px 16px;
-            margin: 0px 0px 10px 20px;
-            border-radius: 20px;
-            background-color: #ededed;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .moving-progress {
-            height: 23px;
-            width:0%;  /*dynamic */
-            border-radius: 10px;
-            background-color: rgb(179, 217, 179);
-        }
-        .review-box {
-            height: 200px;
-            /* margin: 30px 30px 60px 30px; */
-            background-color: rgba(255, 255, 255, 0.637);
-            border-radius: 10px;
-            padding: 10px 10px 10px 10px;
-        }
-        .state-change {
-            padding:5px;
-            background-color:rgb(230, 230, 230);
-        }
+            .quiz-option {
+                display: inline-flex;
+                align-items: center;
+                padding: 10px 16px;
+                margin: 0px 0px 10px 20px;
+                border-radius: 20px;
+                background-color: #ededed;
+                cursor: pointer;
+                transition: background-color 0.2s;
+            }
+            .moving-progress {
+                height: 23px;
+                width:0%;  /*dynamic */
+                border-radius: 10px;
+                background-color: rgb(179, 217, 179);
+            }
+            .review-box {
+                height: 200px;
+                /* margin: 30px 30px 60px 30px; */
+                background-color: rgba(255, 255, 255, 0.637);
+                border-radius: 10px;
+                padding: 10px 10px 10px 10px;
+            }
+            .state-change {
+                padding:5px;
+                background-color:rgb(230, 230, 230);
+            }
 
-    </style>
+        </style>
 
-</head>
-
-	<body>
+    </head>
 
 <body>
     <div class="page-container">
-        <button onclick="goBack()" style="position: absolute; top: 1px; left: 0px;
+        <button onclick="goBack()" style="
                 z-index: 1000; font-size: 20px;
                 background: none; border: none; cursor: pointer;
                 color: black; font-weight: 600;">
@@ -104,8 +110,8 @@
         </button>
         <div class="flex flex-column" id="progressContainer">
             <div>
-                <image src="./assets/trip_mode.jpg" style="width:100%;height:250px;margin-top: 40px"/>
-                <div style="position: absolute; top: 140px; left: 240px; color: white; font-size: 20px; font-weight: 600;" id="time-left">
+                <img src="" style="width:100%;height:250px;margin-top:0px" id="trip_mode" alt="cover"/>
+                <div style="position: absolute; top: 150px; left: 240px; color: white; font-size: 20px; font-weight: 600;" id="time-left">
                     1 hr 30 left
                   </div>
             </div>
@@ -157,7 +163,7 @@
 			<button style="background-color: rgb(153, 206, 153); margin-top: 30px; margin-left: 40px" onclick="goToSpecificLocation()">Open in Google Maps</button>
 
             </div>
-            <div style="margin: 60px 50px 30px 10px; text-align: right;">
+            <div style="margin: 20px 50px 30px 10px; text-align: right;">
                 <button class="state-change" id="state-1">
                     <i class="fas fa-arrow-right"></i>
                 </button>
@@ -167,14 +173,17 @@
                 <span style="font-size: 12px; font-weight: 300;">for demo</span>
             </div>
         </div>
-        <div id="nextScreen" style="display: none;">
-            <image src="./assets/arrived.jpg" style="width:100%;height:100%;margin-top: 40px"/>
-            <div style="position: absolute; top: 170px; left: 60px; color: rgb(36, 176, 102); font-size: 36px; font-weight: 800;" id="arrived">
+        <div id="nextScreen" style="display: none;" class="fade">
+            <image src="./assets/arrived.jpg" style="width:100%;height:auto;"/>
+            <div style="position: absolute; top: 200px; left: 60px; padding: 10px; background-color:rgb(138, 207, 138); border-radius: 16px; border-color: rgb(40, 40, 40); color: white; font-family: 'Cherry Bomb One', system-ui; font-size: 34px; font-weight: 600;" id="arrived">
                 You've Arrived!!
             </div>
-            <button onclick="feedbackForm()">Tell us more about this gem!</button>
+            <div class="flex flex-column" style="margin-left: 40px; margin-right: 40px;">
+                <button onclick="feedbackForm()" style="margin-top: 10px; margin-bottom: 10px;">Tell us about this gem!</button>
+                <span style="font-size: 12px; text-align:center; margin-bottom: 10px">We're so proud that you've uncovered this gem! Remember to come back after you've visited. If it was truly a gem, tell us about it!</span>
+            </div>
+            
         </div>
-    
     </div>
 
     <script>
@@ -193,6 +202,9 @@
                 // document.getElementById('category-2').innerText = data_text["category_2"];
                 // document.getElementById('review').innerText = data_text["review"];
                 // document.getElementById('time-left').innerText = data_text["time"];
+                const color = data_text["color"];
+                document.getElementById('trip_mode').src = `./assets/${color}_trip_mode.jpg`;
+                
             })
             .catch(error => console.error('Error loading JSON:', error));
         let latitude = 0;
@@ -223,7 +235,7 @@
 
         console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
 
-       
+       //demo functionality buttons: real progress bar functionality has NOT been implemented
         document.getElementById('state-1').onclick = function() {
             const progressBar = document.getElementById('moving-progress');
             progressBar.style.width = 20 + '%';
@@ -235,6 +247,12 @@
             progressBar.style.width = 100 + '%';
             document.getElementById('time-left').innerText = "Arrived!";
             document.getElementById('time-left').style.marginLeft = "15px";
+
+            confetti({
+                particleCount: 250,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
             setTimeout(() => {
                 showNextScreen();
             }, 800);
@@ -251,11 +269,16 @@
         //after progress is 100%, image of finish fills the page and put button to feedback quiz 
         function showNextScreen() {
             document.getElementById('progressContainer').style.display = 'none';
-            nextScreen.style.display = 'block';
+            document.getElementById('nextScreen').style.display = 'block';
         }
 
         function goBack() {
-            window.location.href = "landing-page.html?skipWelcome=1";
+            if (document.getElementById('progressContainer').style.display == 'none') {
+                document.getElementById('nextScreen').style.display = 'none';
+                document.getElementById('progressContainer').style.display = 'block';
+            } else {
+                window.location.href = "landing-page.html?skipWelcome=1";
+            }
         }
 
         function feedbackForm() {
