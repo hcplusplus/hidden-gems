@@ -357,10 +357,16 @@
 						welcomeOverlay.remove();
 					}, 500);
 				});
+				history.replaceState({}, document.title, "landing-page.html?skipWelcome=1");
+
+
 			}
 
-			// Show welcome message after a short delay
-			setTimeout(showWelcomeMessage, 500);
+			// Only show welcome message if URL doesn't include skipWelcome=1
+			const params = new URLSearchParams(window.location.search);
+			if (params.get("skipWelcome") !== "1") {
+				setTimeout(showWelcomeMessage, 500);
+			}
 		</script>
 	</body>
 </html>
