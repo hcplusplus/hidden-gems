@@ -1,0 +1,332 @@
+[
+  {
+    "name": "Tigerlily Berkeley - restaurant - food, dinner, upscale",
+    "coordinates": [
+      37.8125,
+      -122.419444
+    ],
+    "category": "food",
+    "description": "Enjoy delicious cuisine at Tigerlily Berkeley, a restaurant that offers upscale dining options in the heart of Berkeley.",
+    "rarity": "easy",
+    "color": "purple",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "Albany Bulb - beach - art, hiking, photography",
+    "coordinates": [
+      37.8125,
+      -122.419444
+    ],
+    "category": "beach",
+    "description": "Explore the Albany Bulb, a hidden gem in Berkeley that offers stunning views of the Bay Area and plenty of opportunities for outdoor activities like hiking and photography.",
+    "rarity": "most hidden",
+    "color": "purple",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "Sibley Volcanic Regional Preserve - volcano - hiking, geology, views",
+    "coordinates": [
+      37.8125,
+      -122.419444
+    ],
+    "category": "volcano",
+    "description": "Explore the Sibley Volcanic Regional Preserve, a hidden gem in Berkeley that offers stunning views of Mount Diablo and plenty of opportunities for hiking and geology exploration.",
+    "rarity": "most hidden",
+    "color": "purple",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "The Hidden Cafe - cafe - coffee, breakfast, local",
+    "coordinates": [
+      37.8125,
+      -122.419444
+    ],
+    "category": "caf\u00c3\u00a9",
+    "description": "Enjoy delicious coffee and breakfast fare at The Hidden Cafe, a local favorite in Berkeley that offers a variety of homemade treats.",
+    "rarity": "most hidden",
+    "color": "purple",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "Blake Garden - garden - nature, walking, photography",
+    "coordinates": [
+      37.8125,
+      -122.419444
+    ],
+    "category": "garden",
+    "description": "Explore the Blake Garden, a hidden gem in Berkeley that offers stunning views of the Bay Area and plenty of opportunities for outdoor activities like walking and photography.",
+    "rarity": "most hidden",
+    "color": "purple",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "Point Richmond - district - history, shopping, architecture",
+    "coordinates": [
+      37.8125,
+      -122.419444
+    ],
+    "category": "district",
+    "description": "Explore the Point Richmond neighborhood in Berkeley, which offers a mix of history, shopping, and architecture.",
+    "rarity": "most hidden",
+    "color": "purple",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "Kennedy Grove Regional Recreaction Area - park - hiking, picnic, nature",
+    "coordinates": [
+      37.8125,
+      -122.419444
+    ],
+    "category": "park",
+    "description": "Explore the Kennedy Grove Regional Recreaction Area in Berkeley, which offers stunning views of the Bay Area and plenty of opportunities for outdoor activities like hiking and picnicking.",
+    "rarity": "most hidden",
+    "color": "purple",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "Blake Garden Regional Recreaction Area - park - hiking, photography",
+    "coordinates": [
+      37.8125,
+      -122.419444
+    ],
+    "category": "park",
+    "description": "Explore the Blake Garden Regional Recreaction Area in Berkeley, which offers stunning views of the Bay Area and plenty of opportunities for outdoor activities like hiking and photography.",
+    "rarity": "most hidden",
+    "color": "purple",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "Kennedy Grove Regional Recreation Area",
+    "coordinates": [
+      37.8194,
+      -122.5608
+    ],
+    "category": "nature",
+    "description": "Explore the natural beauty of Kennedy Grove Regional Recreation Area and discover hidden gems like the spring, park, and picnic areas.",
+    "rarity": "most hidden",
+    "color": "orange",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "McBrydel Garden",
+    "coordinates": [
+      37.8156,
+      -122.564
+    ],
+    "category": "nature",
+    "description": "Discover the tranquil beauty of McBrydel Garden and explore its nature, walking, fishing, and plant-growing areas.",
+    "rarity": "most hidden",
+    "color": "purple",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "Point Pinole Regional Shoeline",
+    "coordinates": [
+      37.8162,
+      -122.564
+    ],
+    "category": "nature",
+    "description": "Explore the natural beauty of Point Pinole Regional Shoeline and discover hidden gems like the park, hiking, fishing, and picnic areas.",
+    "rarity": "most hidden",
+    "color": "orange",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "Port Costa",
+    "coordinates": [
+      37.8156,
+      -122.564
+    ],
+    "category": "nature",
+    "description": "Discover the natural beauty of Port Costa and explore its history, food, shopping, and architecture areas.",
+    "rarity": "most hidden",
+    "color": "purple",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "Bouverie Preserve",
+    "coordinates": [
+      37.8162,
+      -122.564
+    ],
+    "category": "nature",
+    "description": "Explore the natural beauty of Bouverie Preserve and discover hidden gems like the mine, history, architecture, and shopping areas.",
+    "rarity": "most hidden",
+    "color": "orange",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "Black Diamond Mine",
+    "coordinates": [
+      37.8162,
+      -122.564
+    ],
+    "category": "mines",
+    "description": "Discover the natural beauty of Black Diamond Mine and explore its history, architecture, and shopping areas.",
+    "rarity": "most hidden",
+    "color": "purple",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "Point Richmond",
+    "coordinates": [
+      37.8162,
+      -122.564
+    ],
+    "category": "districts",
+    "description": "Explore the natural beauty of Point Richmond and discover hidden gems like the district, architecture, and shopping areas.",
+    "rarity": "most hidden",
+    "color": "orange",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "The Hidden Cafe",
+    "coordinates": [
+      37.814295,
+      -122.46086
+    ],
+    "category": "caf\u00c3\u00a9",
+    "description": "Enjoy a delicious meal and stunning views of the Golden Gate Bridge at The Hidden Cafe.",
+    "rarity": "most hidden",
+    "color": "orange",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "Angel Island Immigrant Station Museum",
+    "coordinates": [
+      37.814295,
+      -122.46086
+    ],
+    "category": "museum",
+    "description": "Experience the history of immigration in America at Angel Island Immigrant Station Museum.",
+    "rarity": "least hidden",
+    "color": "orange",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "St. George Spiritual Center",
+    "coordinates": [
+      37.814295,
+      -122.46086
+    ],
+    "category": "arts_centre",
+    "description": "Experience the spiritual and artistic culture of St. George at St. George Spiritual Center.",
+    "rarity": "most hidden",
+    "color": "orange",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "San Bruno Mountain Summit Loop Trail",
+    "coordinates": [
+      37.814295,
+      -122.46086
+    ],
+    "category": "trail",
+    "description": "Experience the natural beauty of San Bruno Mountain at San Bruno Mountain Summit Loop Trail.",
+    "rarity": "most hidden",
+    "color": "orange",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "Rodeo Beach",
+    "coordinates": [
+      37.814295,
+      -122.46086
+    ],
+    "category": "beach",
+    "description": "Relax on Rodeo Beach and enjoy the views of the Golden Gate Bridge.",
+    "rarity": "most hidden",
+    "color": "orange",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "Rod\u00e9o Beach Perimeter Trail",
+    "coordinates": [
+      37.814295,
+      -122.46086
+    ],
+    "category": "trail",
+    "description": "Experience the natural beauty of Rod\u00e9o Beach at Rod\u00e9o Beach Perimeter Trail.",
+    "rarity": "most hidden",
+    "color": "orange",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  },
+  {
+    "name": "Sacred & Profane",
+    "coordinates": [
+      37.814295,
+      -122.46086
+    ],
+    "category": "arts_centre",
+    "description": "Experience the spiritual and artistic culture of Sacred & Profane at Sacred & Profane.",
+    "rarity": "most hidden",
+    "color": "orange",
+    "tags": [],
+    "time": 120,
+    "amenities": [],
+    "accessibility": []
+  }
+]

@@ -173,7 +173,7 @@ def load_available_gems():
     # In a real implementation, this would load from a database or file
     # For this example, we'll return a placeholder list
     try:
-        with open('gems_database.json', 'r') as f:
+        with open('gems_database_test.json', 'r') as f:
             return json.load(f)
     except FileNotFoundError:
         logger.warning("Gems database file not found, using sample data")

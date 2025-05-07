@@ -1,0 +1,1621 @@
+[
+  {
+    "id": 358823795,
+    "type": "node",
+    "tags": {
+      "ele": "376",
+      "gnis:feature_id": "1723449",
+      "historic": "district",
+      "leisure": "park",
+      "name": "Old Auburn Historic District"
+    },
+    "coordinates": [
+      -121.0761774,
+      38.8968165
+    ],
+    "name": "Old Auburn Historic District",
+    "historic": "district",
+    "leisure": "park",
+    "accessibility": [],
+    "description": "A district in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 120,
+    "detour_distance": 0.3113263466668917
+  },
+  {
+    "id": 358832796,
+    "type": "node",
+    "tags": {
+      "ele": "1264",
+      "gnis:feature_id": "1804562",
+      "leisure": "park",
+      "name": "Bishop City Park",
+      "wikidata": "Q49474864"
+    },
+    "coordinates": [
+      -118.3936585,
+      37.3671451
+    ],
+    "name": "Bishop City Park",
+    "leisure": "park",
+    "accessibility": [],
+    "description": "A park in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 152,
+    "detour_distance": 0.40997259366474603
+  },
+  {
+    "id": 11690678371,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets",
+      "toilets:disposal": "flush"
+    },
+    "coordinates": [
+      -118.396337,
+      37.367342
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 5,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 0.41868593040481605
+  },
+  {
+    "id": 11250338360,
+    "type": "node",
+    "tags": {
+      "access": "yes",
+      "amenity": "toilets",
+      "toilets:disposal": "flush"
+    },
+    "coordinates": [
+      -118.3908229,
+      37.3671651
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 0.5501328629915209
+  },
+  {
+    "id": 12024615760,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -121.0536574,
+      38.892362
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 1.7770663525111123
+  },
+  {
+    "id": 7799442493,
+    "type": "node",
+    "tags": {
+      "name": "Tamaroo Bar",
+      "natural": "beach"
+    },
+    "coordinates": [
+      -121.045787,
+      38.8896127
+    ],
+    "name": "Tamaroo Bar",
+    "natural": "beach",
+    "accessibility": [],
+    "description": "A beach in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 2.5028955272205207
+  },
+  {
+    "id": 358823723,
+    "type": "node",
+    "tags": {
+      "ele": "434",
+      "gnis:feature_id": "1723402",
+      "leisure": "park",
+      "name": "Ashford Park"
+    },
+    "coordinates": [
+      -121.0638343,
+      38.9179539
+    ],
+    "name": "Ashford Park",
+    "leisure": "park",
+    "accessibility": [],
+    "description": "A park in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 172,
+    "detour_distance": 2.742126013931271
+  },
+  {
+    "id": 6237573897,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -121.0594393,
+      38.864588
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 3.5663162181061576
+  },
+  {
+    "id": 7799442492,
+    "type": "node",
+    "tags": {
+      "name": "Oregon Bar",
+      "natural": "beach"
+    },
+    "coordinates": [
+      -121.056488,
+      38.8641135
+    ],
+    "name": "Oregon Bar",
+    "natural": "beach",
+    "accessibility": [],
+    "description": "A beach in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 3.712450071935652
+  },
+  {
+    "id": 12292481466,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -121.0340985,
+      38.9110791
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 3.90843461210657
+  },
+  {
+    "id": 3719612541,
+    "type": "node",
+    "tags": {
+      "name": "1. Welcome to Canyon View Preserve!",
+      "tourism": "viewpoint",
+      "website": "https://placerlandtrust.org/cvp-trail/#1"
+    },
+    "coordinates": [
+      -121.0520498,
+      38.9317119
+    ],
+    "name": "1. Welcome to Canyon View Preserve!",
+    "accessibility": [],
+    "description": "A feature in Northern California",
+    "popularity_score": 7,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 4.5429340904383535
+  },
+  {
+    "id": 12008117972,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -121.011888,
+      38.9328271
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 6.851525666394717
+  },
+  {
+    "id": 2131738904,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets",
+      "fee": "no",
+      "wheelchair": "no"
+    },
+    "coordinates": [
+      -118.4471161,
+      37.4137774
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 8,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 7.213729746998692
+  },
+  {
+    "id": 358807651,
+    "type": "node",
+    "tags": {
+      "ele": "454",
+      "gnis:feature_id": "1660072",
+      "name": "Umbrella Hill",
+      "natural": "peak"
+    },
+    "coordinates": [
+      -121.0057765,
+      38.8473999
+    ],
+    "name": "Umbrella Hill",
+    "natural": "peak",
+    "accessibility": [],
+    "description": "A peak in Northern California",
+    "popularity_score": 2,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 157,
+    "detour_distance": 7.900121128981304
+  },
+  {
+    "id": 11250338406,
+    "type": "node",
+    "tags": {
+      "access": "yes",
+      "amenity": "toilets",
+      "toilets:disposal": "flush"
+    },
+    "coordinates": [
+      -118.4915867,
+      37.3766703
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 5,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 8.635837122609162
+  },
+  {
+    "id": 358772676,
+    "type": "node",
+    "tags": {
+      "ele": "566",
+      "gnis:feature_id": "230658",
+      "name": "Pilot Hill",
+      "natural": "peak"
+    },
+    "coordinates": [
+      -121.029666,
+      38.8182337
+    ],
+    "name": "Pilot Hill",
+    "natural": "peak",
+    "accessibility": [],
+    "description": "A peak in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 223,
+    "detour_distance": 9.317987988506971
+  },
+  {
+    "id": 897990656,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets",
+      "fee": "no",
+      "note": "Pit Toilets",
+      "operator": "CA State Parks",
+      "wheelchair": "yes"
+    },
+    "coordinates": [
+      -120.9822954,
+      38.9425769
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [
+      "wheelchair"
+    ],
+    "description": "A toilets in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 9.560188042671925
+  },
+  {
+    "id": 358800088,
+    "type": "node",
+    "tags": {
+      "ele": "580",
+      "gnis:feature_id": "267789",
+      "name": "Stony Hill",
+      "natural": "peak"
+    },
+    "coordinates": [
+      -120.9838314,
+      38.9468425
+    ],
+    "name": "Stony Hill",
+    "natural": "peak",
+    "accessibility": [],
+    "description": "A peak in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 158,
+    "detour_distance": 9.725698452727602
+  },
+  {
+    "id": 12008118090,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -120.9892917,
+      38.8269476
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 5,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 10.50523833508403
+  },
+  {
+    "id": 358775176,
+    "type": "node",
+    "tags": {
+      "ele": "363",
+      "gnis:feature_id": "233034",
+      "name": "Shirttail Peak",
+      "natural": "peak"
+    },
+    "coordinates": [
+      -121.0896676,
+      38.7924008
+    ],
+    "name": "Shirttail Peak",
+    "natural": "peak",
+    "accessibility": [],
+    "description": "A peak in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 222,
+    "detour_distance": 11.444187126362408
+  },
+  {
+    "id": 2625539159,
+    "type": "node",
+    "tags": {
+      "tourism": "viewpoint"
+    },
+    "coordinates": [
+      -121.177818,
+      38.9661287
+    ],
+    "name": "Unnamed Feature",
+    "accessibility": [],
+    "description": "A feature in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 11.997140181251781
+  },
+  {
+    "id": 3185500568,
+    "type": "node",
+    "tags": {
+      "access": "public",
+      "amenity": "toilets",
+      "note": "Bathroom is actually on the Bobcat Trail.",
+      "toilets:disposal": "chemical",
+      "wheelchair": "yes"
+    },
+    "coordinates": [
+      -121.1770464,
+      38.9670082
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [
+      "wheelchair"
+    ],
+    "description": "A toilets in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 12.012549600777026
+  },
+  {
+    "id": 358798618,
+    "type": "node",
+    "tags": {
+      "ele": "364",
+      "gnis:feature_id": "262868",
+      "name": "Long Point",
+      "natural": "cliff"
+    },
+    "coordinates": [
+      -120.9696639,
+      38.9701756
+    ],
+    "name": "Long Point",
+    "natural": "cliff",
+    "accessibility": [],
+    "description": "A cliff in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 12.331376285184984
+  },
+  {
+    "id": 3624128123,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -121.2079478,
+      38.8536807
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 1,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 12.456947320660259
+  },
+  {
+    "id": 358761056,
+    "type": "node",
+    "tags": {
+      "ele": "610",
+      "gnis:feature_id": "218334",
+      "name": "Mount Ararat",
+      "natural": "peak"
+    },
+    "coordinates": [
+      -120.9399402,
+      38.8529558
+    ],
+    "name": "Mount Ararat",
+    "natural": "peak",
+    "accessibility": [],
+    "description": "A peak in Northern California",
+    "popularity_score": 8,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 138,
+    "detour_distance": 12.494013808713179
+  },
+  {
+    "id": 3624127890,
+    "type": "node",
+    "tags": {
+      "amenity": "bench",
+      "description": "John Barbour memorial",
+      "historic": "memorial"
+    },
+    "coordinates": [
+      -121.2082537,
+      38.8481055
+    ],
+    "name": "Unnamed bench",
+    "amenity": "bench",
+    "historic": "memorial",
+    "accessibility": [],
+    "description": "A bench in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 77,
+    "detour_distance": 12.72108124997294
+  },
+  {
+    "id": 12008118091,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -120.9557158,
+      38.8261035
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 12.762169943421032
+  },
+  {
+    "id": 358806101,
+    "type": "node",
+    "tags": {
+      "ele": "483",
+      "gnis:feature_id": "1658052",
+      "name": "Big Hill",
+      "natural": "peak"
+    },
+    "coordinates": [
+      -121.1616159,
+      38.9873967
+    ],
+    "name": "Big Hill",
+    "natural": "peak",
+    "accessibility": [],
+    "description": "A peak in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 120,
+    "detour_distance": 12.803106755100728
+  },
+  {
+    "id": 12008118095,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -120.9781927,
+      38.8068788
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 12.80425358899927
+  },
+  {
+    "id": 12008118096,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -120.9737537,
+      38.8070209
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 13.044781585010702
+  },
+  {
+    "id": 12008128759,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -120.9523492,
+      38.8193581
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 60,
+    "detour_distance": 13.450867692019825
+  },
+  {
+    "id": 358765910,
+    "type": "node",
+    "tags": {
+      "ele": "432",
+      "gnis:feature_id": "223574",
+      "name": "Flagstaff Hill",
+      "natural": "peak"
+    },
+    "coordinates": [
+      -121.083834,
+      38.7676791
+    ],
+    "name": "Flagstaff Hill",
+    "natural": "peak",
+    "accessibility": [],
+    "description": "A peak in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 175,
+    "detour_distance": 14.138020655035598
+  },
+  {
+    "id": 358765802,
+    "type": "node",
+    "tags": {
+      "ele": "583",
+      "gnis:feature_id": "223410",
+      "name": "Fattebort Hill",
+      "natural": "peak"
+    },
+    "coordinates": [
+      -121.0766134,
+      39.0248964
+    ],
+    "name": "Fattebort Hill",
+    "natural": "peak",
+    "accessibility": [],
+    "description": "A peak in Northern California",
+    "popularity_score": null,
+    "rarity": "most hidden",
+    "color": "red",
+    "time": 199,
+    "detour_distance": 14.490752763314928
+  },
+  {
+    "id": 5731446520,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -118.3921856,
+      37.3678955
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 17,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 60,
+    "detour_distance": 0.5410059486911925
+  },
+  {
+    "id": 4852469622,
+    "type": "node",
+    "tags": {
+      "name": "Wild Fig Orchard",
+      "name:en": "Wild Fig Orchard",
+      "tourism": "viewpoint"
+    },
+    "coordinates": [
+      -121.0684684,
+      38.8826519
+    ],
+    "name": "Wild Fig Orchard",
+    "accessibility": [],
+    "description": "A feature in Northern California",
+    "popularity_score": 23,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 60,
+    "detour_distance": 1.4112592225693679
+  },
+  {
+    "id": 358807192,
+    "type": "node",
+    "tags": {
+      "ele": "367",
+      "gnis:feature_id": "1659528",
+      "name": "Robie Point",
+      "natural": "peak"
+    },
+    "coordinates": [
+      -121.0524448,
+      38.8921211
+    ],
+    "name": "Robie Point",
+    "natural": "peak",
+    "accessibility": [],
+    "description": "A peak in Northern California",
+    "popularity_score": 18,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 177,
+    "detour_distance": 1.8847633648754174
+  },
+  {
+    "id": 2418620171,
+    "type": "node",
+    "tags": {
+      "historic": "memorial",
+      "inscription": "BLOOMERS CUT/SO NAMED BECAUSE OF ITS LOCATION ON THE BLOOMER RANCH, IT REMAINS VIRTUALLY UNCHANGED SINCE ITS ORIGINAL CONSTRUCTION IN 1864. THE OVERWHELMING TASK OF CONSTRUCTION WAS UNDERTAKEN BY THE DILIGENT, HARD WORKING EFFORTS OF A SMALL BAND OF...",
+      "memorial": "plaque"
+    },
+    "coordinates": [
+      -121.0830993,
+      38.8779497
+    ],
+    "name": "Unnamed memorial",
+    "historic": "memorial",
+    "accessibility": [],
+    "description": "A memorial in Northern California",
+    "popularity_score": 14,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 86,
+    "detour_distance": 2.0117052461076694
+  },
+  {
+    "id": 358857506,
+    "type": "node",
+    "tags": {
+      "ele": "446",
+      "gnis:feature_id": "2109869",
+      "leisure": "park",
+      "name": "Spring Meadows Park"
+    },
+    "coordinates": [
+      -121.0825,
+      38.9316667
+    ],
+    "name": "Spring Meadows Park",
+    "leisure": "park",
+    "accessibility": [],
+    "description": "A park in Northern California",
+    "popularity_score": 19,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 122,
+    "detour_distance": 4.187550589201079
+  },
+  {
+    "id": 429169196,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -121.0307428,
+      38.9128488
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 11,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 60,
+    "detour_distance": 4.257313170577224
+  },
+  {
+    "id": 429169410,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets",
+      "toilets:wheelchair": "yes",
+      "wheelchair": "limited"
+    },
+    "coordinates": [
+      -121.0153877,
+      38.9169516
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [
+      "wheelchair"
+    ],
+    "description": "A toilets in Northern California",
+    "popularity_score": 21,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 60,
+    "detour_distance": 5.647444425129374
+  },
+  {
+    "id": 358816245,
+    "type": "node",
+    "tags": {
+      "ele": "1412",
+      "gnis:feature_id": "1667246",
+      "name": "Red Hill",
+      "natural": "peak",
+      "wikidata": "Q49067261"
+    },
+    "coordinates": [
+      -118.4687248,
+      37.3599298
+    ],
+    "name": "Red Hill",
+    "natural": "peak",
+    "accessibility": [],
+    "description": "A peak in Northern California",
+    "popularity_score": 10,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 225,
+    "detour_distance": 6.50794410053219
+  },
+  {
+    "id": 358857487,
+    "type": "node",
+    "tags": {
+      "ele": "467",
+      "gnis:feature_id": "2109864",
+      "leisure": "park",
+      "name": "Christian Valley Park"
+    },
+    "coordinates": [
+      -121.0366667,
+      38.9577778
+    ],
+    "name": "Christian Valley Park",
+    "leisure": "park",
+    "accessibility": [],
+    "description": "A park in Northern California",
+    "popularity_score": 15,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 158,
+    "detour_distance": 7.732065518407321
+  },
+  {
+    "id": 2519020584,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -121.1641192,
+      38.9590266
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 12,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 60,
+    "detour_distance": 10.588565025544396
+  },
+  {
+    "id": 358776699,
+    "type": "node",
+    "tags": {
+      "ele": "612",
+      "gnis:feature_id": "235639",
+      "name": "Sugar Pine Mountain",
+      "natural": "peak"
+    },
+    "coordinates": [
+      -121.0557788,
+      38.9923969
+    ],
+    "name": "Sugar Pine Mountain",
+    "natural": "peak",
+    "accessibility": [],
+    "description": "A peak in Northern California",
+    "popularity_score": 11,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 185,
+    "detour_distance": 10.98864729660888
+  },
+  {
+    "id": 3158829740,
+    "type": "node",
+    "tags": {
+      "tourism": "viewpoint"
+    },
+    "coordinates": [
+      -121.1653958,
+      38.9691668
+    ],
+    "name": "Unnamed Feature",
+    "accessibility": [],
+    "description": "A feature in Northern California",
+    "popularity_score": 18,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 60,
+    "detour_distance": 11.457354547833306
+  },
+  {
+    "id": 12008118094,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -120.9782544,
+      38.8068579
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 15,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 60,
+    "detour_distance": 12.80256418247082
+  },
+  {
+    "id": 12366464157,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets",
+      "portable": "yes"
+    },
+    "coordinates": [
+      -121.0324824,
+      38.7815328
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 18,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 60,
+    "detour_distance": 13.075738698490897
+  },
+  {
+    "id": 9573609851,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets",
+      "name": "Restroom"
+    },
+    "coordinates": [
+      -120.9816934,
+      38.7947545
+    ],
+    "name": "Restroom",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 22,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 60,
+    "detour_distance": 13.679841298623087
+  },
+  {
+    "id": 358797854,
+    "type": "node",
+    "tags": {
+      "ele": "646",
+      "gnis:feature_id": "260393",
+      "name": "French Hill",
+      "natural": "peak"
+    },
+    "coordinates": [
+      -120.9257727,
+      38.9393432
+    ],
+    "name": "French Hill",
+    "natural": "peak",
+    "accessibility": [],
+    "description": "A peak in Northern California",
+    "popularity_score": 18,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 240,
+    "detour_distance": 13.754725226794536
+  },
+  {
+    "id": 358800150,
+    "type": "node",
+    "tags": {
+      "ele": "650",
+      "gnis:feature_id": "267920",
+      "name": "Summit Hill",
+      "natural": "peak"
+    },
+    "coordinates": [
+      -120.9245795,
+      38.9532036
+    ],
+    "name": "Summit Hill",
+    "natural": "peak",
+    "accessibility": [],
+    "description": "A peak in Northern California",
+    "popularity_score": 20,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 159,
+    "detour_distance": 14.475186802191821
+  },
+  {
+    "id": 2659115557,
+    "type": "node",
+    "tags": {
+      "access": "public",
+      "amenity": "toilets",
+      "fee": "no"
+    },
+    "coordinates": [
+      -121.1328224,
+      38.769168
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 20,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 60,
+    "detour_distance": 14.84860185138981
+  },
+  {
+    "id": 358767840,
+    "type": "node",
+    "tags": {
+      "ele": "710",
+      "gnis:feature_id": "225680",
+      "name": "Hotchkiss Hill",
+      "natural": "peak"
+    },
+    "coordinates": [
+      -120.9774423,
+      39.006286
+    ],
+    "name": "Hotchkiss Hill",
+    "natural": "peak",
+    "accessibility": [],
+    "description": "A peak in Northern California",
+    "popularity_score": 10,
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 145,
+    "detour_distance": 14.965002591516251
+  },
+  {
+    "id": 6806053199,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets",
+      "fee": "no"
+    },
+    "coordinates": [
+      -118.395718,
+      37.3629914
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 33,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "detour_distance": 0.08735207960886691
+  },
+  {
+    "id": 11115286462,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -118.397936,
+      37.3723412
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 37,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "detour_distance": 0.9922219477003505
+  },
+  {
+    "id": 358806377,
+    "type": "node",
+    "tags": {
+      "ele": "390",
+      "gnis:feature_id": "1658443",
+      "name": "Duncan Hill",
+      "natural": "peak"
+    },
+    "coordinates": [
+      -121.0968907,
+      38.8973987
+    ],
+    "name": "Duncan Hill",
+    "natural": "peak",
+    "accessibility": [],
+    "description": "A peak in Northern California",
+    "popularity_score": 31,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 161,
+    "detour_distance": 2.0062778282250138
+  },
+  {
+    "id": 6206904606,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -121.0654303,
+      38.8751621
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 27,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "detour_distance": 2.284200901187788
+  },
+  {
+    "id": 3354989352,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets",
+      "toilets:disposal": "pitlatrine"
+    },
+    "coordinates": [
+      -121.0582663,
+      38.8687787
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 29,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "detour_distance": 3.176823384151428
+  },
+  {
+    "id": 6166901450,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -121.0359207,
+      38.9155203
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 40,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "detour_distance": 4.033088622668566
+  },
+  {
+    "id": 358761292,
+    "type": "node",
+    "tags": {
+      "ele": "405",
+      "gnis:feature_id": "218569",
+      "name": "Bald Hill",
+      "natural": "peak"
+    },
+    "coordinates": [
+      -121.1174471,
+      38.9090651
+    ],
+    "name": "Bald Hill",
+    "natural": "peak",
+    "accessibility": [],
+    "description": "A peak in Northern California",
+    "popularity_score": 31,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 205,
+    "detour_distance": 4.090368084460186
+  },
+  {
+    "id": 6923603946,
+    "type": "node",
+    "tags": {
+      "access": "yes",
+      "amenity": "toilets",
+      "toilets:disposal": "chemical"
+    },
+    "coordinates": [
+      -121.014844,
+      38.9159448
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 40,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "detour_distance": 5.641740528605603
+  },
+  {
+    "id": 11755717626,
+    "type": "node",
+    "tags": {
+      "historic": "memorial",
+      "memorial": "war_memorial",
+      "name": "Bishop Creek Battleground"
+    },
+    "coordinates": [
+      -118.4811679,
+      37.3414716
+    ],
+    "name": "Bishop Creek Battleground",
+    "historic": "memorial",
+    "accessibility": [],
+    "description": "A memorial in Northern California",
+    "popularity_score": 27,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 98,
+    "detour_distance": 7.9865651131529685
+  },
+  {
+    "id": 358816212,
+    "type": "node",
+    "tags": {
+      "ele": "1342",
+      "gnis:feature_id": "1667215",
+      "name": "Chalk Bluff",
+      "natural": "cliff",
+      "wikidata": "Q49468037"
+    },
+    "coordinates": [
+      -118.4687263,
+      37.4118744
+    ],
+    "name": "Chalk Bluff",
+    "natural": "cliff",
+    "accessibility": [],
+    "description": "A cliff in Northern California",
+    "popularity_score": 38,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "detour_distance": 8.418540989161524
+  },
+  {
+    "id": 358807478,
+    "type": "node",
+    "tags": {
+      "ele": "218",
+      "gnis:feature_id": "1659902",
+      "name": "Sugarloaf",
+      "natural": "peak"
+    },
+    "coordinates": [
+      -121.1535586,
+      38.8279556
+    ],
+    "name": "Sugarloaf",
+    "natural": "peak",
+    "accessibility": [],
+    "description": "A peak in Northern California",
+    "popularity_score": 32,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 190,
+    "detour_distance": 10.117772442208686
+  },
+  {
+    "id": 3595395412,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -121.1640902,
+      38.9591864
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 39,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "detour_distance": 10.598744816926004
+  },
+  {
+    "id": 6419944168,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -121.0475772,
+      38.9932958
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 35,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "detour_distance": 11.210336986491797
+  },
+  {
+    "id": 3052810068,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -121.1738837,
+      38.8238239
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 39,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "detour_distance": 11.693521753127655
+  },
+  {
+    "id": 4759297082,
+    "type": "node",
+    "tags": {
+      "tourism": "viewpoint"
+    },
+    "coordinates": [
+      -121.1781874,
+      38.9678134
+    ],
+    "name": "Unnamed Feature",
+    "accessibility": [],
+    "description": "A feature in Northern California",
+    "popularity_score": 38,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "detour_distance": 12.145767312556908
+  },
+  {
+    "id": 12008118097,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -120.9729437,
+      38.8067304
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 35,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "detour_distance": 13.115616540635362
+  },
+  {
+    "id": 12008118098,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -120.9729088,
+      38.8067262
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 25,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "detour_distance": 13.117981062072177
+  },
+  {
+    "id": 5404741143,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -121.1946064,
+      38.8213356
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 31,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "detour_distance": 13.245092438521894
+  },
+  {
+    "id": 12008118092,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -120.9484149,
+      38.8261829
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 31,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "detour_distance": 13.2697171430475
+  },
+  {
+    "id": 5662453536,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -120.9516545,
+      38.9668474
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 26,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "detour_distance": 13.286282929073968
+  },
+  {
+    "id": 358763671,
+    "type": "node",
+    "tags": {
+      "ele": "478",
+      "gnis:feature_id": "221161",
+      "name": "Clark Mountain",
+      "natural": "peak"
+    },
+    "coordinates": [
+      -120.957441,
+      38.8124008
+    ],
+    "name": "Clark Mountain",
+    "natural": "peak",
+    "accessibility": [],
+    "description": "A peak in Northern California",
+    "popularity_score": 35,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 178,
+    "detour_distance": 13.61561319348956
+  },
+  {
+    "id": 4375846411,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -120.9323446,
+      38.9633561
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 40,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "detour_distance": 14.44247138444657
+  },
+  {
+    "id": 2882638480,
+    "type": "node",
+    "tags": {
+      "amenity": "toilets"
+    },
+    "coordinates": [
+      -121.1104893,
+      38.7635128
+    ],
+    "name": "Unnamed toilets",
+    "amenity": "toilets",
+    "accessibility": [],
+    "description": "A toilets in Northern California",
+    "popularity_score": 32,
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "detour_distance": 14.914527764251114
+  }
+]

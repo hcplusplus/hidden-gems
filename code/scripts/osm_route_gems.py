@@ -172,11 +172,10 @@ def get_common_osm_tags():
     """Returns dictionary of common OSM tag groups with their common values."""
     return {
         'leisure': [
-            'park', 'garden', 'nature_reserve', 'playground',
-            'sports_centre', 'swimming_pool',
-            'fitness_station', 'picnic_table', 'marina',
-            'slipway', 'bird_hide', 'beach_resort', 'fishing', 'firepit',
-            'outdoor_seating', 'swimming_area', 'recreation_ground'
+            'park', 'garden', 'nature_reserve', 
+          
+            'bird_hide'
+          
         ],
         'amenity': [
             # Food & Drink
@@ -190,10 +189,8 @@ def get_common_osm_tags():
             'picnic_site', 'viewpoint'
         ],
         'natural': [
-            'beach', 'water', 'wood', 'tree', 'cliff', 'cave_entrance', 'peak',
-            'volcano', 'bay', 'spring', 'hot_spring', 'waterfall', 'glacier',
-            'wetland', 'sand', 'scrub', 'heath', 'grassland', 'fell', 'rock',
-            'stone', 'sinkhole'
+            'beach','cave_entrance', 'peak',
+            'hot_spring', 'waterfall', 'glacier'
         ],
         'historic': [
             'monument', 'memorial', 'archaeological_site', 'ruins', 'castle',
