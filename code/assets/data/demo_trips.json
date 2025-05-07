@@ -1,0 +1,35 @@
+[
+    {
+      "origin": "Berkeley, CA",
+      "destination": "Dublin, CA",
+      "originCoords": [-122.2730, 37.8715],
+      "destinationCoords": [-121.9096, 37.7049],
+      "activities": ["hiking", "scenic", "historic"],
+      "effortLevel": "easy",
+      "accessibility": ["wheelchair"],
+      "time": "full-day",
+      "maxDetour": "30"
+    },
+    {
+     "origin": "Auburn, CA",
+      "destination": "Bishop, CA",
+      "originCoords": [-120.0324, 39.0968],
+      "destinationCoords": [-118.3952, 37.3614],
+      "activities": ["hiking", "photography", "historic"],
+      "effortLevel": "moderate",
+      "accessibility": [],
+      "time": "half-day",
+      "maxDetour": "15"
+    },
+    {
+      "origin": "San Francisco, CA",
+      "destination": "Eureka, CA",
+      "originCoords": [-122.4194, 37.7749],
+      "destinationCoords": [-124.1637, 40.8021],
+      "activities": ["hiking", "nature", "views"],
+      "effortLevel": "challenging",
+      "accessibility": [],
+      "time": "full-day",
+      "maxDetour": "50+"
+    }
+  ]
