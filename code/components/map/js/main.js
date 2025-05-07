@@ -20,14 +20,13 @@ async function initApp() {
         await HiddenGems.map.init();
         
         // Initialize remaining modules
-        HiddenGems.preferences.init();
+        //HiddenGems.preferences.init();
         HiddenGems.cards.createCards();
         HiddenGems.cards.createSwipeIndicators();
         HiddenGems.swipe.init();
-        HiddenGems.achievements.init();
         
         // Apply preference filters
-        HiddenGems.cards.applyPreferenceFilters();
+        //HiddenGems.cards.applyPreferenceFilters();
         
         console.log('Hidden Gems App initialized successfully!');
     } catch (err) {

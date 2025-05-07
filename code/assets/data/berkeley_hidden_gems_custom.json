@@ -1,0 +1,6373 @@
+[
+  {
+    "name": "The Rock",
+    "coordinates": [
+      -122.243419,
+      37.8655393
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "stone",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 7.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 240
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2538735,
+      37.8708571
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 27.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 90
+  },
+  {
+    "name": "4.0 Ball",
+    "coordinates": [
+      -122.2579626,
+      37.8724521
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "",
+    "amenity": "fountain",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 10.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 270
+  },
+  {
+    "name": "Penelope's Coffee and Tea",
+    "coordinates": [
+      -122.267556,
+      37.868419
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": "94704"
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 60
+  },
+  {
+    "name": "Sather Gate",
+    "coordinates": [
+      -122.259509,
+      37.8702403
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "monument",
+    "leisure": "",
+    "popularity_score": 13.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 180
+  },
+  {
+    "name": "Damask Rose Coffee",
+    "coordinates": [
+      -122.265928,
+      37.8517585
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 8.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 180
+  },
+  {
+    "name": "Nomad Cafe",
+    "coordinates": [
+      -122.2656935,
+      37.8504805
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 14.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 120
+  },
+  {
+    "name": "Fireplace (ruins)",
+    "coordinates": [
+      -122.2360183,
+      37.8623816
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "ruins",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 120
+  },
+  {
+    "name": "Flavia",
+    "coordinates": [
+      -122.269013,
+      37.8798563
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": "94704"
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 12.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Tigerlily Berkeley",
+    "coordinates": [
+      -122.269,
+      37.8797331
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": "94709"
+    },
+    "opening_hours": "Sa,Su 11:00-14:00, Mo-Su 17:00-18:30",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 20.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 210
+  },
+  {
+    "name": "Cheeseboard Pizza",
+    "coordinates": [
+      -122.269469,
+      37.87986
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo-Tu,Su off; We-Fr 17:00-20:00; Sa 11:30-14:30,17:00-20:00",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 180
+  },
+  {
+    "name": "Vanne Bistro",
+    "coordinates": [
+      -122.269403,
+      37.87933
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo-Fr 06:00-20:00; Su 07:00-19:00; Sa 06:30-20:00",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 2.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 330
+  },
+  {
+    "name": "Da Lian",
+    "coordinates": [
+      -122.269164,
+      37.8770733
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo off; Tu-Fr,Su 11:30-14:30,16:30-21:00; Sa 16:30-21:00",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 270
+  },
+  {
+    "name": "Taste of the Himalayas",
+    "coordinates": [
+      -122.269079,
+      37.876464
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "We-Su 16:30-20:30",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 23.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 210
+  },
+  {
+    "name": "Party Sushi",
+    "coordinates": [
+      -122.2689411,
+      37.8752578
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 120
+  },
+  {
+    "name": "Cha Thai Tea",
+    "coordinates": [
+      -122.2688995,
+      37.87491
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 30
+  },
+  {
+    "name": "La Burrita",
+    "coordinates": [
+      -122.2606291,
+      37.8755667
+    ],
+    "address": {
+      "number": "",
+      "street": "Euclid Avenue",
+      "city": "",
+      "postcode": "94709"
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 10.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 330
+  },
+  {
+    "name": "Bongo Burger",
+    "coordinates": [
+      -122.2601289,
+      37.8756116
+    ],
+    "address": {
+      "number": "",
+      "street": "Euclid Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 24.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 180
+  },
+  {
+    "name": "Delah Coffee",
+    "coordinates": [
+      -122.2601636,
+      37.8757872
+    ],
+    "address": {
+      "number": "",
+      "street": "Euclid Avenue",
+      "city": "",
+      "postcode": "94709"
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 360
+  },
+  {
+    "name": "Chaparral Peak",
+    "coordinates": [
+      -122.2230234,
+      37.8782589
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "peak",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 240
+  },
+  {
+    "name": "Mezzo",
+    "coordinates": [
+      -122.2587883,
+      37.866179
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 210
+  },
+  {
+    "name": "Peet's Coffee",
+    "coordinates": [
+      -122.2562718,
+      37.8668692
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 210
+  },
+  {
+    "name": "Kirala",
+    "coordinates": [
+      -122.2668457,
+      37.8593252
+    ],
+    "address": {
+      "number": "",
+      "street": "Ward Street",
+      "city": "",
+      "postcode": "94705"
+    },
+    "opening_hours": "Mo-Fr 17:30-21:30; Sa 11:30-15:00, 17:30-21:30; Su 11:30-15:00, 17:00-21:00",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 90
+  },
+  {
+    "name": "The Station",
+    "coordinates": [
+      -122.245052,
+      37.8588105
+    ],
+    "address": {
+      "number": "",
+      "street": "Russell Street",
+      "city": "",
+      "postcode": "94705"
+    },
+    "opening_hours": "07:00-21:00",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 22.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 270
+  },
+  {
+    "name": "Gypsy's Trattoria Italiano",
+    "coordinates": [
+      -122.2580948,
+      37.8680564
+    ],
+    "address": {
+      "number": "",
+      "street": "Durant Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 90
+  },
+  {
+    "name": "Comal Next Door",
+    "coordinates": [
+      -122.26852,
+      37.871489
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": "94704"
+    },
+    "opening_hours": "Mo-Su 11:00-20:30",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 120
+  },
+  {
+    "name": "Blue Bottle Coffee",
+    "coordinates": [
+      -122.2676078,
+      37.8720713
+    ],
+    "address": {
+      "number": "",
+      "street": "University Avenue",
+      "city": "",
+      "postcode": "94704"
+    },
+    "opening_hours": "Mo-Fr 06:30-18:00; Sa, Su 07:00-18:00",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 60
+  },
+  {
+    "name": "Flavors Of India",
+    "coordinates": [
+      -122.2522732,
+      37.8510245
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 20.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 150
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2263726,
+      37.8500503
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 30
+  },
+  {
+    "name": "La M\u00e9diteran\u00e9e",
+    "coordinates": [
+      -122.2532665,
+      37.8576561
+    ],
+    "address": {
+      "number": "",
+      "street": "College Avenue",
+      "city": "",
+      "postcode": "94705"
+    },
+    "opening_hours": "Tu-Su 12:00-20:30",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 240
+  },
+  {
+    "name": "Main Stacks",
+    "coordinates": [
+      -122.259322,
+      37.8729501
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "library",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 21.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 240
+  },
+  {
+    "name": "My-O-My",
+    "coordinates": [
+      -122.260333,
+      37.8753063
+    ],
+    "address": {
+      "number": "",
+      "street": "Euclid Avenue",
+      "city": "",
+      "postcode": "94709"
+    },
+    "opening_hours": "Mo-Fr 11:00-21:00; Sa off; Su 12:00-18:00",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 300
+  },
+  {
+    "name": "Harmer E. Davis Transportation Library",
+    "coordinates": [
+      -122.2589305,
+      37.8738174
+    ],
+    "address": {
+      "number": "",
+      "street": "McLaughlin Hall",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "library",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 25.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "The Wood Tavern",
+    "coordinates": [
+      -122.2525593,
+      37.8506299
+    ],
+    "address": {
+      "number": "",
+      "street": "College Avenue",
+      "city": "",
+      "postcode": "94618"
+    },
+    "opening_hours": "Tu-Sa 11:00-19:00; Su 12:00-19:00",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 12.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 120
+  },
+  {
+    "name": "Durham Studio Theater",
+    "coordinates": [
+      -122.2604789,
+      37.8704319
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "theatre",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 1.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 60
+  },
+  {
+    "name": "Bobby G's Pizzeria",
+    "coordinates": [
+      -122.2689878,
+      37.8719113
+    ],
+    "address": {
+      "number": "",
+      "street": "University Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo-Th, Su 11:00-23:00; Fr, Sa 11:00-02:00",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 360
+  },
+  {
+    "name": "Juice Appeal",
+    "coordinates": [
+      -122.2679439,
+      37.8704713
+    ],
+    "address": {
+      "number": "",
+      "street": "Berkeley Square",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo-Fr 08:00-18:00; Sa 09:00-18:00; Su 10:00-17:00",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 150
+  },
+  {
+    "name": "Angeline's Louisiana Kitchen",
+    "coordinates": [
+      -122.2675427,
+      37.8682414
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Tu-Fr 11:30-21:00; Sa-Su 12:00-20:30; Mo off",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 11.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 30
+  },
+  {
+    "name": "Sandwich Zone",
+    "coordinates": [
+      -122.2675369,
+      37.8710195
+    ],
+    "address": {
+      "number": "",
+      "street": "Kala Bagai Way",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo-Fr 08:00-15:00",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 1.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Annie's Oak",
+    "coordinates": [
+      -122.2585688,
+      37.8766043
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "tree",
+    "leisure": "",
+    "popularity_score": 6.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 360
+  },
+  {
+    "name": "Caf\u00e9 Zeb",
+    "coordinates": [
+      -122.2531492,
+      37.869678
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 17.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 270
+  },
+  {
+    "name": "Binge Coffee House",
+    "coordinates": [
+      -122.2661767,
+      37.8679255
+    ],
+    "address": {
+      "number": "",
+      "street": "Bancroft Way",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 90
+  },
+  {
+    "name": "Las Delicias",
+    "coordinates": [
+      -122.2675685,
+      37.8714605
+    ],
+    "address": {
+      "number": "",
+      "street": "Kala Bagai Way",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo-Sa 11:00-20:00",
+    "activity_cost": "Free",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 28.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 90
+  },
+  {
+    "name": "Saigon Express",
+    "coordinates": [
+      -122.267537,
+      37.871379
+    ],
+    "address": {
+      "number": "",
+      "street": "Kala Bagai Way",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo-Fr 10:00-19:00",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 6.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 150
+  },
+  {
+    "name": "Abe's Cafe",
+    "coordinates": [
+      -122.2603679,
+      37.8754788
+    ],
+    "address": {
+      "number": "",
+      "street": "Euclid Avenue",
+      "city": "",
+      "postcode": "94709"
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 22.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 120
+  },
+  {
+    "name": "Jazzcaff\u00e9",
+    "coordinates": [
+      -122.2688109,
+      37.8712014
+    ],
+    "address": {
+      "number": "",
+      "street": "Addison Street",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 21.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 120
+  },
+  {
+    "name": "Lox Stock & Bagel",
+    "coordinates": [
+      -122.269465,
+      37.8693065
+    ],
+    "address": {
+      "number": "",
+      "street": "Allston Way",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo-Fr 08:00-15:00",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 20.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 360
+  },
+  {
+    "name": "Simply Bowl",
+    "coordinates": [
+      -122.267132,
+      37.872158
+    ],
+    "address": {
+      "number": "",
+      "street": "University Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo-Su 11:00-15:30,17:00-21:00",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 30
+  },
+  {
+    "name": "Toss Noodle Bar",
+    "coordinates": [
+      -122.268154,
+      37.868057
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo-Su 11:00-22:00",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 23.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 90
+  },
+  {
+    "name": "Platano",
+    "coordinates": [
+      -122.2697291,
+      37.8718164
+    ],
+    "address": {
+      "number": "",
+      "street": "University Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Su-Th 11:30-21:00, Fr,Sa 11:30-22:00",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 360
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2635924,
+      37.8721214
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 90
+  },
+  {
+    "name": "Little Plearn Thai Kitchen",
+    "coordinates": [
+      -122.267541,
+      37.867978
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 360
+  },
+  {
+    "name": "\u7737\u6e58 Easterly",
+    "coordinates": [
+      -122.267459,
+      37.867165
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo,We-Su 10:00-14:00,17:00-21:00; Tu off",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 210
+  },
+  {
+    "name": "Springer Memorial Gateway",
+    "coordinates": [
+      -122.2652916,
+      37.8717297
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 300
+  },
+  {
+    "name": "Observatory Hill",
+    "coordinates": [
+      -122.2605669,
+      37.8742233
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "peak",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 90
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2581675,
+      37.8725277
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 90
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2578671,
+      37.8726632
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 19.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 210
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2580509,
+      37.8725615
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 330
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2579409,
+      37.8725171
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 22.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2578591,
+      37.8723053
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 6.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 210
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2578469,
+      37.8726038
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 26.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 360
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2580656,
+      37.8726112
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 90
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.25813,
+      37.8725932
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 10.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 360
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2579462,
+      37.8726992
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 8.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 60
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2582078,
+      37.8726292
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 12.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 210
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2579221,
+      37.8722259
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 210
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2577893,
+      37.8724451
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 300
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.257906,
+      37.8725879
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 17.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 150
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2581085,
+      37.872373
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 27.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 30
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2577262,
+      37.8722735
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 17.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 240
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2580669,
+      37.8722641
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 270
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2578363,
+      37.8722439
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 90
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2579006,
+      37.8724154
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 360
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.257784,
+      37.8722545
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 22.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 120
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2579865,
+      37.8722143
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 6.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 120
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2579248,
+      37.8726431
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 60
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2579516,
+      37.8722895
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 270
+  },
+  {
+    "name": "A'Cuppa Tea",
+    "coordinates": [
+      -122.2531192,
+      37.8562513
+    ],
+    "address": {
+      "number": "",
+      "street": "College Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo-Su 09:00-17:00",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 60
+  },
+  {
+    "name": "Tightwad Hill",
+    "coordinates": [
+      -122.2508317,
+      37.8726181
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "peak",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 28.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 150
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.249678,
+      37.8747067
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "picnic_table",
+    "popularity_score": 29.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 150
+  },
+  {
+    "name": "John Le Conte and Joseph Le Conte Memorial",
+    "coordinates": [
+      -122.2636569,
+      37.8709976
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 9.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 30
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2571815,
+      37.870734
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 90
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2571752,
+      37.8708194
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 17.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 210
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2519387,
+      37.8672165
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 24.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 120
+  },
+  {
+    "name": "Sweetheart Cafe",
+    "coordinates": [
+      -122.2579232,
+      37.8680797
+    ],
+    "address": {
+      "number": "",
+      "street": "Durant Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "6:00-20:30",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 210
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2593645,
+      37.8699042
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 360
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.259294,
+      37.8698809
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 10.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2592411,
+      37.8693011
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 14.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 240
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2592658,
+      37.8697401
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 60
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2591863,
+      37.8690263
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 28.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 330
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.259355,
+      37.8692912
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 10.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.259307,
+      37.8690914
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 17.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 270
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.259392,
+      37.8700389
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 210
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2592798,
+      37.8689338
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 24.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 210
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2594395,
+      37.869693
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 19.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 240
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.259483,
+      37.8698994
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 3.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 330
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2594962,
+      37.8699626
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 6.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 60
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2595233,
+      37.8697887
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 150
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.259352,
+      37.8698434
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 16.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 330
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2595113,
+      37.8697095
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 22.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 360
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2591708,
+      37.8689501
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 240
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2591474,
+      37.8691438
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 10.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 270
+  },
+  {
+    "name": "Berkeley Social Club",
+    "coordinates": [
+      -122.2695214,
+      37.871843
+    ],
+    "address": {
+      "number": "",
+      "street": "University Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 120
+  },
+  {
+    "name": "La Familia",
+    "coordinates": [
+      -122.2664027,
+      37.8556546
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 60
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2519432,
+      37.8697156
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 270
+  },
+  {
+    "name": "Royal Rangoon",
+    "coordinates": [
+      -122.2594876,
+      37.8589942
+    ],
+    "address": {
+      "number": "",
+      "street": "Telegraph Avenue",
+      "city": "",
+      "postcode": "94705"
+    },
+    "opening_hours": "Mo-Su 11:30 - 14:30; Mo-Su 17:00 - 22:00",
+    "activity_cost": "Free",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 120
+  },
+  {
+    "name": "Philz Coffee",
+    "coordinates": [
+      -122.252219,
+      37.8501594
+    ],
+    "address": {
+      "number": "",
+      "street": "College Avenue",
+      "city": "",
+      "postcode": "94618"
+    },
+    "opening_hours": "Sa,Su 06:00-18:00; Mo-We 05:00-13:00; Th,Fr 05:00-18:00",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 23.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 90
+  },
+  {
+    "name": "Sliver Pizzeria",
+    "coordinates": [
+      -122.2587045,
+      37.8656685
+    ],
+    "address": {
+      "number": "",
+      "street": "Telegraph Avenue",
+      "city": "",
+      "postcode": "94704"
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 18.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 330
+  },
+  {
+    "name": "Limewood Bar & Restaurant",
+    "coordinates": [
+      -122.242243,
+      37.8589725
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 25.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 360
+  },
+  {
+    "name": "Micro Yali's",
+    "coordinates": [
+      -122.2617916,
+      37.8716673
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 330
+  },
+  {
+    "name": "Marian Koshland Bioscience & Natural Resources Library",
+    "coordinates": [
+      -122.2626838,
+      37.8713738
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "library",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 330
+  },
+  {
+    "name": "Mathematics Statistics Library",
+    "coordinates": [
+      -122.2576719,
+      37.8736458
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "library",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 19.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 360
+  },
+  {
+    "name": "Social Research Library",
+    "coordinates": [
+      -122.2611426,
+      37.873883
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "library",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 16.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 150
+  },
+  {
+    "name": "Institute of Governmental Studies Library",
+    "coordinates": [
+      -122.2579066,
+      37.8710437
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "library",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 17.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 180
+  },
+  {
+    "name": "The Coffee Lab",
+    "coordinates": [
+      -122.2558516,
+      37.8727947
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 30
+  },
+  {
+    "name": "Optometry and Health Sciences Library",
+    "coordinates": [
+      -122.2547533,
+      37.871681
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "library",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 15.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 90
+  },
+  {
+    "name": "Thomas J. Long Business Library",
+    "coordinates": [
+      -122.253854,
+      37.8714803
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "library",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 360
+  },
+  {
+    "name": "Zing Cafe",
+    "coordinates": [
+      -122.2691424,
+      37.853559
+    ],
+    "address": {
+      "number": "",
+      "street": "Adeline Street",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 6.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 90
+  },
+  {
+    "name": "Howison Philosophy Library",
+    "coordinates": [
+      -122.2579691,
+      37.8708584
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "library",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 2.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 330
+  },
+  {
+    "name": "Indian Rasoi",
+    "coordinates": [
+      -122.260702,
+      37.8507337
+    ],
+    "address": {
+      "number": "",
+      "street": "Telegraph Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo-Su 11:00-21:00",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 90
+  },
+  {
+    "name": "Townsend Amphitheater",
+    "coordinates": [
+      -122.240269,
+      37.875272
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "theatre",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 15.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 270
+  },
+  {
+    "name": "Musashi",
+    "coordinates": [
+      -122.2664371,
+      37.8639968
+    ],
+    "address": {
+      "number": "",
+      "street": "Dwight Way",
+      "city": "",
+      "postcode": "94704"
+    },
+    "opening_hours": "Tu-Sa 17:00-21:00",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 3.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Cafe Milano",
+    "coordinates": [
+      -122.2584615,
+      37.8686708
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 210
+  },
+  {
+    "name": "84 Viet",
+    "coordinates": [
+      -122.2689226,
+      37.8728299
+    ],
+    "address": {
+      "number": "",
+      "street": "Berkeley Way",
+      "city": "",
+      "postcode": "94704"
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 27.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 90
+  },
+  {
+    "name": "Hui Lau Shan",
+    "coordinates": [
+      -122.266233,
+      37.8681954
+    ],
+    "address": {
+      "number": "",
+      "street": "Fulton Street",
+      "city": "",
+      "postcode": "94704"
+    },
+    "opening_hours": "Mo-Tu 13:30-20:30; We 14:30-20:30; Th-Fr 13:30-21:00; Sa-Su 12:30-21:00",
+    "activity_cost": "Free",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 20.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 120
+  },
+  {
+    "name": "Canary Islands",
+    "coordinates": [
+      -122.2359641,
+      37.8736053
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "garden",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 240
+  },
+  {
+    "name": "Cloud Forest",
+    "coordinates": [
+      -122.2382352,
+      37.8730141
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "garden",
+    "popularity_score": 29.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 30
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2366126,
+      37.8750494
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "picnic_table",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 300
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2381817,
+      37.8735489
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "picnic_table",
+    "popularity_score": 8.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 180
+  },
+  {
+    "name": "Chaparral",
+    "coordinates": [
+      -122.2395074,
+      37.8735258
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "garden",
+    "popularity_score": 15.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 150
+  },
+  {
+    "name": "Water Wise Entry Garden",
+    "coordinates": [
+      -122.2385631,
+      37.8751242
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "garden",
+    "popularity_score": 9.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 60
+  },
+  {
+    "name": "Peet's Theatre",
+    "coordinates": [
+      -122.269334,
+      37.8712898
+    ],
+    "address": {
+      "number": "",
+      "street": "Addison Street",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "theatre",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 6.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 270
+  },
+  {
+    "name": "1951 Coffee Company",
+    "coordinates": [
+      -122.2600071,
+      37.8665929
+    ],
+    "address": {
+      "number": "",
+      "street": "Channing Way",
+      "city": "",
+      "postcode": "94704"
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 60
+  },
+  {
+    "name": "Romeo's Coffee",
+    "coordinates": [
+      -122.2583437,
+      37.865256
+    ],
+    "address": {
+      "number": "",
+      "street": "Telegraph Avenue",
+      "city": "",
+      "postcode": "94704"
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 5.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 120
+  },
+  {
+    "name": "Kimchi Garden",
+    "coordinates": [
+      -122.258211,
+      37.8680838
+    ],
+    "address": {
+      "number": "",
+      "street": "Durant Avenue",
+      "city": "",
+      "postcode": "94704"
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 2.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 270
+  },
+  {
+    "name": "Barcote",
+    "coordinates": [
+      -122.260154,
+      37.8508692
+    ],
+    "address": {
+      "number": "",
+      "street": "Telegraph Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo-Su 11:00-22:00",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 16.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Poke Parlor",
+    "coordinates": [
+      -122.2583932,
+      37.8655219
+    ],
+    "address": {
+      "number": "",
+      "street": "Telegraph Avenue",
+      "city": "",
+      "postcode": "94704"
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 19.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 150
+  },
+  {
+    "name": "4 Dreams Nepali Indian Cuisine",
+    "coordinates": [
+      -122.2672202,
+      37.8652637
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": "94704"
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 210
+  },
+  {
+    "name": "Spiral Knob",
+    "coordinates": [
+      -122.2296456,
+      37.8715116
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "peak",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 21.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 270
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2600475,
+      37.8692699
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "picnic_table",
+    "popularity_score": 23.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 180
+  },
+  {
+    "name": "V&A Cafe",
+    "coordinates": [
+      -122.2591244,
+      37.8755331
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 150
+  },
+  {
+    "name": "Aliberto's Jr. Mexican Food",
+    "coordinates": [
+      -122.25994,
+      37.8567527
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 30
+  },
+  {
+    "name": "Mount Everest",
+    "coordinates": [
+      -122.258962,
+      37.8633508
+    ],
+    "address": {
+      "number": "",
+      "street": "Telegraph Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo, Tu, Th-Su 11:00-15:00; Mo, Tu, Th-Su 17:00-21:30",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 9.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 120
+  },
+  {
+    "name": "Palm A\u00e7a\u00ed Cafe",
+    "coordinates": [
+      -122.2528786,
+      37.8565645
+    ],
+    "address": {
+      "number": "",
+      "street": "College Avenue",
+      "city": "",
+      "postcode": "94705"
+    },
+    "opening_hours": "Mo-Sa 09:00-15:00",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 210
+  },
+  {
+    "name": "Manpuku",
+    "coordinates": [
+      -122.2528847,
+      37.8566263
+    ],
+    "address": {
+      "number": "",
+      "street": "College Avenue",
+      "city": "",
+      "postcode": "94705"
+    },
+    "opening_hours": "Mo-Sa 11:30-14:00, 16:00-20:00",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 12.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Mudrakers Cafe",
+    "coordinates": [
+      -122.259037,
+      37.8594593
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 120
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2540639,
+      37.8558254
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 120
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.245953,
+      37.856982
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 24.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 330
+  },
+  {
+    "name": "Sharetea",
+    "coordinates": [
+      -122.2592103,
+      37.8681697
+    ],
+    "address": {
+      "number": "",
+      "street": "Telegraph Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 360
+  },
+  {
+    "name": "Phosho Dough",
+    "coordinates": [
+      -122.2604607,
+      37.8521025
+    ],
+    "address": {
+      "number": "",
+      "street": "Telegraph Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo-Sa 11:00-19:00",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 150
+  },
+  {
+    "name": "Hashtag Poki",
+    "coordinates": [
+      -122.2597362,
+      37.8543525
+    ],
+    "address": {
+      "number": "",
+      "street": "Telegraph Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo-Fr 11:30-20:00",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 4.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 180
+  },
+  {
+    "name": "Noodle Dynasty",
+    "coordinates": [
+      -122.2589,
+      37.866412
+    ],
+    "address": {
+      "number": "",
+      "street": "Telegraph Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 360
+  },
+  {
+    "name": "RareTea",
+    "coordinates": [
+      -122.2603864,
+      37.868445
+    ],
+    "address": {
+      "number": "",
+      "street": "Bancroft Way",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 15.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Hiller Library",
+    "coordinates": [
+      -122.23368,
+      37.8531535
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "library",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 30
+  },
+  {
+    "name": "Berkeley YMCA Pool",
+    "coordinates": [
+      -122.269728,
+      37.8694548
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "swimming_pool",
+    "popularity_score": 1.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Taco & Co.",
+    "coordinates": [
+      -122.2580196,
+      37.8681462
+    ],
+    "address": {
+      "number": "",
+      "street": "Durant Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 4.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 30
+  },
+  {
+    "name": "Fish Ranch Peak",
+    "coordinates": [
+      -122.221083,
+      37.8652008
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "peak",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 30
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2569913,
+      37.8543951
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "picnic_table",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 240
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2573711,
+      37.8543543
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "picnic_table",
+    "popularity_score": 18.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 180
+  },
+  {
+    "name": "Builders of Berkeley",
+    "coordinates": [
+      -122.2595435,
+      37.8726982
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 180
+  },
+  {
+    "name": "Portable Peet's Stand",
+    "coordinates": [
+      -122.2515784,
+      37.8717763
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 300
+  },
+  {
+    "name": "Peet's & Lighter Side",
+    "coordinates": [
+      -122.250134,
+      37.8701266
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 360
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2600207,
+      37.8690174
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "picnic_table",
+    "popularity_score": 1.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 360
+  },
+  {
+    "name": "Berkeley Art Museum and Pacific Film Archive Film Library",
+    "coordinates": [
+      -122.2661288,
+      37.8711131
+    ],
+    "address": {
+      "number": "",
+      "street": "Center Street",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "",
+    "amenity": "library",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 240
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2589833,
+      37.8744984
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 24.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2589976,
+      37.8745422
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 180
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2590109,
+      37.8745826
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 12.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 210
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2594556,
+      37.870635
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 120
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2208527,
+      37.8754273
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 29.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 330
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2569024,
+      37.8680214
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "outdoor_seating",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 360
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2567619,
+      37.8712011
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 30
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2566453,
+      37.8711656
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 1.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 270
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2564374,
+      37.8713229
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 6.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 60
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2558004,
+      37.8705474
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 23.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 360
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2558044,
+      37.870612
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 21.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 210
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2558138,
+      37.8706644
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 240
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2558681,
+      37.870622
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 180
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2554912,
+      37.8704151
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 30
+  },
+  {
+    "name": "Pok\u00e9 Bar",
+    "coordinates": [
+      -122.2598384,
+      37.8680505
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 3.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 240
+  },
+  {
+    "name": "KoStop",
+    "coordinates": [
+      -122.2599014,
+      37.8678213
+    ],
+    "address": {
+      "number": "",
+      "street": "Durant Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Mo-Su 11:30-21:00",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 270
+  },
+  {
+    "name": "Steve's Korean B.B.Q.",
+    "coordinates": [
+      -122.2580739,
+      37.8683145
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 150
+  },
+  {
+    "name": "Bears Ramen House",
+    "coordinates": [
+      -122.258043,
+      37.8682548
+    ],
+    "address": {
+      "number": "",
+      "street": "Durant Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 120
+  },
+  {
+    "name": "Katsumi Sushi",
+    "coordinates": [
+      -122.2580343,
+      37.8682146
+    ],
+    "address": {
+      "number": "",
+      "street": "Durant Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 4.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 150
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2584822,
+      37.8704833
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "picnic_table",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 90
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2692339,
+      37.8794458
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 12.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 60
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2632469,
+      37.8575607
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "fitness_station",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 120
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2632191,
+      37.8575465
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "fitness_station",
+    "popularity_score": 2.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 120
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2632177,
+      37.8579852
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "fitness_station",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 240
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2631358,
+      37.8580015
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "fitness_station",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 90
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2628405,
+      37.8577137
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 23.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 210
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2621083,
+      37.8579454
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 330
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2635594,
+      37.8578273
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 30
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2636633,
+      37.8576976
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 18.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2630863,
+      37.857415
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 19.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 30
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2631161,
+      37.857438
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 23.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 240
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2630816,
+      37.8574374
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "picnic_table",
+    "popularity_score": 5.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 330
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2621418,
+      37.8735645
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 23.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 60
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2621384,
+      37.873664
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 3.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 360
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2622866,
+      37.8737773
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 60
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2618629,
+      37.8579337
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 21.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 150
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2597033,
+      37.8733316
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 120
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2593999,
+      37.8734955
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 11.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 360
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2592675,
+      37.8734804
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 13.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 150
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.259425,
+      37.8734232
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 300
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2591384,
+      37.8734187
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 20.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 30
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2589453,
+      37.8733105
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 7.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2590217,
+      37.87337
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 10.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 60
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2591709,
+      37.8733171
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 11.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2589459,
+      37.8730831
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 11.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2588789,
+      37.8731797
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 150
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2589121,
+      37.873153
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 6.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 360
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2588923,
+      37.873113
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 14.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 90
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2589741,
+      37.8731183
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 180
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2598887,
+      37.8731776
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 60
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2598016,
+      37.8732972
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 120
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.259642,
+      37.8734079
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 60
+  },
+  {
+    "name": "Bansho Ramen",
+    "coordinates": [
+      -122.258797,
+      37.864906
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "Tu-Su 11:30-21:00",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 4.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Mosaic Boulders",
+    "coordinates": [
+      -122.2587696,
+      37.8674458
+    ],
+    "address": {
+      "number": "",
+      "street": "Telegraph Avenue",
+      "city": "",
+      "postcode": "94704"
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "sports_centre",
+    "popularity_score": 2.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 150
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2598059,
+      37.8714286
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 3.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 150
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2593392,
+      37.8717587
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 24.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 270
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2592108,
+      37.8717894
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 16.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2593095,
+      37.8716623
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 3.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 240
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2590368,
+      37.8717258
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 300
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2627779,
+      37.8707102
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "bench",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 180
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2584925,
+      37.8720164
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 120
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2582946,
+      37.8715178
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 27.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 60
+  },
+  {
+    "name": "Racha Cafe",
+    "coordinates": [
+      -122.2587158,
+      37.8646674
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 120
+  },
+  {
+    "name": "Heytea",
+    "coordinates": [
+      -122.2679729,
+      37.8709073
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 16.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 240
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2660971,
+      37.8679428
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 15.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 60
+  },
+  {
+    "name": "Pizzeria Da Laura",
+    "coordinates": [
+      -122.2680936,
+      37.8713192
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": "94704"
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 30
+  },
+  {
+    "name": "Dessert Cafe",
+    "coordinates": [
+      -122.2664473,
+      37.8557672
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 120
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2601702,
+      37.8553989
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "picnic_table",
+    "popularity_score": 15.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 150
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2601663,
+      37.8554209
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "picnic_table",
+    "popularity_score": 21.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 210
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2601633,
+      37.855441
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "picnic_table",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 180
+  },
+  {
+    "name": "Cal's Fried Chicken & Burgers",
+    "coordinates": [
+      -122.269987,
+      37.8717833
+    ],
+    "address": {
+      "number": "",
+      "street": "University Avenue",
+      "city": "",
+      "postcode": "94704"
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 1.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 240
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2591388,
+      37.870729
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 3.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 120
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2573371,
+      37.851142
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "playground",
+    "popularity_score": 13.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2561739,
+      37.8534609
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 90
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2563744,
+      37.8554572
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "playground",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 300
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2557494,
+      37.855678
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 25.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 60
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2558631,
+      37.8556255
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 330
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2560136,
+      37.8556949
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 120
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2693972,
+      37.8799821
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "picnic_table",
+    "popularity_score": 3.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 210
+  },
+  {
+    "name": "La Cr\u00eape \u00e0 moi",
+    "coordinates": [
+      -122.260356,
+      37.8754199
+    ],
+    "address": {
+      "number": "",
+      "street": "Euclid Avenue",
+      "city": "",
+      "postcode": "94709"
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 19.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "The Bent of The Tau Beta Pi Association - CA Alpha Chapter",
+    "coordinates": [
+      -122.2585957,
+      37.8739324
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "monument",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 330
+  },
+  {
+    "name": "Signal",
+    "coordinates": [
+      -122.2670407,
+      37.8703052
+    ],
+    "address": {
+      "number": "",
+      "street": "Center Street",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 150
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2665145,
+      37.8723942
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 3.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 30
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2671461,
+      37.8723159
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 120
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2673486,
+      37.8722894
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 14.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 60
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2675498,
+      37.8722624
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 24.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 360
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2689512,
+      37.8769838
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 300
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2690471,
+      37.8777698
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 90
+  },
+  {
+    "name": "Farmhouse Kitchen",
+    "coordinates": [
+      -122.2688748,
+      37.8785934
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 90
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2672189,
+      37.8641088
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 2.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 240
+  },
+  {
+    "name": "Teaspoon",
+    "coordinates": [
+      -122.2674821,
+      37.8724207
+    ],
+    "address": {
+      "number": "",
+      "street": "University Avenue",
+      "city": "",
+      "postcode": "94704"
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "cafe",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 17.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 150
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2683853,
+      37.8704915
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 15.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 90
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2567469,
+      37.8699261
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 10.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 90
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2518924,
+      37.8703186
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 120
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2550317,
+      37.8718369
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "bench",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 90
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2549616,
+      37.8718505
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 270
+  },
+  {
+    "name": "Taqueria La Venganza",
+    "coordinates": [
+      -122.2606583,
+      37.8506887
+    ],
+    "address": {
+      "number": "",
+      "street": "Telegraph Avenue",
+      "city": "",
+      "postcode": "94609"
+    },
+    "opening_hours": "Tu-Th 16:00-19:00; Fr-Sa 11:00-21:00; Su 11:00-14:00",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 90
+  },
+  {
+    "name": "Fraternity House - Day",
+    "coordinates": [
+      -122.2547319,
+      37.8684625
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 90
+  },
+  {
+    "name": "North Beach Pizza",
+    "coordinates": [
+      -122.2678442,
+      37.8652828
+    ],
+    "address": {
+      "number": "",
+      "street": "Shattuck Avenue",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 150
+  },
+  {
+    "name": "2401 Bancroft Way",
+    "coordinates": [
+      -122.2612423,
+      37.8685817
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "",
+    "amenity": "",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 22.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 240
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2467667,
+      37.8544174
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 15.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 180
+  },
+  {
+    "name": "Hans Kelsen",
+    "coordinates": [
+      -122.2577279,
+      37.8712697
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "",
+    "amenity": "",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 18.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 270
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2578614,
+      37.871254
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 360
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2573901,
+      37.8711176
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "picnic_table",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 330
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2532482,
+      37.8719463
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "",
+    "leisure": "garden",
+    "popularity_score": 11.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 240
+  },
+  {
+    "name": "The Edwards Track Honor Roll",
+    "coordinates": [
+      -122.2654285,
+      37.868189
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 24.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 120
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2552611,
+      37.8713925
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$",
+    "natural": "",
+    "amenity": "",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 7.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 90
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.250222,
+      37.8696936
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 12.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 300
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2502328,
+      37.8697121
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 0,
+    "rarity": "least hidden",
+    "color": "red",
+    "time": 240
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2675922,
+      37.8714266
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 19.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 240
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2592392,
+      37.8699861
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$",
+    "natural": "",
+    "amenity": "",
+    "historic": "memorial",
+    "leisure": "",
+    "popularity_score": 4.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 330
+  },
+  {
+    "name": "Kura Revolving Sushi",
+    "coordinates": [
+      -122.2681498,
+      37.8720156
+    ],
+    "address": {
+      "number": "",
+      "street": "University Avenue",
+      "city": "",
+      "postcode": "94704"
+    },
+    "opening_hours": "",
+    "activity_cost": "Free",
+    "natural": "",
+    "amenity": "restaurant",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 1.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 210
+  },
+  {
+    "name": "Unnamed location",
+    "coordinates": [
+      -122.2648515,
+      37.8680979
+    ],
+    "address": {
+      "number": "",
+      "street": "",
+      "city": "",
+      "postcode": ""
+    },
+    "opening_hours": "",
+    "activity_cost": "$$$$",
+    "natural": "tree",
+    "amenity": "",
+    "historic": "",
+    "leisure": "",
+    "popularity_score": 10.0,
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 30
+  }
+]

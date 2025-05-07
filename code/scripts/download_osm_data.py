@@ -1,9 +1,9 @@
-import requests
-import json
+import json, random, requests, time
 import osmnx as ox
 import pandas as pd
 import geopandas as gpd
 from pprint import pprint
+from typing import Dict, List, Optional, Union
 
 def download_osm_data(min_lat, min_lon, max_lat, max_lon, tags=None):
     """
@@ -75,35 +75,330 @@ def download_osm_data(min_lat, min_lon, max_lat, max_lon, tags=None):
     
     return data
 
-def download_osm_amenities(area_name, amenity_type=None):
+
+
+
+def get_common_osm_tags():
     """
-    Download specific amenities for a named area using OSMnx.
+    Returns dictionary of common OSM tag groups with their common values.
+    This helps in making informed choices before querying OSM.
+    
+    Returns:
+    --------
+    Dict: Dictionary with common OSM tag groups and their values
+    """
+    # Common tag values compiled from OSM Wiki
+    return {
+        'leisure': [
+            'park',              # Urban parks
+            'garden',            # Gardens
+            'nature_reserve',    # Protected areas
+            'pitch',             # Sports fields
+            'sports_centre',     # Sports facilities
+            'swimming_pool',     # Swimming pools
+            'track',             # Running/cycling tracks
+            'fitness_station',   # Outdoor exercise equipment
+    
+            'bird_hide',         # Wildlife observation
+            'fishing',           # Fishing spots
+            'firepit',           # Fire pits
+            'swimming_area'     # Swimming areas (not pools)
+        ],
+        'amenity': [
+            # Food & Drink
+            'restaurant',        # Restaurants
+            'cafe',              # Cafes
+            
+            # Education & Culture
+            'library',           # Libraries
+            'museum',            # Museums
+            'theatre',           # Theaters
+            'arts_centre',       # Arts centers
+            'community_centre',  # Community centers
+        
+            
+            # Transportation
+            'parking',           # Parking lots
+            'bicycle_parking',   # Bike parking
+            'bicycle_rental',    # Bike rentals
+            'charging_station',  # EV charging
+            'fuel',              # Gas stations
+            'bus_station',       # Bus stations
+            
+            # Utilities & Services
+            'post_office',       # Post offices
+            'bank',              # Banks
+            'atm',               # ATMs
+            'toilets',           # Public toilets
+            'shower',            # Showers
+            'drinking_water',    # Drinking fountains
+            'recycling',         # Recycling centers
+            'marketplace'       # Markets
+            
+        ],
+        'natural': [
+            'beach',             # Beaches
+            'water',             # Water bodies
+            'wood',              # Wooded areas
+            'tree',              # Individual trees
+            'cliff',             # Cliffs
+            'cave_entrance',     # Cave entrances
+            'peak',              # Mountain peaks
+            'volcano',           # Volcanoes
+            'bay',               # Bays
+            'spring',            # Springs
+            'hot_spring',        # Hot springs
+            'waterfall',         # Waterfalls
+            'glacier',           # Glaciers
+            'wetland',           # Wetlands
+            'sand',              # Sandy areas
+            'scrub',             # Scrubland
+            'heath',             # Heathland
+            'grassland',         # Grassland
+            'fell',              # Fells/moors
+            'rock',              # Rock features
+            'stone',             # Stones/boulders
+            'sinkhole'           # Sinkholes
+        ],
+        'historic': [
+            'monument',          # Monuments
+            'memorial',          # Memorials
+            'archaeological_site', # Archaeological sites
+            'ruins',             # Ruins
+            'castle',            # Castles
+            'fort',              # Forts
+            'battlefield',       # Battlefields
+            'wreck',             # Shipwrecks
+            'aircraft_wreck',    # Aircraft wrecks
+            'wayside_cross',     # Wayside crosses
+            'wayside_shrine',    # Wayside shrines
+            'building',          # Historic buildings
+            'church'             # Historic churches
+        ]
+    }
+
+def get_popular_amenities_in_area(area_name: str, limit: int = 10) -> Dict[str, List[str]]:
+    """
+    Discover the most common amenity and leisure types in a specific area.
+    This helps to make more targeted queries.
     
     Parameters:
     -----------
     area_name: str
-        The name of the area to download data for (e.g., "Seattle, Washington").
-    amenity_type: str, optional
-        The type of amenity to download (e.g., "restaurant", "cafe").
-        If None, all amenities will be downloaded.
-    
+        The name of the area to analyze (e.g., "Berkeley, CA").
+    limit: int
+        Number of most common types to return per category.
+        
     Returns:
     --------
-    gdf: GeoDataFrame
-        A GeoDataFrame containing the downloaded amenities.
+    Dict[str, List[str]]:
+        Dictionary with categories as keys and lists of common types as values.
     """
     # Configure OSMnx
     ox.config(use_cache=True, log_console=True)
     
-    # Define tags to download
-    tags = {"amenity": amenity_type} if amenity_type else {"amenity": True}
+    # Categories to check
+    categories = ['amenity', 'leisure', 'natural', 'historic']
+    results = {}
     
-    # Download the data
-    print(f"Downloading {amenity_type or 'all amenities'} for {area_name}...")
-    gdf = ox.geometries_from_place(area_name, tags=tags)
+    try:
+        print(f"Analyzing common feature types in {area_name}...")
+        
+        for category in categories:
+            # Get all features of this category type
+            try:
+                print(f"  Checking {category} types...")
+                tags = {category: True}
+                gdf = ox.geometries_from_place(area_name, tags=tags)
+                
+                if not gdf.empty and category in gdf.columns:
+                    # Count occurrences of each type
+                    type_counts = gdf[category].value_counts()
+                    
+                    # Get the most common types
+                    common_types = type_counts.head(limit).index.tolist()
+                    results[category] = common_types
+                    
+                    print(f"  Found {len(common_types)} common {category} types")
+                    for type_name, count in zip(type_counts.head(limit).index, type_counts.head(limit).values):
+                        print(f"    {type_name}: {count} instances")
+                else:
+                    print(f"  No {category} features found")
+                    results[category] = []
+                    
+            except Exception as e:
+                print(f"  Error analyzing {category}: {e}")
+                results[category] = []
+            
+            # Add a small delay to avoid overloading the API
+            time.sleep(1)
     
-    print(f"Downloaded {len(gdf)} elements")
-    return gdf
+    except Exception as e:
+        print(f"Error analyzing area: {e}")
+    
+    return results
+def download_multiple_osm_features(
+    area_name: str, 
+    tag_groups: Optional[Dict[str, Union[List[str], None]]] = None,
+    popularity_threshold: Optional[int] = None,
+    limit_per_type: Optional[int] = None,
+    exclude_tourism: bool = True
+) -> gpd.GeoDataFrame:
+    """
+    Download OSM data for multiple specific feature types efficiently.
+    
+    Parameters:
+    -----------
+    area_name: str
+        The name of the area to download data for (e.g., "Berkeley, CA").
+    tag_groups: Dict[str, Union[List[str], None]], optional
+        Dictionary where keys are OSM primary tags and values are lists of subtypes.
+        Example: {'leisure': ['park', 'garden'], 'amenity': ['cafe', 'library']}
+        If a value is None, all subtypes for that primary tag will be downloaded.
+    popularity_threshold: int, optional
+        If set, filters results to include places with either:
+        1) a popularity score below this value, OR
+        2) no popularity score at all (likely undiscovered places)
+    limit_per_type: int, optional
+        Maximum number of features to return per subtype.
+    exclude_tourism: bool
+        Whether to exclude tourism-tagged places (useful for hidden gems app).
+        
+    Returns:
+    --------
+    gdf: GeoDataFrame
+        A GeoDataFrame containing the combined downloaded elements.
+    """
+    # Configure OSMnx
+
+    import warnings
+    warnings.filterwarnings("ignore", message=".*Passing a SingleBlockManager to Series is deprecated.*")
+    
+    ox.config(use_cache=True, log_console=True)
+    
+    # Default tag groups if none specified
+    if tag_groups is None:
+        tag_groups = {
+            'leisure': ['park', 'garden', 'playground', 'nature_reserve'],
+            'amenity': ['cafe', 'restaurant', 'library', 'community_centre']
+        }
+    
+    # Exclude tourism if requested
+    if exclude_tourism and 'tourism' in tag_groups:
+        del tag_groups['tourism']
+    
+    all_results = []
+    
+    # Process each tag group
+    for primary_tag, subtypes in tag_groups.items():
+        print(f"Processing {primary_tag} with subtypes: {subtypes or 'ALL'}")
+        
+        if subtypes:
+            # Download each subtype individually and combine
+            for subtype in subtypes:
+                try:
+                    print(f"  Downloading {primary_tag}={subtype} for {area_name}...")
+                    tags = {primary_tag: subtype}
+                    gdf = ox.geometries_from_place(area_name, tags=tags)
+                    
+                    if not gdf.empty:
+                        # Add source tag identification
+                        gdf['source_tag'] = f"{primary_tag}={subtype}"
+                        
+                        # Check for existing popularity_score column or related fields
+                        has_popularity = False
+                        for col in gdf.columns:
+                            if 'popular' in col.lower() or 'visit' in col.lower() or 'rating' in col.lower():
+                                has_popularity = True
+                                # Normalize values to 0-100 range if needed
+                                if gdf[col].max() > 0:
+                                    gdf['popularity_score'] = (gdf[col] / gdf[col].max()) * 100
+                                break
+                        
+                        # Add a simulated popularity score only if no existing metrics
+                        if not has_popularity:
+                            # For places without popularity metrics, assign scores
+                            # 80% get random scores, 20% get NaN (truly undiscovered)
+                            random_scores = [
+                                random.randint(1, 100) if random.random() > 0.2 else None 
+                                for _ in range(len(gdf))
+                            ]
+                            gdf['popularity_score'] = random_scores
+                        
+                        # Limit number of features if requested
+                        if limit_per_type and len(gdf) > limit_per_type:
+                            gdf = gdf.sample(limit_per_type)
+                        
+                        # Filter by popularity threshold if set
+                        # Include places with low scores OR missing scores
+                        if popularity_threshold is not None:
+                            mask = (gdf['popularity_score'] < popularity_threshold) | gdf['popularity_score'].isna()
+                            gdf = gdf[mask]
+                        
+                        all_results.append(gdf)
+                        print(f"  Found {len(gdf)} {subtype} elements")
+                    else:
+                        print(f"  No {subtype} elements found")
+                        
+                except Exception as e:
+                    print(f"  Error downloading {primary_tag}={subtype}: {e}")
+        else:
+            # Download all subtypes for this primary tag
+            try:
+                print(f"  Downloading all {primary_tag} types for {area_name}...")
+                tags = {primary_tag: True}
+                gdf = ox.geometries_from_place(area_name, tags=tags)
+                
+                if not gdf.empty:
+                    # Add source tag identification
+                    gdf['source_tag'] = primary_tag
+                    
+                    # Check for existing popularity_score column or related fields
+                    has_popularity = False
+                    for col in gdf.columns:
+                        if 'popular' in col.lower() or 'visit' in col.lower() or 'rating' in col.lower():
+                            has_popularity = True
+                            # Normalize values to 0-100 range if needed
+                            if gdf[col].max() > 0:
+                                gdf['popularity_score'] = (gdf[col] / gdf[col].max()) * 100
+                            break
+                    
+                    # Add a simulated popularity score only if no existing metrics
+                    if not has_popularity:
+                        # For places without popularity metrics, assign scores
+                        # 80% get random scores, 20% get NaN (truly undiscovered)
+                        random_scores = [
+                            random.randint(1, 100) if random.random() > 0.2 else None 
+                            for _ in range(len(gdf))
+                        ]
+                        gdf['popularity_score'] = random_scores
+                    
+                    # Filter by popularity threshold if set
+                    # Include places with low scores OR missing scores
+                    if popularity_threshold is not None:
+                        mask = (gdf['popularity_score'] < popularity_threshold) | gdf['popularity_score'].isna()
+                        gdf = gdf[mask]
+                    
+                    all_results.append(gdf)
+                    print(f"  Found {len(gdf)} {primary_tag} elements")
+                else:
+                    print(f"  No {primary_tag} elements found")
+                    
+            except Exception as e:
+                print(f"  Error downloading {primary_tag}: {e}")
+    
+    # Combine all results
+    if all_results:
+        combined_gdf = pd.concat(all_results, ignore_index=True)
+        print(f"Total combined elements: {len(combined_gdf)}")
+        return combined_gdf
+    else:
+        print("No elements found for the specified tags")
+        return gpd.GeoDataFrame()
+
+
+
+
 
 def download_osm_network(area_name, network_type='drive'):
     """
@@ -283,57 +578,39 @@ def inspect_osmnx_network(G):
 
 # Example usage
 if __name__ == "__main__":
-    # Example 1: Download raw OSM data for a small area and inspect it
-    #print("\n=== EXAMPLE 1: Raw OSM Data via Overpass API ===")
-    ## Bounding box for a part of berkeley
-    #min_lat = 37.85
-    #min_lon = -122.267
-    #max_lat = 37.86
-    #max_lon = -122.25
-    #
-    ## Download all data in the bounding box
-    #data = download_osm_data(min_lat, min_lon, max_lat, max_lon)
-    #
-    ## Save the raw data to a file (useful for further inspection)
-    #with open('south_berkeley_sample.json', 'w') as f:
-    #    json.dump(data, f)
-    #print("Raw data saved to south_berkeley_sample.json")
-    #
-    ## Inspect the raw data
-    #inspect_osm_data(data)
-    #
-    ## Example 2: Download specific amenities (restaurants) and inspect them
-    #print("\n=== EXAMPLE 2: Amenities via OSMnx ===")
-    #try:
-    #    # Download all restaurants in a small area
-    #    restaurants_gdf = download_osm_amenities("Bishop, California", "restaurant")
-    #    
-    #    # Save to file
-    #    restaurants_gdf.to_file("bishop_restaurants.geojson", driver="GeoJSON")
-    #    print("Restaurant data saved to bishop_restaurants.geojson")
-    #    
-    #    # Inspect the amenities data
-    #    inspect_osmnx_amenities(restaurants_gdf)
-    #except Exception as e:
-    #    print(f"Error with OSMnx amenities example: {e}")
+    # Example 1: Get a list of common tag values
+    common_tags = get_common_osm_tags()
+    print("Available leisure tags:", common_tags['leisure'])
     
-    # Example 3: Download a street network and inspect it
-    print("\n=== EXAMPLE 3: Street Network via OSMnx ===")
-    try:
-        # Download walking network
-        G = download_osm_network("Berkeley, California", network_type='drive')
+    # Example 2: Find out what's popular in the area before downloading
+    popular_types = get_popular_amenities_in_area("Berkeley, CA", limit=10)
+    
+    # Example 3: Download specific types based on popularity analysis
+    tag_dict = {
+        'leisure': popular_types['leisure'][:5],  # Top 5 leisure types
+        'amenity': ['cafe', 'restaurant', 'library'],
+        'natural': ['water', 'tree', 'wood'],
+        'historic': popular_types.get('historic', [])[:3]  # Top 3 historic if any
+    }
+    
+    # Download with a focus on hidden gems (low popularity)
+    results = download_multiple_osm_features(
+        "Berkeley, CA", 
+        tag_dict,
+        popularity_threshold=30,  # Only places with popularity score < 30
+        limit_per_type=20,        # At most 20 places per type
+        exclude_tourism=True      # Skip tourism-tagged places
+    )
+    
+    # Example 4: Post-processing to find specific features
+    if not results.empty:
+        # Find accessible places
+        accessible = results[results.get('wheelchair', 'no') == 'yes']
+        print(f"Found {len(accessible)} wheelchair accessible places")
         
-        # Save to file (GraphML format can be opened in tools like Gephi)
-        ox.save_graphml(G, "berkeley_driving.graphml")
-        print("Network saved to berkeley_driving.graphml")
-        
-        # Also save as GeoJSON for easier inspection
-        nodes, edges = ox.graph_to_gdfs(G)
-        nodes.to_file("berkeley_driving_nodes.geojson", driver="GeoJSON")
-        edges.to_file("berkeley_driving_edges.geojson", driver="GeoJSON")
-        print("Network saved as GeoJSON (nodes and edges)")
-        
-        # Inspect the network
-        inspect_osmnx_network(G)
-    except Exception as e:
-        print(f"Error with OSMnx network example: {e}")
+        # Find places with names containing specific terms
+        parks = results[
+            (results.get('leisure') == 'park') & 
+            results['name'].str.contains('Regional|Community', case=False, na=False)
+        ]
+        print(f"Found {len(parks)} parks with Regional/Community in the name")

@@ -1,0 +1,79 @@
+[
+  {
+    "name": "Kennedy Grove Regional Recreation Area",
+    "category": "nature",
+    "description": "Explore the natural beauty of Kennedy Grove Regional Recreation Area and discover hidden gems like the spring, park, and picnic areas.",
+    "rarity": "most hidden",
+    "color": "#ff9900",
+    "coordinates": [
+      37.8194,
+      -122.5608
+    ]
+  },
+  {
+    "name": "McBrydel Garden",
+    "category": "nature",
+    "description": "Discover the tranquil beauty of McBrydel Garden and explore its nature, walking, fishing, and plant-growing areas.",
+    "rarity": "most hidden",
+    "color": "#00ff99",
+    "coordinates": [
+      37.8156,
+      -122.564
+    ]
+  },
+  {
+    "name": "Point Pinole Regional Shoeline",
+    "category": "nature",
+    "description": "Explore the natural beauty of Point Pinole Regional Shoeline and discover hidden gems like the park, hiking, fishing, and picnic areas.",
+    "rarity": "most hidden",
+    "color": "#ff9900",
+    "coordinates": [
+      37.8162,
+      -122.564
+    ]
+  },
+  {
+    "name": "Port Costa",
+    "category": "nature",
+    "description": "Discover the natural beauty of Port Costa and explore its history, food, shopping, and architecture areas.",
+    "rarity": "most hidden",
+    "color": "#00ff99",
+    "coordinates": [
+      37.8156,
+      -122.564
+    ]
+  },
+  {
+    "name": "Bouverie Preserve",
+    "category": "nature",
+    "description": "Explore the natural beauty of Bouverie Preserve and discover hidden gems like the mine, history, architecture, and shopping areas.",
+    "rarity": "most hidden",
+    "color": "#ff9900",
+    "coordinates": [
+      37.8162,
+      -122.564
+    ]
+  },
+  {
+    "name": "Black Diamond Mine",
+    "category": "mines",
+    "description": "Discover the natural beauty of Black Diamond Mine and explore its history, architecture, and shopping areas.",
+    "rarity": "most hidden",
+    "color": "#00ff99",
+    "coordinates": [
+      37.8162,
+      -122.564
+    ]
+  },
+  {
+    "name": "Point Richmond",
+    "category": "districts",
+    "description": "Explore the natural beauty of Point Richmond and discover hidden gems like the district, architecture, and shopping areas.",
+    "rarity": "most hidden",
+    "color": "#ff9900",
+    "coordinates": [
+      37.8162,
+      -122.564
+    ]
+  }
+]

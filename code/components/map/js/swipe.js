@@ -1,5 +1,5 @@
 /**
- * Swipe handling for the Hidden Gems application
+ * Swipe handling for the Berkeley Hidden Gems application
  */
 
 // Ensure namespace exists
@@ -11,13 +11,20 @@ HiddenGems.swipe = {
     startX: 0,
     currentX: 0,
     isDragging: false,
-    threshold: 100, // Minimum distance to trigger swipe
+    threshold: 80, // Minimum distance to trigger swipe
     
     /**
-     * Initialize swipe handling for cards
+     * Initialize swipe handling for gem cards
      */
     init: function() {
         const cardsContainer = document.querySelector('.cards-container');
+        
+        if (!cardsContainer) {
+            console.warn('Cards container not found, skipping swipe init');
+            return;
+        }
+        
+        console.log('Initializing swipe handling');
         
         // Touch event handlers
         cardsContainer.addEventListener('touchstart', this._handleTouchStart.bind(this), false);
@@ -28,6 +35,7 @@ HiddenGems.swipe = {
         cardsContainer.addEventListener('mousedown', this._handleMouseDown.bind(this), false);
         cardsContainer.addEventListener('mousemove', this._handleMouseMove.bind(this), false);
         cardsContainer.addEventListener('mouseup', this._handleMouseUp.bind(this), false);
+        cardsContainer.addEventListener('mouseleave', this._handleMouseUp.bind(this), false);
     },
     
     /**
@@ -37,6 +45,7 @@ HiddenGems.swipe = {
      */
     _handleTouchStart: function(e) {
         this.startX = e.touches[0].clientX;
+        this.currentX = this.startX;
         this.isDragging = true;
         
         // Get current active card and adjacent cards
@@ -77,7 +86,7 @@ HiddenGems.swipe = {
             nextCard.style.transform = `translateX(calc(100% + ${diffX}px))`;
         }
         
-        // Prevent scrolling when swiping
+        // Prevent default scrolling when swiping
         e.preventDefault();
     },
     
@@ -128,6 +137,7 @@ HiddenGems.swipe = {
      */
     _handleMouseDown: function(e) {
         this.startX = e.clientX;
+        this.currentX = this.startX;
         this.isDragging = true;
         
         // Get cards
@@ -190,6 +200,18 @@ HiddenGems.swipe = {
         
         // Calculate swipe distance
         const diffX = this.currentX - this.startX;
+        
+        // Only proceed if there's a valid map and data
+        if (!HiddenGems.map || !HiddenGems.data || !HiddenGems.data.gems) {
+            // Reset card positions
+            if (activeCard) activeCard.style.transform = 'translateX(0)';
+            if (prevCard) prevCard.style.transform = 'translateX(-100%)';
+            if (nextCard) nextCard.style.transform = 'translateX(100%)';
+            
+            this.isDragging = false;
+            return;
+        }
+        
         const activeIndex = HiddenGems.map.activeGemIndex;
         const gemsLength = HiddenGems.data.gems.length;
         
@@ -218,10 +240,19 @@ HiddenGems.swipe = {
      */
     _changeActiveGem: function(newIndex) {
         // Update the map markers and routes
-        HiddenGems.map.updateActiveGem(newIndex);
+        if (HiddenGems.map && typeof HiddenGems.map.showGemPopup === 'function') {
+            HiddenGems.map.showGemPopup(newIndex);
+        }
         
         // Update the card positions
-        HiddenGems.cards.updateCardPositions(newIndex);
+        if (HiddenGems.cards && typeof HiddenGems.cards.updateCardPositions === 'function') {
+            HiddenGems.cards.updateCardPositions(newIndex);
+        }
+        
+        // Trigger vibration if supported (for better mobile feedback)
+        if (navigator.vibrate) {
+            navigator.vibrate(50);
+        }
     }
 };
 
