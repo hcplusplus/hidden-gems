@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hidden Gems Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .controls {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        select, button {
+            padding: 8px 12px;
+            margin-right: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #results {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .gem-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            transition: transform 0.2s;
+        }
+        .gem-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .gem-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .gem-category {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .gem-details {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .gem-detail {
+            background-color: #e7f5ff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .popularity {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .low-popularity {
+            background-color: #d5f5e3;
+            color: #27ae60;
+        }
+        .undiscovered {
+            background-color: #fadbd8;
+            color: #c0392b;
+        }
+        #map {
+            height: 400px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        .error {
+            background-color: #fadbd8;
+            color: #c0392b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .counter {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <h1>Northern California Hidden Gems</h1>
+    
+    <div class="controls">
+        <label for="category-filter">Filter by Category:</label>
+        <select id="category-filter">
+            <option value="all">All Categories</option>
+            <option value="leisure">Leisure</option>
+            <option value="amenity">Amenities</option>
+            <option value="natural">Natural Features</option>
+            <option value="historic">Historic Sites</option>
+        </select>
+        
+        <label for="subcategory-filter">Subcategory:</label>
+        <select id="subcategory-filter">
+            <option value="all">All Subcategories</option>
+            <!-- Will be populated dynamically -->
+        </select>
+        
+        <label for="popularity-filter">Max Popularity:</label>
+        <select id="popularity-filter">
+            <option value="100">All</option>
+            <option value="50">Less Popular</option>
+            <option value="30" selected>Hidden Gems</option>
+            <option value="10">Very Hidden</option>
+            <option value="0">Undiscovered Only</option>
+        </select>
+        
+        <button id="filter-button">Apply Filters</button>
+    </div>
+    
+    <div id="results">
+        <div class="loading">Loading data...</div>
+    </div>
+
+    <script>
+        // HiddenGemsService class
+        class HiddenGemsService {
+            constructor() {
+                this.data = null;
+                this.subcategories = {
+                    leisure: [],
+                    amenity: [],
+                    natural: [],
+                    historic: []
+                };
+            }
+
+            async loadData(filePath) {
+                try {
+                    const response = await fetch(filePath);
+                    if (!response.ok) {
+                        throw new Error(`Failed to load data: ${response.status} ${response.statusText}`);
+                    }
+                    
+                    // For GeoJSON format
+                    const rawData = await response.json();
+                    
+                    // Transform GeoJSON to our data model if needed
+                    if (rawData.type === 'FeatureCollection') {
+                        this.data = {
+                            gems: rawData.features.map(feature => {
+                                // Extract properties
+                                const props = feature.properties;
+                                
+                                // Create gem object
+                                return {
+                                    id: props.id,
+                                    name: props.name || 'Unnamed Location',
+                                    type: props.type,
+                                    coordinates: {
+                                        latitude: feature.geometry.coordinates[1],
+                                        longitude: feature.geometry.coordinates[0]
+                                    },
+                                    amenity: props.amenity,
+                                    leisure: props.leisure,
+                                    natural: props.natural,
+                                    historic: props.historic,
+                                    popularity_score: props.popularity_score,
+                                    // Add any other properties
+                                    ...props
+                                };
+                            })
+                        };
+                    } else {
+                        // Assume it's already in our format
+                        this.data = rawData;
+                    }
+                    
+                    // Extract subcategories
+                    this.extractSubcategories();
+                    
+                    console.log(`Loaded ${this.data.gems.length} hidden gems`);
+                    return this.data;
+                } catch (error) {
+                    console.error('Error loading hidden gems data:', error);
+                    throw error;
+                }
+            }
+            
+            extractSubcategories() {
+                // Clear existing subcategories
+                for (let category in this.subcategories) {
+                    this.subcategories[category] = [];
+                }
+                
+                // Extract unique subcategories
+                this.data.gems.forEach(gem => {
+                    for (let category in this.subcategories) {
+                        if (gem[category] && !this.subcategories[category].includes(gem[category])) {
+                            this.subcategories[category].push(gem[category]);
+                        }
+                    }
+                });
+                
+                // Sort subcategories
+                for (let category in this.subcategories) {
+                    this.subcategories[category].sort();
+                }
+            }
+
+            getAllGems() {
+                return this.data?.gems || [];
+            }
+
+            getGemsByCategory(category, subcategory = null) {
+                if (!this.data?.gems || category === 'all') return this.data?.gems || [];
+                
+                return this.data.gems.filter(gem => {
+                    // Check if the gem has this category
+                    const hasCategory = gem[category] !== undefined;
+                    
+                    // If subcategory is specified and not "all", check if it matches
+                    if (subcategory && subcategory !== 'all' && hasCategory) {
+                        return gem[category] === subcategory;
+                    }
+                    
+                    return hasCategory;
+                });
+            }
+
+            getGemsByPopularity(maxScore) {
+                if (!this.data?.gems) return [];
+                
+                if (maxScore === 0) {
+                    // Only return undiscovered places (null popularity)
+                    return this.data.gems.filter(gem => gem.popularity_score === null);
+                }
+                
+                return this.data.gems.filter(gem => 
+                    gem.popularity_score === null || gem.popularity_score <= maxScore
+                );
+            }
+
+            combineFilters(gems, filters) {
+                return gems.filter(gem => 
+                    filters.every(filterFn => filterFn(gem))
+                );
+            }
+        }
+
+        // Main application code
+        document.addEventListener('DOMContentLoaded', () => {
+            const gemsService = new HiddenGemsService();
+            const categoryFilter = document.getElementById('category-filter');
+            const subcategoryFilter = document.getElementById('subcategory-filter');
+            const popularityFilter = document.getElementById('popularity-filter');
+            const filterButton = document.getElementById('filter-button');
+            const resultsContainer = document.getElementById('results');
+            
+            // Load the data
+            gemsService.loadData('./assets/data/berkeley_hidden_gems.geojson')
+                .then(() => {
+                    // Update UI
+                    updateSubcategoryOptions();
+                    applyFilters();
+                })
+                .catch(error => {
+                    resultsContainer.innerHTML = `
+                        <div class="error">
+                            <p>Error loading data: ${error.message}</p>
+                            <p>Make sure the file path is correct: ./assets/data/berkeley_hidden_gems.geojson</p>
+                        </div>
+                    `;
+                });
+            
+            // Event listeners
+            categoryFilter.addEventListener('change', updateSubcategoryOptions);
+            filterButton.addEventListener('click', applyFilters);
+            
+            // Update subcategory options based on category selection
+            function updateSubcategoryOptions() {
+                const category = categoryFilter.value;
+                subcategoryFilter.innerHTML = '<option value="all">All Subcategories</option>';
+                
+                if (category !== 'all' && gemsService.subcategories[category]) {
+                    gemsService.subcategories[category].forEach(subcategory => {
+                        const option = document.createElement('option');
+                        option.value = subcategory;
+                        option.textContent = subcategory.charAt(0).toUpperCase() + subcategory.slice(1);
+                        subcategoryFilter.appendChild(option);
+                    });
+                }
+            }
+            
+            // Apply filters and update results
+            function applyFilters() {
+                const category = categoryFilter.value;
+                const subcategory = subcategoryFilter.value;
+                const maxPopularity = parseInt(popularityFilter.value);
+                
+                // Get filtered gems
+                let filteredGems = gemsService.getGemsByCategory(category, subcategory);
+                filteredGems = gemsService.getGemsByPopularity(maxPopularity).filter(gem => 
+                    filteredGems.some(g => g.id === gem.id)
+                );
+                
+                // Display results
+                displayResults(filteredGems);
+            }
+            
+            // Display results in the UI
+            function displayResults(gems) {
+                if (!gems || gems.length === 0) {
+                    resultsContainer.innerHTML = '<p>No hidden gems found matching your criteria.</p>';
+                    return;
+                }
+                
+                // Display counter
+                const counterHtml = `<div class="counter">Found ${gems.length} hidden gems</div>`;
+                
+                // Generate HTML for each gem
+                const gemsHtml = gems.map(gem => {
+                    // Determine primary category
+                    let primaryCategory = '';
+                    let subcategory = '';
+                    
+                    if (gem.leisure) {
+                        primaryCategory = 'Leisure';
+                        subcategory = gem.leisure;
+                    } else if (gem.amenity) {
+                        primaryCategory = 'Amenity';
+                        subcategory = gem.amenity;
+                    } else if (gem.natural) {
+                        primaryCategory = 'Natural';
+                        subcategory = gem.natural;
+                    } else if (gem.historic) {
+                        primaryCategory = 'Historic';
+                        subcategory = gem.historic;
+                    }
+                    
+                    // Format subcategory
+                    subcategory = subcategory.charAt(0).toUpperCase() + subcategory.slice(1).replace('_', ' ');
+                    
+                    // Generate details HTML
+                    const details = [];
+                    if (gem.wheelchair) details.push(`<span class="gem-detail">♿ Wheelchair: ${gem.wheelchair}</span>`);
+                    if (gem.access) details.push(`<span class="gem-detail">🚪 Access: ${gem.access}</span>`);
+                    if (gem.opening_hours) details.push(`<span class="gem-detail">🕒 Hours: ${gem.opening_hours}</span>`);
+                    
+                    // Generate popularity badge
+                    let popularityHtml = '';
+                    if (gem.popularity_score === null) {
+                        popularityHtml = '<span class="popularity undiscovered">Undiscovered</span>';
+                    } else {
+                        popularityHtml = `<span class="popularity low-popularity">Popularity: ${gem.popularity_score}</span>`;
+                    }
+                    
+                    return `
+                        <div class="gem-card">
+                            <div class="gem-name">${gem.name || 'Unnamed Location'}</div>
+                            <div class="gem-category">${primaryCategory}: ${subcategory}</div>
+                            <div class="gem-details">
+                                ${details.join('')}
+                                ${popularityHtml}
+                            </div>
+                            <div>
+                                <small>Coordinates: ${gem.coordinates.latitude.toFixed(6)}, ${gem.coordinates.longitude.toFixed(6)}</small>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                // Update the results container
+                resultsContainer.innerHTML = counterHtml + gemsHtml;
+            }
+        });
+    </script>
+</body>
+</html>
