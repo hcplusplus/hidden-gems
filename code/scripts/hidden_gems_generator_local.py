@@ -44,12 +44,16 @@ Return the output in this exact JSON format:
   {{
     "name": "Hidden Gem Name",
     "coordinates": [LATITUDE, LONGITUDE],
+    "address": "Street Address, City, State, Zip",
+    "opening_hours": "Opening hours in HH:MM format",
+    "dolar_sign": "Dollar sign indicating price level ($, $$, $$$)",
     "category": "nature|food|scenic|historic|...",
     "description": "Why this place is special in one sentence",
     "rarity": "most hidden|moderately hidden|least hidden",
     "color": "red|blue|purple",
     "review": "User review of the place in one sentence",
     "time": "The total time it takes to go from the origin to the destination with the gem added in route, in number of minutes only"
+  
   }}
 ]
 """
