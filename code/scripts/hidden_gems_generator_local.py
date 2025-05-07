@@ -47,8 +47,14 @@ Return the output in this exact JSON format:
     "coordinates": [LATITUDE, LONGITUDE],
     "address": "Street Address, City, State, Zip",
     "opening_hours": "Opening hours in HH:MM format",
+<<<<<<< HEAD
     "dolar_sign": "Dollar sign indicating price level ($, $$, $$$)",
     "category": "nature, food, scenic, historic, etc...",
+=======
+    "dollar_sign": "Dollar sign indicating price level ($, $$, $$$)",
+    "category_1": "nature|food|scenic|historic|...",
+    "category_2": "nature|food|scenic|historic|...",
+>>>>>>> b14c6f3740dd5432ad264724a14449d22dc205d2
     "description": "Why this place is special in one sentence",
     "rarity": "most hidden|moderately hidden|least hidden",
     "color": "red|blue|purple",
