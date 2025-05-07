@@ -126,40 +126,43 @@
             </div>
 
 
-            <div class="place-container">
-                <div>
-                    <div class="title" id="title" style="font-weight: 800; font-size: xx-large;"></div>
-                </div>
-            
-                <div style="margin-right: 40px">
-                    <div class="quiz-option" style="font-size: 14px; font-weight: 700; color:rgb(255, 255, 255); padding: 6px 12px; margin-left: 0; background-color: #f6d375;">Super Rare Gem</div>
-                    <div class="detail">
-                        <i class="fas fa-location-dot" style="color:#f6d375"></i>
-                        <span id="address">43600 Mission Blvd, Fremont, CA</span>
-                    </div>
-                    <div class="detail">
-                        <i class="fas fa-clock" style="color:#f6d375"></i>
-                        <span id="open">6:00 AM - 10:00 PM | </span>
-                        <span id="cost"> $ </span>
-                        
-                    </div>
-                    <div style="display: flex; gap: 8px; margin-top: 3px; margin-left:5px">
-                        <div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;" id="category-1">Outdoor</div>
-                        <div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;" id="category-2">Nature</div>
-                    </div>
-                    <hr>
-                    <span style="font-size: 13px; font-weight:500; display:block; margin-top:0px; margin-right: 40px; margin-left: 10px" id="description">This is a small pond with a small trail and a lot of good views and good photos </span>
-                </div>
+				<div class="place-container">
+					<div>
+						<div class="title" id="title" style="font-weight: 800; font-size: xx-large;"></div>
+					</div>
 
-		
+					<div style="margin-right: 40px">
+						<div class="quiz-option" style="font-size: 14px; font-weight: 700; color:rgb(255, 255, 255); padding: 6px 12px; margin-left: 0; background-color: #f6d375;">Super Rare Gem</div>
+						<div class="detail">
+							<i class="fas fa-location-dot" style="color:#f6d375"></i>
+							<span id="address">43600 Mission Blvd, Fremont, CA</span>
+						</div>
+						<div class="detail">
+							<i class="fas fa-clock" style="color:#f6d375"></i>
+							<span id="open">6:00 AM - 10:00 PM |
+							</span>
+							<span id="cost">
+								$
+							</span>
 
-    				<div class="review-box">
-    					<image src="./assets/avataaars.jpg" style="width:60px; height:60px;"></image>
-    				<span style="font-size: 16px; font-weight: 700;" id="review">"This trail has amazing views especially for sunset."</span>
-    				<span style="font-size: 14px; font-weight: 500; text-align: center; display: block; margin-top: 10px;">"Dog friendly!"</span>
+						</div>
+						<div style="display: flex; gap: 8px; margin-top: 3px; margin-left:5px">
+							<div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;" id="category-1">Outdoor</div>
+							<div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;" id="category-2">Nature</div>
+						</div>
+						<hr>
+						<span style="font-size: 13px; font-weight:500; display:block; margin-top:0px; margin-right: 40px; margin-left: 10px" id="description">This is a small pond with a small trail and a lot of good views and good photos
+						</span>
+					</div>
 
-    				<image src="./assets/dog.jpg" style="width:60px; height:60px; margin-left:190px; margin-top:5px"></image>
-                </div>
+
+					<div class="review-box">
+						<image src="./assets/avataaars.jpg" style="width:60px; height:60px;"></image>
+					<span style="font-size: 16px; font-weight: 700;" id="review">"This trail has amazing views especially for sunset."</span>
+					<span style="font-size: 14px; font-weight: 500; text-align: center; display: block; margin-top: 10px;">"Dog friendly!"</span>
+
+					<image src="./assets/dog.jpg" style="width:60px; height:60px; margin-left:190px; margin-top:5px"></image>
+			</div>
 			<button style="background-color: rgb(153, 206, 153); margin-top: 30px; margin-left: 40px" onclick="goToSpecificLocation()">Open in Google Maps</button>
 
             </div>
@@ -260,11 +263,11 @@
         }
 
 
-        function goToSpecificLocation() {
-            const coordinates = data_text["coordinates"];
-            const url = `https://www.google.com/maps?q=${coordinates}`;
-            window.open(url, "_blank");
-        }
+document.getElementById('state-1').onclick = function () {
+	const progressBar = document.getElementById('moving-progress');
+	progressBar.style.width = 20 + '%';
+	document.getElementById('time-left').innerText = "30 min left";
+}
 
         //after progress is 100%, image of finish fills the page and put button to feedback quiz 
         function showNextScreen() {
@@ -287,11 +290,27 @@
 									
 
 
+function goToSpecificLocation() {
+	const coordinates = data_text["coordinates"];
+	const url = `https://www.google.com/maps?q=${coordinates}`;
+	window.open(url, "_blank");
+}
 
-        // function updateProgress(percent) {
-            
-        // }
+// after progress is 100%, image of finish fills the page and put button to feedback quiz
+function showNextScreen() {
+	document.getElementById('progressContainer').style.display = 'none';
+	nextScreen.style.display = 'block';
+}
 
-    </script>
-</body>
-</html>
+function goBack() {
+	window.location.href = "landing-page.html?skipWelcome=1";
+}
+
+function feedbackForm() {
+	window.location.href = "end-survey.html";
+}
+
+
+// function updateProgress(percent) {
+
+// }</script></body></html>
