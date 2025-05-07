@@ -25,10 +25,10 @@
         }
 
         .progress-bar {
-            height: 20px;
+            height: 23px;
             border-radius: 10px;
             margin: 0px 40px 10px 40px;
-            background-color: lightgray;
+            background-color: rgb(226, 226, 226);
             display: flex;
         }
         .place-container {
@@ -65,21 +65,21 @@
             display: inline-flex;
             align-items: center;
             padding: 10px 16px;
-            margin: 0px 40px 10px 20px;
+            margin: 0px 0px 10px 20px;
             border-radius: 20px;
-            background-color: #f6d375;
+            background-color: #ededed;
             cursor: pointer;
             transition: background-color 0.2s;
         }
         .moving-progress {
-            height: 20px;
+            height: 23px;
             width:0%;  /*dynamic */
             border-radius: 10px;
-            background-color: green;
+            background-color: rgb(179, 217, 179);
         }
         .review-box {
             height: 200px;
-            margin: 30px 60px 60px 40px;
+            /* margin: 30px 30px 60px 30px; */
             background-color: rgba(255, 255, 255, 0.637);
             border-radius: 10px;
             padding: 10px 10px 10px 10px;
@@ -95,9 +95,7 @@
 
 <body>
     <div class="page-container">
-
-        <div class="flex flex-column">
-            <!-- <div id="map" style="width:100%;height:200px"></div> -->
+        <div class="flex flex-column" id="progressContainer">
             <div>
                 <image src="./assets/trip_mode.jpg" style="width:100%;height:250px;margin-top: 40px"/>
                 <div style="position: absolute; top: 140px; left: 240px; color: white; font-size: 20px; font-weight: 600;" id="time-left">
@@ -109,60 +107,65 @@
                     <div class="moving-progress" id="moving-progress">
                         <!-- progress div -->
                     </div>
-                    <span style="margin-left: 280px;">🏁</span>
+                    <span style="margin-left: 280px; position: absolute; right: 45;">🏁</span>
                     
-                        
                 </div>
-                <!-- <span style="font-weight:bold; display:block; text-align: right; margin-right: 40px" >time left</span> -->
             </div>
 
 
             <div class="place-container">
                 <div>
-                    <div class="title" id="title" style="font-weight: 800; font-size: xx-large;">Mission Peak</div>
+                    <div class="title" id="title" style="font-weight: 800; font-size: xx-large;"></div>
                 </div>
             
-                <div class="">
-                    <div class="quiz-option" style="font-size: 14px; font-weight: 700; color:rgb(255, 255, 255); padding: 6px 12px; margin-left: 0;">Super Rare Gem</div>
+                <div style="margin-right: 40px">
+                    <div class="quiz-option" style="font-size: 14px; font-weight: 700; color:rgb(255, 255, 255); padding: 6px 12px; margin-left: 0; background-color: #f6d375;">Super Rare Gem</div>
                     <div class="detail">
                         <i class="fas fa-location-dot" style="color:#f6d375"></i>
                         <span id="address">43600 Mission Blvd, Fremont, CA</span>
                     </div>
                     <div class="detail">
                         <i class="fas fa-clock" style="color:#f6d375"></i>
-                        <span>6:00 AM - 10:00 PM | $</span>
+                        <span id="open">6:00 AM - 10:00 PM | </span>
+                        <span id="cost"> $ </span>
+                        
                     </div>
-                    <!-- <div style="display: flex; gap: 8px; margin-top: 12px;">
-                        <div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;">Outdoor</div>
-                        <div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;">Nature</div>
-                    </div> -->
+                    <div style="display: flex; gap: 8px; margin-top: 3px; margin-left:5px">
+                        <div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;" id="category-1">Outdoor</div>
+                        <div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;" id="category-2">Nature</div>
+                    </div>
+                    <hr>
+                    <span style="font-size: 13px; font-weight:500; display:block; margin-top:0px; margin-right: 40px; margin-left: 10px" id="description">This is a small pond with a small trail and a lot of good views and good photos </span>
                 </div>
 
+		
 
-			<!-- Navigation wheel component will be loaded here -->
-			<div id="nav-wheel-container"></div>
-		</div>
+                <div class="review-box">
+                    <image src="./assets/avataaars.jpg" style="width:60px; height:60px;"></image>
+                    <span style="font-size: 16px; font-weight: 700;" id="review">"This trail has amazing views especially for sunset."</span>
+                    <span style="font-size: 14px; font-weight: 500; text-align: center; display: block; margin-top: 10px;">"Dog friendly!"</span>
 
-            <div class="review-box">
-                <image src="./assets/avataaars.jpg" style="width:60px; height:60px"></image>
-                <span style="font-size: 16px; font-weight: 700;">"This trail has amazing views especially for sunset."</span>
-                <span style="font-size: 14px; font-weight: 500; text-align: center; display: block; margin-top: 10px;">"Dog friendly!"</span>
-
-                <image src="./assets/dog.jpg" style="width:60px; height:60px; margin-left:190px; margin-top:5px"></image>
-
+                    <image src="./assets/dog.jpg" style="width:60px; height:60px; margin-left:190px; margin-top:5px"></image>
+                </div>
                 <button style="background-color: rgb(153, 206, 153); margin-top: 30px; margin-left: 40px" onclick="goToSpecificLocation()">Open in Google Maps</button>
 
             </div>
-
+            <div style="margin: 60px 50px 30px 10px; text-align: right;">
+                <button class="state-change" id="state-1">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button class="state-change" id="state-2">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <span style="font-size: 12px; font-weight: 300;">for demo</span>
+            </div>
         </div>
-        <div style="margin: 60px 50px 30px 10px; text-align: right;">
-            <button class="state-change" id="state-1">
-                <i class="fas fa-arrow-right"></i>
-            </button>
-            <button class="state-change" id="state-2">
-                <i class="fas fa-arrow-right"></i>
-            </button>
-            <span style="font-size: 12px; font-weight: 300;">for demo</span>
+        <div id="nextScreen" style="display: none;">
+            <image src="./assets/arrived.jpg" style="width:100%;height:100%;margin-top: 40px"/>
+            <div style="position: absolute; top: 170px; left: 60px; color: rgb(36, 176, 102); font-size: 36px; font-weight: 800;" id="arrived">
+                You've Arrived!!
+            </div>
+            <button>Tell us more about this gem!</button>
         </div>
     
     </div>
@@ -175,10 +178,14 @@
                 console.log(data); // Use your data here
                 data_text = data[0]
                 document.getElementById('title').innerText = data_text["name"];
-                document.getElementById('address').innerText = data_text["coordinates"];
-                document.getElementById('open').innerText = data_text["open"];
-                document.getElementById('title').innerText = data_text["name"];
-                document.getElementById('title').innerText = data_text["name"];
+                document.getElementById('address').innerText = data_text["address"];
+                document.getElementById('cost').innerText = data_text["dollar_sign"];
+                document.getElementById('open').innerText = data_text["opening_hours"];
+                document.getElementById('description').innerText = data_text["description"];
+                document.getElementById('category-1').innerText = data_text["category_1"];
+                document.getElementById('category-2').innerText = data_text["category_2"];
+                document.getElementById('review').innerText = data_text["review"];
+                document.getElementById('time-left').innerText = data_text["time"];
             })
             .catch(error => console.error('Error loading JSON:', error));
         let latitude = 0;
@@ -221,12 +228,23 @@
             progressBar.style.width = 100 + '%';
             document.getElementById('time-left').innerText = "Arrived!";
             document.getElementById('time-left').style.marginLeft = "15px";
+            setTimeout(() => {
+                showNextScreen();
+            }, 800);
+
         }
+
 
         function goToSpecificLocation() {
             const coordinates = data_text["coordinates"];
             const url = `https://www.google.com/maps?q=${coordinates}`;
             window.open(url, "_blank");
+        }
+
+        //after progress is 100%, image of finish fills the page and put button to feedback quiz 
+        function showNextScreen() {
+            document.getElementById('progressContainer').style.display = 'none';
+            nextScreen.style.display = 'block';
         }
 
 
