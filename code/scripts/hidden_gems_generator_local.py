@@ -16,7 +16,7 @@ def build_prompt(data):
         return ", ".join(data.get(field, [])) or "None"
 
     return f"""
-You are a local travel expert. Recommend 5 hidden gems (underrated places) that are not well known but worth exploring based on the following user preferences.
+You are a local travel expert. Recommend 3 hidden gems (underrated places) that are not well known but worth exploring based on the following user preferences.
 
 Trip Route:
 - From: {data.get('origin', 'Unknown')}
@@ -47,14 +47,8 @@ Return the output in this exact JSON format:
     "coordinates": [LATITUDE, LONGITUDE],
     "address": "Street Address, City, State, Zip",
     "opening_hours": "Opening hours in HH:MM format",
-<<<<<<< HEAD
     "dolar_sign": "Dollar sign indicating price level ($, $$, $$$)",
     "category": "nature, food, scenic, historic, etc...",
-=======
-    "dollar_sign": "Dollar sign indicating price level ($, $$, $$$)",
-    "category_1": "nature|food|scenic|historic|...",
-    "category_2": "nature|food|scenic|historic|...",
->>>>>>> b14c6f3740dd5432ad264724a14449d22dc205d2
     "description": "Why this place is special in one sentence",
     "rarity": "most hidden|moderately hidden|least hidden",
     "color": "red|blue|purple",
