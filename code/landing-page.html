@@ -278,6 +278,8 @@
 					el.style.width = '28px';
 					el.style.height = '28px';
 					el.style.cursor = 'pointer';
+					el.addEventListener('click', () => renderRoutes(lngLat));
+
 
 					const popupHTML = `
 				  <div style="min-width:200px">
