@@ -9,7 +9,7 @@ CORS(app)  # Allow CORS from frontend
 
 OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
 # OLLAMA_MODEL = "mistral:7b"
-OLLAMA_MODEL = "gemma3:4b"
+OLLAMA_MODEL = "gemma3:1b"
 
 def build_prompt(data):
     def fmt(field):
@@ -47,15 +47,10 @@ Return the output in this exact JSON format:
     "coordinates": [LATITUDE, LONGITUDE],
     "address": "Street Address, City, State, Zip",
     "opening_hours": "Opening hours in HH:MM format",
-<<<<<<< HEAD
-    "dolar_sign": "Dollar sign indicating price level ($, $$, $$$)",
-    "category": "nature, food, scenic, historic, etc...",
-=======
     "dollar_sign": "Dollar sign indicating price level ($, $$, $$$)",
     "category_1": "nature|food|scenic|historic|...",
     "category_2": "nature|food|scenic|historic|...",
->>>>>>> b14c6f3740dd5432ad264724a14449d22dc205d2
-    "description": "Why this place is special in one sentence",
+    "description": "Why this place is special in ten words or less",
     "rarity": "most hidden|moderately hidden|least hidden",
     "color": "red|blue|purple",
     "review": "User review of the place in one sentence",

@@ -7,38 +7,45 @@
 		<link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet"/>
 		<script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
 		<style>
-			* {
-				margin: 0;
-				padding: 0;
-				box-sizing: border-box;
-			}
 			html,
 			body {
+				margin: 0;
+				padding: 0;
 				height: 100%;
 				font-family: sans-serif;
-				background: #f5f5f5;
 				display: flex;
 				justify-content: center;
+				background: #f5f5f5;
 			}
 			.container {
 				position: relative;
 				width: 390px;
 				height: 100%;
-				overflow: hidden;
 				background: white;
 				border-left: 1px solid #ccc;
 				border-right: 1px solid #ccc;
+				overflow: hidden;
 			}
 			#map {
 				width: 100%;
 				height: 100%;
 			}
-			.marker {
-				width: 20px;
-				height: 20px;
-				transform: rotate(45deg);
-				border-radius: 4px;
-				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+			.legend {
+				position: absolute;
+				bottom: 200px;
+				left: 10px;
+				background: white;
+				padding: 10px;
+				border-radius: 6px;
+				box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+				font-size: 14px;
+				z-index: 10;
+			}
+			.legend-icon {
+				width: 16px;
+				height: 16px;
+				margin-right: 6px;
+				vertical-align: middle;
 			}
 			.nav-wheel-container {
 				position: fixed;
@@ -58,11 +65,6 @@
 				justify-content: center;
 				font-size: 30px;
 				cursor: pointer;
-				box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-				transition: transform 0.3s;
-			}
-			.nav-wheel-button:hover {
-				transform: scale(1.1);
 			}
 			.nav-wheel {
 				position: absolute;
@@ -76,60 +78,23 @@
 			.nav-wheel.active {
 				display: flex;
 			}
-			.nav-item {
-				display: flex;
-				align-items: center;
-				gap: 8px;
-			}
-			.nav-label {
+			.nav-label,
+			.nav-icon {
 				background-color: #222;
 				color: white;
-				padding: 8px 16px;
 				border-radius: 20px;
 				font-size: 14px;
 				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 			}
 			.nav-icon {
-				background-color: #222;
-				color: white;
 				width: 48px;
 				height: 48px;
-				border-radius: 50%;
 				display: flex;
 				justify-content: center;
 				align-items: center;
+				border-radius: 50%;
 				font-size: 24px;
 				cursor: pointer;
-				box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-			}
-			.legend {
-				position: absolute;
-				bottom: 20px;
-				left: 10px;
-				background: white;
-				padding: 10px;
-				border-radius: 6px;
-				box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-				font-size: 14px;
-			}
-			.legend div {
-				display: flex;
-				align-items: center;
-				margin-bottom: 6px;
-			}
-			.legend span {
-				display: inline-block;
-				width: 14px;
-				height: 14px;
-				margin-right: 8px;
-				transform: rotate(45deg);
-				border-radius: 3px;
-			}
-			.legend-icon {
-				width: 16px;
-				height: 16px;
-				margin-right: 6px;
-				vertical-align: middle;
 			}
 			#gem-card-container {
 				position: absolute;
@@ -153,18 +118,12 @@
 		<div class="container">
 			<div id="map"></div>
 			<div class="legend">
-				<div>
-					<img src="icons/gem-red.svg" class="legend-icon" alt="Most Hidden Gem"/>
-					Most Hidden
-				</div>
-				<div>
-					<img src="icons/gem-purple.svg" class="legend-icon" alt="Moderately Hidden Gem"/>
-					Moderately Hidden
-				</div>
-				<div>
-					<img src="icons/gem-blue.svg" class="legend-icon" alt="Least Hidden Gem"/>
-					Least Hidden
-				</div>
+				<div><img src="icons/gem-red.svg" class="legend-icon"/>
+					Most Hidden</div>
+				<div><img src="icons/gem-purple.svg" class="legend-icon"/>
+					Moderately Hidden</div>
+				<div><img src="icons/gem-blue.svg" class="legend-icon"/>
+					Least Hidden</div>
 			</div>
 			<div class="nav-wheel-container">
 				<div class="nav-wheel" id="nav-wheel">
@@ -184,7 +143,6 @@
 				<div class="nav-wheel-button" id="nav-wheel-toggle">☰</div>
 			</div>
 			<div id="gem-card-container"></div>
-
 		</div>
 
 		<script>
@@ -210,7 +168,6 @@
 					return;
 				
 
-
 				const baseRoute = {
 					type: 'Feature',
 					geometry: {
@@ -218,7 +175,6 @@
 						coordinates: [origin, destination]
 					}
 				};
-
 				const detourRoute = {
 					type: 'Feature',
 					geometry: {
@@ -279,7 +235,7 @@
 				const cardContainer = document.getElementById("gem-card-container");
 				cardContainer.innerHTML = "";
 
-				gems.forEach(gem => {
+				gems.forEach((gem, index) => {
 					const coords = gem.coords || gem.coordinates;
 					if (! coords || coords.length !== 2) 
 						return;
@@ -331,71 +287,8 @@
 					map.fitBounds(bounds, {padding: 40});
 				}
 			}
+
 			map.on('load', loadGems);
-			function showWelcomeMessage() {
-				const welcomeOverlay = document.createElement('div');
-				welcomeOverlay.style.position = 'fixed';
-				welcomeOverlay.style.top = '0';
-				welcomeOverlay.style.left = '0';
-				welcomeOverlay.style.right = '0';
-				welcomeOverlay.style.bottom = '0';
-				welcomeOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-				welcomeOverlay.style.display = 'flex';
-				welcomeOverlay.style.flexDirection = 'column';
-				welcomeOverlay.style.justifyContent = 'center';
-				welcomeOverlay.style.alignItems = 'center';
-				welcomeOverlay.style.zIndex = '2000';
-				welcomeOverlay.style.transition = 'opacity 0.5s';
-
-				const welcomeMessage = document.createElement('div');
-				welcomeMessage.style.color = 'white';
-				welcomeMessage.style.fontSize = '28px';
-				welcomeMessage.style.fontWeight = 'bold';
-				welcomeMessage.style.marginBottom = '20px';
-				welcomeMessage.style.textAlign = 'center';
-				welcomeMessage.style.padding = '0 30px';
-				welcomeMessage.innerText = 'Discover Hidden Gems in Northern California';
-
-				const welcomeSubMessage = document.createElement('div');
-				welcomeSubMessage.style.color = 'white';
-				welcomeSubMessage.style.fontSize = '16px';
-				welcomeSubMessage.style.marginBottom = '30px';
-				welcomeSubMessage.style.textAlign = 'center';
-				welcomeSubMessage.style.padding = '0 30px';
-				welcomeSubMessage.innerText = 'Find off-the-beaten-path adventures for seasoned travelers';
-
-				const startButton = document.createElement('button');
-				startButton.style.padding = '12px 40px';
-				startButton.style.backgroundColor = 'white';
-				startButton.style.color = 'black';
-				startButton.style.border = 'none';
-				startButton.style.borderRadius = '24px';
-				startButton.style.fontSize = '18px';
-				startButton.style.cursor = 'pointer';
-				startButton.innerText = 'Get Started';
-
-				welcomeOverlay.appendChild(welcomeMessage);
-				welcomeOverlay.appendChild(welcomeSubMessage);
-				welcomeOverlay.appendChild(startButton);
-
-				document.body.appendChild(welcomeOverlay);
-
-				startButton.addEventListener('click', () => {
-					welcomeOverlay.style.opacity = '0';
-					setTimeout(() => {
-						welcomeOverlay.remove();
-					}, 500);
-				});
-				history.replaceState({}, document.title, "landing-page.html?skipWelcome=1");
-
-
-			}
-
-			// Only show welcome message if URL doesn't include skipWelcome=1
-			const params = new URLSearchParams(window.location.search);
-			if (params.get("skipWelcome") !== "1") {
-				setTimeout(showWelcomeMessage, 500);
-			}
 		</script>
 	</body>
 </html>
