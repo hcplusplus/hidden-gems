@@ -4,8 +4,11 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Getting to Know You - Hidden Gems</title>
-		<link rel="stylesheet" href="css/main.css">
-		<link rel="stylesheet" href="css/quiz.css">
+		<script src="static/js/data-controller.js"></script>
+
+		<link rel="stylesheet" href="static/styles/new-aesthetics.css">
+		<link rel="stylesheet" href="static/styles/quiz.css">
+
 
 
 	</head>
@@ -319,7 +322,7 @@
 							const selectedTime = document.querySelector('input[name="time"]:checked');
 							quizState.answers.time = selectedTime ? selectedTime.value : '';
 
-							const detourButtons = document.querySelectorAll('#step-4 .option-button.selected');
+							const detourButtons = document.querySelectorAll('#step-2 .option-button.selected');
 							const selectedDetour = Array.from(detourButtons).find(btn => ['5', '15', '30', '50+'].includes(btn.getAttribute('data-value')));
 							quizState.answers.maxDetour = selectedDetour ? selectedDetour.getAttribute('data-value') : '';
 
@@ -359,26 +362,50 @@
 						sessionStorage.setItem("originCoords", JSON.stringify(originCoords));
 						sessionStorage.setItem("destinationCoords", JSON.stringify(destinationCoords));
 
+						// Save user preferences
+						sessionStorage.setItem("userPreferences", JSON.stringify(userData));
+    
+
 						console.log("userData:", userData);
 						console.log("sessionStorage:", sessionStorage.getItem("originCoords"));
-						const res = await fetch("http://127.0.0.1:5000/generate_gems", {
-							method: "POST",
+
+
+						// TODO: send user data & hidden gems to the model for ranking the best gems
+						const res = await fetch("http://127.0.0.1:5000/trips/demo/0", {
+							method: "GET",
 							headers: {
 								"Content-Type": "application/json"
 							},
 							body: JSON.stringify(userData)
 						});
 
-						const gems = await res.json();
-						sessionStorage.setItem("gems", JSON.stringify(gems));
-						sessionStorage.setItem("userPreferences", JSON.stringify(userData));
-						window.location.href = "landing-page.html?skipWelcome=1";
-					} catch (err) {
-						console.error("Error generating gems:", err);
-						alert("Something went wrong. Please try again.");
-						overlay.style.display = "none";
-					}
-				}
+						//const gems = await res.json();
+
+						 // Filter gems by route and preferences
+    						try {
+    						  // First filter by route
+    						  await filterGemsByRoute(originCoords, destinationCoords, 30);
+							
+    						  // Then apply preference filters
+    						  //filterGemsByPreferences(userData);
+							
+    						  // Navigate to the map page
+    						  window.location.href = "landing-page.html";
+    						} catch (error) {
+    						  console.error("Error filtering gems:", error);
+    						  alert("Something went wrong with gem filtering. Please try again.");
+    						  overlay.style.display = "none";
+    						}
+							} 	catch (err) {
+    						console.error("Error generating gems:", err);
+    						alert("Something went wrong. Please try again.");
+    						overlay.style.display = "none";
+  							}						
+}						
+
+						//sessionStorage.setItem("gems", JSON.stringify(gems));
+
+						window.location.href = "gtky.html";
 
 
 				nextButton.addEventListener('click', function () {
@@ -399,7 +426,7 @@
 
 				closeButton.addEventListener('click', function () {
 					if (confirm('Are you sure you want to exit the quiz? Your progress will be lost.')) {
-						window.location.href = "landing-page.html?skipWelcome=1";
+						window.location.href = "index.html";
 					}
 				});
 

@@ -1,181 +1,595 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-		<title>Northern California Hidden Gems</title>
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Your Trip - Hidden Gems</title>
+    <link rel="stylesheet" href="static/styles/main.css">
+    <link rel="stylesheet" href="static/styles/new-aesthetics.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&display=swap" rel="stylesheet">
+    
+    <!-- Include FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Data Controller -->
+    <script src="static/js/data-controller.js"></script>
+    
+    <style>
+        *,
+        *::before,
+        *::after {
+            font-family: 'Nunito', sans-serif;
+            box-sizing: border-box;
+        }
 
-		<!-- MapLibre CSS -->
-		<link href="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.css" rel="stylesheet"/>
-		<link href="components/map/css/styles.css" rel="stylesheet"/>
-	</head>
-	<body>
-		<div
-			class="phone-frame">
-			<!-- App header with filters selection -->
-			<div class="app-header">
-				<!-- <button class="filter-button active">Filter1</button>
-				<button class="filter-button">Filter2</button>
-				<button class="filter-button">Filter3</button>
-				<button class="filter-button">Filter4</button> -->
-			</div>
+        body {
+            margin: 0;
+            color: #333;
+        }
 
-			<!-- Map container -->
-			<div id="map" style="margin-top: 40px"></div>
+        .page-container {
+            max-width: 430px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            background: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
 
-			<!-- Itinerary button
-			<button class="view-itinerary-btn">
-				<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
-				View Itinerary
-			</button> -->
+        .fade {
+            opacity: 1;
+            transition: opacity 1s ease;
+        }
 
-			<!-- Achievements button
-			<button class="achievements-button">
-				<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
-				Achievements
-			</button> -->
+        .progress-bar {
+            height: 23px;
+            border-radius: 10px;
+            margin: 0px 40px 10px 40px;
+            background-color: rgb(226, 226, 226);
+            display: flex;
+        }
+        
+        .moving-progress {
+            height: 23px;
+            width: 0%;  /*dynamic */
+            border-radius: 10px;
+            background-color: rgb(179, 217, 179);
+            transition: width 0.5s ease-out;
+        }
+        
+        .place-container {
+            margin: 15px 0px 0px 40px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 500;
+        }
 
-			<!-- Swipe indicators -->
-			<div
-				class="swipe-indicator"><!-- Will be populated by JavaScript -->
-			</div>
+        .detail {
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 700;
+        }
 
-			<!-- Hidden gem cards container -->
-			<div
-				class="cards-container"><!-- Cards will be generated dynamically -->
-			</div>
+        .review-box {
+            height: auto;
+            min-height: 140px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 10px;
+            margin: 15px 40px 20px 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .state-change {
+            padding: 5px 10px;
+            background-color: rgb(230, 230, 230);
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .state-change:hover {
+            background-color: rgb(200, 200, 200);
+        }
+        
+        .trip-controls {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 40px;
+        }
+        
+        .action-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: rgb(179, 217, 179);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            margin: 0 5px;
+        }
+        
+        .action-button:hover {
+            background-color: rgb(149, 187, 149);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .secondary {
+            background-color: rgb(226, 226, 226);
+            color: #333;
+        }
+        
+        .secondary:hover {
+            background-color: rgb(200, 200, 200);
+        }
+        
+        #arrived-screen {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        #arrived-message {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: rgb(138, 207, 138);
+            border-radius: 16px;
+            color: white;
+            font-family: 'Cherry Bomb One', system-ui;
+            font-size: 34px;
+            font-weight: 600;
+            margin: 20px 0;
+            animation: bounce 1s infinite alternate;
+        }
+        
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+        
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .review-content {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .review-text {
+            flex: 1;
+        }
+        
+        .quiz-option {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            margin: 0 8px 10px 0;
+            border-radius: 20px;
+            background-color: #ededed;
+            font-size: 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
 
-			<!-- Bottom navigation -->
-			<div class="bottom-nav">
-				<div class="bottom-nav-item">
-					<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-					Explore
-				</div>
-				<div class="bottom-nav-item active">
-					<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-					Map
-				</div>
-				<div class="bottom-nav-item">
-					<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-					Add
-				</div>
-				<div class="bottom-nav-item" id="profile-button">
-					<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-					Profile
-				</div>
-			</div>
+<body>
+    <div class="page-container">
+        <button id="back-button" style="font-size: 20px; background: none; border: none; cursor: pointer; color: black; font-weight: 600; padding: 10px; z-index: 100;">
+            ← Back
+        </button>
+        
+        <!-- Trip Progress Container -->
+        <div id="progress-container" class="fade">
+            <div>
+                <img src="static/assets/red_trip_mode.jpg" id="trip-cover" style="width:100%;height:250px;margin-top:0px" alt="Trip Cover"/>
+                <div id="time-left" style="position: absolute; top: 150px; left: 240px; color: white; font-size: 20px; font-weight: 600;">
+                    Time Remaining
+                </div>
+            </div>
+            
+            <div>
+                <div class="progress-bar">
+                    <div class="moving-progress" id="moving-progress">
+                        <!-- Progress bar fills dynamically -->
+                    </div>
+                    <span style="margin-left: 280px; position: absolute; right: 45px;">🏁</span>
+                </div>
+            </div>
 
-			<!-- User Preferences Overlay -->
-			<div class="preferences-overlay">
-				<div class="preferences-panel">
-					<div class="preferences-header">
-						<div class="preferences-title">Your Preferences</div>
-						<button class="close-preferences">×</button>
-					</div>
+            <div class="place-container">
+                <div>
+                    <div id="gem-title" class="title" style="font-weight: 800; font-size: xx-large;">
+                        <!-- Gem title inserted here -->
+                    </div>
+                </div>
 
-					<div class="preferences-section">
-						<div class="preferences-section-title">Favorite Activities</div>
-						<div class="preferences-option-group">
-							<input type="checkbox" id="hiking" class="preference-checkbox" data-preference="activities" value="hiking">
-							<label for="hiking" class="preference-label">Hiking</label>
+                <div style="margin-right: 40px">
+                    <div id="gem-rarity" class="quiz-option" style="font-size: 14px; font-weight: 700; color: rgb(255, 255, 255); padding: 6px 12px; margin-left: 0; background-color: #f6d375;">
+                        Loading...
+                    </div>
+                    <div class="detail">
+                        <i class="fas fa-location-dot" style="color:#f6d375"></i>
+                        <span id="gem-address">Loading address...</span>
+                    </div>
+                    <div class="detail">
+                        <i class="fas fa-clock" style="color:#f6d375"></i>
+                        <span id="gem-hours">Loading hours... </span>
+                        <span id="gem-cost"></span>
+                    </div>
+                    <div style="display: flex; gap: 8px; margin-top: 3px; margin-left:5px">
+                        <div id="gem-category-1" class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;">
+                            Category
+                        </div>
+                        <div id="gem-category-2" class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;">
+                            Activity
+                        </div>
+                    </div>
+                    <hr>
+                    <span id="gem-description" style="font-size: 13px; font-weight:500; display:block; margin-top:0px; margin-right: 40px; margin-left: 10px">
+                        Loading description...
+                    </span>
+                </div>
 
-							<input type="checkbox" id="wine-tasting" class="preference-checkbox" data-preference="activities" value="wine-tasting">
-							<label for="wine-tasting" class="preference-label">Wine Tasting</label>
+                <div class="review-box">
+                    <div class="review-content">
+                        <img src="static/assets/avataaars.jpg" class="avatar" alt="User Avatar">
+                        <div class="review-text">
+                            <span id="gem-review" style="font-size: 16px; font-weight: 700;"></span>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-size: 14px; font-weight: 500;">Dog friendly!</span>
+                        <img src="static/assets/dog.jpg" style="width:40px; height:40px; margin-left:10px; margin-top:5px; border-radius: 50%;" alt="Dog Avatar">
+                    </div>
+                </div>
+                
+                <button id="directions-btn" style="background-color: rgb(153, 206, 153); margin-top: 15px; margin-bottom: 15px; width: 80%;">
+                    Open in Google Maps
+                </button>
+            </div>
+            
+            <div class="trip-controls">
+                <button id="state-1" class="state-change">
+                    <i class="fas fa-car"></i> On the Road
+                </button>
+                <button id="state-2" class="state-change">
+                    <i class="fas fa-check-circle"></i> Arrived
+                </button>
+                <span style="font-size: 12px; font-weight: 300; align-self: center;">Demo Controls</span>
+            </div>
+        </div>
+        
+        <!-- Arrived Screen (initially hidden) -->
+        <div id="arrived-screen" style="display: none;" class="fade">
+            <img src="static/assets/arrived.jpg" style="width:100%;height:auto;" alt="Arrived Banner"/>
+            
+            <div id="arrived-message">
+                You've Arrived!!
+            </div>
+            
+            <div class="flex flex-column" style="margin: 0 40px;">
+                <button id="feedback-btn" class="action-button" style="margin-top: 10px; margin-bottom: 20px;">
+                    Tell us about this gem!
+                </button>
+                
+                <p style="font-size: 12px; text-align:center; margin-bottom: 10px">
+                    We're so proud that you've uncovered this gem! Remember to come back after you've visited. If it was truly a gem, tell us about it!
+                </p>
+                
+                <div class="trip-controls">
+                    <button id="next-gem-btn" class="action-button">
+                        Next Gem
+                    </button>
+                    <button id="finish-trip-btn" class="action-button secondary">
+                        End Trip
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-							<input type="checkbox" id="photography" class="preference-checkbox" data-preference="activities" value="photography">
-							<label for="photography" class="preference-label">Photography</label>
-
-							<input type="checkbox" id="history" class="preference-checkbox" data-preference="activities" value="history">
-							<label for="history" class="preference-label">History</label>
-
-							<input type="checkbox" id="food" class="preference-checkbox" data-preference="activities" value="food">
-							<label for="food" class="preference-label">Food & Dining</label>
-
-							<input type="checkbox" id="views" class="preference-checkbox" data-preference="activities" value="views">
-							<label for="views" class="preference-label">Scenic Views</label>
-
-							<input type="checkbox" id="swimming" class="preference-checkbox" data-preference="activities" value="swimming">
-							<label for="swimming" class="preference-label">Swimming</label>
-						</div>
-					</div>
-
-					<div class="preferences-section">
-						<div class="preferences-section-title">Accessibility Needs</div>
-						<div class="preferences-option-group">
-							<input type="checkbox" id="wheelchair" class="preference-checkbox" data-preference="accessibility" value="wheelchair">
-							<label for="wheelchair" class="preference-label">Wheelchair Access</label>
-
-							<input type="checkbox" id="easy-trails" class="preference-checkbox" data-preference="accessibility" value="easy-trails">
-							<label for="easy-trails" class="preference-label">Easy Trails Only</label>
-
-							<input type="checkbox" id="stroller" class="preference-checkbox" data-preference="accessibility" value="stroller">
-							<label for="stroller" class="preference-label">Stroller Friendly</label>
-						</div>
-					</div>
-
-					<div class="preferences-section">
-						<div class="preferences-section-title">Maximum Detour Time</div>
-						<div class="preference-slider-container">
-							<div class="preference-slider-header">
-								<span>15 min</span>
-								<span id="detour-time-value">30 min</span>
-								<span>60+ min</span>
-							</div>
-							<input type="range" min="15" max="60" value="30" class="preference-slider" id="detour-time-slider" data-preference="detour-time">
-						</div>
-					</div>
-
-					<div class="preferences-section">
-						<div class="preferences-section-title">Popularity Preference</div>
-						<div class="preference-slider-container">
-							<div class="preference-slider-header">
-								<span>Hidden Gems</span>
-								<span id="popularity-value">Balanced</span>
-								<span>Popular Spots</span>
-							</div>
-							<input type="range" min="1" max="5" value="3" class="preference-slider" id="popularity-slider" data-preference="popularity">
-						</div>
-					</div>
-
-					<button class="save-preferences-btn">Save Preferences</button>
-				</div>
-			</div>
-
-			<!-- Achievements Panel -->
-			<div class="preferences-overlay" id="achievements-overlay">
-				<div class="achievements-panel">
-					<div class="achievements-header">
-						<div class="achievements-title">Your Achievements</div>
-						<button class="close-achievements">×</button>
-					</div>
-
-					<div
-						class="achievement-list"><!-- Will be populated by JavaScript -->
-					</div>
-				</div>
-			</div>
-
-			<!-- Achievement Notification -->
-			<div class="achievement-notification">
-				<div class="achievement-icon">🏆</div>
-				<div class="achievement-details">
-					<div class="achievement-title">Achievement Unlocked!</div>
-					<div class="achievement-description">Explorer: Discovered your first hidden gem</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- MapLibre JS -->
-		<script src="https://unpkg.com/maplibre-gl@3.3.1/dist/maplibre-gl.js"></script>
-
-		<!-- App JavaScript -->
-		<script src="components/map/js/utils.js"></script>
-		<script src="components/map/js/data.js"></script>
-		<script src="components/map/js/map.js"></script>
-		<script src="components/map/js/cards.js"></script>
-		<script src="components/map/js/swipe.js"></script>
-		<script src="components/map/js/preferences.js"></script>
-		<script src="components/map/js/achievements.js"></script>
-		<script src="components/map/js/main.js"></script>
-	</body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get trip data from URL or localStorage
+            let tripData = HiddenGemsData.utils.getDataFromUrl();
+            let currentGem;
+            let tripState;
+            
+            // If no data in URL, try to get from localStorage
+            if (!tripData || (!tripData.gem && !tripData.selectedGems)) {
+                // Check if we have a current trip state
+                tripState = HiddenGemsData.tripState.get();
+                
+                if (tripState.lastGemVisited) {
+                    // Get the current gem from storage
+                    currentGem = HiddenGemsData.gemsData.getById(tripState.lastGemVisited);
+                } else {
+                    // No trip in progress - return to index
+                    alert('No trip in progress. Please select gems first.');
+                    window.location.href = 'index.html';
+                    return;
+                }
+            } else {
+                // Extract data from URL
+                if (tripData.gem) {
+                    currentGem = tripData.gem;
+                } else if (tripData.selectedGems && tripData.selectedGems.length > 0) {
+                    currentGem = tripData.selectedGems[0];
+                }
+                
+                tripState = tripData.tripState || HiddenGemsData.tripState.get();
+            }
+            
+            // Get all selected gems
+            const selectedGems = HiddenGemsData.gemsData.getSelected();
+            
+            // Determine current gem's index in the trip
+            const currentGemIndex = selectedGems.findIndex(g => 
+                (g.id || g.index).toString() === (currentGem.id || currentGem.index).toString());
+            
+            // Calculate trip progress based on gem position
+            const progress = selectedGems.length > 1 
+                ? ((currentGemIndex + 1) / selectedGems.length) * 100 
+                : 50; // If only one gem, show 50% progress
+            
+            // Update progress bar
+            updateProgressBar(progress);
+            
+            // Update trip state with current progress
+            tripState.progress = progress;
+            HiddenGemsData.tripState.save(tripState);
+            
+            // Display gem details
+            displayGemDetails(currentGem);
+            
+            // Initialize buttons
+            initializeButtons(currentGem, currentGemIndex, selectedGems);
+        });
+        
+        function displayGemDetails(gem) {
+            // Update page elements with gem details
+            document.getElementById('gem-title').textContent = gem.name || gem.title || 'Hidden Gem';
+            document.getElementById('gem-address').textContent = gem.address || gem.location || 'Location details not available';
+            
+            // Set hours and cost
+            const hoursEl = document.getElementById('gem-hours');
+            const costEl = document.getElementById('gem-cost');
+            
+            hoursEl.textContent = gem.hours || '';
+            costEl.textContent = gem.cost || '';
+            
+            // If we only have cost but no hours
+            if (!gem.hours && gem.cost) {
+                hoursEl.textContent = gem.cost;
+                costEl.textContent = '';
+            }
+            
+            // Update description
+            document.getElementById('gem-description').textContent = gem.description || 'No description available.';
+            
+            // Set categories
+            const cat1El = document.getElementById('gem-category-1');
+            const cat2El = document.getElementById('gem-category-2');
+            
+            // Primary category
+            if (gem.category || gem.gemType || gem.type) {
+                cat1El.textContent = gem.category || gem.gemType || gem.type;
+                cat1El.style.display = 'inline-flex';
+            } else {
+                cat1El.style.display = 'none';
+            }
+            
+            // Secondary category (activity)
+            if (gem.activities && gem.activities.length > 0) {
+                cat2El.textContent = Array.isArray(gem.activities) ? gem.activities[0] : gem.activities;
+                cat2El.style.display = 'inline-flex';
+            } else if (gem.activity) {
+                cat2El.textContent = gem.activity;
+                cat2El.style.display = 'inline-flex';
+            } else {
+                cat2El.style.display = 'none';
+            }
+            
+            // Set rarity badge
+            const rarityEl = document.getElementById('gem-rarity');
+            let rarityText = 'Hidden Gem';
+            let rarityColor = '#f6d375'; // Default yellow
+            
+            if (gem.popularity !== undefined) {
+                if (gem.popularity < 2) {
+                    rarityText = 'Super Rare Gem';
+                    rarityColor = '#e74c3c'; // Red
+                } else if (gem.popularity < 4) {
+                    rarityText = 'Uncommon Gem';
+                    rarityColor = '#9b59b6'; // Purple
+                } else {
+                    rarityText = 'Popular Gem';
+                    rarityColor = '#3498db'; // Blue
+                }
+            } else if (gem.isHidden) {
+                rarityText = 'Super Rare Gem';
+                rarityColor = '#e74c3c'; // Red
+            }
+            
+            rarityEl.textContent = rarityText;
+            rarityEl.style.backgroundColor = rarityColor;
+            
+            // Set review
+            const reviewEl = document.getElementById('gem-review');
+            reviewEl.textContent = gem.review || '"This place is a true hidden gem with amazing views."';
+            
+            // Update cover image based on rarity
+            const coverEl = document.getElementById('trip-cover');
+            if (gem.popularity !== undefined && gem.popularity < 2) {
+                coverEl.src = 'static/assets/red_trip_mode.jpg';
+            } else if (gem.popularity !== undefined && gem.popularity < 4) {
+                coverEl.src = 'static/assets/purple_trip_mode.jpg';
+            } else {
+                coverEl.src = 'static/assets/blue_trip_mode.jpg';
+            }
+            
+            // Set time left
+            document.getElementById('time-left').textContent = gem.timeLeft || 'In progress...';
+        }
+        
+        function updateProgressBar(percent) {
+            document.getElementById('moving-progress').style.width = percent + '%';
+            
+            // Also update the global trip state
+            HiddenGemsData.tripState.setProgress(percent);
+        }
+        
+        function initializeButtons(currentGem, currentGemIndex, allGems) {
+            // Initialize directions button
+            document.getElementById('directions-btn').addEventListener('click', function() {
+                openDirections(currentGem);
+            });
+            
+            // Initialize demo state buttons
+            document.getElementById('state-1').addEventListener('click', function() {
+                // Update to "on the road" state (50% progress)
+                updateProgressBar(50);
+                document.getElementById('time-left').textContent = '10 min left';
+            });
+            
+            document.getElementById('state-2').addEventListener('click', function() {
+                // Trigger arrival
+                showArrivalScreen();
+            });
+            
+            // Initialize back button
+            document.getElementById('back-button').addEventListener('click', function() {
+                const currentScreen = document.getElementById('arrived-screen').style.display === 'none'
+                    ? 'progress'
+                    : 'arrived';
+                
+                if (currentScreen === 'arrived') {
+                    // Go back to progress screen
+                    document.getElementById('arrived-screen').style.display = 'none';
+                    document.getElementById('progress-container').style.display = 'block';
+                } else {
+                    // Go back to recommendations
+                    window.location.href = 'map-recommendations.html';
+                }
+            });
+            
+            // Feedback button
+            document.getElementById('feedback-btn').addEventListener('click', function() {
+                // Record gem as visited
+                HiddenGemsData.stats.recordGemVisit(currentGem.id || currentGem.index);
+                
+                // Go to feedback form
+                window.location.href = 'end-survey.html';
+            });
+            
+            // Next gem button
+            document.getElementById('next-gem-btn').addEventListener('click', function() {
+                // First record this gem as visited
+                HiddenGemsData.stats.recordGemVisit(currentGem.id || currentGem.index);
+                
+                // Move to next gem if there are more
+                const nextIndex = (currentGemIndex + 1) % allGems.length;
+                if (nextIndex !== currentGemIndex) {
+                    const nextGem = allGems[nextIndex];
+                    
+                    // Update trip state
+                    const tripState = HiddenGemsData.tripState.get();
+                    tripState.lastGemVisited = nextGem.id || nextGem.index;
+                    tripState.progress = ((nextIndex + 1) / allGems.length) * 100;
+                    HiddenGemsData.tripState.save(tripState);
+                    
+                    // Prepare data to pass to this page again
+                    const data = {
+                        gem: nextGem,
+                        tripState: tripState
+                    };
+                    
+                    // Reload this page with new gem
+                    window.location.href = HiddenGemsData.utils.generateDataUrl('trip.html', data);
+                } else {
+                    // If there's only one gem or we've gone through all gems
+                    alert('This is the only gem in your trip!');
+                }
+            });
+            
+            // Finish trip button
+            document.getElementById('finish-trip-btn').addEventListener('click', function() {
+                // First record this gem as visited
+                HiddenGemsData.stats.recordGemVisit(currentGem.id || currentGem.index);
+                
+                // Increment trips completed
+                HiddenGemsData.stats.increment('tripsCompleted');
+                
+                // Reset trip state
+                const tripState = HiddenGemsData.tripState.get();
+                tripState.currentStep = 'browse';
+                tripState.lastGemVisited = null;
+                tripState.progress = 0;
+                HiddenGemsData.tripState.save(tripState);
+                
+                // Return to index
+                window.location.href = 'index.html';
+            });
+        }
+        
+        function openDirections(gem) {
+            const coords = gem.coords || gem.coordinates;
+            if (!coords || coords.length !== 2) {
+                alert('Sorry, coordinates not available for this location.');
+                return;
+            }
+            
+            const [a, b] = coords;
+            const lat = Math.abs(a) <= 90 ? a : b;
+            const lng = Math.abs(a) > 90 ? a : b;
+            
+            // For mobile devices, try to use the native maps app
+            if (navigator.platform.indexOf('iPhone') !== -1 || 
+                navigator.platform.indexOf('iPad') !== -1 || 
+                navigator.platform.indexOf('iPod') !== -1) {
+                window.open(`maps://maps.apple.com/maps?daddr=${lat},${lng}`);
+            } else {
+                // For other devices, use Google Maps
+                window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`);
+            }
+        }
+        
+        function showArrivalScreen() {
+            // Update progress to 100%
+            updateProgressBar(100);
+            
+            // Update trip state
+            const tripState = HiddenGemsData.tripState.get();
+            tripState.currentStep = 'arrived';
+            HiddenGemsData.tripState.save(tripState);
+            
+            // Hide progress container
+            document.getElementById('progress-container').style.display = 'none';
+            
+            // Show arrival screen
+            document.getElementById('arrived-screen').style.display = 'block';
+            
+            // Launch confetti
+            confetti({
+                particleCount: 250,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+    </script>
+</body>
 </html>

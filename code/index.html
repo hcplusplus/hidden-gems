@@ -2,164 +2,156 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 		<title>Hidden Gems - Northern California</title>
+		
+		<!-- MapLibre CSS -->
 		<link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet"/>
+		<link rel="stylesheet" href="static/styles/new-aesthetics.css">
+		<link rel="stylesheet" href="static/styles/recommendation-card.css">
+		
+		
+	
 		<script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+
+		
+		
+		<!-- javascripts -->
+		<script src="static/js/data-controller.js"></script>
+		<script src="static/js/main.js"></script>
+		<script src="static/js/map-controller.js"></script>
+		<script src="static/js/card-controller.js"></script>
+		<script src="static/js/swipe.js"></script>
+		<script src="static/js/nav-wheel.js"></script>
+		<script src="static/js/preferences.js"></script>
+		
 		<style>
-			* {
-				margin: 0;
-				padding: 0;
-				box-sizing: border-box;
-			}
-			html,
-			body {
-				height: 100%;
-				font-family: sans-serif;
-				background: #f5f5f5;
-				display: flex;
-				justify-content: center;
-			}
-			.container {
-				position: relative;
-				width: 390px;
-				height: 100%;
-				overflow: hidden;
-				background: white;
-				border-left: 1px solid #ccc;
-				border-right: 1px solid #ccc;
-			}
-			#map {
-				width: 100%;
-				height: 100%;
-			}
-			.marker {
-				width: 20px;
-				height: 20px;
-				transform: rotate(45deg);
-				border-radius: 4px;
-				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-			}
-			.nav-wheel-container {
-				position: fixed;
-				bottom: 32px;
-				right: 50%;
-				transform: translateX(195px);
-				z-index: 1000;
-			}
-			.nav-wheel-button {
-				background-color: #222;
-				color: white;
-				width: 60px;
-				height: 60px;
-				border-radius: 50%;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				font-size: 30px;
-				cursor: pointer;
-				box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-				transition: transform 0.3s;
-			}
-			.nav-wheel-button:hover {
-				transform: scale(1.1);
-			}
-			.nav-wheel {
-				position: absolute;
-				bottom: 70px;
-				right: 0;
-				display: none;
-				flex-direction: column;
-				align-items: flex-end;
-				gap: 12px;
-			}
-			.nav-wheel.active {
-				display: flex;
-			}
-			.nav-item {
-				display: flex;
-				align-items: center;
-				gap: 8px;
-			}
-			.nav-label {
-				background-color: #222;
-				color: white;
-				padding: 8px 16px;
-				border-radius: 20px;
-				font-size: 14px;
-				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-			}
-			.nav-icon {
-				background-color: #222;
-				color: white;
-				width: 48px;
-				height: 48px;
-				border-radius: 50%;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				font-size: 24px;
-				cursor: pointer;
-				box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-			}
-			.legend {
-				position: absolute;
-				bottom: 20px;
-				left: 10px;
-				background: white;
-				padding: 10px;
-				border-radius: 6px;
-				box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-				font-size: 14px;
-			}
-			.legend div {
-				display: flex;
-				align-items: center;
-				margin-bottom: 6px;
-			}
-			.legend span {
-				display: inline-block;
-				width: 14px;
-				height: 14px;
-				margin-right: 8px;
-				transform: rotate(45deg);
-				border-radius: 3px;
-			}
-			.legend-icon {
-				width: 16px;
-				height: 16px;
-				margin-right: 6px;
-				vertical-align: middle;
-			}
+	    /* Welcome overlay */
+	    #welcome-overlay {
+	        position: fixed;
+	        top: 0;
+	        left: 0;
+	        right: 0;
+	        bottom: 0;
+	        background-color: rgba(0, 0, 0, 0.8);
+	        display: flex;
+	        flex-direction: column;
+	        justify-content: center;
+	        align-items: center;
+	        z-index: 2000;
+	        transition: opacity 0.5s;
+	    }
+	    
+	    .welcome-container {
+	        background-color: rgba(255, 255, 255, 0.9);
+	        padding: 30px;
+	        border-radius: 16px;
+	        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+	        max-width: 85%;
+	        text-align: center;
+	        animation: fadeIn 0.5s ease-out;
+	    }
+	    
+	    .welcome-title {
+	        color: #222;
+	        font-size: 24px;
+	        font-weight: bold;
+	        margin-bottom: 20px;
+	    }
+	    
+	    .welcome-subtitle {
+	        color: #555;
+	        font-size: 16px;
+	        margin-bottom: 30px;
+	    }
+	    
+	    .welcome-buttons {
+	        display: flex;
+	        flex-direction: column;
+	        gap: 15px;
+	        margin-top: 20px;
+	    }
+	    
+	    .welcome-button {
+	        padding: 14px 20px;
+	        border: none;
+	        border-radius: 10px;
+	        font-size: 16px;
+	        font-weight: 600;
+	        cursor: pointer;
+	        transition: all 0.3s;
+	    }
+	    
+	    .welcome-button.primary {
+	        background-color: #94c9ba;
+	        color: white;
+	    }
+	    
+	    .welcome-button.primary:hover {
+	        background-color: #7fb7a7;
+	        transform: translateY(-2px);
+	    }
+	    
+	    .welcome-button.secondary {
+	        background-color: #f5f5f5;
+	        color: #333;
+	    }
+	    
+	    .welcome-button.secondary:hover {
+	        background-color: #e0e0e0;
+	        transform: translateY(-2px);
+	    }
+	    
+	    @keyframes fadeIn {
+	        from { opacity: 0; transform: translateY(20px); }
+	        to { opacity: 1; transform: translateY(0); }
+	    }
+	    
+	
+
 		</style>
+
 	</head>
 	<body>
 		<div class="container">
 			<div id="map"></div>
-			<div class="legend">
+			
+			
+			<!-- Cards section - takes bottom 1/X of screen -->
+ 
+	<div class="legend">
 				<div>
-					<img src="code/icons/gem-red.svg" class="legend-icon" alt="Most Hidden Gem"/>
+					<img src="static/icons/gem-red.svg" class="legend-icon" alt="Most Hidden Gem"/>
 					Most Hidden
 				</div>
 				<div>
-					<img src="code/icons/gem-purple.svg" class="legend-icon" alt="Moderately Hidden Gem"/>
+					<img src="static/icons/gem-purple.svg" class="legend-icon" alt="Moderately Hidden Gem"/>
 					Moderately Hidden
 				</div>
 				<div>
-					<img src="code/icons/gem-blue.svg" class="legend-icon" alt="Least Hidden Gem"/>
+					<img src="static/icons/gem-blue.svg" class="legend-icon" alt="Least Hidden Gem"/>
 					Least Hidden
 				</div>
-			</div>
-			<div class="nav-wheel-container">
+			</div> 
+    <!-- Swipe indicators above the cards -->
+    <div class="swipe-indicator">
+      <!-- Will be populated by JavaScript -->
+    </div>
+    
+    <!-- Cards container -->
+    <div class="cards-container">
+      <!-- Cards will be generated dynamically -->
+    </div>
+			
+
+    <!-- Navigation wheel positioned at top right of cards-section -->
+    <div class="nav-wheel-container">
 				<div class="nav-wheel" id="nav-wheel">
 					<div class="nav-item">
 						<div class="nav-label">Add a Gem</div>
 						<div class="nav-icon" onclick="window.location.href='add-gem.html'">💎</div>
 					</div>
-					<div class="nav-item">
-						<div class="nav-label">Profile</div>
-						<div class="nav-icon" onclick="alert('Profile page')">👤</div>
-					</div>
+			
 					<div class="nav-item">
 						<div class="nav-label">Start a Trip</div>
 						<div class="nav-icon" onclick="window.location.href='gtky.html'">🗺️</div>
@@ -167,208 +159,262 @@
 				</div>
 				<div class="nav-wheel-button" id="nav-wheel-toggle">☰</div>
 			</div>
+			
+			<!-- Welcome overlay - always shown on page load -->
+			<div id="welcome-overlay">
+				<div class="welcome-container">
+					<div class="welcome-title">Discover Hidden Gems in Northern California</div>
+					<div class="welcome-subtitle">Find off-the-beaten-path adventures for seasoned travelers</div>
+					
+					<div class="welcome-buttons">
+						<button id="browse-area-btn" class="welcome-button primary">Browse Area Gems</button>
+						<button id="take-quiz-btn" class="welcome-button secondary">Take Preference Quiz</button>
+					</div>
+				</div>
+			</div>
+			
+		
 		</div>
 
 		<script>
-			const map = new maplibregl.Map({
-				container: 'map',
-				style: 'https://api.maptiler.com/maps/basic-v2/style.json?key=hbvo5fWE9HuC6JUHKB9q',
-				center: [
-					-121.93, 37.66
-				],
-				zoom: 11
-			});
-			map.addControl(new maplibregl.NavigationControl(), 'top-left');
-
-			const navToggle = document.getElementById('nav-wheel-toggle');
-			const navWheel = document.getElementById('nav-wheel');
-			navToggle.addEventListener('click', () => navWheel.classList.toggle('active'));
-
-			const origin = JSON.parse(sessionStorage.getItem("originCoords"));
-			const destination = JSON.parse(sessionStorage.getItem("destinationCoords"));
-
-			function renderRoutes(gemCoords) {
-				if (! origin || ! destination || ! gemCoords) 
-					return;
+			// This script integrates with data-controller
+			document.addEventListener('DOMContentLoaded', function() {
+				console.log("Index page initialized");
 				
+				// Check if welcome should be shown based on URL parameter
+				const urlParams = new URLSearchParams(window.location.search);
+				const skipWelcome = urlParams.get('skipWelcome') === '1';
 
-
-				const baseRoute = {
-					type: 'Feature',
-					geometry: {
-						type: 'LineString',
-						coordinates: [origin, destination]
-					}
-				};
-
-				const detourRoute = {
-					type: 'Feature',
-					geometry: {
-						type: 'LineString',
-						coordinates: [origin, gemCoords, destination]
-					}
-				};
-
-				if (! map.getSource('baseRoute')) {
-					map.addSource('baseRoute', {
-						type: 'geojson',
-						data: baseRoute
-					});
-					map.addLayer({
-						id: 'baseRouteLine',
-						type: 'line',
-						source: 'baseRoute',
-						paint: {
-							'line-color': '#000',
-							'line-width': 4
-						}
-					});
+				// Handle welcome overlay visibility
+				const welcomeOverlay = document.getElementById('welcome-overlay');
+				if (skipWelcome) {
+				    welcomeOverlay.style.display = 'none';
+				    // Load gems immediately if welcome is skipped
+				    loadRandomGems();
 				} else {
-					map.getSource('baseRoute').setData(baseRoute);
+				    welcomeOverlay.style.display = 'flex';
 				}
-
-				if (! map.getSource('detourRoute')) {
-					map.addSource('detourRoute', {
-						type: 'geojson',
-						data: detourRoute
-					});
-					map.addLayer({
-						id: 'detourRouteLine',
-						type: 'line',
-						source: 'detourRoute',
-						paint: {
-							'line-color': '#000',
-							'line-width': 2,
-							'line-dasharray': [2, 2]
-						}
-					});
-				} else {
-					map.getSource('detourRoute').setData(detourRoute);
-				}
-			}
-
-			function loadGems() {
-				const stored = sessionStorage.getItem("gems");
 				
-				if (stored) {
-					console.log("Stored gems:", stored);
-					renderGems(JSON.parse(stored));
-				} else {
-					fetch("../gems.json").then(res => res.json()).then(renderGems);
-				}
-			}
-
-			function renderGems(gems) {
-				const bounds = new maplibregl.LngLatBounds();
-
-				gems.forEach(gem => {
-					const coords = gem.coords || gem.coordinates;
-					if (! coords || coords.length !== 2) 
-						return;
-					
-
-
-					const [a, b] = coords;
-					const lngLat = (Math.abs(a) > 90 && Math.abs(b) <= 90) ? [a, b] : [b, a];
-
-					const el = document.createElement('img');
-					el.src = {
-						red: 'icons/gem-red.svg',
-						purple: 'icons/gem-purple.svg',
-						blue: 'icons/gem-blue.svg'
-					}[gem.color] || 'icons/gem-blue.svg';
-					el.style.width = '28px';
-					el.style.height = '28px';
-					el.style.cursor = 'pointer';
-
-					const popupHTML = `
-				  <div style="min-width:200px">
-					<strong>${
-						gem.name
-					}</strong><br/>
-					<small>${
-						gem.category || gem.type
-					}</small><br/>
-					<p style="font-size:13px;margin:6px 0">${
-						gem.description || ''
-					}</p>
-					<button onclick="window.location.href='trip-select.html'" style="background:#222;color:white;border:none;padding:6px 12px;border-radius:6px;font-size:14px;cursor:pointer;">Explore Now</button>
-				  </div>`;
-
-					new maplibregl.Marker(el).setLngLat(lngLat).setPopup(new maplibregl.Popup().setHTML(popupHTML)).addTo(map);
-					bounds.extend(lngLat);
-				});
-				if (! bounds.isEmpty()) 
-					map.fitBounds(bounds, {padding: 40});
-				
-
-
-			}
-			map.on('load', loadGems);
-			function showWelcomeMessage() {
-				const welcomeOverlay = document.createElement('div');
-				welcomeOverlay.style.position = 'fixed';
-				welcomeOverlay.style.top = '0';
-				welcomeOverlay.style.left = '0';
-				welcomeOverlay.style.right = '0';
-				welcomeOverlay.style.bottom = '0';
-				welcomeOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-				welcomeOverlay.style.display = 'flex';
-				welcomeOverlay.style.flexDirection = 'column';
-				welcomeOverlay.style.justifyContent = 'center';
-				welcomeOverlay.style.alignItems = 'center';
-				welcomeOverlay.style.zIndex = '2000';
-				welcomeOverlay.style.transition = 'opacity 0.5s';
-
-				const welcomeMessage = document.createElement('div');
-				welcomeMessage.style.color = 'white';
-				welcomeMessage.style.fontSize = '28px';
-				welcomeMessage.style.fontWeight = 'bold';
-				welcomeMessage.style.marginBottom = '20px';
-				welcomeMessage.style.textAlign = 'center';
-				welcomeMessage.style.padding = '0 30px';
-				welcomeMessage.innerText = 'Discover Hidden Gems in Northern California';
-
-				const welcomeSubMessage = document.createElement('div');
-				welcomeSubMessage.style.color = 'white';
-				welcomeSubMessage.style.fontSize = '16px';
-				welcomeSubMessage.style.marginBottom = '30px';
-				welcomeSubMessage.style.textAlign = 'center';
-				welcomeSubMessage.style.padding = '0 30px';
-				welcomeSubMessage.innerText = 'Find off-the-beaten-path adventures for seasoned travelers';
-
-				const startButton = document.createElement('button');
-				startButton.style.padding = '12px 40px';
-				startButton.style.backgroundColor = 'white';
-				startButton.style.color = 'black';
-				startButton.style.border = 'none';
-				startButton.style.borderRadius = '24px';
-				startButton.style.fontSize = '18px';
-				startButton.style.cursor = 'pointer';
-				startButton.innerText = 'Get Started';
-
-				welcomeOverlay.appendChild(welcomeMessage);
-				welcomeOverlay.appendChild(welcomeSubMessage);
-				welcomeOverlay.appendChild(startButton);
-
-				document.body.appendChild(welcomeOverlay);
-
-				startButton.addEventListener('click', () => {
+				// Browse Area button
+				document.getElementById('browse-area-btn').addEventListener('click', function() {
+					// Hide the welcome overlay
 					welcomeOverlay.style.opacity = '0';
 					setTimeout(() => {
-						welcomeOverlay.remove();
+						welcomeOverlay.style.display = 'none';
 					}, 500);
+					
+					// Reset preferences in data controller
+					if (window.HiddenGemsData) {
+						console.log("Resetting preferences in data controller");
+						// Reset selected gems
+						const prefs = window.HiddenGemsData.preferences.get();
+						prefs.selectedGems = [];
+						window.HiddenGemsData.preferences.save(prefs);
+						
+						// Reset trip state
+						const tripState = window.HiddenGemsData.tripState.get();
+						tripState.currentStep = 'browse';
+						tripState.lastGemVisited = null;
+						tripState.progress = 0;
+						window.HiddenGemsData.tripState.save(tripState);
+					}
+					
+					// Also reset in traditional preferences system if it exists
+					if (window.HiddenGems && window.HiddenGems.preferences) {
+						console.log("Resetting preferences in traditional system");
+						// Reset selected gems
+						const prefs = window.HiddenGems.preferences.getUserPreferences();
+						prefs.selectedGems = [];
+						window.HiddenGems.preferences.saveUserPreferences(prefs);
+					}
+					
+					// Load random gems around user location or Berkeley
+					window.findNearbyGems();
 				});
-				history.replaceState({}, document.title, "index.html?skipWelcome=1");
+				
+				// Take Quiz button
+				document.getElementById('take-quiz-btn').addEventListener('click', function() {
+					// Navigate to quiz page
+					window.location.href = 'gtky.html';
+				});
+				
 
-
-			}
-
-			// Only show welcome message if URL doesn't include skipWelcome=1
-			const params = new URLSearchParams(window.location.search);
-			if (params.get("skipWelcome") !== "1") {
-				setTimeout(showWelcomeMessage, 500);
-			}
+				// Clear all data
+				document.getElementById('clear-data').addEventListener('click', function() {
+					if (confirm('Are you sure you want to clear all stored data? This will reset the app.')) {
+						// Clear data controller storage
+						if (window.HiddenGemsData) {
+							// Clear preferences
+							window.HiddenGemsData.preferences.save({
+								activities: [],
+								amenities: [],
+								accessibility: [],
+								effortLevel: '',
+								detourTime: 60,
+								maxDetour: 15,
+								selectedGems: []
+							});
+							
+							// Clear trip state
+							window.HiddenGemsData.tripState.save({
+								currentStep: 'browse',
+								lastGemVisited: null,
+								currentRoute: null,
+								progress: 0
+							});
+							
+							// Clear stats
+							localStorage.removeItem('hiddenGems_stats');
+							localStorage.removeItem('hiddenGems_visited');
+						}
+						
+						// Clear traditional storage
+						localStorage.removeItem('hiddenGemsPreferences');
+						localStorage.removeItem('userGems');
+						localStorage.removeItem('welcomeShown');
+						
+						// Update debug panel
+						updateDebugPanel();
+						
+						alert('All data cleared. You may need to reload the page.');
+					}
+				});
+				
+				
+				
+				// Function to load random gems
+				/*function loadRandomGems() {
+					console.log("Loading random gems");
+					
+					// Try to get user's location
+					if (navigator.geolocation) {
+						navigator.geolocation.getCurrentPosition(
+							// Success
+							function(position) {
+								const userLocation = [position.coords.longitude, position.coords.latitude];
+								console.log("User location found:", userLocation);
+								
+								// Save location to data controller
+								if (window.HiddenGemsData) {
+									const prefs = window.HiddenGemsData.preferences.get();
+									prefs.userLocation = userLocation;
+									window.HiddenGemsData.preferences.save(prefs);
+								}
+								
+								// Load random gems at user location
+								window.loadGems({
+									center: userLocation,
+									radius: window.HiddenGems.constants.DEFAULT_RADIUS, 
+									limit: window.HiddenGems.constants.MIN_GEMS, 
+									random: true // Randomize results
+								});
+								
+								// If map is available, fly to location
+								if (window.map) {
+									window.map.flyTo({
+										center: userLocation,
+										zoom: 11,
+										duration: 1000
+									});
+								}
+							},
+							// Error - fall back to Berkeley
+							function(error) {
+								console.log('Geolocation error, falling back to Berkeley:', error);
+								
+								// Default to Berkeley
+								const berkeley = [-122.2730, 37.8715];
+								
+								// Save location to data controller
+								if (window.HiddenGemsData) {
+									const prefs = window.HiddenGemsData.preferences.get();
+									prefs.userLocation = berkeley;
+									window.HiddenGemsData.preferences.save(prefs);
+								}
+								
+								// Load random gems
+								window.loadGems({
+									center: berkeley,
+									radius: window.HiddenGems.constants.DEFAULT_RADIUS, 
+									limit: window.HiddenGems.constants.MIN_GEMS, 
+									random: true
+								});
+								
+								// If map is available, fly to Berkeley
+								if (window.map) {
+									window.map.flyTo({
+										center: berkeley,
+										zoom: 11,
+										duration: 1000
+									});
+								}
+							}
+						);
+					} else {
+						// Geolocation not supported, fall back to Berkeley
+						const berkeley = [-122.2730, 37.8715];
+						console.log("Geolocation not supported, using Berkeley:", berkeley);
+						
+						// Save location to data controller
+						if (window.HiddenGemsData) {
+							const prefs = window.HiddenGemsData.preferences.get();
+							prefs.userLocation = berkeley;
+							window.HiddenGemsData.preferences.save(prefs);
+						}
+						
+						// Load random gems
+						window.loadGems({
+							center: berkeley,
+							radius: window.HiddenGems.constants.DEFAULT_RADIUS, 
+							limit: window.HiddenGems.constants.MIN_GEMS, 
+							random: true
+						});
+						
+						// If map is available, fly to Berkeley
+						if (window.map) {
+							window.map.flyTo({
+								center: berkeley,
+								zoom: 11,
+								duration: 1000
+							});
+						}
+					}
+				}*/
+				
+				// Override toggleGemSelection to use data controller
+				if (window.HiddenGems && window.HiddenGems.cards) {
+					const originalToggle = window.HiddenGems.cards.toggleGemSelection;
+					
+					window.HiddenGems.cards.toggleGemSelection = function(gemId, buttonEl) {
+						console.log("Toggling gem selection:", gemId);
+						
+						// First, use the original function for UI updates
+						if (typeof originalToggle === 'function') {
+							originalToggle.call(this, gemId, buttonEl);
+						}
+						
+						// Then, ensure the data controller is updated
+						if (window.HiddenGemsData) {
+							// Toggle the gem selection in data controller
+							window.HiddenGemsData.selectedGems.toggle(gemId);
+							console.log("Updated gem selection in data controller");
+						}
+					};
+				}
+				
+				// Initialize gems-loading logic via observer
+				document.addEventListener('gemsLoaded', function(event) {
+					console.log("Gems loaded event received");
+					
+					if (event.detail && event.detail.gems) {
+						// Save gems to data controller
+						if (window.HiddenGemsData) {
+							window.HiddenGemsData.gemsData.save(event.detail.gems);
+							console.log("Saved gems to data controller:", event.detail.gems.length);
+						}
+					}
+				});
+			});
 		</script>
 	</body>
 </html>

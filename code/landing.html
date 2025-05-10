@@ -6,19 +6,97 @@
 		<title>Hidden Gems - Northern California</title>
 		<link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet"/>
 		<script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
-		<link rel="stylesheet" href="/static/styles/css/new-aesthetics.css">
-				<!-- javascripts -->
-		<script src="static/js/data-controller.js"></script>
-		<script src="static/js/main.js"></script>
-
-		<script src="static/js/map-controller.js"></script>
-		<script src="static/js/card-controller.js"></script>
-		<script src="static/js/swipe.js"></script>
-		<script src="static/js/nav-wheel.js"></script>
-		<script src="static/js/preferences.js"></script>
 		<style>
-			
-			#cards-container {
+			html,
+			body {
+				margin: 0;
+				padding: 0;
+				height: 100%;
+				font-family: sans-serif;
+				display: flex;
+				justify-content: center;
+				background: #f5f5f5;
+			}
+			.container {
+				position: relative;
+				width: 390px;
+				height: 100%;
+				background: white;
+				border-left: 1px solid #ccc;
+				border-right: 1px solid #ccc;
+				overflow: hidden;
+			}
+			#map {
+				width: 100%;
+				height: 100%;
+			}
+			.legend {
+				position: absolute;
+				bottom: 200px;
+				left: 10px;
+				background: white;
+				padding: 10px;
+				border-radius: 6px;
+				box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+				font-size: 14px;
+				z-index: 10;
+			}
+			.legend-icon {
+				width: 16px;
+				height: 16px;
+				margin-right: 6px;
+				vertical-align: middle;
+			}
+			.nav-wheel-container {
+				position: fixed;
+				bottom: 32px;
+				right: 50%;
+				transform: translateX(195px);
+				z-index: 1000;
+			}
+			.nav-wheel-button {
+				background-color: #222;
+				color: white;
+				width: 60px;
+				height: 60px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 30px;
+				cursor: pointer;
+			}
+			.nav-wheel {
+				position: absolute;
+				bottom: 70px;
+				right: 0;
+				display: none;
+				flex-direction: column;
+				align-items: flex-end;
+				gap: 12px;
+			}
+			.nav-wheel.active {
+				display: flex;
+			}
+			.nav-label,
+			.nav-icon {
+				background-color: #222;
+				color: white;
+				border-radius: 20px;
+				font-size: 14px;
+				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+			}
+			.nav-icon {
+				width: 48px;
+				height: 48px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				border-radius: 50%;
+				font-size: 24px;
+				cursor: pointer;
+			}
+			#gem-card-container {
 				position: absolute;
 				bottom: 0;
 				left: 0;
@@ -40,27 +118,23 @@
 		<div class="container">
 			<div id="map"></div>
 			<div class="legend">
-				<div>
-					<img src="/static/icons/gem-red.svg" class="legend-icon" alt="Most Hidden Gem"/>
-					Most Hidden
-				</div>
-				<div>
-					<img src="/static/icons/gem-purple.svg" class="legend-icon" alt="Moderately Hidden Gem"/>
-					Moderately Hidden
-				</div>
-				<div>
-					<img src="/static/icons/gem-blue.svg" class="legend-icon" alt="Least Hidden Gem"/>
-					Least Hidden
-				</div>
+				<div><img src="icons/gem-red.svg" class="legend-icon"/>
+					Most Hidden</div>
+				<div><img src="icons/gem-purple.svg" class="legend-icon"/>
+					Moderately Hidden</div>
+				<div><img src="icons/gem-blue.svg" class="legend-icon"/>
+					Least Hidden</div>
 			</div>
-			    <!-- Navigation wheel positioned at top right of cards-section -->
-    <div class="nav-wheel-container">
+			<div class="nav-wheel-container">
 				<div class="nav-wheel" id="nav-wheel">
 					<div class="nav-item">
 						<div class="nav-label">Add a Gem</div>
 						<div class="nav-icon" onclick="window.location.href='add-gem.html'">💎</div>
 					</div>
-			
+					<div class="nav-item">
+						<div class="nav-label">Profile</div>
+						<div class="nav-icon" onclick="alert('Profile page')">👤</div>
+					</div>
 					<div class="nav-item">
 						<div class="nav-label">Start a Trip</div>
 						<div class="nav-icon" onclick="window.location.href='gtky.html'">🗺️</div>
@@ -68,8 +142,7 @@
 				</div>
 				<div class="nav-wheel-button" id="nav-wheel-toggle">☰</div>
 			</div>
-			<div id="card-container"></div>
-
+			<div id="gem-card-container"></div>
 		</div>
 
 		<script>
@@ -95,7 +168,6 @@
 					return;
 				
 
-
 				const baseRoute = {
 					type: 'Feature',
 					geometry: {
@@ -103,7 +175,6 @@
 						coordinates: [origin, destination]
 					}
 				};
-
 				const detourRoute = {
 					type: 'Feature',
 					geometry: {
@@ -151,12 +222,11 @@
 			}
 
 			function loadGems() {
-				const stored = sessionStorage.getItem("routeFilteredGems");
+				const stored = sessionStorage.getItem("gems");
 				if (stored) {
 					renderGems(JSON.parse(stored));
 				} else {
-					//fetch("gems.json").then(res => res.json()).then(renderGems);
-					return
+					fetch("gems.json").then(res => res.json()).then(renderGems);
 				}
 			}
 
@@ -165,7 +235,7 @@
 				const cardContainer = document.getElementById("gem-card-container");
 				cardContainer.innerHTML = "";
 
-				gems.forEach(gem => {
+				gems.forEach((gem, index) => {
 					const coords = gem.coords || gem.coordinates;
 					if (! coords || coords.length !== 2) 
 						return;
@@ -176,10 +246,10 @@
 
 					const el = document.createElement('img');
 					el.src = {
-						red: 'static/icons/gem-red.svg',
-						purple: 'static/icons/gem-purple.svg',
-						blue: 'static/icons/gem-blue.svg'
-					}[gem.color] || 'static/icons/gem-blue.svg';
+						red: 'icons/gem-red.svg',
+						purple: 'icons/gem-purple.svg',
+						blue: 'icons/gem-blue.svg'
+					}[gem.color] || 'icons/gem-blue.svg';
 					el.style.width = '28px';
 					el.style.height = '28px';
 					el.style.cursor = 'pointer';
@@ -217,8 +287,8 @@
 					map.fitBounds(bounds, {padding: 40});
 				}
 			}
+
 			map.on('load', loadGems);
-			
 		</script>
 	</body>
 </html>
