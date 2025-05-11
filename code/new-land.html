@@ -230,6 +230,9 @@
 					fetch("gems.json").then(res => res.json()).then(renderGems);
 				}
 			}
+			function loadRecommendedGems() {
+				fetch("recommendations.json").then(res => res.json()).then(gems => renderGems(gems));
+			}
 
 			function renderGems(gems) {
 				const bounds = new maplibregl.LngLatBounds();
@@ -289,6 +292,22 @@
 					map.fitBounds(bounds, {padding: 40});
 				}
 			}
+			function exploreGem(gemId) {
+				fetch("recommendations.json").then(res => res.json()).then(gems => {
+					const selected = gems.find(g => g.id === gemId);
+					return fetch("http://127.0.0.1:5000/generate_review", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json"
+						},
+						body: JSON.stringify(selected)
+					});
+				}).then(res => res.json()).then(data => {
+					sessionStorage.setItem("selectedGemReview", data.review);
+					window.location.href = "trip-select.html";
+				}).catch(err => console.error("Error generating review:", err));
+			}
+
 
 			map.on('load', loadGems);
 		</script>
