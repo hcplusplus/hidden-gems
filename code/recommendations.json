@@ -1,0 +1,162 @@
+[
+  {
+    "id": "Marin Coffee Roasters",
+    "name": "Marin Coffee Roasters",
+    "coordinates": [
+      37.8889,
+      -122.2357
+    ],
+    "category_1": "Local Amenity",
+    "category_2": "Local favorite",
+    "description": "A gem of a Cafe that tourists rarely discover, offering exceptional coffee and pastries in a charming setting.",
+    "rarity": "least hidden | moderately hidden | least hidden",
+    "color": "blue",
+    "time": 15,
+    "time_spent": 15,
+    "dolar_sign": "$$"
+  },
+  {
+    "id": "Disc Golf Course",
+    "name": "Disc Golf Course",
+    "coordinates": [
+      37.89,
+      -122.24
+    ],
+    "category_1": "Recreation",
+    "category_2": "Off the beaten path",
+    "description": "Relax and unwind at this local favorite recreation spot, perfect for a quick stroll and some friendly competition.",
+    "rarity": "moderately hidden | least hidden",
+    "color": "blue",
+    "time": 5,
+    "time_spent": 5,
+    "dolar_sign": "$$"
+  },
+  {
+    "id": "Weaverville Joss House State Historical Monument",
+    "name": "Weaverville Joss House State Historical Monument",
+    "coordinates": [
+      37.882,
+      -122.239
+    ],
+    "category_1": "Recreation",
+    "category_2": "Local favorite",
+    "description": "A hidden recreational gem frequented by locals, offering a glimpse into the past.",
+    "rarity": "moderately hidden | least hidden",
+    "color": "red",
+    "time": 10,
+    "time_spent": 10,
+    "dolar_sign": "$$"
+  },
+  {
+    "id": "Kerr Park",
+    "name": "Kerr Park",
+    "coordinates": [
+      37.885,
+      -122.235
+    ],
+    "category_1": "Recreation",
+    "category_2": "Local favorite",
+    "description": "Relax and unwind at this local favorite recreation spot, offering a peaceful escape.",
+    "rarity": "moderately hidden | least hidden",
+    "color": "blue",
+    "time": 12,
+    "time_spent": 12,
+    "dolar_sign": "$$"
+  },
+  {
+    "id": "Cousin Jack",
+    "name": "Cousin Jack",
+    "coordinates": [
+      37.891,
+      -122.242
+    ],
+    "category_1": "Historical Site",
+    "category_2": "Nature escape",
+    "description": "A historical treasure with rich stories and few tourists, offering a unique historical experience.",
+    "rarity": "moderately hidden | least hidden",
+    "color": "blue",
+    "time": 8,
+    "time_spent": 8,
+    "dolar_sign": "$$"
+  },
+  {
+    "id": "Mill City Mine",
+    "name": "Mill City Mine",
+    "coordinates": [
+      37.886,
+      -122.242
+    ],
+    "category_1": "Historical Site",
+    "category_2": "Nature escape",
+    "description": "A historical treasure with rich stories and few tourists, offering a unique historical experience.",
+    "rarity": "moderately hidden | least hidden",
+    "color": "blue",
+    "time": 10,
+    "time_spent": 10,
+    "dolar_sign": "$$"
+  },
+  {
+    "id": "Them (Trying To See What They Saw)",
+    "name": "Them (Trying To See What They Saw)",
+    "coordinates": [
+      37.892,
+      -122.238
+    ],
+    "category_1": "Newly Discovered",
+    "category_2": "Unique find",
+    "description": "Enjoy panoramic scenery in peaceful solitude, a recently discovered gem for those seeking tranquility.",
+    "rarity": "moderately hidden | least hidden",
+    "color": "blue",
+    "time": 12,
+    "time_spent": 12,
+    "dolar_sign": "$$"
+  },
+  {
+    "id": "Veterans Memorial Military Museum",
+    "name": "Veterans Memorial Military Museum",
+    "coordinates": [
+      37.887,
+      -122.236
+    ],
+    "category_1": "Nature escape",
+    "category_2": "Nature escape",
+    "description": "Breathtaking views without the typical tourist crowds, offering a poignant and atmospheric historical experience.",
+    "rarity": "moderately hidden | least hidden",
+    "color": "blue",
+    "time": 8,
+    "time_spent": 8,
+    "dolar_sign": "$$"
+  },
+  {
+    "id": "Twin Tower Memorial",
+    "name": "Twin Tower Memorial",
+    "coordinates": [
+      37.888,
+      -122.239
+    ],
+    "category_1": "Nature escape",
+    "category_2": "Nature escape",
+    "description": "Experience the past in this atmospheric historical site, offering a poignant and historical moment.",
+    "rarity": "moderately hidden | least hidden",
+    "color": "blue",
+    "time": 10,
+    "time_spent": 10,
+    "dolar_sign": "$$"
+  },
+  {
+    "id": "Kelly Ridge Recreation Area",
+    "name": "Kelly Ridge Recreation Area",
+    "coordinates": [
+      37.889,
+      -122.24
+    ],
+    "category_1": "Recreation",
+    "category_2": "Historical site",
+    "description": "A peaceful Park where you can escape the tourist crowds, offering a tranquil space for relaxation.",
+    "rarity": "moderately hidden | least hidden",
+    "color": "blue",
+    "time": 12,
+    "time_spent": 12,
+    "dolar_sign": "$$"
+  }
+]
