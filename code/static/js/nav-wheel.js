@@ -1,7 +1,6 @@
 /**
- * nav-wheel.js
- * Custom web component for the navigation wheel with radial expansion
- * Complete fresh implementation with all enhancements
+ * nav-wheel.js - NAVIGATION FIXED VERSION
+ * Navigation wheel with guaranteed navigation and visible text labels
  */
 
 class NavWheel extends HTMLElement {
@@ -17,7 +16,7 @@ class NavWheel extends HTMLElement {
         /* Navigation wheel container */
         .nav-wheel-container {
           position: fixed;
-          bottom: 120px; /* Positioned higher to allow space for cards below */
+          bottom: 120px;
           right: 20px;
           z-index: 1000;
         }
@@ -31,6 +30,7 @@ class NavWheel extends HTMLElement {
           z-index: 999;
           width: 240px;
           height: 240px;
+          transform-origin: bottom right;
         }
         
         .nav-wheel.active {
@@ -39,7 +39,10 @@ class NavWheel extends HTMLElement {
         
         /* Toggle button */
         .nav-wheel-button {
-          background-color: #222;
+          position: relative;
+          bottom: 0;
+          right: 0;
+          background-color: #94c9ba;
           color: white;
           width: 60px;
           height: 60px;
@@ -51,26 +54,49 @@ class NavWheel extends HTMLElement {
           cursor: pointer;
           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
           transition: transform 0.3s;
-          position: relative;
           z-index: 1000;
         }
         
         .nav-wheel-button:hover {
           transform: scale(1.1);
+          background-color: #7fb7a7;
         }
         
         .nav-wheel-button.active {
           transform: rotate(45deg);
         }
         
-        /* Force menu items to be visible */
+        /* Critical fix for slotted elements */
         ::slotted(nav-item) {
+          display: block !important;
           opacity: 1 !important;
-          pointer-events: auto !important;
           visibility: visible !important;
+          position: absolute !important;
+          pointer-events: auto !important;
+          z-index: 1000 !important;
+        }
+        
+        /* Backdrop */
+        .nav-wheel-backdrop {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: rgba(0, 0, 0, 0.2);
+          z-index: 998;
+          display: none;
+          opacity: 0;
+          transition: opacity 0.3s;
+        }
+        
+        .nav-wheel-backdrop.active {
+          display: block;
+          opacity: 1;
         }
       </style>
       
+      <div class="nav-wheel-backdrop" id="nav-wheel-backdrop"></div>
       <div class="nav-wheel-container">
         <div class="nav-wheel" id="nav-wheel">
           <slot></slot>
@@ -79,36 +105,138 @@ class NavWheel extends HTMLElement {
       </div>
     `;
     
+    // Get references to elements
+    this.navWheel = this.shadowRoot.getElementById('nav-wheel');
+    this.toggleButton = this.shadowRoot.getElementById('nav-wheel-toggle');
+    this.backdrop = this.shadowRoot.getElementById('nav-wheel-backdrop');
+    
     // Add event listener for toggle button
-    this.shadowRoot.getElementById('nav-wheel-toggle').addEventListener('click', () => {
-      const navWheel = this.shadowRoot.getElementById('nav-wheel');
-      const toggleButton = this.shadowRoot.getElementById('nav-wheel-toggle');
-      
-      navWheel.classList.toggle('active');
-      toggleButton.classList.toggle('active');
-      
-      // When wheel becomes active, position the nav items in a radial pattern
-      this._positionNavItems();
-      
-      // Trigger an event that can be caught by the page to update visibility
-      this.dispatchEvent(new CustomEvent('wheelToggle', {
-        bubbles: true,
-        composed: true,
-        detail: { isOpen: navWheel.classList.contains('active') }
-      }));
+    this.toggleButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this._toggleWheel();
     });
+    
+    // Add event listener for backdrop click
+    this.backdrop.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this._closeWheel();
+    });
+    
+    // Add event listener for escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.navWheel.classList.contains('active')) {
+        this._closeWheel();
+      }
+    });
+    
+    console.log('NavWheel component initialized');
   }
   
   connectedCallback() {
-    // Once the component is added to the DOM, we can access its children
-    // Wait for a moment to ensure all slots are populated
+    console.log('NavWheel connected to DOM');
+    
+    // Delay initialization to ensure DOM is fully loaded
     setTimeout(() => {
+      this._initializeNavItems();
       this._positionNavItems();
-    }, 100);
+    }, 500);
   }
   
   /**
-   * Position nav items in a radial/star pattern
+   * Initialize nav items
+   * @private
+   */
+  _initializeNavItems() {
+    const navItems = Array.from(this.querySelectorAll('nav-item'));
+    console.log(`Found ${navItems.length} nav items to initialize`);
+    
+    navItems.forEach(item => {
+      // Set initial visibility
+      item.style.display = 'block';
+      item.style.pointerEvents = 'auto';
+      item.style.visibility = 'visible';
+      
+      // Set a direct label text to ensure visibility
+      const label = item.getAttribute('label');
+      item.setAttribute('direct-label', label);
+      
+      console.log(`Nav item initialized: ${label}`);
+    });
+  }
+  
+  /**
+   * Toggle the wheel
+   * @private
+   */
+  _toggleWheel() {
+    const isActive = this.navWheel.classList.contains('active');
+    console.log(`Toggling wheel, current state: ${isActive ? 'open' : 'closed'}`);
+    
+    if (isActive) {
+      this._closeWheel();
+    } else {
+      this._openWheel();
+    }
+  }
+  
+  /**
+   * Open the wheel
+   * @private
+   */
+  _openWheel() {
+    console.log('Opening wheel');
+    
+    // Position items before showing
+    this._positionNavItems();
+    
+    // Show the wheel
+    this.navWheel.classList.add('active');
+    this.toggleButton.classList.add('active');
+    this.toggleButton.innerHTML = '×';
+    this.backdrop.classList.add('active');
+    
+    // Show nav items with animation
+    this._showNavItems();
+    
+    // Dispatch event
+    this.dispatchEvent(new CustomEvent('wheelToggle', {
+      bubbles: true,
+      composed: true,
+      detail: { isOpen: true }
+    }));
+  }
+  
+  /**
+   * Close the wheel
+   * @private
+   */
+  _closeWheel() {
+    console.log('Closing wheel');
+    
+    // Hide items first with animation
+    this._hideNavItems();
+    
+    // Use a delay to allow animation to complete
+    setTimeout(() => {
+      // Hide the wheel
+      this.navWheel.classList.remove('active');
+      this.toggleButton.classList.remove('active');
+      this.toggleButton.innerHTML = '☰';
+      this.backdrop.classList.remove('active');
+      
+      // Dispatch event
+      this.dispatchEvent(new CustomEvent('wheelToggle', {
+        bubbles: true,
+        composed: true,
+        detail: { isOpen: false }
+      }));
+    }, 300);
+  }
+  
+  /**
+   * Position nav items in a radial pattern
    * @private
    */
   _positionNavItems() {
@@ -116,10 +244,15 @@ class NavWheel extends HTMLElement {
     const navItems = Array.from(this.querySelectorAll('nav-item'));
     const totalItems = navItems.length;
     
-    if (totalItems === 0) return;
+    if (totalItems === 0) {
+      console.warn('No nav items found to position');
+      return;
+    }
     
-    // Calculate positions in a circle around the center
-    const radius = 90; // Distance from center
+    console.log(`Positioning ${totalItems} nav items`);
+    
+    // Calculate positions in a circle
+    const radius = 90; // Distance from center in pixels
     const offsetAngle = -90; // Start from top (in degrees)
     
     navItems.forEach((item, index) => {
@@ -133,31 +266,76 @@ class NavWheel extends HTMLElement {
       const x = Math.cos(radians) * radius;
       const y = Math.sin(radians) * radius;
       
-      // Apply position directly to the nav-item element
+      // Position the item
       item.style.position = 'absolute';
-      item.style.transform = `translate(${x}px, ${y}px)`;
-      item.style.left = '50%';
-      item.style.top = '50%';
-      item.style.marginLeft = '-24px'; // Half of nav-item width
-      item.style.marginTop = '-24px'; // Half of nav-item height
+      item.style.left = `calc(50% + ${x}px - 38px)`;  // Centered with wider items
+      item.style.top = `calc(50% + ${y}px - 38px)`;   // Centered with taller items
+      
+      // Ensure visibility
       item.style.opacity = '1';
       item.style.visibility = 'visible';
+      item.style.display = 'block';
+      item.style.pointerEvents = 'auto';
+      item.style.zIndex = '1000';
       
-      // Store the angle for animations if needed
+      // Store the angle for animations
       item.dataset.angle = angle;
       
-      // Ensure the wheel is initially closed
-      const navWheel = this.shadowRoot.getElementById('nav-wheel');
-      if (!navWheel.classList.contains('active')) {
-        item.style.display = 'none';
-      } else {
-        item.style.display = 'block';
+      // Force item to show icon and label
+      if (typeof item.forceShow === 'function') {
+        item.forceShow();
+      }
+      
+      console.log(`Positioned item ${index} at angle ${angle}°, x: ${x}, y: ${y}`);
+    });
+  }
+  
+  /**
+   * Show nav items with animation
+   * @private
+   */
+  _showNavItems() {
+    const navItems = Array.from(this.querySelectorAll('nav-item'));
+    
+    navItems.forEach((item, index) => {
+      // Show with staggered animation
+      const delay = 50 * index;
+      
+      setTimeout(() => {
+        item.style.opacity = '1';
+        item.style.transform = 'scale(1)';
+        item.style.transition = 'opacity 0.3s, transform 0.3s';
+        
+        // Tell the item to show itself
+        if (typeof item.showItem === 'function') {
+          item.showItem();
+        }
+      }, delay);
+    });
+  }
+  
+  /**
+   * Hide nav items with animation
+   * @private
+   */
+  _hideNavItems() {
+    const navItems = Array.from(this.querySelectorAll('nav-item'));
+    
+    navItems.forEach(item => {
+      item.style.opacity = '0';
+      item.style.transform = 'scale(0.8)';
+      
+      // Tell the item to hide itself
+      if (typeof item.hideItem === 'function') {
+        item.hideItem();
       }
     });
   }
 }
 
-// Define the nav-item component
+/**
+ * NavItem component - NAVIGATION FIXED VERSION
+ */
 class NavItem extends HTMLElement {
   constructor() {
     super();
@@ -169,28 +347,31 @@ class NavItem extends HTMLElement {
     const icon = this.getAttribute('icon') || '';
     const href = this.getAttribute('href') || '#';
     
+    // Create a completely unhidden direct HTML structure
     this.shadowRoot.innerHTML = `
       <style>
         :host {
           display: block;
+          width: 76px;
+          height: 76px;
+          z-index: 1000;
+          transition: opacity 0.3s, transform 0.3s;
           opacity: 1;
-          visibility: visible;
         }
         
         .nav-item {
           display: flex;
           flex-direction: column;
           align-items: center;
+          justify-content: center;
           text-align: center;
           cursor: pointer;
-          opacity: 1;
-          visibility: visible;
-          /* Override any transforms from parent */
-          position: relative;
+          width: 100%;
+          height: 100%;
         }
         
         .nav-icon {
-          background-color: #222;
+          background-color: #94c9ba;
           color: white;
           width: 48px;
           height: 48px;
@@ -200,218 +381,284 @@ class NavItem extends HTMLElement {
           align-items: center;
           font-size: 24px;
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-          margin-bottom: 8px;
-          transition: transform 0.2s;
-          z-index: 1;
+          transition: transform 0.2s, background-color 0.2s;
+          margin-bottom: 6px;
         }
         
-        .nav-icon:hover {
-          transform: scale(1.1);
+        .nav-icon:active {
+          transform: scale(0.95);
+          background-color: #7fb7a7;
         }
         
-        .nav-label {
-          background-color: #222;
-          color: white;
-          padding: 5px 10px;
-          border-radius: 12px;
-          font-size: 12px;
+        .nav-label-container {
+          background-color: #94c9ba;
+          padding: 4px 8px;
+          border-radius: 10px;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 30px;
+        }
+        
+        .nav-label-text {
+          color: white;
+          font-family: Arial, sans-serif;
+          font-size: 11px;
+          font-weight: bold;
           white-space: nowrap;
+          display: inline-block;
+        }
+        
+        /* Hidden link for forced navigation */
+        .nav-direct-link {
           position: absolute;
-          bottom: -30px;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
           opacity: 0;
-          transition: opacity 0.2s, transform 0.2s;
-          transform: translateY(5px);
-          pointer-events: none;
-        }
-        
-        .nav-item:hover .nav-label {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        
-        /* Animation for appearing */
-        @keyframes fadeIn {
-          from { opacity: 0; transform: scale(0.5); }
-          to { opacity: 1; transform: scale(1); }
-        }
-        
-        :host(.visible) .nav-icon {
-          animation: fadeIn 0.3s ease-out forwards;
+          cursor: pointer;
         }
       </style>
       
       <div class="nav-item" id="nav-item">
         <div class="nav-icon">${icon}</div>
-        <div class="nav-label">${label}</div>
+        <div class="nav-label-container">
+          <span class="nav-label-text">${label}</span>
+        </div>
+        <a href="${href}" class="nav-direct-link" id="direct-link"></a>
       </div>
     `;
     
-    // Add click event to navigate
-    this.shadowRoot.getElementById('nav-item').addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      if (href.startsWith('#')) {
-        // For function calls like #shuffleGems
-        const functionName = href.substring(1);
-        if (window[functionName] && typeof window[functionName] === 'function') {
-          window[functionName]();
-        }
-      } else {
-        // For regular navigation
-        window.location.href = href;
-      }
-    });
-  }
-  
-  // Show the nav item with a staggered animation
-  showWithDelay(delay) {
-    setTimeout(() => {
-      this.classList.add('visible');
-    }, delay);
-  }
-}
-
-/**
- * Update visibility of nav items and manage animations
- * @param {boolean} isVisible - Whether items should be visible
- */
-function showNavItems(isVisible) {
-  const navWheel = document.querySelector('nav-wheel');
-  if (!navWheel) return;
-  
-  const navItems = Array.from(navWheel.querySelectorAll('nav-item'));
-  
-  navItems.forEach((item, index) => {
-    // Reset all items
-    item.classList.remove('visible');
+    // Store href for navigation
+    this._href = href;
     
-    if (isVisible) {
-      // Show with staggered animation
-      const delay = 50 * index;
-      item.style.display = 'block';
-      item.showWithDelay(delay);
+    // Get direct link element
+    this.directLink = this.shadowRoot.getElementById('direct-link');
+    
+    // Add click event with direct navigation
+    this.shadowRoot.getElementById('nav-item').addEventListener('click', this._handleClick.bind(this));
+    
+    console.log(`NavItem initialized: ${label} with href: ${href}`);
+  }
+  
+  /**
+   * Handle click event with multiple navigation methods
+   * @private
+   */
+  _handleClick(e) {
+    // Don't prevent default - let the event bubble to the link if it exists
+    e.stopPropagation();
+    
+    const label = this.getAttribute('label');
+    const href = this.getAttribute('href');
+    console.log(`Nav item clicked: ${label} with href: ${href}`);
+    
+    // Method 1: Use the direct link (most reliable)
+    if (this.directLink) {
+      console.log('Using direct link navigation method');
+      // Programmatically click the link
+      this.directLink.click();
     } else {
-      // Hide immediately
+      // Method 2: Use window.location directly
+      console.log('Using window.location navigation method');
       setTimeout(() => {
-        if (!navWheel.shadowRoot.querySelector('.nav-wheel').classList.contains('active')) {
-          item.style.display = 'none';
+        if (this._href.startsWith('#')) {
+          // For function calls
+          const functionName = this._href.substring(1);
+          if (window[functionName] && typeof window[functionName] === 'function') {
+            window[functionName]();
+          }
+        } else {
+          // For regular navigation
+          console.log(`Navigating to: ${this._href}`);
+          window.location.href = this._href;
         }
-      }, 300); // Wait for fade out animation
+      }, 150);
     }
-  });
-}
-
-/**
- * Helper function to toggle the wheel
- */
-function toggleNavWheel() {
-  const navWheel = document.querySelector('nav-wheel');
-  if (!navWheel) return;
-  
-  const toggleButton = navWheel.shadowRoot.querySelector('#nav-wheel-toggle');
-  if (toggleButton) {
-    toggleButton.click();
+    
+    // Close the wheel regardless of navigation method
+    this._closeParentWheel();
   }
-}
-
-/**
- * Shuffle the currently displayed gems
- */
-function shuffleGems() {
-  // Use data controller function directly
-  if (window.HiddenGemsData && typeof window.HiddenGemsData.shuffleGems === 'function') {
-    window.HiddenGemsData.shuffleGems();
-  } else {
-    // Fallback to original implementation
-    window.loadGems({
-      limit: 10,
-      random: true
-    });
-  }
-}
-
-/**
- * Find gems near the user's location
- */
-function findNearbyGems() {
-  // Show loading animation
-  window.HiddenGems.utils.showLoading('Finding nearby gems...');
   
-  // Try to get the user's location
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      // Success callback
-      (position) => {
-        const userLocation = [position.coords.longitude, position.coords.latitude];
-        window.loadGems({
-          center: userLocation,
-          radius: window.HiddenGems.constants.DEFAULT_RADIUS,
-          limit: window.HiddenGems.constants.DEFAULT_LIMIT
-        });
-      },
-      // Error callback
-      (error) => {
-        console.error('Geolocation error:', error);
-        // Fall back to default location (Berkeley)
-        window.loadGems({
-          center: window.HiddenGems.constants.DEFAULT_CENTER,
-          radius: window.HiddenGems.constants.DEFAULT_RADIUS,
-          limit: window.HiddenGems.constants.DEFAULT_LIMIT
-        });
-      },
-      // Options
-      {
-        timeout: 10000,
-        maximumAge: 60000
+  connectedCallback() {
+    console.log(`NavItem connected to DOM: ${this.getAttribute('label')}`);
+    
+    // Initialize visibility
+    this.style.opacity = '1';
+    this.style.transform = 'scale(1)';
+    this.style.display = 'block';
+    this.style.pointerEvents = 'auto';
+    this.style.visibility = 'visible';
+  }
+  
+  /**
+   * Force show this item
+   */
+  forceShow() {
+    this.style.display = 'block';
+    this.style.opacity = '1';
+    this.style.visibility = 'visible';
+    this.style.pointerEvents = 'auto';
+    
+    // Make sure components are visible
+    const iconEl = this.shadowRoot.querySelector('.nav-icon');
+    const labelContainer = this.shadowRoot.querySelector('.nav-label-container');
+    const labelText = this.shadowRoot.querySelector('.nav-label-text');
+    
+    if (iconEl) {
+      iconEl.style.opacity = '1';
+      iconEl.style.visibility = 'visible';
+    }
+    
+    if (labelContainer) {
+      labelContainer.style.opacity = '1';
+      labelContainer.style.visibility = 'visible';
+    }
+    
+    if (labelText) {
+      labelText.style.opacity = '1';
+      labelText.style.visibility = 'visible';
+      labelText.style.display = 'inline-block';
+    }
+    
+    console.log(`Forced show on nav item: ${this.getAttribute('label')}`);
+  }
+  
+  /**
+   * Show this item
+   */
+  showItem() {
+    this.style.opacity = '1';
+    this.style.transform = 'scale(1)';
+    this.style.display = 'block';
+    
+    // Ensure label is visible
+    const labelText = this.shadowRoot.querySelector('.nav-label-text');
+    if (labelText) {
+      labelText.style.opacity = '1';
+      labelText.style.visibility = 'visible';
+      labelText.style.display = 'inline-block';
+    }
+  }
+  
+  /**
+   * Hide this item
+   */
+  hideItem() {
+    this.style.opacity = '0';
+    this.style.transform = 'scale(0.8)';
+  }
+  
+  /**
+   * Close the parent wheel
+   * @private
+   */
+  _closeParentWheel() {
+    const navWheel = this.closest('nav-wheel');
+    if (navWheel) {
+      if (typeof navWheel._closeWheel === 'function') {
+        navWheel._closeWheel();
       }
-    );
-  } else {
-    // Geolocation not supported, fallback to default
-    window.loadGems({
-      center: window.HiddenGems.constants.DEFAULT_CENTER,
-      radius: window.HiddenGems.constants.DEFAULT_RADIUS,
-      limit: window.HiddenGems.constants.DEFAULT_LIMIT
-    });
+    }
+  }
+  
+  /**
+   * When attributes change
+   */
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'label' && this.shadowRoot) {
+      const labelText = this.shadowRoot.querySelector('.nav-label-text');
+      if (labelText) {
+        labelText.textContent = newValue;
+      }
+    } else if (name === 'href' && this.shadowRoot) {
+      // Update the direct link href
+      const directLink = this.shadowRoot.querySelector('.nav-direct-link');
+      if (directLink) {
+        directLink.setAttribute('href', newValue);
+        this._href = newValue;
+      }
+    }
+  }
+  
+  static get observedAttributes() {
+    return ['label', 'href'];
   }
 }
 
-// Register the custom elements
+// Register custom elements
 customElements.define('nav-wheel', NavWheel);
 customElements.define('nav-item', NavItem);
 
-// Add event listener to document to catch wheel toggle events
-document.addEventListener('wheelToggle', (e) => {
-  showNavItems(e.detail.isOpen);
+// Add global event listener for wheel toggle events
+document.addEventListener('wheelToggle', function(e) {
+  console.log(`Wheel toggle event: ${e.detail.isOpen ? 'open' : 'closed'}`);
 });
 
-// Add event listener to document ready
+// Add initialization on document ready
 document.addEventListener('DOMContentLoaded', () => {
-  // Initial setup to ensure nav items are correctly displayed/hidden
-  const navWheel = document.querySelector('nav-wheel');
-  if (navWheel) {
-    const wheelEl = navWheel.shadowRoot.querySelector('.nav-wheel');
-    const isOpen = wheelEl && wheelEl.classList.contains('active');
-    showNavItems(isOpen);
-    
-    // Additional forced initialization
-    setTimeout(() => {
-      const navItems = navWheel.querySelectorAll('nav-item');
-      navItems.forEach(item => {
-        // Ensure icons are visible
-        const iconEl = item.shadowRoot && item.shadowRoot.querySelector('.nav-icon');
-        if (iconEl) {
-          iconEl.style.opacity = '1';
-          iconEl.style.visibility = 'visible';
-        }
-      });
-    }, 500);
-  }
+  console.log('Document loaded, initializing nav wheel');
+  
+  // Force the initialization after a delay
+  setTimeout(() => {
+    const navWheels = document.querySelectorAll('nav-wheel');
+    navWheels.forEach(wheel => {
+      if (typeof wheel._initializeNavItems === 'function') {
+        wheel._initializeNavItems();
+        wheel._positionNavItems();
+      }
+      
+      console.log('Nav wheel post-initialization complete');
+    });
+  }, 1000);
 });
 
-// Make utility functions available globally
-window.toggleNavWheel = toggleNavWheel;
-window.showNavItems = showNavItems;
-window.shuffleGems = shuffleGems;
-window.findNearbyGems = findNearbyGems;
+// Add a global helper to force navigation
+window.navigateTo = function(url) {
+  if (!url) return;
+  console.log(`Forced navigation to: ${url}`);
+  window.location.href = url;
+};
+
+// Expose utility function globally
+window.toggleNavWheel = function() {
+  const navWheel = document.querySelector('nav-wheel');
+  if (navWheel && navWheel.shadowRoot) {
+    const toggleButton = navWheel.shadowRoot.querySelector('#nav-wheel-toggle');
+    if (toggleButton) {
+      toggleButton.click();
+    }
+  }
+};
+
+// Debug script to help trace navigation issues
+(function() {
+  console.log('Navigation debug helpers installed');
+  
+  // Monitor navigation attempts
+  const originalAssign = window.location.assign;
+  const originalReplace = window.location.replace;
+  const originalHref = Object.getOwnPropertyDescriptor(window.location, 'href');
+  
+  // Override location.assign
+  window.location.assign = function(url) {
+    console.log(`Navigation attempt via location.assign to: ${url}`);
+    return originalAssign.apply(this, arguments);
+  };
+  
+  // Override location.replace
+  window.location.replace = function(url) {
+    console.log(`Navigation attempt via location.replace to: ${url}`);
+    return originalReplace.apply(this, arguments);
+  };
+  
+  // Monitor click events on links
+  document.addEventListener('click', function(e) {
+    const link = e.target.closest('a');
+    if (link && link.href) {
+      console.log(`Link clicked with href: ${link.href}`);
+    }
+  }, true);
+})();

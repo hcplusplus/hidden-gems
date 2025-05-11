@@ -1,420 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-		<title>Hidden Gems - Northern California</title>
-		
-		<!-- MapLibre CSS -->
-		<link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet"/>
-		<link rel="stylesheet" href="static/styles/new-aesthetics.css">
-		<link rel="stylesheet" href="static/styles/recommendation-card.css">
-		
-		
-	
-		<script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
 
-		
-		
-		<!-- javascripts -->
-		<script src="static/js/data-controller.js"></script>
-		<script src="static/js/main.js"></script>
-		<script src="static/js/map-controller.js"></script>
-		<script src="static/js/card-controller.js"></script>
-		<script src="static/js/swipe.js"></script>
-		<script src="static/js/nav-wheel.js"></script>
-		<script src="static/js/preferences.js"></script>
-		
-		<style>
-	    /* Welcome overlay */
-	    #welcome-overlay {
-	        position: fixed;
-	        top: 0;
-	        left: 0;
-	        right: 0;
-	        bottom: 0;
-	        background-color: rgba(0, 0, 0, 0.8);
-	        display: flex;
-	        flex-direction: column;
-	        justify-content: center;
-	        align-items: center;
-	        z-index: 2000;
-	        transition: opacity 0.5s;
-	    }
-	    
-	    .welcome-container {
-	        background-color: rgba(255, 255, 255, 0.9);
-	        padding: 30px;
-	        border-radius: 16px;
-	        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-	        max-width: 85%;
-	        text-align: center;
-	        animation: fadeIn 0.5s ease-out;
-	    }
-	    
-	    .welcome-title {
-	        color: #222;
-	        font-size: 24px;
-	        font-weight: bold;
-	        margin-bottom: 20px;
-	    }
-	    
-	    .welcome-subtitle {
-	        color: #555;
-	        font-size: 16px;
-	        margin-bottom: 30px;
-	    }
-	    
-	    .welcome-buttons {
-	        display: flex;
-	        flex-direction: column;
-	        gap: 15px;
-	        margin-top: 20px;
-	    }
-	    
-	    .welcome-button {
-	        padding: 14px 20px;
-	        border: none;
-	        border-radius: 10px;
-	        font-size: 16px;
-	        font-weight: 600;
-	        cursor: pointer;
-	        transition: all 0.3s;
-	    }
-	    
-	    .welcome-button.primary {
-	        background-color: #94c9ba;
-	        color: white;
-	    }
-	    
-	    .welcome-button.primary:hover {
-	        background-color: #7fb7a7;
-	        transform: translateY(-2px);
-	    }
-	    
-	    .welcome-button.secondary {
-	        background-color: #f5f5f5;
-	        color: #333;
-	    }
-	    
-	    .welcome-button.secondary:hover {
-	        background-color: #e0e0e0;
-	        transform: translateY(-2px);
-	    }
-	    
-	    @keyframes fadeIn {
-	        from { opacity: 0; transform: translateY(20px); }
-	        to { opacity: 1; transform: translateY(0); }
-	    }
-	    
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+	<title>Hidden Gems - Northern California</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+		rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&display=swap" rel="stylesheet">
+	<!-- MapLibre CSS -->
+	<link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+	<link rel="stylesheet" href="static/styles/new-aesthetics.css">
+	<link rel="stylesheet" href="static/styles/layout-fixes.css">
+	<link rel="stylesheet" href="static/styles/card-styles.css">
+
+
+	<script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+
+
+
+	<!-- javascripts -->
+	<script src="static/js/data-controller.js"></script>
+
+	<script src="static/js/main.js"></script>
+	<script src="static/js/gem-cards.js"></script>
+	<script src="static/js/map-controller.js"></script>
+
+	<script src="static/js/swipe.js"></script>
+	<script src="static/js/nav-wheel.js"></script>
 	
 
-		</style>
+	<style>
+		/* Welcome overlay */
+		#welcome-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: rgba(0, 0, 0, 0.8);
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			z-index: 2000;
+			transition: opacity 0.5s;
+		}
 
-	</head>
-	<body>
-		<div class="container">
-			<div id="map"></div>
-			
-			
-			<!-- Cards section - takes bottom 1/X of screen -->
- 
-	<div class="legend">
-				<div>
-					<img src="static/icons/gem-red.svg" class="legend-icon" alt="Most Hidden Gem"/>
-					Most Hidden
-				</div>
-				<div>
-					<img src="static/icons/gem-purple.svg" class="legend-icon" alt="Moderately Hidden Gem"/>
-					Moderately Hidden
-				</div>
-				<div>
-					<img src="static/icons/gem-blue.svg" class="legend-icon" alt="Least Hidden Gem"/>
-					Least Hidden
-				</div>
-			</div> 
-    <!-- Swipe indicators above the cards -->
-    <div class="swipe-indicator">
-      <!-- Will be populated by JavaScript -->
-    </div>
-    
-    <!-- Cards container -->
-    <div class="cards-container">
-      <!-- Cards will be generated dynamically -->
-    </div>
-			
+		.welcome-container {
+			background-color: rgba(255, 255, 255, 0.9);
+			padding: 30px;
+			border-radius: 16px;
+			box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+			max-width: 85%;
+			text-align: center;
+			animation: fadeIn 0.5s ease-out;
+		}
 
-    <!-- Navigation wheel positioned at top right of cards-section -->
-    <div class="nav-wheel-container">
-				<div class="nav-wheel" id="nav-wheel">
-					<div class="nav-item">
-						<div class="nav-label">Add a Gem</div>
-						<div class="nav-icon" onclick="window.location.href='add-gem.html'">💎</div>
-					</div>
-			
-					<div class="nav-item">
-						<div class="nav-label">Start a Trip</div>
-						<div class="nav-icon" onclick="window.location.href='gtky.html'">🗺️</div>
-					</div>
-				</div>
-				<div class="nav-wheel-button" id="nav-wheel-toggle">☰</div>
+		.welcome-title {
+			color: #222;
+			font-size: 24px;
+			font-weight: bold;
+			margin-bottom: 20px;
+		}
+
+		.welcome-subtitle {
+			color: #555;
+			font-size: 16px;
+			margin-bottom: 30px;
+		}
+
+		.welcome-buttons {
+			display: flex;
+			flex-direction: column;
+			gap: 15px;
+			margin-top: 20px;
+		}
+
+		.welcome-button {
+			padding: 14px 20px;
+			border: none;
+			border-radius: 10px;
+			font-size: 16px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s;
+		}
+
+		.welcome-button.primary {
+			background-color: #94c9ba;
+			color: white;
+		}
+
+		.welcome-button.primary:hover {
+			background-color: #7fb7a7;
+			transform: translateY(-2px);
+		}
+
+		.welcome-button.secondary {
+			background-color: #f5f5f5;
+			color: #333;
+		}
+
+		.welcome-button.secondary:hover {
+			background-color: #e0e0e0;
+			transform: translateY(-2px);
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+				transform: translateY(20px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+	</style>
+
+</head>
+
+<body>
+	<div class="container">
+		<div id="map"></div>
+
+
+
+
+		<div class="legend">
+			<div>
+				<img src="static/icons/gem-red.svg" class="legend-icon" alt="Most Hidden Gem" />
+				Most Hidden
 			</div>
-			
-			<!-- Welcome overlay - always shown on page load -->
-			<div id="welcome-overlay">
-				<div class="welcome-container">
-					<div class="welcome-title">Discover Hidden Gems in Northern California</div>
-					<div class="welcome-subtitle">Find off-the-beaten-path adventures for seasoned travelers</div>
-					
-					<div class="welcome-buttons">
-						<button id="browse-area-btn" class="welcome-button primary">Browse Area Gems</button>
-						<button id="take-quiz-btn" class="welcome-button secondary">Take Preference Quiz</button>
-					</div>
-				</div>
+			<div>
+				<img src="static/icons/gem-purple.svg" class="legend-icon" alt="Moderately Hidden Gem" />
+				Moderately Hidden
 			</div>
-			
-		
+			<div>
+				<img src="static/icons/gem-blue.svg" class="legend-icon" alt="Least Hidden Gem" />
+				Least Hidden
+			</div>
 		</div>
 
-		<script>
-			// This script integrates with data-controller
-			document.addEventListener('DOMContentLoaded', function() {
-				console.log("Index page initialized");
-				
-				// Check if welcome should be shown based on URL parameter
-				const urlParams = new URLSearchParams(window.location.search);
-				const skipWelcome = urlParams.get('skipWelcome') === '1';
 
-				// Handle welcome overlay visibility
-				const welcomeOverlay = document.getElementById('welcome-overlay');
-				if (skipWelcome) {
-				    welcomeOverlay.style.display = 'none';
-				    // Load gems immediately if welcome is skipped
-				    loadRandomGems();
-				} else {
-				    welcomeOverlay.style.display = 'flex';
-				}
-				
-				// Browse Area button
-				document.getElementById('browse-area-btn').addEventListener('click', function() {
-					// Hide the welcome overlay
-					welcomeOverlay.style.opacity = '0';
-					setTimeout(() => {
-						welcomeOverlay.style.display = 'none';
-					}, 500);
-					
-					// Reset preferences in data controller
-					if (window.HiddenGemsData) {
-						console.log("Resetting preferences in data controller");
-						// Reset selected gems
-						const prefs = window.HiddenGemsData.preferences.get();
-						prefs.selectedGems = [];
-						window.HiddenGemsData.preferences.save(prefs);
-						
-						// Reset trip state
-						const tripState = window.HiddenGemsData.tripState.get();
-						tripState.currentStep = 'browse';
-						tripState.lastGemVisited = null;
-						tripState.progress = 0;
-						window.HiddenGemsData.tripState.save(tripState);
-					}
-					
-					// Also reset in traditional preferences system if it exists
-					if (window.HiddenGems && window.HiddenGems.preferences) {
-						console.log("Resetting preferences in traditional system");
-						// Reset selected gems
-						const prefs = window.HiddenGems.preferences.getUserPreferences();
-						prefs.selectedGems = [];
-						window.HiddenGems.preferences.saveUserPreferences(prefs);
-					}
-					
-					// Load random gems around user location or Berkeley
-					window.findNearbyGems();
-				});
-				
-				// Take Quiz button
-				document.getElementById('take-quiz-btn').addEventListener('click', function() {
-					// Navigate to quiz page
-					window.location.href = 'gtky.html';
-				});
-				
 
-				// Clear all data
-				document.getElementById('clear-data').addEventListener('click', function() {
-					if (confirm('Are you sure you want to clear all stored data? This will reset the app.')) {
-						// Clear data controller storage
-						if (window.HiddenGemsData) {
-							// Clear preferences
-							window.HiddenGemsData.preferences.save({
-								activities: [],
-								amenities: [],
-								accessibility: [],
-								effortLevel: '',
-								detourTime: 60,
-								maxDetour: 15,
-								selectedGems: []
-							});
-							
-							// Clear trip state
-							window.HiddenGemsData.tripState.save({
-								currentStep: 'browse',
-								lastGemVisited: null,
-								currentRoute: null,
-								progress: 0
-							});
-							
-							// Clear stats
-							localStorage.removeItem('hiddenGems_stats');
-							localStorage.removeItem('hiddenGems_visited');
-						}
-						
-						// Clear traditional storage
-						localStorage.removeItem('hiddenGemsPreferences');
-						localStorage.removeItem('userGems');
-						localStorage.removeItem('welcomeShown');
-						
-						// Update debug panel
-						updateDebugPanel();
-						
-						alert('All data cleared. You may need to reload the page.');
-					}
-				});
-				
-				
-				
-				// Function to load random gems
-				/*function loadRandomGems() {
-					console.log("Loading random gems");
-					
-					// Try to get user's location
-					if (navigator.geolocation) {
-						navigator.geolocation.getCurrentPosition(
-							// Success
-							function(position) {
-								const userLocation = [position.coords.longitude, position.coords.latitude];
-								console.log("User location found:", userLocation);
-								
-								// Save location to data controller
-								if (window.HiddenGemsData) {
-									const prefs = window.HiddenGemsData.preferences.get();
-									prefs.userLocation = userLocation;
-									window.HiddenGemsData.preferences.save(prefs);
-								}
-								
-								// Load random gems at user location
-								window.loadGems({
-									center: userLocation,
-									radius: window.HiddenGems.constants.DEFAULT_RADIUS, 
-									limit: window.HiddenGems.constants.MIN_GEMS, 
-									random: true // Randomize results
-								});
-								
-								// If map is available, fly to location
-								if (window.map) {
-									window.map.flyTo({
-										center: userLocation,
-										zoom: 11,
-										duration: 1000
-									});
-								}
-							},
-							// Error - fall back to Berkeley
-							function(error) {
-								console.log('Geolocation error, falling back to Berkeley:', error);
-								
-								// Default to Berkeley
-								const berkeley = [-122.2730, 37.8715];
-								
-								// Save location to data controller
-								if (window.HiddenGemsData) {
-									const prefs = window.HiddenGemsData.preferences.get();
-									prefs.userLocation = berkeley;
-									window.HiddenGemsData.preferences.save(prefs);
-								}
-								
-								// Load random gems
-								window.loadGems({
-									center: berkeley,
-									radius: window.HiddenGems.constants.DEFAULT_RADIUS, 
-									limit: window.HiddenGems.constants.MIN_GEMS, 
-									random: true
-								});
-								
-								// If map is available, fly to Berkeley
-								if (window.map) {
-									window.map.flyTo({
-										center: berkeley,
-										zoom: 11,
-										duration: 1000
-									});
-								}
-							}
-						);
-					} else {
-						// Geolocation not supported, fall back to Berkeley
-						const berkeley = [-122.2730, 37.8715];
-						console.log("Geolocation not supported, using Berkeley:", berkeley);
-						
-						// Save location to data controller
-						if (window.HiddenGemsData) {
-							const prefs = window.HiddenGemsData.preferences.get();
-							prefs.userLocation = berkeley;
-							window.HiddenGemsData.preferences.save(prefs);
-						}
-						
-						// Load random gems
-						window.loadGems({
-							center: berkeley,
-							radius: window.HiddenGems.constants.DEFAULT_RADIUS, 
-							limit: window.HiddenGems.constants.MIN_GEMS, 
-							random: true
-						});
-						
-						// If map is available, fly to Berkeley
-						if (window.map) {
-							window.map.flyTo({
-								center: berkeley,
-								zoom: 11,
-								duration: 1000
-							});
-						}
-					}
-				}*/
-				
-				// Override toggleGemSelection to use data controller
-				if (window.HiddenGems && window.HiddenGems.cards) {
-					const originalToggle = window.HiddenGems.cards.toggleGemSelection;
-					
-					window.HiddenGems.cards.toggleGemSelection = function(gemId, buttonEl) {
-						console.log("Toggling gem selection:", gemId);
-						
-						// First, use the original function for UI updates
-						if (typeof originalToggle === 'function') {
-							originalToggle.call(this, gemId, buttonEl);
-						}
-						
-						// Then, ensure the data controller is updated
-						if (window.HiddenGemsData) {
-							// Toggle the gem selection in data controller
-							window.HiddenGemsData.selectedGems.toggle(gemId);
-							console.log("Updated gem selection in data controller");
-						}
-					};
-				}
-				
-				// Initialize gems-loading logic via observer
-				document.addEventListener('gemsLoaded', function(event) {
-					console.log("Gems loaded event received");
-					
-					if (event.detail && event.detail.gems) {
-						// Save gems to data controller
-						if (window.HiddenGemsData) {
-							window.HiddenGemsData.gemsData.save(event.detail.gems);
-							console.log("Saved gems to data controller:", event.detail.gems.length);
-						}
-					}
-				});
-			});
-		</script>
-	</body>
+		<!-- Swipe indicators above the cards -->
+		<div class="swipe-indicator">
+			<!-- Will be populated by JavaScript -->
+		</div>
+
+		<!-- Cards container -->
+		<gem-cards variant="index" marker-id=".maplibregl-marker"></gem-cards>
+
+		<!-- Navigation wheel positioned at top right of cards-section -->
+		<!-- Replace your existing nav wheel HTML with this -->
+		<nav-wheel>
+			<nav-item label="Add a Gem" icon="💎" href="/add-gem.html"></nav-item>
+			<nav-item label="Start a Trip" icon="🗺️" href="/gtky.html"></nav-item>
+		</nav-wheel>
+
+
+
+		<!-- Welcome overlay - always shown on page load -->
+		<div id="welcome-overlay">
+		</div>
+
+
+	</div>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+    console.log("Index page initialized");
+    
+    // Check if welcome should be shown based on URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const skipWelcome = urlParams.get('skipWelcome') === '1';
+    
+    // Handle welcome overlay visibility
+    const welcomeOverlay = document.getElementById('welcome-overlay');
+    if (skipWelcome) {
+        welcomeOverlay.style.display = 'none';
+        // Initialize app directly if skipping welcome
+        window.initializeAppDirectly();
+    } else {
+        welcomeOverlay.style.display = 'flex';
+        window.showWelcomeMessage();
+    }
+    
+    // We don't need the existing button event handlers as they'll be
+    // assigned in showWelcomeMessage() function
+    
+    // Still keep the other event listeners for data management
+    if (window.HiddenGems && window.HiddenGems.cards) {
+        const originalToggle = window.HiddenGems.cards.toggleGemSelection;
+
+        window.HiddenGems.cards.toggleGemSelection = function (gemId, buttonEl) {
+            console.log("Toggling gem selection:", gemId);
+
+            // First, use the original function for UI updates
+            if (typeof originalToggle === 'function') {
+                originalToggle.call(this, gemId, buttonEl);
+            }
+
+            // Then, ensure the data controller is updated
+            if (window.HiddenGems.data) {
+                // Toggle the gem selection in data controller
+                window.HiddenGems.data.selectedGems.toggle(gemId);
+                console.log("Updated gem selection in data controller");
+            }
+        };
+    }
+
+    // Initialize gems-loading logic via observer
+    document.addEventListener('gemsLoaded', function (event) {
+        console.log("Gems loaded event received");
+
+        if (event.detail && event.detail.gems) {
+            // Save gems to data controller
+            if (window.HiddenGems && window.HiddenGems.data) {
+                window.HiddenGems.data.saveGems(event.detail.gems);
+                console.log("Saved gems to data controller:", event.detail.gems.length);
+            }
+        }
+    });
+});
+	</script>
+<script src="static/js/delayed-initialization.js"></script>
+</body>
+
 </html>

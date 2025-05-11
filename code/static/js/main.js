@@ -1,22 +1,23 @@
 /**
+ * main.js
  * Main entry point for the Hidden Gems application
- * Complete fresh implementation with all enhancements
+ * Now leverages the consolidated data controller for all data operations
  */
 
-// Create the HiddenGems namespace immediately to avoid race conditions
+// Make sure the HiddenGems namespace exists
 window.HiddenGems = window.HiddenGems || {};
 
 // Define application-wide constants
 window.HiddenGems.constants = {
     // Default location (Berkeley, CA)
     DEFAULT_CENTER: [-122.2730, 37.8715],
-    DEFAULT_ZOOM: 11, // Higher default zoom for better initial density
+    DEFAULT_ZOOM: 11,
     
     // Search settings
     DEFAULT_RADIUS: 5, // miles
     DEFAULT_LIMIT: 10,
-    MIN_GEMS: 5, // Minimum number of gems to display
-    MAX_ATTEMPTS: 3, // Maximum zoom-out attempts
+    MIN_GEMS: 5, 
+    MAX_ATTEMPTS: 3,
     
     // JSON data path
     DATA_PATH: 'static/assets/data/hidden_gems.json',
@@ -49,12 +50,12 @@ window.HiddenGems.constants = {
 
 // Define utility functions directly on the window.HiddenGems object
 window.HiddenGems.utils = {
-
-    
+    // Get previous index with wraparound
     getPrevIndex: function(currentIndex, total) {
         return (currentIndex - 1 + total) % total;
     },
     
+    // Get next index with wraparound
     getNextIndex: function(currentIndex, total) {
         return (currentIndex + 1) % total;
     },
@@ -76,9 +77,7 @@ window.HiddenGems.utils = {
             Math.sin(dLon/2) * Math.sin(dLon/2);
         
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        const distance = R * c;
-        
-        return distance;
+        return R * c;
     },
     
     // Fisher-Yates shuffle algorithm
@@ -93,7 +92,6 @@ window.HiddenGems.utils = {
     
     // Show loading animation
     showLoading: function(message = 'Loading...') {
-        // Check if element already exists
         let loadingEl = document.getElementById('gems-loading');
         
         if (!loadingEl) {
@@ -124,7 +122,6 @@ window.HiddenGems.utils = {
         const loadingEl = document.getElementById('gems-loading');
         if (loadingEl) {
             loadingEl.style.display = 'none';
-            // We don't remove it completely to avoid recreating on repeated calls
         }
     },
     
@@ -146,80 +143,81 @@ window.HiddenGems.utils = {
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
-    }
-};
-
-// Add to main.js
-window.HiddenGems.utils.getDeviceSize = function() {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    const isLandscape = width > height;
-    
-    let deviceCategory = 'phone';
-    if (width >= 768 || height >= 768) {
-        deviceCategory = 'tablet';
-    }
-    if (width >= 1024 || height >= 1024) {
-        deviceCategory = 'desktop';
-    }
-    
-    return {
-        width: width,
-        height: height,
-        isLandscape: isLandscape,
-        deviceCategory: deviceCategory,
-        isSmallPhone: height < 600,
-        hasSafeArea: CSS.supports('padding: env(safe-area-inset-top)')
-    };
-};
-
-
-// Initial data namespace
-window.HiddenGems.data = {
-    gems: [],
-    isProcessingEvent: false, // Add a flag to prevent recursion
-    loadGems: function(gemsData) {
-        this.gems = gemsData;
-        
-        // Only dispatch event if not already processing an event
-        if (!this.isProcessingEvent) {
-            document.dispatchEvent(new CustomEvent('gemsLoaded', {
-                detail: { gems: gemsData }
-            }));
-        }
-    }
-};
-
-// Initialize preferences namespace
-window.HiddenGems.preferences = {
-    getUserPreferences: function() {
-        const preferences = localStorage.getItem('userPreferences');
-        if (preferences) {
-            return JSON.parse(preferences);
-        }
-        return {
-            activities: [],
-            accessibility: [],
-            detourTime: 60,
-            popularity: 3,
-            visitedGems: []
-        };
     },
     
-    saveUserPreferences: function(preferences) {
-        localStorage.setItem('userPreferences', JSON.stringify(preferences));
+    // Get device size information
+    getDeviceSize: function() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const isLandscape = width > height;
+        
+        let deviceCategory = 'phone';
+        if (width >= 768 || height >= 768) {
+            deviceCategory = 'tablet';
+        }
+        if (width >= 1024 || height >= 1024) {
+            deviceCategory = 'desktop';
+        }
+        
+        return {
+            width: width,
+            height: height,
+            isLandscape: isLandscape,
+            deviceCategory: deviceCategory,
+            isSmallPhone: height < 600,
+            hasSafeArea: CSS.supports('padding: env(safe-area-inset-top)')
+        };
     }
 };
 
 // Create a map namespace placeholder - will be populated by map-controller.js
 window.HiddenGems.map = {
     activeGemIndex: 0,
+    
+    // Map initialization placeholder
     init: function() {
         return new Promise((resolve) => {
             console.log('Map init placeholder called - waiting for real implementation');
-            // Resolve immediately - will be overridden by map-controller.js
             resolve();
-        })
+        });
+    },
+    
+    // Function to adjust map for current device
+    adjustForDevice: function() {
+        const deviceSize = window.HiddenGems.utils.getDeviceSize();
+        
+        // Adjust card height based on device size
+        const cardsContainer = document.querySelector('.cards-container');
+        if (cardsContainer) {
+            if (deviceSize.isSmallPhone) {
+                cardsContainer.style.height = '140px';
+            } else if (deviceSize.isLandscape) {
+                cardsContainer.style.height = '130px';
+            } else {
+                cardsContainer.style.height = '170px';
+            }
+        }
+        
+        // Adjust map padding
+        if (map) {
+            const padding = {
+                top: deviceSize.isLandscape ? 40 : 60,
+                bottom: deviceSize.isLandscape ? 140 : 180,
+                left: 20,
+                right: 20
+            };
+            
+            if (deviceSize.hasSafeArea) {
+                // Add safe area insets for notched phones
+                padding.left += 10;
+                padding.right += 10;
+            }
+            
+            // Update map bounds padding
+            if (typeof map.fitBounds === 'function') {
+                this._mapPadding = padding;
+            }
+        }
     }
 };
 
@@ -232,6 +230,234 @@ window.hideLoading = function() {
     window.HiddenGems.utils.hideLoading();
 };
 
+/**
+ * Show welcome message for first-time visitors with blur effect
+ */
+function showWelcomeMessage() {
+    // Get the existing welcome overlay element
+    const welcomeOverlay = document.getElementById('welcome-overlay');
+    
+    // Ensure the overlay cannot be dismissed by clicking outside
+    welcomeOverlay.addEventListener('click', function(e) {
+        // Only prevent clicks on the overlay background, not the buttons
+        if (e.target === welcomeOverlay) {
+            e.stopPropagation();
+        }
+    });
+    
+    // Clear any existing content
+    welcomeOverlay.innerHTML = '';
+    
+    // Create welcome container
+    const welcomeContainer = document.createElement('div');
+    welcomeContainer.className = 'welcome-container';
+    
+    // Create title
+    const welcomeTitle = document.createElement('div');
+    welcomeTitle.className = 'welcome-title';
+    welcomeTitle.innerText = 'Discover Hidden Gems in Northern California';
+    
+    // Create subtitle
+    const welcomeSubtitle = document.createElement('div');
+    welcomeSubtitle.className = 'welcome-subtitle';
+    welcomeSubtitle.innerText = 'Find off-the-beaten-path adventures near you';
+    
+    // Create location message
+    const locationMessage = document.createElement('div');
+    locationMessage.style.color = '#555';
+    locationMessage.style.fontSize = '14px';
+    locationMessage.style.margin = '15px 0';
+    locationMessage.style.padding = '10px';
+    locationMessage.style.backgroundColor = 'rgba(0, 0, 0, 0.05)';
+    locationMessage.style.borderRadius = '8px';
+    locationMessage.innerHTML = '🗺️ <b>Choose how you want to explore</b>';
+    
+    // Create buttons container
+    const buttonsContainer = document.createElement('div');
+    buttonsContainer.className = 'welcome-buttons';
+    
+    // Create location button
+    const locationButton = document.createElement('button');
+    locationButton.className = 'welcome-button primary';
+    locationButton.innerHTML = '<i class="fas fa-location-arrow"></i> Share Your Location';
+    
+    // Create browse button (reusing your existing ID)
+    const browseButton = document.createElement('button');
+    browseButton.id = 'browse-area-btn';
+    browseButton.className = 'welcome-button secondary';
+    browseButton.innerHTML = '<i class="fas fa-compass"></i> Browse Area Gems';
+    
+    // Create quiz button (reusing your existing ID)
+    const quizButton = document.createElement('button');
+    quizButton.id = 'take-quiz-btn';
+    quizButton.className = 'welcome-button secondary';
+    quizButton.innerHTML = '<i class="fas fa-list-check"></i> Take Preference Quiz';
+    
+    // Add event listener for location button
+    // Add event listener for location button
+    locationButton.addEventListener('click', function() {
+        // Update UI to show we're processing
+        locationMessage.innerHTML = '🔍 <b>Requesting your location...</b>';
+        locationButton.disabled = true;
+        locationButton.style.opacity = '0.7';
+        locationButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        
+        // Request geolocation
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                // Success callback
+                (position) => {
+                    // We got the location, now update the UI
+                    locationMessage.innerHTML = '✅ <b>Location found!</b> Loading gems near you...';
+                    
+                    // Get coordinates
+                    const userCoords = [position.coords.longitude, position.coords.latitude];
+                    console.log("User location:", userCoords);
+                    
+                    // Store location in localStorage and sessionStorage for other pages
+                    localStorage.setItem('userCoords', JSON.stringify(userCoords));
+                    sessionStorage.setItem('userCoords', JSON.stringify(userCoords));
+                    localStorage.setItem('locationPermissionGranted', 'true');
+                    
+                    // Hide the welcome overlay with animation
+                    welcomeOverlay.style.opacity = '0';
+                    setTimeout(() => {
+                        welcomeOverlay.style.display = 'none';
+                        
+                        // Initialize the map with user coordinates
+                        initializeMap();
+                        
+                        // Wait for map to be ready, then load gems
+                        document.addEventListener('mapReady', function onMapReady() {
+                            // Remove this listener to prevent duplicates
+                            document.removeEventListener('mapReady', onMapReady);
+                            
+                            // Fetch and display gems near user location
+                            fetch('static/assets/data/hidden_gems.json')
+                                .then(response => response.json())
+                                .then(allGems => {
+                                    // Use data controller to find gems near user
+                                    if (window.HiddenGems && window.HiddenGems.data && 
+                                        typeof window.HiddenGems.data.findGemsNearUser === 'function') {
+                                        return window.HiddenGems.data.findGemsNearUser(
+                                            allGems, userCoords, 20, 10
+                                        );
+                                    } else {
+                                        // Simple fallback
+                                        return allGems;
+                                    }
+                                })
+                                .then(gems => {
+                                    // Render gems on the map
+                                    if (typeof window.renderGems === 'function') {
+                                        window.renderGems(gems);
+                                    }
+                                    
+                                    // Dispatch gems loaded event
+                                    document.dispatchEvent(new CustomEvent('gemsLoaded', {
+                                        detail: { gems: gems }
+                                    }));
+                                });
+                        });
+                    }, 500);
+                },
+                // Error callback
+                (error) => {
+                    console.error("Geolocation error:", error);
+                    
+                    // Update UI to show error
+                    locationMessage.style.color = '#cc0000';
+                    locationMessage.innerHTML = '❌ <b>Location access denied or unavailable.</b>';
+                    
+                    // Re-enable the button
+                    locationButton.disabled = false;
+                    locationButton.style.opacity = '1';
+                    locationButton.innerHTML = '<i class="fas fa-location-arrow"></i> Try Again';
+                    
+                    // Store that we've failed to get location
+                    localStorage.setItem('locationPermissionDenied', 'true');
+                }
+            );
+        } else {
+            // Browser doesn't support geolocation
+            locationMessage.style.color = '#cc0000';
+            locationMessage.innerHTML = '❌ <b>Your browser doesn\'t support geolocation.</b>';
+            
+            // Re-enable the button with different text
+            locationButton.disabled = false;
+            locationButton.style.opacity = '1';
+            locationButton.innerHTML = '<i class="fas fa-location-arrow"></i> Not Available';
+        }
+    });
+    
+    // Add event listener for browse button
+    browseButton.addEventListener('click', function() {
+        // Berkeley coordinates as fallback [lng, lat]
+        const berkeleyCoords = [-122.2714, 37.8705];
+        
+        // Store default coordinates
+        localStorage.setItem('defaultCoords', JSON.stringify(berkeleyCoords));
+        sessionStorage.setItem('defaultCoords', JSON.stringify(berkeleyCoords));
+        
+        // Hide the welcome overlay with animation
+        welcomeOverlay.style.opacity = '0';
+        setTimeout(() => {
+            welcomeOverlay.style.display = 'none';
+            
+            // Initialize the map with Berkeley coordinates
+            initializeMap();
+            
+            // Wait for map to be ready, then load gems
+            document.addEventListener('mapReady', function onMapReady() {
+                // Remove this listener to prevent duplicates
+                document.removeEventListener('mapReady', onMapReady);
+                
+                // Fetch and display gems near Berkeley
+                fetch('static/assets/data/hidden_gems.json')
+                    .then(response => response.json())
+                    .then(allGems => {
+                        // Use data controller to find gems near Berkeley
+                        if (window.HiddenGems && window.HiddenGems.data && 
+                            typeof window.HiddenGems.data.findGemsNearUser === 'function') {
+                            return window.HiddenGems.data.findGemsNearUser(
+                                allGems, berkeleyCoords, 20, 10
+                            );
+                        } else {
+                            // Simple fallback
+                            return allGems;
+                        }
+                    })
+                    .then(gems => {
+                        // Render gems on the map
+                        if (typeof window.renderGems === 'function') {
+                            window.renderGems(gems);
+                        }
+                        
+                        // Dispatch gems loaded event
+                        document.dispatchEvent(new CustomEvent('gemsLoaded', {
+                            detail: { gems: gems }
+                        }));
+                    });
+            });
+        }, 500);
+    });
+    
+    // Assemble the welcome message
+    buttonsContainer.appendChild(locationButton);
+    buttonsContainer.appendChild(browseButton);
+    buttonsContainer.appendChild(quizButton);
+    
+    welcomeContainer.appendChild(welcomeTitle);
+    welcomeContainer.appendChild(welcomeSubtitle);
+    welcomeContainer.appendChild(locationMessage);
+    welcomeContainer.appendChild(buttonsContainer);
+    
+    welcomeOverlay.appendChild(welcomeContainer);
+    
+    // Mark welcome as seen in localStorage
+    localStorage.setItem('welcomeShown', 'true');
+}
+
 // Create a safer async initialization that won't throw uncaught errors
 async function initApp() {
     try {
@@ -240,6 +466,7 @@ async function initApp() {
             window.HiddenGems.utils.showLoading('Starting Hidden Gems...');
         } catch (e) {
             console.warn('Error using namespaced loading function:', e);
+            
             // Fallback to direct creation
             const loadingEl = document.createElement('div');
             loadingEl.id = 'gems-loading';
@@ -255,6 +482,11 @@ async function initApp() {
             loadingEl.innerHTML = 'Starting Hidden Gems...';
             document.body.appendChild(loadingEl);
         }
+
+           // Show welcome message if needed
+        if (!localStorage.getItem('welcomeShown') && typeof showWelcomeMessage === 'function') {
+            setTimeout(showWelcomeMessage, 500);
+        }
         
         // Initialize map first (returns a promise)
         if (window.HiddenGems.map && typeof window.HiddenGems.map.init === 'function') {
@@ -266,15 +498,7 @@ async function initApp() {
             }
         }
         
-        // Map is initialized, gem loading will happen in the map initialization
-        // based on location and adaptive sampling strategy
-        
-        // Show welcome message if needed
-        if (!localStorage.getItem('welcomeShown') && typeof showWelcomeMessage === 'function') {
-            setTimeout(showWelcomeMessage, 500);
-        }
-
-        // initialize preferences
+        // Initialize preferences if function exists
         if (typeof initializePreferences === 'function') {
             initializePreferences();
         }
@@ -325,63 +549,10 @@ async function initApp() {
     }
 }
 
-
-// Function to adjust map for current device
-window.HiddenGems.map.adjustForDevice = function() {
-    const deviceSize = window.HiddenGems.utils.getDeviceSize();
-    
-    // Adjust card height based on device size
-    const cardsContainer = document.querySelector('.cards-container');
-    if (cardsContainer) {
-        if (deviceSize.isSmallPhone) {
-            cardsContainer.style.height = '140px';
-        } else if (deviceSize.isLandscape) {
-            cardsContainer.style.height = '130px';
-        } else {
-            cardsContainer.style.height = '170px';
-        }
-    }
-    
-    // Adjust map padding
-    if (map) {
-        const padding = {
-            top: deviceSize.isLandscape ? 40 : 60,
-            bottom: deviceSize.isLandscape ? 140 : 180,
-            left: 20,
-            right: 20
-        };
-        
-        if (deviceSize.hasSafeArea) {
-            // Add safe area insets for notched phones
-            padding.left += 10;
-            padding.right += 10;
-        }
-        
-        // Update map bounds padding
-        if (typeof map.fitBounds === 'function') {
-            this._mapPadding = padding;
-        }
-    }
-};
-
-// Add this function to main.js
+// Add navigation utility function
 function navigateWithData(url, data) {
     // Save current state to data controller
-    if (window.HiddenGemsData) {
-        // Save preferences
-        const prefs = window.HiddenGemsData.preferences.get();
-        
-        // Update with new data if provided
-        if (data && data.preferences) {
-            Object.assign(prefs, data.preferences);
-            window.HiddenGemsData.preferences.save(prefs);
-        }
-        
-        // Save gems if provided
-        if (data && data.selectedGems) {
-            window.HiddenGemsData.gemsData.save(data.selectedGems);
-        }
-        
+    if (window.HiddenGems && window.HiddenGems.data) {
         // Generate URL with minimal data (just a reference ID)
         const sessionId = Date.now().toString();
         sessionStorage.setItem(`hiddenGems_session_${sessionId}`, JSON.stringify(data));
@@ -395,13 +566,7 @@ function navigateWithData(url, data) {
     }
 }
 
-// Wait for DOM to be fully loaded, then initialize the app
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize application modules in the correct order
-    initApp();
-});
-
-// Add to main.js
+// Debug mode toggle and utilities
 window.HiddenGems.debug = {
     enabled: false,
     
@@ -473,16 +638,25 @@ window.HiddenGems.debug = {
     },
     
     inspectGemCoordinates: function() {
-        if (!HiddenGems.data || !HiddenGems.data.gems) {
+        if (!window.HiddenGems.data || !window.HiddenGems.data.gems) {
             return 'No gems data available';
         }
         
-        const gems = HiddenGems.data.gems;
+        const gems = window.HiddenGems.data.gems;
         const results = [];
         
         gems.forEach((gem, index) => {
             const coords = gem.coords || gem.coordinates;
-            const normalized = coords ? normalizeCoordinates(coords) : null;
+            
+            // Try to normalize coordinates (lng/lat format)
+            let normalized = null;
+            if (coords) {
+                if (window.HiddenGems.utils.isValidCoordinate(coords[0], coords[1])) {
+                    normalized = coords;
+                } else if (window.HiddenGems.utils.isValidCoordinate(coords[1], coords[0])) {
+                    normalized = [coords[1], coords[0]];
+                }
+            }
             
             results.push({
                 index,
@@ -507,3 +681,9 @@ window.debugGems = function() {
 window.checkCoords = function() {
     return window.HiddenGems.debug.inspectGemCoordinates();
 };
+
+// Wait for DOM to be fully loaded, then initialize the app
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize application modules in the correct order
+    initApp();
+});

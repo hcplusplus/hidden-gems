@@ -19,6 +19,7 @@ class GemCards extends HTMLElement {
     this.gems = [];
     this.cardVariant = this.getAttribute('variant') || 'index'; // 'index' or 'detail'
     this.markerId = this.getAttribute('marker-id') || null;
+    this.mapReady = false;
     
     // Initialize shadow DOM with styles and structure
     this.shadowRoot.innerHTML = `
@@ -390,7 +391,7 @@ class GemCards extends HTMLElement {
         }
         
         /* Active marker indicator */
-        .active-marker-label {
+        .active-gem-label {
           position: absolute;
           top: 10px;
           right: 10px;
@@ -438,6 +439,21 @@ class GemCards extends HTMLElement {
             max-height: 100px;
           }
         }
+
+        /* Waiting message when map is not ready */
+        .map-waiting-message {
+          position: absolute;
+          bottom: 20px;
+          left: 0;
+          right: 0;
+          text-align: center;
+          background-color: rgba(255, 255, 255, 0.9);
+          padding: 15px;
+          border-radius: 8px;
+          margin: 0 20px;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          display: none;
+        }
       </style>
       
       <!-- Swipe indicator dots -->
@@ -445,6 +461,11 @@ class GemCards extends HTMLElement {
       
       <!-- Main cards container -->
       <div class="cards-container"></div>
+      
+      <!-- Waiting message -->
+      <div class="map-waiting-message">
+        Waiting for map to initialize...
+      </div>
     `;
     
     // Bind methods to this
@@ -457,6 +478,8 @@ class GemCards extends HTMLElement {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.showCard = this.showCard.bind(this);
     this.highlightMarker = this.highlightMarker.bind(this);
+    this.handleMapReady = this.handleMapReady.bind(this);
+    this.handleAppInitialized = this.handleAppInitialized.bind(this);
     
     // Touch/swipe tracking variables
     this.startX = null;
@@ -469,6 +492,10 @@ class GemCards extends HTMLElement {
     // Card and indicator container references
     this.cardsContainer = this.shadowRoot.querySelector('.cards-container');
     this.swipeIndicator = this.shadowRoot.querySelector('.swipe-indicator');
+    this.waitingMessage = this.shadowRoot.querySelector('.map-waiting-message');
+    
+    // Queue for pending operations
+    this.pendingGems = null;
     
     // Store trip calculation data (for detail variant)
     this.tripDistances = {
@@ -490,25 +517,80 @@ class GemCards extends HTMLElement {
     // Check for variant attribute changes
     this.updateVariant();
     
-    // Load gems if provided via attribute
-    this.loadGemsFromAttribute();
+    // Listen for map ready events
+    document.addEventListener('mapReady', this.handleMapReady);
+    document.addEventListener('initializeApp', this.handleAppInitialized);
+    document.addEventListener('appReady', this.handleMapReady);
     
-    // Listen for gems loaded event
-    document.addEventListener('gemsLoaded', this.handleGemsLoaded.bind(this));
-    
-    // Set up keyboard navigation
-    this.setupKeyboardNavigation();
+    // Check if map is already initialized
+    if (window.map) {
+      this.mapReady = true;
+      
+      // Hide waiting message
+      this.waitingMessage.style.display = 'none';
+      
+      // Load gems if provided via attribute
+      this.loadGemsFromAttribute();
+      
+      // Listen for gems loaded event
+      document.addEventListener('gemsLoaded', this.handleGemsLoaded.bind(this));
+      
+      // Set up keyboard navigation
+      this.setupKeyboardNavigation();
+    } else {
+      // Show waiting message
+      this.waitingMessage.style.display = 'block';
+    }
     
     // Dispatch custom event to inform the page that the gem cards are ready
     this.dispatchEvent(new CustomEvent('gem-cards-ready', {
       bubbles: true,
       composed: true
     }));
+  }
+  
+  /**
+   * Handle map ready event
+   */
+  handleMapReady() {
+    console.log('Map is ready, gem cards can now render');
+    this.mapReady = true;
     
-    // Automatically load gems from common sources if not explicitly provided
+    // Hide waiting message
+    this.waitingMessage.style.display = 'none';
+    
+    // Process any pending operations
+    if (this.pendingGems) {
+      this.renderCards(this.pendingGems);
+      this.pendingGems = null;
+    }
+    
+    // Load gems from attribute if not done yet
+    this.loadGemsFromAttribute();
+    
+    // Listen for gems loaded event if not already
+    document.removeEventListener('gemsLoaded', this.handleGemsLoaded);
+    document.addEventListener('gemsLoaded', this.handleGemsLoaded.bind(this));
+    
+    // Set up keyboard navigation
+    this.setupKeyboardNavigation();
+    
+    // If we don't have gems yet, try to load from common sources
     if (this.gems.length === 0) {
       this.loadGemsFromCommonSources();
     }
+  }
+  
+  /**
+   * Handle app initialization
+   */
+  handleAppInitialized() {
+    // App is initializing, we'll soon be able to render
+    setTimeout(() => {
+      if (!this.mapReady && window.map) {
+        this.handleMapReady();
+      }
+    }, 500);
   }
   
   /**
@@ -517,6 +599,10 @@ class GemCards extends HTMLElement {
   disconnectedCallback() {
     // Remove event listeners
     this.removeEventListeners();
+    document.removeEventListener('mapReady', this.handleMapReady);
+    document.removeEventListener('initializeApp', this.handleAppInitialized);
+    document.removeEventListener('appReady', this.handleMapReady);
+    document.removeEventListener('gemsLoaded', this.handleGemsLoaded);
   }
   
   /**
@@ -528,11 +614,15 @@ class GemCards extends HTMLElement {
       this.updateVariant();
     } else if (name === 'active-index' && oldValue !== newValue) {
       this.activeIndex = parseInt(newValue, 10);
-      this.showCard(this.activeIndex);
+      if (this.mapReady) {
+        this.showCard(this.activeIndex);
+      }
     } else if (name === 'marker-id' && oldValue !== newValue) {
       this.markerId = newValue;
     } else if (name === 'gems-data' && oldValue !== newValue) {
-      this.loadGemsFromAttribute();
+      if (this.mapReady) {
+        this.loadGemsFromAttribute();
+      }
     }
   }
   
@@ -549,7 +639,12 @@ class GemCards extends HTMLElement {
    */
   handleGemsLoaded(event) {
     if (event.detail && event.detail.gems) {
-      this.renderCards(event.detail.gems);
+      if (this.mapReady) {
+        this.renderCards(event.detail.gems);
+      } else {
+        // Store for later rendering
+        this.pendingGems = event.detail.gems;
+      }
     }
   }
   
@@ -557,6 +652,8 @@ class GemCards extends HTMLElement {
    * Load gems from the gems-data attribute
    */
   loadGemsFromAttribute() {
+    if (!this.mapReady) return;
+    
     const gemsData = this.getAttribute('gems-data');
     if (gemsData) {
       try {
@@ -572,6 +669,8 @@ class GemCards extends HTMLElement {
    * Load gems from common sources (window.HiddenGems, sessionStorage, etc.)
    */
   loadGemsFromCommonSources() {
+    if (!this.mapReady) return;
+    
     // Check if gems are in HiddenGems namespace
     if (window.HiddenGems && window.HiddenGems.data && window.HiddenGems.data.gems) {
       this.renderCards(window.HiddenGems.data.gems);
@@ -633,8 +732,8 @@ class GemCards extends HTMLElement {
       tripDistanceStyle.style.display = this.cardVariant === 'detail' ? 'block' : 'none';
     }
     
-    // Rerender cards with the new variant
-    if (this.gems.length > 0) {
+    // Rerender cards with the new variant if map is ready
+    if (this.mapReady && this.gems.length > 0) {
       this.renderCards(this.gems);
     }
   }
@@ -655,7 +754,7 @@ class GemCards extends HTMLElement {
     
     // Listen for gem selection changes from map or other sources
     document.addEventListener('gemSelected', (event) => {
-      if (event.detail && event.detail.index !== undefined) {
+      if (this.mapReady && event.detail && event.detail.index !== undefined) {
         this.showCard(event.detail.index);
       }
     });
@@ -665,7 +764,9 @@ class GemCards extends HTMLElement {
       const markerElements = document.querySelectorAll(this.markerId);
       markerElements.forEach((marker, index) => {
         marker.addEventListener('click', () => {
-          this.showCard(index);
+          if (this.mapReady) {
+            this.showCard(index);
+          }
         });
       });
     }
@@ -701,6 +802,9 @@ class GemCards extends HTMLElement {
    * @param {KeyboardEvent} e - Keyboard event
    */
   handleKeyDown(e) {
+    // Only proceed if map is ready
+    if (!this.mapReady) return;
+    
     // Only handle arrow keys
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       if (!this.gems || !this.gems.length) return;
@@ -725,6 +829,9 @@ class GemCards extends HTMLElement {
    * @param {TouchEvent} e - Touch event
    */
   handleTouchStart(e) {
+    // Only proceed if map is ready
+    if (!this.mapReady) return;
+    
     const touch = e.touches[0];
     this.startX = touch.clientX;
     this.startY = touch.clientY;
@@ -744,7 +851,7 @@ class GemCards extends HTMLElement {
    * @param {TouchEvent} e - Touch event
    */
   handleTouchMove(e) {
-    if (!this.isDragging) return;
+    if (!this.mapReady || !this.isDragging) return;
     
     const touch = e.touches[0];
     this.currentX = touch.clientX;
@@ -770,7 +877,7 @@ class GemCards extends HTMLElement {
    * @param {TouchEvent} e - Touch event
    */
   handleTouchEnd(e) {
-    if (!this.isDragging) return;
+    if (!this.mapReady || !this.isDragging) return;
     
     // Restore transition
     const activeCard = this.shadowRoot.querySelector('.gem-card.active');
@@ -807,6 +914,8 @@ class GemCards extends HTMLElement {
    * @param {MouseEvent} e - Mouse event
    */
   handleMouseDown(e) {
+    if (!this.mapReady) return;
+    
     this.startX = e.clientX;
     this.startY = e.clientY;
     this.isDragging = true;
@@ -827,7 +936,7 @@ class GemCards extends HTMLElement {
    * @param {MouseEvent} e - Mouse event
    */
   handleMouseMove(e) {
-    if (!this.isDragging) return;
+    if (!this.mapReady || !this.isDragging) return;
     
     this.currentX = e.clientX;
     this.offsetX = this.currentX - this.startX;
@@ -847,7 +956,7 @@ class GemCards extends HTMLElement {
    * @param {MouseEvent} e - Mouse event
    */
   handleMouseUp(e) {
-    if (!this.isDragging) return;
+    if (!this.mapReady || !this.isDragging) return;
     
     // Restore transition
     const activeCard = this.shadowRoot.querySelector('.gem-card.active');
@@ -882,6 +991,13 @@ class GemCards extends HTMLElement {
    * @param {Array} gems - Array of gem objects
    */
   renderCards(gems) {
+    if (!this.mapReady) {
+      // Store for later rendering
+      this.pendingGems = gems;
+      console.log('Map not ready, queueing gems for later rendering');
+      return;
+    }
+    
     if (!gems || !gems.length) {
       console.warn('No gems data available for creating cards');
       return;
@@ -964,7 +1080,7 @@ class GemCards extends HTMLElement {
           <div class="card-subtitle">${categoryTags}</div>
           ${distanceText ? `<div class="card-distance">📍 ${distanceText}</div>` : ''}
         </div>
-        ${this.activeIndex === index ? '<div class="active-marker-label">ACTIVE</div>' : ''}
+        ${this.activeIndex === index ? '<div class="active-gem-label">ACTIVE</div>' : ''}
       </div>
       
       <div class="card-meta">
@@ -1042,7 +1158,9 @@ class GemCards extends HTMLElement {
       
       // Add click handler
       dot.addEventListener('click', () => {
-        this.showCard(i);
+        if (this.mapReady) {
+          this.showCard(i);
+        }
       });
       
       this.swipeIndicator.appendChild(dot);
@@ -1105,7 +1223,7 @@ class GemCards extends HTMLElement {
     if (gem.color) {
       return gem.color;
     } else if (gem.rarity) {
-      if (gem.rarity.includes('most') || gem.rarity.includes('very')) {
+      if (gem.rarity.includes('most') || rarity.includes('very')) {
         return 'red';
       } else if (gem.rarity.includes('moderately')) {
         return 'purple';
@@ -1231,14 +1349,14 @@ class GemCards extends HTMLElement {
    * @param {number} index - Index of card to show
    */
   showCard(index) {
-    if (!this.gems || !this.gems.length) return;
+    if (!this.mapReady || !this.gems || !this.gems.length) return;
 
     // Prevent recursive calls
-  if (window._showingCard) {
-    console.log('Already showing card, skipping to prevent recursion');
-    return;
-  }
-  window._showingCard = true;
+    if (window._showingCard) {
+      console.log('Already showing card, skipping to prevent recursion');
+      return;
+    }
+    window._showingCard = true;
     
     // Keep index within bounds
     if (index < 0) index = 0;
@@ -1263,7 +1381,7 @@ class GemCards extends HTMLElement {
       card.classList.remove('active');
       
       // Remove active marker labels from all cards
-      const activeLabel = card.querySelector('.active-marker-label');
+      const activeLabel = card.querySelector('.active-gem-label');
       if (activeLabel) {
         activeLabel.remove();
       }
@@ -1277,9 +1395,9 @@ class GemCards extends HTMLElement {
       activeCard.style.transform = 'translateX(0)';
       
       // Add active marker label
-      if (!activeCard.querySelector('.active-marker-label')) {
+      if (!activeCard.querySelector('.active-gem-label')) {
         const label = document.createElement('div');
-        label.className = 'active-marker-label';
+        label.className = 'active-gem-label';
         label.textContent = 'ACTIVE';
         activeCard.querySelector('.card-header').appendChild(label);
       }
@@ -1305,6 +1423,11 @@ class GemCards extends HTMLElement {
       composed: true,
       detail: { index, gem: this.gems[index] }
     }));
+    
+    // Clear showing card flag
+    setTimeout(() => {
+      window._showingCard = false;
+    }, 50);
   }
   
   /**
@@ -1420,16 +1543,18 @@ class GemCards extends HTMLElement {
    * @param {number} index - Index of the marker to highlight
    */
   highlightMarker(index) {
-  // First try using the global highlightGemMarker function
-  if (typeof window.highlightGemMarker === 'function') {
-    // Check if we're already in an update cycle to prevent recursion
-    if (window._updatingCard) {
-      console.log('Skipping marker highlight to prevent recursion');
+    if (!this.mapReady) return;
+    
+    // First try using the global highlightGemMarker function
+    if (typeof window.highlightGemMarker === 'function') {
+      // Check if we're already in an update cycle to prevent recursion
+      if (window._updatingCard) {
+        console.log('Skipping marker highlight to prevent recursion');
+        return;
+      }
+      window.highlightGemMarker(index, true); // Use true to skip card updates (avoid recursion)
       return;
     }
-    window.highlightGemMarker(index, true); // Use true to skip card updates (avoid recursion)
-    return;
-  }
     
     // Next try direct marker update if markerId provided
     if (this.markerId) {
@@ -1593,7 +1718,11 @@ class GemCards extends HTMLElement {
    */
   setGems(gems) {
     if (Array.isArray(gems) && gems.length > 0) {
-      this.renderCards(gems);
+      if (this.mapReady) {
+        this.renderCards(gems);
+      } else {
+        this.pendingGems = gems;
+      }
     }
   }
   
@@ -1643,116 +1772,131 @@ class GemCards extends HTMLElement {
    */
   setTripDistances(distances) {
     this.tripDistances = distances;
-    this.updateTripDistanceInfo(this.activeIndex);
+    if (this.mapReady) {
+      this.updateTripDistanceInfo(this.activeIndex);
+    }
+  }
+  
+  /**
+   * Public API: Force map ready state
+   * Useful for testing or for pages where map detection doesn't work
+   */
+  forceMapReady() {
+    this.mapReady = true;
+    this.waitingMessage.style.display = 'none';
+    
+    // Process pending gems
+    if (this.pendingGems) {
+      this.renderCards(this.pendingGems);
+      this.pendingGems = null;
+    }
   }
 }
 
 // Register the custom element
 customElements.define('gem-cards', GemCards);
 
-/**
- * Add a simple highlight gems function that works with the custom element
- * @param {number} index - Index of gem to highlight
- * @param {boolean} skipCardUpdate - Whether to skip updating the cards (to avoid recursion)
- */
 window.highlightGemMarker = function(index, skipCardUpdate = false) {
-  // Update map markers
-  const markers = window.markers || [];
-  markers.forEach((marker, i) => {
-    if (!marker || !marker.getElement) return;
-    
-    const el = marker.getElement();
-    if (!el) return;
-    
-    // Update visual appearance
-    if (i === index) {
-      // Active marker
-      el.style.transform = 'scale(1.4)';
-      el.style.zIndex = '100';
-      el.style.filter = 'drop-shadow(0 0 4px rgba(0, 0, 0, 0.3))';
-      
-      // Add pulse effect
-      if (!el.querySelector('.pulse-effect')) {
-        const pulse = document.createElement('div');
-        pulse.className = 'pulse-effect';
-        pulse.style.position = 'absolute';
-        pulse.style.top = '0';
-        pulse.style.left = '0';
-        pulse.style.width = '100%';
-        pulse.style.height = '100%';
-        pulse.style.borderRadius = '50%';
-        pulse.style.boxShadow = '0 0 0 rgba(66, 133, 244, 0.6)';
-        pulse.style.animation = 'pulse 2s infinite';
-        el.appendChild(pulse);
-        
-        // Add pulse animation if not already in document
-        if (!document.getElementById('gem-cards-pulse-style')) {
-          const style = document.createElement('style');
-          style.id = 'gem-cards-pulse-style';
-          style.textContent = `
-            @keyframes pulse {
-              0% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.6); }
-              70% { box-shadow: 0 0 0 10px rgba(66, 133, 244, 0); }
-              100% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0); }
-            }
-          `;
-          document.head.appendChild(style);
-        }
-      }
-      
-      // If map is available, fly to marker location
-   //   if (window.map && marker.getLngLat) {
-   //     window.map.flyTo({
-   //       center: marker.getLngLat(),
-   //       zoom: 11,
-   //       duration: 500
-   //     });
-   //   }
-    } else {
-      // Inactive marker
-      el.style.transform = 'scale(1.0)';
-      el.style.zIndex = '1';
-      el.style.filter = 'none';
-      
-      // Remove pulse effect
-      const pulse = el.querySelector('.pulse-effect');
-      if (pulse) pulse.remove();
-    }
-  });
-  
-  // Update global active gem index
-  window.activeGemIndex = index;
-  if (window.HiddenGems && window.HiddenGems.map) {
-    window.HiddenGems.map.activeGemIndex = index;
-  }
-  
-  // Update gem-cards element if not skipping card update
-  if (!skipCardUpdate) {
-  const gemCards = document.querySelector('gem-cards');
-  if (gemCards) {
-    // Set a flag to prevent recursion
-    window._updatingCard = true;
-    gemCards.showCard(index);
-    window._updatingCard = false;
-  }
-}
-  
-  // Dispatch a global event for other components
-  document.dispatchEvent(new CustomEvent('gemSelected', {
-    detail: { index, id: window.HiddenGems?.data?.gems?.[index]?.id }
-  }));
+ // Update map markers
+ const markers = window.markers || [];
+ markers.forEach((marker, i) => {
+   if (!marker || !marker.getElement) return;
+   
+   const el = marker.getElement();
+   if (!el) return;
+   
+   // Update visual appearance
+   if (i === index) {
+     // Active marker
+     el.style.transform = 'scale(1.4)';
+     el.style.zIndex = '100';
+     el.style.filter = 'drop-shadow(0 0 4px rgba(0, 0, 0, 0.3))';
+     
+     // Add pulse effect
+     if (!el.querySelector('.pulse-effect')) {
+       const pulse = document.createElement('div');
+       pulse.className = 'pulse-effect';
+       pulse.style.position = 'absolute';
+       pulse.style.top = '0';
+       pulse.style.left = '0';
+       pulse.style.width = '100%';
+       pulse.style.height = '100%';
+       pulse.style.borderRadius = '50%';
+       pulse.style.boxShadow = '0 0 0 rgba(66, 133, 244, 0.6)';
+       pulse.style.animation = 'pulse 2s infinite';
+       el.appendChild(pulse);
+       
+       // Add pulse animation if not already in document
+       if (!document.getElementById('gem-cards-pulse-style')) {
+         const style = document.createElement('style');
+         style.id = 'gem-cards-pulse-style';
+         style.textContent = `
+           @keyframes pulse {
+             0% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.7); }
+             70% { box-shadow: 0 0 0 10px rgba(66, 133, 244, 0); }
+             100% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0); }
+           }
+         `;
+         document.head.appendChild(style);
+       }
+     }
+   } else {
+     // Inactive marker
+     el.style.transform = 'scale(1.0)';
+     el.style.zIndex = '1';
+     el.style.filter = 'none';
+     
+     // Remove pulse effect
+     const pulse = el.querySelector('.pulse-effect');
+     if (pulse) pulse.remove();
+   }
+ });
+ 
+ // Update global active gem index
+ window.activeGemIndex = index;
+ if (window.HiddenGems && window.HiddenGems.map) {
+   window.HiddenGems.map.activeGemIndex = index;
+ }
+ 
+ // Update gem-cards element if not skipping card update
+ if (!skipCardUpdate) {
+   const gemCards = document.querySelector('gem-cards');
+   if (gemCards) {
+     // Set a flag to prevent recursion
+     window._updatingCard = true;
+     gemCards.showCard(index);
+     setTimeout(() => {
+       window._updatingCard = false;
+     }, 50);
+   }
+ }
+ 
+ // Dispatch a global event for other components
+ document.dispatchEvent(new CustomEvent('gemSelected', {
+   detail: { index, id: window.HiddenGems?.data?.gems?.[index]?.id }
+ }));
 };
 
 /**
- * Global function to go to a specific gem
- * @param {number} index - Index of the gem to display
- */
+* Global function to go to a specific gem
+* @param {number} index - Index of the gem to display
+*/
 window.goToGem = function(index) {
-  const gemCards = document.querySelector('gem-cards');
-  if (gemCards) {
-    gemCards.showCard(index);
-  } else {
-    // Fallback to highlighting just the marker
-    window.highlightGemMarker(index);
-  }
+ const gemCards = document.querySelector('gem-cards');
+ if (gemCards) {
+   gemCards.showCard(index);
+ } else {
+   // Fallback to highlighting just the marker
+   window.highlightGemMarker(index);
+ }
+};
+
+/**
+* Function to dispatch map ready event
+* This should be called when the map is fully initialized
+*/
+window.notifyMapReady = function() {
+ document.dispatchEvent(new CustomEvent('mapReady', {
+   bubbles: true
+ }));
 };

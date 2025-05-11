@@ -1,7 +1,6 @@
 /**
  * map-controller.js
  * Handles map initialization and rendering gems on the map with card integration
- * Complete fresh implementation with all enhancements
  */
 
 // Ensure HiddenGems namespace exists
@@ -20,7 +19,7 @@ function initializeMap() {
     const DEFAULT_CENTER = window.HiddenGems.constants.DEFAULT_CENTER;
     const DEFAULT_ZOOM = window.HiddenGems.constants.DEFAULT_ZOOM || 11;
     
-    // Start with a loading state
+    // Initialize the map without loading gems
     map = new maplibregl.Map({
         container: 'map',
         style: 'https://api.maptiler.com/maps/basic-v2/style.json?key=hbvo5fWE9HuC6JUHKB9q',
@@ -29,77 +28,35 @@ function initializeMap() {
         renderWorldCopies: false,
         antialias: true,
         // Better map controls
-        dragRotate: false, // Disable rotation for simpler mobile interaction
-        touchZoomRotate: true, // Enable pinch-to-zoom
-        doubleClickZoom: true, // Double-click to zoom in
-        boxZoom: false, // Simplify interactions by disabling box zoom
-        dragPan: true, // Enable standard map panning
-        touchPitch: false, // Disable touch pitch adjustments
-        maxBounds: [ // Limit panning to Northern California
-            [-125, 37], // Southwest corner
-            [-118, 42]  // Northeast corner
+        dragRotate: false,
+        touchZoomRotate: true,
+        doubleClickZoom: true,
+        boxZoom: false,
+        dragPan: true,
+        touchPitch: false,
+        maxBounds: [
+            [-125, 37],
+            [-118, 42]
         ]
     });
     
     // Add improved map controls with mobile-friendly options
     map.addControl(new maplibregl.NavigationControl({
-        showCompass: false, // Hide compass for simpler UI
-        visualizePitch: false // Don't show pitch control
+        showCompass: false,
+        visualizePitch: false
     }), 'top-left');
 
-    const navToggle = document.getElementById('nav-wheel-toggle');
-	const navWheel = document.getElementById('nav-wheel');
-	navToggle.addEventListener('click', () => navWheel.classList.toggle('active'));
-    
-    // Create loading indicator
-    const loadingEl = document.createElement('div');
-    loadingEl.id = 'location-loading';
-    loadingEl.textContent = 'Finding your location...';
-    loadingEl.style.position = 'absolute';
-    loadingEl.style.top = '50%';
-    loadingEl.style.left = '50%';
-    loadingEl.style.transform = 'translate(-50%, -50%)';
-    loadingEl.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-    loadingEl.style.color = 'white';
-    loadingEl.style.padding = '10px 20px';
-    loadingEl.style.borderRadius = '5px';
-    loadingEl.style.zIndex = '100';
-    
     // Set up event listeners for map
     map.on('load', function() {
-        console.log('Map fully loaded');/*
-        // Ensure proper marker positions on map move
-map.on('move', function() {
-    if (markers && markers.length) {
-        markers.forEach(marker => {
-            const lngLat = marker.getLngLat();
-            marker.setLngLat(lngLat);
-        });
-    }
-});
-
-// Fix marker positions after any user interaction
-map.on('moveend', function() {
-    // Find any visibly misplaced markers and correct their positions
-    if (markers && markers.length) {
-        markers.forEach(marker => {
-            const el = marker.getElement();
-            const lngLat = marker.getLngLat();
-            marker.setLngLat(lngLat);
-            
-            // Reset transform if not active to fix positioning
-            if (!el.classList.contains('active-marker')) {
-                el.style.transform = 'scale(1.0)';
-            }
-        });
-    }
-    
-    // Re-highlight active marker if one exists
-    if (activeGemIndex >= 0 && markers && markers.length > activeGemIndex) {
-        const activeEl = markers[activeGemIndex].getElement();
-        activeEl.style.transform = 'scale(1.4)';
-    }
-});*/
+        console.log('Map fully loaded');
+        
+        // Notify that the map is ready - this will trigger gem-cards to render
+        window.notifyMapReady();
+        
+        // Dispatch standard event for other components
+        document.dispatchEvent(new CustomEvent('mapReady', {
+            bubbles: true
+        }));
     });
     
     // Fix for sliding markers during zoom
@@ -114,108 +71,37 @@ map.on('moveend', function() {
         }
     });
 
-    // Add this to the end of initializeMap function to improve mobile touch handling
-
-// Improve touch handling for mobile devices
-if ('ontouchstart' in window) {
-    // Add custom touch handler for better card and map interaction
-    const mapContainer = document.getElementById('map');
-    let touchStartY = 0;
-    let isSwiping = false;
-    
-    mapContainer.addEventListener('touchstart', function(e) {
-        touchStartY = e.touches[0].clientY;
+    // Improve touch handling for mobile devices
+    if ('ontouchstart' in window) {
+        // Add custom touch handler for better card and map interaction
+        const mapContainer = document.getElementById('map');
+        let touchStartY = 0;
+        let isSwiping = false;
         
-        // Check if touch is in the lower part of the screen (card area)
-        const screenHeight = window.innerHeight;
-        const cardAreaHeight = screenHeight / 4; // Adjust based on your card height ratio
-        
-        if (touchStartY > screenHeight - cardAreaHeight) {
-            // Touch started in card area, let card handling take precedence
-            isSwiping = true;
-        } else {
-            isSwiping = false;
-        }
-    });
-    
-    mapContainer.addEventListener('touchmove', function(e) {
-        if (isSwiping) {
-            // Let card swipe handler take over for vertical swipes in card area
-            const touchY = e.touches[0].clientY;
-            const deltaY = touchStartY - touchY;
+        mapContainer.addEventListener('touchstart', function(e) {
+            touchStartY = e.touches[0].clientY;
             
-            if (Math.abs(deltaY) > 10) {
-                // Vertical swipe detected in card area
-                // Don't prevent default to allow card scrolling
-            }
-        }
-    });
-}
-    
-    // Try to get user location
-    if (navigator.geolocation) {
-        document.getElementById('map').appendChild(loadingEl);
-        
-        // Set timeout for geolocation
-        const locationTimeout = setTimeout(() => {
-            if (loadingEl && loadingEl.parentNode) {
-                loadingEl.parentNode.removeChild(loadingEl);
-            }
+            // Check if touch is in the lower part of the screen (card area)
+            const screenHeight = window.innerHeight;
+            const cardAreaHeight = screenHeight / 4;
             
-            // Get visible bounds and load adaptive gems
-            loadAdaptiveGems();
-        }, 10000);
-        
-        navigator.geolocation.getCurrentPosition(
-            // Success callback
-            (position) => {
-                const userLocation = [position.coords.longitude, position.coords.latitude];
-                
-                // Clear timeout
-                clearTimeout(locationTimeout);
-                
-                // Fly to user location
-                map.flyTo({
-                    center: userLocation,
-                    zoom: DEFAULT_ZOOM,
-                    essential: true
-                });
-                
-                // Remove loading indicator
-                if (loadingEl && loadingEl.parentNode) {
-                    loadingEl.parentNode.removeChild(loadingEl);
-                }
-                
-                // Add "you are here" marker
-                addYouAreHereMarker(userLocation);
-                
-                // Get visible bounds and load adaptive gems
-                loadAdaptiveGems(userLocation);
-            },
-            // Error callback
-            (error) => {
-                console.log('Geolocation error:', error);
-                
-                // Clear timeout
-                clearTimeout(locationTimeout);
-                
-                // Remove loading indicator
-                if (loadingEl && loadingEl.parentNode) {
-                    loadingEl.parentNode.removeChild(loadingEl);
-                }
-                
-                // Load adaptive gems with default center
-                loadAdaptiveGems();
-            },
-            // Options
-            {
-                timeout: 8000,
-                maximumAge: 60000
+            if (touchStartY > screenHeight - cardAreaHeight) {
+                isSwiping = true;
+            } else {
+                isSwiping = false;
             }
-        );
-    } else {
-        // Geolocation not supported
-        loadAdaptiveGems();
+        });
+        
+        mapContainer.addEventListener('touchmove', function(e) {
+            if (isSwiping) {
+                const touchY = e.touches[0].clientY;
+                const deltaY = touchStartY - touchY;
+                
+                if (Math.abs(deltaY) > 10) {
+                    // Vertical swipe detected in card area
+                }
+            }
+        });
     }
 }
 
@@ -255,17 +141,12 @@ function addYouAreHereMarker(location) {
         document.head.appendChild(style);
     }
     
-    // Add a popup showing "You are here"
-    const popup = new maplibregl.Popup({ offset: 25 })
-        .setText('You are here');
-    
     // Add marker to map
     new maplibregl.Marker({
         element: el,
         anchor: 'center'
     })
     .setLngLat(location)
-    .setPopup(popup)
     .addTo(map);
 }
 
@@ -393,7 +274,9 @@ function loadAdaptiveGems(center) {
                     const finalGems = filteredGems.slice(0, limit);
                     
                     // Store gems in the HiddenGems namespace
-                    window.HiddenGems.data.loadGems(finalGems);
+                    if (window.HiddenGems.data) {
+                        window.HiddenGems.data.loadGems(finalGems);
+                    }
                     
                     // Render the gems on the map
                     renderGems(finalGems);
@@ -507,6 +390,11 @@ function renderGems(gems) {
         el.style.cursor = 'pointer';
         el.style.position = 'relative';
         
+        // Store gem ID in the marker element data attribute for synchronization
+        const gemId = gem.id || gem.index || `gem-${index}`;
+        el.setAttribute('data-gem-id', gemId.toString());
+        el.setAttribute('data-index', index.toString());
+        
         // Determine the correct color for the gem
         let iconColor = 'blue'; // Default color
         if (gem.color) {
@@ -522,25 +410,20 @@ function renderGems(gems) {
             iconColor = 'red';
         }
         
-        // Use SVG directly for better control
-        if (iconColor === 'red') {
-            el.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28">
-                <path fill="#e74c3c" d="M12 2L2 12l10 10 10-10z"/>
-            </svg>`;
-        } else if (iconColor === 'purple') {
-            el.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28">
-                <path fill="#9b59b6" d="M12 2L2 12l10 10 10-10z"/>
-            </svg>`;
-        } else {
-            el.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28">
-                <path fill="#3498db" d="M12 2L2 12l10 10 10-10z"/>
-            </svg>`;
-        }
+        // Use the same icon approach as the cards for consistency
+        const iconImg = document.createElement('img');
+        iconImg.src = ICON_PATHS[iconColor];
+        iconImg.alt = `${iconColor.charAt(0).toUpperCase() + iconColor.slice(1)} Gem`;
+        iconImg.className = `${iconColor}-gem-icon`;
+        iconImg.style.width = '100%';
+        iconImg.style.height = '100%';
+        el.appendChild(iconImg);
 
         // Highlight if it's the active gem
         if (index === activeGemIndex) {
             el.style.transform = 'scale(1.4)';
             el.style.zIndex = '10';
+            el.classList.add('active-gem');
         }
 
         const marker = new maplibregl.Marker({
@@ -550,44 +433,55 @@ function renderGems(gems) {
         })
         .setLngLat(lngLat)
         .addTo(map);
+        
+        // Store gemId directly on the marker object for easier access
+        marker.gemId = gemId.toString();
 
         // Improved click handler with better centering
-el.addEventListener('click', function(e) {
-    // Prevent event propagation to avoid map click events
-    e.stopPropagation();
-    e.preventDefault();
-    
-    // Update active gem index
-    activeGemIndex = index;
-    
-    // Update HiddenGems namespace if available
-    if (window.HiddenGems && window.HiddenGems.map) {
-        window.HiddenGems.map.activeGemIndex = index;
-    }
-    
-    // Center map on gem with animation - proper fly to animation
-    map.flyTo({
-        center: lngLat,
-        essential: true,
-        duration: 800, // Faster animation
-        easing: function(t) {
-            return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; // Custom easing
-        }
-    });
-    
-    // Update cards after a slight delay to ensure smooth map transition
-    setTimeout(() => {
-        // Update card UI if swipe module is available
-        if (window.HiddenGems && window.HiddenGems.swipe && 
-            typeof window.HiddenGems.swipe.goToGem === 'function') {
-            window.HiddenGems.swipe.goToGem(index);
-        }
-        
-        // Highlight the marker
-        highlightGemMarker(index);
-
-    }, 100);
-});
+        el.addEventListener('click', function(e) {
+            // Prevent event propagation to avoid map click events
+            e.stopPropagation();
+            e.preventDefault();
+            
+            // Update active gem index
+            activeGemIndex = index;
+            
+            // Update HiddenGems namespace if available
+            if (window.HiddenGems && window.HiddenGems.map) {
+                window.HiddenGems.map.activeGemIndex = index;
+            }
+            
+            // Center map on gem with animation - proper fly to animation
+            map.flyTo({
+                center: lngLat,
+                essential: true,
+                duration: 800, // Faster animation
+                easing: function(t) {
+                    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; // Custom easing
+                }
+            });
+            
+            // Update cards after a slight delay to ensure smooth map transition
+            setTimeout(() => {
+                // Find and show the matching card by gem ID
+                const gemCard = document.querySelector(`.gem-card[data-gem-id="${gemId}"]`);
+                if (gemCard && window.HiddenGems && window.HiddenGems.cards) {
+                    const cardIndex = Array.from(document.querySelectorAll('.gem-card')).indexOf(gemCard);
+                    if (cardIndex !== -1 && window.HiddenGems.cards.updateCardPositions) {
+                        window.HiddenGems.cards.updateCardPositions(cardIndex);
+                    }
+                }
+                
+                // Update card UI if swipe module is available
+                if (window.HiddenGems && window.HiddenGems.swipe && 
+                    typeof window.HiddenGems.swipe.goToGem === 'function') {
+                    window.HiddenGems.swipe.goToGem(index);
+                }
+                
+                // Highlight the marker
+                highlightGemMarker(index, gemId);
+            }, 100);
+        });
         
         markers.push(marker);
         bounds.extend(lngLat);
@@ -637,7 +531,10 @@ el.addEventListener('click', function(e) {
     }
     
     // Highlight the active gem marker
-    highlightGemMarker(activeGemIndex);
+    if (activeGemIndex >= 0 && activeGemIndex < gems.length) {
+        const gemId = gems[activeGemIndex].id || gems[activeGemIndex].index || `gem-${activeGemIndex}`;
+        highlightGemMarker(activeGemIndex, gemId.toString());
+    }
     
     // Dispatch a custom event to notify that gems were loaded
     document.dispatchEvent(new CustomEvent('gemsLoaded', { 
@@ -658,8 +555,9 @@ function clearMarkers() {
 /**
  * Highlight a gem marker and center the map on it
  * @param {number} index - Index of gem to highlight
+ * @param {string} gemId - Optional ID of the gem (for better sync with cards)
  */
-function highlightGemMarker(index) {
+function highlightGemMarker(index, gemId) {
     // Validate index and markers array
     if (!markers || markers.length === 0 || index < 0 || index >= markers.length) {
         console.warn('Invalid marker index or no markers available');
@@ -670,19 +568,18 @@ function highlightGemMarker(index) {
     activeGemIndex = index;
     window.HiddenGems.map.activeGemIndex = index;
     
-    // Get the target marker's element and coordinates
-    const targetMarker = markers[index];
-    const targetLngLat = targetMarker.getLngLat();
-    
     // Reset all markers to default state
     markers.forEach((marker, i) => {
         const el = marker.getElement();
         
-        if (i === index) {
+        // Remove active class from all markers
+        el.classList.remove('active-gem');
+        
+        if (i === index || (gemId && marker.gemId === gemId)) {
             // Active marker styling
             el.style.transform = 'scale(1.4)';
             el.style.zIndex = '100';
-            el.style.boxShadow = '0 0 0 4px rgba(66, 133, 244, 0.8)';
+            el.classList.add('active-gem');
             
             // Add pulsing effect
             if (!el.querySelector('.pulse-effect')) {
@@ -716,7 +613,6 @@ function highlightGemMarker(index) {
             // Inactive marker styling
             el.style.transform = 'scale(1.0)';
             el.style.zIndex = '1';
-            el.style.boxShadow = 'none';
             
             // Remove any pulse effect
             const pulseEffect = el.querySelector('.pulse-effect');
@@ -726,162 +622,58 @@ function highlightGemMarker(index) {
         }
     });
     
+    // Try to find a target marker by gemId first
+    let targetMarker = null;
+    if (gemId) {
+        targetMarker = markers.find(m => m.gemId === gemId);
+    }
+    
+    // Fall back to index if no marker found by gemId
+    if (!targetMarker) {
+        targetMarker = markers[index];
+    }
+    
+    // Get target coordinates
+    const targetLngLat = targetMarker.getLngLat();
+    
     // Center map on active gem with proper mobile-friendly animation
     map.flyTo({
         center: targetLngLat,
         zoom: 14,
         duration: 800,
-        essential: true, // This option ensures the operation is considered essential and not killed
-        padding: { top: 50, bottom: 200, left: 50, right: 50 }, // Offset for the card at bottom
+        essential: true,
+        padding: { top: 50, bottom: 200, left: 50, right: 50 },
         easing: function(t) {
-            return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; // Smoother easing
+            return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
         }
     });
     
     // Update card display if available
-    //if (window.HiddenGems && window.HiddenGems.cards && 
-    //    typeof window.HiddenGems.cards.updateCardPositions === 'function') {
-    //    window.HiddenGems.cards.updateCardPositions(index);
-    //}
+    if (window.HiddenGems && window.HiddenGems.cards && 
+        typeof window.HiddenGems.cards.updateCardPositions === 'function') {
+        window.HiddenGems.cards.updateCardPositions(index);
+    }
     
     // Tell cards controller to update active gem
     if (window.HiddenGems && window.HiddenGems.cards && 
         typeof window.HiddenGems.cards.setActiveCard === 'function') {
         window.HiddenGems.cards.setActiveCard(index);
     }
+    
+    // Dispatch event for other components
+    document.dispatchEvent(new CustomEvent('gemSelected', {
+        detail: { 
+            index: index,
+            id: gemId || (window.HiddenGems?.data?.gems?.[index]?.id)
+        }
+    }));
 }
 
 
-
-/**
- * Show welcome message for first-time visitors with blur effect
- */
-function showWelcomeMessage() {
-    // Create a blur overlay for the entire app
-    const blurOverlay = document.createElement('div');
-    blurOverlay.style.position = 'fixed';
-    blurOverlay.style.top = '0';
-    blurOverlay.style.left = '0';
-    blurOverlay.style.right = '0';
-    blurOverlay.style.bottom = '0';
-    blurOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.3)'; // Semi-transparent background
-    blurOverlay.style.backdropFilter = 'blur(8px)'; // Blur effect
-    blurOverlay.style.WebkitBackdropFilter = 'blur(8px)'; // For Safari
-    blurOverlay.style.display = 'flex';
-    blurOverlay.style.flexDirection = 'column';
-    blurOverlay.style.justifyContent = 'center';
-    blurOverlay.style.alignItems = 'center';
-    blurOverlay.style.zIndex = '3000'; // Higher than other elements
-    blurOverlay.style.transition = 'opacity 0.5s';
-
-    // Welcome message container with glassmorphism effect
-    const welcomeContainer = document.createElement('div');
-    welcomeContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
-    welcomeContainer.style.backdropFilter = 'blur(12px)';
-    welcomeContainer.style.WebkitBackdropFilter = 'blur(12px)';
-    welcomeContainer.style.padding = '30px';
-    welcomeContainer.style.borderRadius = '16px';
-    welcomeContainer.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.2)';
-    welcomeContainer.style.maxWidth = '85%';
-    welcomeContainer.style.textAlign = 'center';
-    welcomeContainer.style.transform = 'translateY(0)';
-    welcomeContainer.style.transition = 'transform 0.5s ease-out';
-    welcomeContainer.style.animation = 'fadeIn 0.5s ease-out';
-
-    // Main title
-    const welcomeMessage = document.createElement('div');
-    welcomeMessage.style.color = '#222';
-    welcomeMessage.style.fontSize = '28px';
-    welcomeMessage.style.fontWeight = 'bold';
-    welcomeMessage.style.marginBottom = '20px';
-    welcomeMessage.innerText = 'Discover Hidden Gems in Northern California';
-
-    // Subtitle
-    const welcomeSubMessage = document.createElement('div');
-    welcomeSubMessage.style.color = '#555';
-    welcomeSubMessage.style.fontSize = '16px';
-    welcomeSubMessage.style.marginBottom = '30px';
-    welcomeSubMessage.innerText = 'Find off-the-beaten-path adventures near you';
-
-    // Get Started button with hover effect
-    const startButton = document.createElement('button');
-    startButton.style.padding = '12px 40px';
-    startButton.style.backgroundColor = '#222';
-    startButton.style.color = 'white';
-    startButton.style.border = 'none';
-    startButton.style.borderRadius = '24px';
-    startButton.style.fontSize = '18px';
-    startButton.style.cursor = 'pointer';
-    startButton.style.transition = 'transform 0.3s, background-color 0.3s';
-    startButton.innerText = 'Get Started';
-    
-    // Add hover effects
-    startButton.onmouseover = function() {
-        startButton.style.backgroundColor = '#444';
-        startButton.style.transform = 'scale(1.05)';
-    };
-    startButton.onmouseout = function() {
-        startButton.style.backgroundColor = '#222';
-        startButton.style.transform = 'scale(1)';
-    };
-
-    // Add everything to the DOM
-    welcomeContainer.appendChild(welcomeMessage);
-    welcomeContainer.appendChild(welcomeSubMessage);
-    welcomeContainer.appendChild(startButton);
-    blurOverlay.appendChild(welcomeContainer);
-    document.body.appendChild(blurOverlay);
-
-    // Add CSS animation
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    `;
-    document.head.appendChild(style);
-
-    // Check browser support for backdrop-filter
-    const supportsBackdropFilter = CSS.supports('backdrop-filter', 'blur(8px)') || 
-                                  CSS.supports('-webkit-backdrop-filter', 'blur(8px)');
-
-    if (!supportsBackdropFilter) {
-        // Fallback to more opaque background without blur
-        blurOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-        welcomeContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
-    }
-
-    // Remove the overlay when button is clicked
-    startButton.addEventListener('click', () => {
-        blurOverlay.style.opacity = '0';
-        setTimeout(() => {
-            blurOverlay.remove();
-            style.remove();
-        }, 500);
-        
-        // Add a subtle zoom effect to the map when starting
-        if (map) {
-            const currentZoom = map.getZoom();
-            map.easeTo({
-                zoom: currentZoom + 0.5,
-                duration: 1000,
-                easing: function(t) {
-                    return t * (2 - t); // Ease out quad
-                }
-            });
-        }
-    });
-    
-    // Mark welcome as seen in localStorage
-    localStorage.setItem('welcomeShown', 'true');
-}
 
 // Initialize map namespace in HiddenGems
 window.HiddenGems.map = {
     activeGemIndex: 0,
-
-    
     
     // Initialize the map
     init: function() {
@@ -897,504 +689,379 @@ window.HiddenGems.map = {
         });
     },
 
-    /**
- * Show the total route distance
- * @param {Array} routePoints - Array of points that form the route
- * @private
- */
-_showRouteDistance: function(routePoints) {
-    if (!routePoints || routePoints.length < 2) {
-        // Hide the distance display if no valid route
+    // Route-related methods and other map functionality remain unchanged
+    _showRouteDistance: function(routePoints) {
+        if (!routePoints || routePoints.length < 2) {
+            // Hide the distance display if no valid route
+            const distanceEl = document.getElementById('route-distance');
+            if (distanceEl) {
+                distanceEl.classList.remove('visible');
+            }
+            return;
+        }
+        
+        // Calculate total route distance
+        let totalDistance = 0;
+        
+        for (let i = 0; i < routePoints.length - 1; i++) {
+            const current = routePoints[i];
+            const next = routePoints[i + 1];
+            
+            // Calculate distance between points
+            const distance = this._calculateDistance(
+                current.coordinates[1], current.coordinates[0],
+                next.coordinates[1], next.coordinates[0]
+            );
+            
+            totalDistance += distance;
+        }
+        
+        // Round to one decimal place
+        totalDistance = Math.round(totalDistance * 10) / 10;
+        
+        // Get or create the distance display element
+        let distanceEl = document.getElementById('route-distance');
+        
+        if (!distanceEl) {
+            distanceEl = document.createElement('div');
+            distanceEl.id = 'route-distance';
+            distanceEl.className = 'route-distance';
+            document.body.appendChild(distanceEl);
+        }
+        
+        // Update content
+        distanceEl.innerHTML = `
+            <span>Total route: ${totalDistance} miles</span>
+            <span style="margin-left: 5px; font-size: 12px; opacity: 0.7;">
+                (${routePoints.length - 1} stops)
+            </span>
+        `;
+        
+        // Show the element
+        distanceEl.classList.add('visible');
+    },
+
+    drawOptimalRoute: function() {
+        // Remove any existing route layers
+        this.clearRoutes();
+        
+        // Get selected gems from preferences
+        const userPreferences = HiddenGems.preferences.getUserPreferences();
+        const selectedGemIds = userPreferences.selectedGems || [];
+        
+        if (selectedGemIds.length === 0) {
+            // No gems selected, nothing to draw
+            return;
+        }
+        
+        // Get selected gem data
+        const selectedGems = [];
+        
+        selectedGemIds.forEach(gemId => {
+            const gem = HiddenGems.data.gems.find(g => (g.id || g.index).toString() === gemId.toString());
+            if (gem) {
+                const coords = gem.coords || gem.coordinates;
+                if (coords && coords.length === 2) {
+                    // Ensure coordinates are in the correct format [lng, lat]
+                    const [a, b] = coords;
+                    const lngLat = (Math.abs(a) > 90 && Math.abs(b) <= 90) ? [a, b] : [b, a];
+                    
+                    // Add to selected gems with correct coordinates
+                    selectedGems.push({
+                        id: gem.id || gem.index,
+                        name: gem.name || gem.title || 'Hidden Gem',
+                        coordinates: lngLat
+                    });
+                }
+            }
+        });
+        
+        if (selectedGems.length === 0) {
+            // No valid gems found
+            return;
+        }
+        
+        // Get origin and destination (if set in preferences)
+        let origin = userPreferences.origin || null;
+        let destination = userPreferences.destination || null;
+        
+        // If origin/destination not set, use default values or first/last gem
+        if (!origin && map) {
+            // Use current map center as origin
+            const center = map.getCenter();
+            origin = {
+                name: 'Starting Point',
+                coordinates: [center.lng, center.lat]
+            };
+        }
+        
+        if (!destination) {
+            // Use origin as destination if not specified (round trip)
+            destination = origin;
+        }
+        
+        // Find the optimal route (nearest neighbor heuristic)
+        const routePoints = this._calculateOptimalRoute(origin, selectedGems, destination);
+        
+        // Draw the route on the map
+        this._drawRouteOnMap(routePoints);
+        
+        // Fit map bounds to include the entire route
+        this._fitMapToRoute(routePoints);
+    },
+
+    _calculateOptimalRoute: function(origin, gems, destination) {
+        // Create a copy of gems to work with
+        const remainingGems = [...gems];
+        const route = [];
+        
+        // Start with origin
+        let currentPoint = origin;
+        route.push(currentPoint);
+        
+        // While we have gems left to visit
+        while (remainingGems.length > 0) {
+            // Find nearest gem to current position
+            let nearestIndex = -1;
+            let nearestDistance = Infinity;
+            
+            for (let i = 0; i < remainingGems.length; i++) {
+                const gem = remainingGems[i];
+                const distance = this._calculateDistance(
+                    currentPoint.coordinates[1], currentPoint.coordinates[0],
+                    gem.coordinates[1], gem.coordinates[0]
+                );
+                
+                if (distance < nearestDistance) {
+                    nearestDistance = distance;
+                    nearestIndex = i;
+                }
+            }
+            
+            // Add nearest gem to route
+            if (nearestIndex !== -1) {
+                currentPoint = remainingGems[nearestIndex];
+                route.push(currentPoint);
+                remainingGems.splice(nearestIndex, 1);
+            }
+        }
+        
+        // Finish at destination
+        if (destination && destination !== origin) {
+            route.push(destination);
+        }
+        
+        return route;
+    },
+
+    _calculateDistance: function(lat1, lon1, lat2, lon2) {
+        if (typeof HiddenGems.utils.calculateDistance === 'function') {
+            return HiddenGems.utils.calculateDistance(lat1, lon1, lat2, lon2);
+        }
+        
+        // Fallback calculation if utils not available
+        const R = 3958.8; // Earth's radius in miles
+        const dLat = this._toRadians(lat2 - lat1);
+        const dLon = this._toRadians(lon2 - lon1);
+        
+        const a = 
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(this._toRadians(lat1)) * Math.cos(this._toRadians(lat2)) * 
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+        
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c;
+    },
+
+    _toRadians: function(degrees) {
+        return degrees * Math.PI / 180;
+    },
+
+    _drawRouteOnMap: function(routePoints) {
+        if (!map || routePoints.length < 2) {
+            return;
+        }
+        
+        this._showRouteDistance(routePoints);
+        
+        // Create line coordinates
+        const lineCoordinates = routePoints.map(point => point.coordinates);
+        
+        // Create a unique ID for this route
+        const routeId = 'route-' + Date.now();
+        
+        // Add the route line
+        map.addSource(routeId, {
+            'type': 'geojson',
+            'data': {
+                'type': 'Feature',
+                'properties': {},
+                'geometry': {
+                    'type': 'LineString',
+                    'coordinates': lineCoordinates
+                }
+            }
+        });
+        
+        // Add a visible path layer
+        map.addLayer({
+            'id': routeId + '-line',
+            'type': 'line',
+            'source': routeId,
+            'layout': {
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            'paint': {
+                'line-color': '#4285F4',
+                'line-width': 3,
+                'line-opacity': 0.8,
+                'line-dasharray': [0, 2, 1]
+            }
+        });
+        
+        // Add glow/outline for the path
+        map.addLayer({
+            'id': routeId + '-glow',
+            'type': 'line',
+            'source': routeId,
+            'layout': {
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            'paint': {
+                'line-color': '#4285F4',
+                'line-width': 6,
+                'line-opacity': 0.2
+            }
+        }, routeId + '-line'); // Place below the line layer
+        
+        // Store the route IDs for later removal
+        if (!this.routeLayers) {
+            this.routeLayers = [];
+        }
+        this.routeLayers.push(routeId + '-line', routeId + '-glow');
+        
+        // Add origin/destination markers if not already on the map
+        this._addRouteEndpointMarkers(routePoints);
+    },
+
+    _addRouteEndpointMarkers: function(routePoints) {
+        if (!map || routePoints.length < 2) {
+            return;
+        }
+        
+        // Get origin and destination
+        const origin = routePoints[0];
+        const destination = routePoints[routePoints.length - 1];
+        
+        // Check if markers already exist and remove them
+        if (this.originMarker) {
+            this.originMarker.remove();
+        }
+        if (this.destinationMarker) {
+            this.destinationMarker.remove();
+        }
+        
+        // Create origin marker (if not the same as a gem marker)
+        const originEl = document.createElement('div');
+        originEl.className = 'route-endpoint origin-marker';
+        originEl.style.width = '20px';
+        originEl.style.height = '20px';
+        originEl.style.borderRadius = '50%';
+        originEl.style.backgroundColor = '#4CAF50';
+        originEl.style.border = '3px solid white';
+        originEl.style.boxShadow = '0 0 0 0 rgba(76, 175, 80, 1)';
+        originEl.style.animation = 'pulse 2s infinite';
+        
+        this.originMarker = new maplibregl.Marker({
+            element: originEl,
+            anchor: 'center'
+        })
+        .setLngLat(origin.coordinates)
+        .addTo(map);
+        
+        // If destination is different from origin, add destination marker
+        if (destination !== origin) {
+            const destEl = document.createElement('div');
+            destEl.className = 'route-endpoint dest-marker';
+            destEl.style.width = '20px';
+            destEl.style.height = '20px';
+            destEl.style.borderRadius = '50%';
+            destEl.style.backgroundColor = '#F44336';
+            destEl.style.border = '3px solid white';
+            destEl.style.boxShadow = '0 0 0 0 rgba(244, 67, 54, 1)';
+            
+            this.destinationMarker = new maplibregl.Marker({
+                element: destEl,
+                anchor: 'center'
+            })
+            .setLngLat(destination.coordinates)
+            .addTo(map);
+        }
+    },
+
+    clearRoutes: function() {
+        if (!map || !this.routeLayers || this.routeLayers.length === 0) {
+            return;
+        }
+        
+        // Remove all route layers
+        this.routeLayers.forEach(layerId => {
+            if (map.getLayer(layerId)) {
+                map.removeLayer(layerId);
+            }
+            
+            // Extract source ID from layer ID by removing the suffix
+            const sourceId = layerId.replace('-line', '').replace('-glow', '');
+            if (map.getSource(sourceId)) {
+                map.removeSource(sourceId);
+            }
+        });
+        
+        // Clear the layers array
+        this.routeLayers = [];
+        
+        // Remove endpoint markers
+        if (this.originMarker) {
+            this.originMarker.remove();
+            this.originMarker = null;
+        }
+        if (this.destinationMarker) {
+            this.destinationMarker.remove();
+            this.destinationMarker = null;
+        }
+
         const distanceEl = document.getElementById('route-distance');
         if (distanceEl) {
             distanceEl.classList.remove('visible');
         }
-        return;
-    }
-    
-    // Calculate total route distance
-    let totalDistance = 0;
-    
-    for (let i = 0; i < routePoints.length - 1; i++) {
-        const current = routePoints[i];
-        const next = routePoints[i + 1];
-        
-        // Calculate distance between points
-        const distance = this._calculateDistance(
-            current.coordinates[1], current.coordinates[0],
-            next.coordinates[1], next.coordinates[0]
-        );
-        
-        totalDistance += distance;
-    }
-    
-    // Round to one decimal place
-    totalDistance = Math.round(totalDistance * 10) / 10;
-    
-    // Get or create the distance display element
-    let distanceEl = document.getElementById('route-distance');
-    
-    if (!distanceEl) {
-        distanceEl = document.createElement('div');
-        distanceEl.id = 'route-distance';
-        distanceEl.className = 'route-distance';
-        document.body.appendChild(distanceEl);
-    }
-    
-    // Update content
-    distanceEl.innerHTML = `
-        <span>Total route: ${totalDistance} miles</span>
-        <span style="margin-left: 5px; font-size: 12px; opacity: 0.7;">
-            (${routePoints.length - 1} stops)
-        </span>
-    `;
-    
-    // Show the element
-    distanceEl.classList.add('visible');
-},
+    },
 
-    drawOptimalRoute: function() {
-    // Remove any existing route layers
-    this.clearRoutes();
-    
-    // Get selected gems from preferences
-    const userPreferences = HiddenGems.preferences.getUserPreferences();
-    const selectedGemIds = userPreferences.selectedGems || [];
-    
-    if (selectedGemIds.length === 0) {
-        // No gems selected, nothing to draw
-        return;
-    }
-    
-    // Get selected gem data
-    const selectedGems = [];
-    
-    selectedGemIds.forEach(gemId => {
-        const gem = HiddenGems.data.gems.find(g => (g.id || g.index).toString() === gemId.toString());
-        if (gem) {
-            const coords = gem.coords || gem.coordinates;
-            if (coords && coords.length === 2) {
-                // Ensure coordinates are in the correct format [lng, lat]
-                const [a, b] = coords;
-                const lngLat = (Math.abs(a) > 90 && Math.abs(b) <= 90) ? [a, b] : [b, a];
-                
-                // Add to selected gems with correct coordinates
-                selectedGems.push({
-                    id: gem.id || gem.index,
-                    name: gem.name || gem.title || 'Hidden Gem',
-                    coordinates: lngLat
-                });
-            }
-        }
-    });
-    
-    if (selectedGems.length === 0) {
-        // No valid gems found
-        return;
-    }
-    
-    // Get origin and destination (if set in preferences)
-    let origin = userPreferences.origin || null;
-    let destination = userPreferences.destination || null;
-    
-    // If origin/destination not set, use default values or first/last gem
-    if (!origin && map) {
-        // Use current map center as origin
-        const center = map.getCenter();
-        origin = {
-            name: 'Starting Point',
-            coordinates: [center.lng, center.lat]
-        };
-    }
-    
-    if (!destination) {
-        // Use origin as destination if not specified (round trip)
-        destination = origin;
-    }
-    
-    // Now we have: origin -> gems -> destination
-    // Find the optimal route (nearest neighbor heuristic)
-    const routePoints = this._calculateOptimalRoute(origin, selectedGems, destination);
-    
-    // Draw the route on the map
-    this._drawRouteOnMap(routePoints);
-    
-    // Fit map bounds to include the entire route
-    this._fitMapToRoute(routePoints);
-},
-
-/**
- * Calculate the optimal route using nearest neighbor heuristic
- * @param {Object} origin - Starting point
- * @param {Array} gems - Array of gem objects with coordinates
- * @param {Object} destination - Ending point
- * @returns {Array} Array of ordered points for the route
- * @private
- */
-_calculateOptimalRoute: function(origin, gems, destination) {
-    // Create a copy of gems to work with
-    const remainingGems = [...gems];
-    const route = [];
-    
-    // Start with origin
-    let currentPoint = origin;
-    route.push(currentPoint);
-    
-    // While we have gems left to visit
-    while (remainingGems.length > 0) {
-        // Find nearest gem to current position
-        let nearestIndex = -1;
-        let nearestDistance = Infinity;
-        
-        for (let i = 0; i < remainingGems.length; i++) {
-            const gem = remainingGems[i];
-            const distance = this._calculateDistance(
-                currentPoint.coordinates[1], currentPoint.coordinates[0],
-                gem.coordinates[1], gem.coordinates[0]
-            );
-            
-            if (distance < nearestDistance) {
-                nearestDistance = distance;
-                nearestIndex = i;
-            }
+    _fitMapToRoute: function(routePoints) {
+        if (!map || routePoints.length < 2) {
+            return;
         }
         
-        // Add nearest gem to route
-        if (nearestIndex !== -1) {
-            currentPoint = remainingGems[nearestIndex];
-            route.push(currentPoint);
-            remainingGems.splice(nearestIndex, 1);
-        }
-    }
-    
-    // Finish at destination
-    if (destination && destination !== origin) {
-        route.push(destination);
-    }
-    
-    return route;
-},
-
-/**
- * Calculate distance between two points in miles
- * @param {number} lat1 - Latitude of first point
- * @param {number} lon1 - Longitude of first point
- * @param {number} lat2 - Latitude of second point
- * @param {number} lon2 - Longitude of second point
- * @returns {number} Distance in miles
- * @private
- */
-_calculateDistance: function(lat1, lon1, lat2, lon2) {
-    if (typeof HiddenGems.utils.calculateDistance === 'function') {
-        return HiddenGems.utils.calculateDistance(lat1, lon1, lat2, lon2);
-    }
-    
-    // Fallback calculation if utils not available
-    const R = 3958.8; // Earth's radius in miles
-    const dLat = this._toRadians(lat2 - lat1);
-    const dLon = this._toRadians(lon2 - lon1);
-    
-    const a = 
-        Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.cos(this._toRadians(lat1)) * Math.cos(this._toRadians(lat2)) * 
-        Math.sin(dLon/2) * Math.sin(dLon/2);
-    
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return R * c;
-},
-
-/**
- * Convert degrees to radians
- * @param {number} degrees - Angle in degrees
- * @returns {number} Angle in radians
- * @private
- */
-_toRadians: function(degrees) {
-    return degrees * Math.PI / 180;
-},
-
-/**
- * Draw the calculated route on the map
- * @param {Array} routePoints - Array of points that form the route
- * @private
- */
-_drawRouteOnMap: function(routePoints) {
-    if (!map || routePoints.length < 2) {
-        return;
-    this._showRouteDistance(routePoints);
-    }
-    
-    // Create line coordinates
-    const lineCoordinates = routePoints.map(point => point.coordinates);
-    
-    // Create a unique ID for this route
-    const routeId = 'route-' + Date.now();
-    
-    // Add the route line
-    map.addSource(routeId, {
-        'type': 'geojson',
-        'data': {
-            'type': 'Feature',
-            'properties': {},
-            'geometry': {
-                'type': 'LineString',
-                'coordinates': lineCoordinates
-            }
-        }
-    });
-    
-    // Add a visible path layer
-    map.addLayer({
-        'id': routeId + '-line',
-        'type': 'line',
-        'source': routeId,
-        'layout': {
-            'line-join': 'round',
-            'line-cap': 'round'
-        },
-        'paint': {
-            'line-color': '#4285F4',
-            'line-width': 3,
-            'line-opacity': 0.8,
-            'line-dasharray': [0, 2, 1]
-        }
-    });
-    
-    // Add glow/outline for the path
-    map.addLayer({
-        'id': routeId + '-glow',
-        'type': 'line',
-        'source': routeId,
-        'layout': {
-            'line-join': 'round',
-            'line-cap': 'round'
-        },
-        'paint': {
-            'line-color': '#4285F4',
-            'line-width': 6,
-            'line-opacity': 0.2
-        }
-    }, routeId + '-line'); // Place below the line layer
-    
-    // Store the route IDs for later removal
-    if (!this.routeLayers) {
-        this.routeLayers = [];
-    }
-    this.routeLayers.push(routeId + '-line', routeId + '-glow');
-    
-    // Add origin/destination markers if not already on the map
-    this._addRouteEndpointMarkers(routePoints);
-},
-
-/**
- * Add markers for the route origin and destination
- * @param {Array} routePoints - Array of points that form the route
- * @private
- */
-_addRouteEndpointMarkers: function(routePoints) {
-    if (!map || routePoints.length < 2) {
-        return;
-    }
-    
-    // Get origin and destination
-    const origin = routePoints[0];
-    const destination = routePoints[routePoints.length - 1];
-    
-    // Check if markers already exist and remove them
-    if (this.originMarker) {
-        this.originMarker.remove();
-    }
-    if (this.destinationMarker) {
-        this.destinationMarker.remove();
-    }
-    
-    // Create origin marker (if not the same as a gem marker)
-    const originEl = document.createElement('div');
-    originEl.className = 'route-endpoint origin-marker';
-    originEl.style.width = '20px';
-    originEl.style.height = '20px';
-    originEl.style.borderRadius = '50%';
-    originEl.style.backgroundColor = '#4CAF50';
-    originEl.style.border = '3px solid white';
-    originEl.style.boxShadow = '0 0 0 0 rgba(76, 175, 80, 1)';
-    originEl.style.animation = 'pulse 2s infinite';
-    
-    this.originMarker = new maplibregl.Marker({
-        element: originEl,
-        anchor: 'center'
-    })
-    .setLngLat(origin.coordinates)
-    .addTo(map);
-    
-    // If destination is different from origin, add destination marker
-    if (destination !== origin) {
-        const destEl = document.createElement('div');
-        destEl.className = 'route-endpoint dest-marker';
-        destEl.style.width = '20px';
-        destEl.style.height = '20px';
-        destEl.style.borderRadius = '50%';
-        destEl.style.backgroundColor = '#F44336';
-        destEl.style.border = '3px solid white';
-        destEl.style.boxShadow = '0 0 0 0 rgba(244, 67, 54, 1)';
+        // Create a bounds object
+        const bounds = new maplibregl.LngLatBounds();
         
-        this.destinationMarker = new maplibregl.Marker({
-            element: destEl,
-            anchor: 'center'
-        })
-        .setLngLat(destination.coordinates)
-        .addTo(map);
-    }
-},
-
-/**
- * Clear any existing route layers from the map
- */
-clearRoutes: function() {
-    if (!map || !this.routeLayers || this.routeLayers.length === 0) {
-        return;
-    }
-    
-    // Remove all route layers
-    this.routeLayers.forEach(layerId => {
-        if (map.getLayer(layerId)) {
-            map.removeLayer(layerId);
-        }
+        // Include all route points in the bounds
+        routePoints.forEach(point => {
+            bounds.extend(point.coordinates);
+        });
         
-        // Extract source ID from layer ID by removing the suffix
-        const sourceId = layerId.replace('-line', '').replace('-glow', '');
-        if (map.getSource(sourceId)) {
-            map.removeSource(sourceId);
-        }
-    });
-    
-    // Clear the layers array
-    this.routeLayers = [];
-    
-    // Remove endpoint markers
-    if (this.originMarker) {
-        this.originMarker.remove();
-        this.originMarker = null;
-    }
-    if (this.destinationMarker) {
-        this.destinationMarker.remove();
-        this.destinationMarker = null;
-    }
-
-    const distanceEl = document.getElementById('route-distance');
-    if (distanceEl) {
-        distanceEl.classList.remove('visible');
-    }
-},
-
-/**
- * Fit the map view to include the entire route
- * @param {Array} routePoints - Array of points that form the route
- * @private
- */
-_fitMapToRoute: function(routePoints) {
-    if (!map || routePoints.length < 2) {
-        return;
-    }
-    
-    // Create a bounds object
-    const bounds = new maplibregl.LngLatBounds();
-    
-    // Include all route points in the bounds
-    routePoints.forEach(point => {
-        bounds.extend(point.coordinates);
-    });
-    
-    // Fit the map to the bounds
-    map.fitBounds(bounds, {
-        padding: 50,
-        maxZoom: 12, // Don't zoom in too far
-        duration: 1000
-    });
-}
-    
-};
-
-// Replace the global loadGems function to use our adaptive strategy
-window.loadGems = function(options = {}) {
-    // If we have specific options, use them, otherwise use adaptive loading
-    if (options.center || options.radius) {
-        // Show loading indicator
-        window.HiddenGems.utils.showLoading('Finding gems...');
-        
-        // Get user-added gems from localStorage if any
-        const userGems = JSON.parse(localStorage.getItem('userGems') || '[]');
-        
-        // Then load from the JSON file
-        fetch(window.HiddenGems.constants.DATA_PATH)
-            .then(response => response.json())
-            .then(jsonGems => {
-                // Combine user gems with JSON gems
-                const allGems = [...jsonGems, ...userGems];
-                
-                // Filter by distance from center if specified
-                let filteredGems = allGems;
-                
-                if (options.center) {
-                    filteredGems = allGems.filter(gem => {
-                        const coords = gem.coords || gem.coordinates;
-                        if (!coords || coords.length !== 2) return false;
-                        
-                        // Calculate distance from center
-                        const distance = window.HiddenGems.utils.calculateDistance(
-                            options.center[1], options.center[0],
-                            coords[1], coords[0]
-                        );
-                        
-                        // Add distance to gem object for display
-                        gem.distance = Math.round(distance * 10) / 10;
-                        
-                        // Include if within radius
-                        return distance <= (options.radius || window.HiddenGems.constants.DEFAULT_RADIUS);
-                    });
-                }
-                
-                // Add an ID if missing (needed for cards)
-                filteredGems = filteredGems.map((gem, index) => {
-                    if (!gem.id) {
-                        gem.id = `gem-${index}`;
-                    }
-                    return gem;
-                });
-                
-                // Randomize if requested
-                if (options.random) {
-                    filteredGems = window.HiddenGems.utils.shuffleArray(filteredGems);
-                }
-                
-                // Limit the number of gems
-                if (options.limit && options.limit > 0) {
-                    filteredGems = filteredGems.slice(0, options.limit);
-                }
-                
-                // Store gems in the HiddenGems namespace
-                window.HiddenGems.data.loadGems(filteredGems);
-                
-                // Render the gems on the map
-                renderGems(filteredGems);
-                
-                // Hide loading animation
-                window.HiddenGems.utils.hideLoading();
-            })
-            .catch(error => {
-                console.error('Error loading gems:', error);
-                window.HiddenGems.utils.hideLoading();
-            });
-    } else {
-        // Use adaptive loading strategy
-        loadAdaptiveGems();
+        // Fit the map to the bounds
+        map.fitBounds(bounds, {
+            padding: 50,
+            maxZoom: 12, // Don't zoom in too far
+            duration: 1000
+        });
     }
 };
-
-
 
 // Export functions for use in other scripts
 window.renderGems = renderGems;
 window.clearMarkers = clearMarkers;
 window.highlightGemMarker = highlightGemMarker;
-window.showWelcomeMessage = showWelcomeMessage;
 window.initializeMap = initializeMap;
