@@ -1,6 +1,7 @@
 /**
  * quiz-integration.js
  * Integrates the quiz with the data controller to save user preferences
+ * Combined and fixed version with proper option selection behavior and free response fields
  */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -34,14 +35,17 @@ document.addEventListener('DOMContentLoaded', function() {
             origin: '',
             destination: '',
             activities: [],
+            otherActivities: '',
             amenities: [],
             effortLevel: '',
             accessibility: [],
+            otherAccessibility: '',
             time: '',
             maxDetour: ''
         }
     };
     
+    // Get DOM elements
     const progressBar = document.getElementById('quiz-progress');
     const backButton = document.getElementById('back-button');
     const nextButton = document.getElementById('next-button');
@@ -52,6 +56,36 @@ document.addEventListener('DOMContentLoaded', function() {
     const destinationInput = document.getElementById('destination');
     const originError = document.getElementById('origin-error');
     const destinationError = document.getElementById('destination-error');
+    
+    // Other input fields
+    const otherActivityButton = document.getElementById('other-activity-button');
+    const otherActivityContainer = document.getElementById('other-activity-container');
+    const otherActivityInput = document.getElementById('other-activity-input');
+    
+    const otherAccessibilityButton = document.getElementById('other-accessibility-button');
+    const otherAccessibilityContainer = document.getElementById('other-accessibility-container');
+    const otherAccessibilityInput = document.getElementById('other-accessibility-input');
+    
+    // Set up the "Other" option toggles
+    if (otherActivityButton) {
+        otherActivityButton.addEventListener('click', function() {
+            this.classList.toggle('selected');
+            otherActivityContainer.style.display = this.classList.contains('selected') ? 'block' : 'none';
+        });
+    }
+    
+    if (otherAccessibilityButton) {
+        otherAccessibilityButton.addEventListener('click', function() {
+            this.classList.toggle('selected');
+            otherAccessibilityContainer.style.display = this.classList.contains('selected') ? 'block' : 'none';
+            
+            // If "None" is selected, deselect it when "Other" is selected
+            if (this.classList.contains('selected')) {
+                document.querySelectorAll('.option-button[data-value="none"]')
+                    .forEach(btn => btn.classList.remove('selected'));
+            }
+        });
+    }
     
     /**
      * Update the progress bar
@@ -100,36 +134,53 @@ document.addEventListener('DOMContentLoaded', function() {
                 return isValid;
                 
             case 2:
-                const activityButtons = document.querySelectorAll('#step-4 .option-button.selected');
-                quizState.answers.activities = Array.from(activityButtons)
-                    .filter(btn => !['restrooms', 'parking', 'gas'].includes(btn.getAttribute('data-value')))
-                    .map(btn => btn.getAttribute('data-value'));
+                // Activities step (now with separated activity and amenity collection)
+                // Get activities (all except amenities)
+                const activityButtons = document.querySelectorAll('#step-4 .option-button.selected:not([data-value="restrooms"]):not([data-value="parking"]):not([data-value="gas"]):not([data-value="other-activity"])');
+                quizState.answers.activities = Array.from(activityButtons).map(btn => btn.getAttribute('data-value'));
                 
-                quizState.answers.amenities = Array.from(activityButtons)
-                    .filter(btn => ['restrooms', 'parking', 'gas'].includes(btn.getAttribute('data-value')))
-                    .map(btn => btn.getAttribute('data-value'));
+                // Get amenities (only restrooms, parking, gas)
+                const amenityButtons = document.querySelectorAll('#step-4 .option-button.selected[data-value="restrooms"], #step-4 .option-button.selected[data-value="parking"], #step-4 .option-button.selected[data-value="gas"]');
+                quizState.answers.amenities = Array.from(amenityButtons).map(btn => btn.getAttribute('data-value'));
+                
+                // Check for "Other" activity
+                if (otherActivityButton && otherActivityButton.classList.contains('selected') && otherActivityInput) {
+                    quizState.answers.otherActivities = otherActivityInput.value.trim();
+                    if (quizState.answers.otherActivities) {
+                        quizState.answers.activities.push('other');
+                    }
+                }
                 
                 return true;
                 
             case 3:
-                const effortButtons = document.querySelectorAll('#step-3 .option-button[data-value="easy"], #step-3 .option-button[data-value="moderate"], #step-3 .option-button[data-value="challenging"]');
-                const selectedEffort = Array.from(effortButtons).find(btn => btn.classList.contains('selected'));
+                // Effort level (single select)
+                const effortButtons = document.querySelectorAll('#step-3 .option-button[data-value="easy"].selected, #step-3 .option-button[data-value="moderate"].selected, #step-3 .option-button[data-value="challenging"].selected');
+                const selectedEffort = Array.from(effortButtons)[0];
                 quizState.answers.effortLevel = selectedEffort ? selectedEffort.getAttribute('data-value') : '';
                 
-                const accessibilityButtons = document.querySelectorAll('#step-3 .option-button.selected');
-                quizState.answers.accessibility = Array.from(accessibilityButtons)
-                    .filter(btn => ['wheelchair', 'stroller', 'elderly', 'none'].includes(btn.getAttribute('data-value')))
-                    .map(btn => btn.getAttribute('data-value'));
+                // Accessibility options (multiple select)
+                const accessibilityButtons = document.querySelectorAll('#step-3 .option-button.selected[data-value="wheelchair"], #step-3 .option-button.selected[data-value="stroller"], #step-3 .option-button.selected[data-value="elderly"], #step-3 .option-button.selected[data-value="none"]:not(#other-accessibility-button)');
+                quizState.answers.accessibility = Array.from(accessibilityButtons).map(btn => btn.getAttribute('data-value'));
+                
+                // Check for "Other" accessibility
+                if (otherAccessibilityButton && otherAccessibilityButton.classList.contains('selected') && otherAccessibilityInput) {
+                    quizState.answers.otherAccessibility = otherAccessibilityInput.value.trim();
+                    if (quizState.answers.otherAccessibility) {
+                        quizState.answers.accessibility.push('other');
+                    }
+                }
                 
                 return true;
                 
             case 4:
+                // Time available
                 const selectedTime = document.querySelector('input[name="time"]:checked');
                 quizState.answers.time = selectedTime ? selectedTime.value : '';
                 
-                const detourButtons = document.querySelectorAll('#step-2 .option-button.selected');
-                const selectedDetour = Array.from(detourButtons).find(btn => 
-                    ['5', '15', '30', '50+'].includes(btn.getAttribute('data-value')));
+                // Maximum detour (single select)
+                const detourButtons = document.querySelectorAll('#step-2 .option-button.selected[data-value="5"], #step-2 .option-button.selected[data-value="15"], #step-2 .option-button.selected[data-value="30"], #step-2 .option-button.selected[data-value="50+"]');
+                const selectedDetour = Array.from(detourButtons)[0];
                 quizState.answers.maxDetour = selectedDetour ? selectedDetour.getAttribute('data-value') : '';
                 
                 return true;
@@ -146,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const userData = quizState.answers;
         const overlay = document.getElementById("loading-overlay");
-        overlay.style.display = "flex";
+        if (overlay) overlay.style.display = "flex";
         
         try {
             const [originCoords, destinationCoords] = await Promise.all([
@@ -161,117 +212,135 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error("Geocoding failed");
             }
             
-            // Save preferences to our data controller
-            const userPreferences = {
-                activities: userData.activities || [],
-                amenities: userData.amenities || [],
-                accessibility: userData.accessibility || [],
-                effortLevel: userData.effortLevel || 'moderate',
-                detourTime: userData.time === 'quick' ? 30 : 
-                            userData.time === 'short' ? 60 : 
-                            userData.time === 'half-day' ? 180 : 240, // Full day in minutes
-                maxDetour: parseInt(userData.maxDetour || 15),
-                selectedGems: [],
-                origin: {
-                    name: userData.origin,
-                    coordinates: originCoords
-                },
-                destination: {
-                    name: userData.destination,
-                    coordinates: destinationCoords
-                }
-            };
+            userData.originCoords = originCoords;
+            userData.destinationCoords = destinationCoords;
+
+            // Save to sessionStorage
+            sessionStorage.setItem("originCoords", JSON.stringify(originCoords));
+            sessionStorage.setItem("destinationCoords", JSON.stringify(destinationCoords));
+            sessionStorage.setItem("userPreferences", JSON.stringify(userData));
             
-            // Save to data controller
-            HiddenGemsData.preferences.save(userPreferences);
-            
-            // In a real app, we would request gems from the server here
-            // For now, we'll simulate it by pulling from a JSON file
-            
-            try {
-                // Fetch gems from static assets
-                const response = await fetch("static/assets/data/hidden_gems.json");
-                const gems = await response.json();
-                
-                // Filter gems based on preferences (simplified)
-                const filteredGems = gems
-                    // Filter by user activities if selected
-                    .filter(gem => {
-                        if (userPreferences.activities.length === 0) return true; // If no activities selected, show all
-                        
-                        // Check if the gem has matching activities
-                        const gemActivities = Array.isArray(gem.activities) 
-                            ? gem.activities
-                            : [gem.category, gem.gemType, gem.type].filter(a => a); // Use category/type as fallback
-                            
-                        return userPreferences.activities.some(activity => 
-                            gemActivities.some(gemActivity => 
-                                gemActivity && gemActivity.toLowerCase().includes(activity.toLowerCase())));
-                    })
-                    // Limit to 10 gems maximum
-                    .slice(0, 10);
-                
-                // Save gems to data controller
-                HiddenGemsData.gemsData.save(filteredGems);
-                
-                // Redirect to results page with data
-                const data = {
-                    preferences: userPreferences,
-                    selectedGems: filteredGems
+            // Save preferences to our data controller if it exists
+            if (window.HiddenGemsData) {
+                const userPreferences = {
+                    activities: userData.activities || [],
+                    otherActivities: userData.otherActivities || '',
+                    amenities: userData.amenities || [],
+                    accessibility: userData.accessibility || [],
+                    otherAccessibility: userData.otherAccessibility || '',
+                    effortLevel: userData.effortLevel || 'moderate',
+                    detourTime: userData.time === 'quick' ? 30 : 
+                                userData.time === 'short' ? 60 : 
+                                userData.time === 'half-day' ? 180 : 240, // Full day in minutes
+                    maxDetour: parseInt(userData.maxDetour || 15),
+                    selectedGems: [],
+                    origin: {
+                        name: userData.origin,
+                        coordinates: originCoords
+                    },
+                    destination: {
+                        name: userData.destination,
+                        coordinates: destinationCoords
+                    }
                 };
                 
-                window.location.href = HiddenGemsData.utils.generateDataUrl('map-recommendations.html', data);
+                // Save to data controller
+                window.HiddenGemsData.preferences.save(userPreferences);
                 
-            } catch (error) {
-                console.error("Error loading gems:", error);
-                throw new Error("Failed to load gem recommendations");
+                // Try to load gems if the function exists
+                if (typeof window.filterGemsByRoute === 'function') {
+                    try {
+                        // First filter by route
+                        await window.filterGemsByRoute(originCoords, destinationCoords, 30);
+                    } catch (error) {
+                        console.error("Error filtering gems:", error);
+                    }
+                }
             }
+            
+            // IMPORTANT: Navigate to landing page after processing (not back to gtky.html)
+            window.location.href = "landing-page.html";
             
         } catch (err) {
             console.error("Error in quiz processing:", err);
-            overlay.style.display = "none";
+            if (overlay) overlay.style.display = "none";
             alert(`Something went wrong: ${err.message}. Please try again.`);
         }
     }
     
     // Event listeners
-    nextButton.addEventListener('click', function() {
-        if (validateCurrentStep()) {
-            if (quizState.currentStep === quizState.totalSteps) {
-                finishQuiz();
-            } else {
-                goToStep(quizState.currentStep + 1);
+    if (nextButton) {
+        nextButton.addEventListener('click', function() {
+            if (validateCurrentStep()) {
+                if (quizState.currentStep === quizState.totalSteps) {
+                    finishQuiz();
+                } else {
+                    goToStep(quizState.currentStep + 1);
+                }
             }
-        }
-    });
+        });
+    }
     
-    backButton.addEventListener('click', function() {
-        if (quizState.currentStep > 1) {
-            goToStep(quizState.currentStep - 1);
-        }
-    });
+    if (backButton) {
+        backButton.addEventListener('click', function() {
+            if (quizState.currentStep > 1) {
+                goToStep(quizState.currentStep - 1);
+            }
+        });
+    }
     
-    closeButton.addEventListener('click', function() {
-        if (confirm('Are you sure you want to exit the quiz? Your progress will be lost.')) {
-            window.location.href = "landing-page.html?skipWelcome=1";
-        }
-    });
+    if (closeButton) {
+        closeButton.addEventListener('click', function() {
+            if (confirm('Are you sure you want to exit the quiz? Your progress will be lost.')) {
+                window.location.href = "landing-page.html?skipWelcome=1";
+            }
+        });
+    }
     
-    // Option button selection
+    // FIXED: Option button selection with proper group handling
     const optionButtons = document.querySelectorAll('.option-button');
     optionButtons.forEach(button => {
         button.addEventListener('click', function() {
-            // Check if this is a single-select group
-            if (['easy', 'moderate', 'challenging'].includes(this.getAttribute('data-value'))) {
+            const value = this.getAttribute('data-value');
+            
+            // Skip special handling for "other" buttons since we handle them separately
+            if (value === 'other-activity' || value === 'other-accessibility') {
+                return;
+            }
+            
+            // Handle specific selection behaviors by group
+            
+            // 1. Effort level buttons (first group in step 3) - single select
+            if (['easy', 'moderate', 'challenging'].includes(value)) {
                 document.querySelectorAll('.option-button[data-value="easy"], .option-button[data-value="moderate"], .option-button[data-value="challenging"]')
                     .forEach(btn => btn.classList.remove('selected'));
             }
             
-            if (['5', '15', '30', '50+'].includes(this.getAttribute('data-value'))) {
+            // 2. Detour distance buttons (in step 2) - single select
+            if (['5', '15', '30', '50+'].includes(value)) {
                 document.querySelectorAll('.option-button[data-value="5"], .option-button[data-value="15"], .option-button[data-value="30"], .option-button[data-value="50+"]')
                     .forEach(btn => btn.classList.remove('selected'));
             }
             
+            // 3. Special behavior for accessibility requirements
+            if (['wheelchair', 'stroller', 'elderly', 'none'].includes(value)) {
+                if (value === 'none') {
+                    // If 'None' is selected, deselect all other accessibility options
+                    document.querySelectorAll('.option-button[data-value="wheelchair"], .option-button[data-value="stroller"], .option-button[data-value="elderly"], .option-button[data-value="other-accessibility"]')
+                        .forEach(btn => btn.classList.remove('selected'));
+                    
+                    // Also hide the "Other" input if it's visible
+                    if (otherAccessibilityContainer) {
+                        otherAccessibilityContainer.style.display = 'none';
+                    }
+                } else {
+                    // If any other accessibility option is selected, deselect 'None'
+                    document.querySelectorAll('.option-button[data-value="none"]')
+                        .forEach(btn => btn.classList.remove('selected'));
+                }
+            }
+            
+            // Toggle selection of clicked button
             this.classList.toggle('selected');
         });
     });
@@ -280,13 +349,38 @@ document.addEventListener('DOMContentLoaded', function() {
     updateProgress();
     
     // Check for existing preferences and fill in values
-    const savedPreferences = HiddenGemsData.preferences.get();
-    
-    if (savedPreferences.origin && savedPreferences.origin.name) {
-        originInput.value = savedPreferences.origin.name;
-    }
-    
-    if (savedPreferences.destination && savedPreferences.destination.name) {
-        destinationInput.value = savedPreferences.destination.name;
+    const savedPreferences = sessionStorage.getItem('userPreferences');
+    if (savedPreferences) {
+        try {
+            const prefs = JSON.parse(savedPreferences);
+            if (prefs.origin && originInput) originInput.value = prefs.origin;
+            if (prefs.destination && destinationInput) destinationInput.value = prefs.destination;
+            
+            // Restore other free-text values if they exist
+            if (prefs.otherActivities && otherActivityInput) {
+                otherActivityInput.value = prefs.otherActivities;
+                if (otherActivityButton) otherActivityButton.classList.add('selected');
+                if (otherActivityContainer) otherActivityContainer.style.display = 'block';
+            }
+            
+            if (prefs.otherAccessibility && otherAccessibilityInput) {
+                otherAccessibilityInput.value = prefs.otherAccessibility;
+                if (otherAccessibilityButton) otherAccessibilityButton.classList.add('selected');
+                if (otherAccessibilityContainer) otherAccessibilityContainer.style.display = 'block';
+            }
+        } catch (e) {
+            console.error("Error parsing saved preferences:", e);
+        }
+    } else if (window.HiddenGemsData) {
+        // Fallback to data controller if available
+        const savedUserPrefs = window.HiddenGemsData.preferences.get();
+        
+        if (savedUserPrefs.origin && savedUserPrefs.origin.name && originInput) {
+            originInput.value = savedUserPrefs.origin.name;
+        }
+        
+        if (savedUserPrefs.destination && savedUserPrefs.destination.name && destinationInput) {
+            destinationInput.value = savedUserPrefs.destination.name;
+        }
     }
 });

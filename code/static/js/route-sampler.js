@@ -172,6 +172,18 @@ function filterGemsByRoute(origin, destination, bufferDistanceKm = 30, jsonPath 
       .then(allGems => {
         console.log(`Loaded ${allGems.length} gems from ${jsonPath}`);
         
+         // Use the gem shuffler to filter and shuffle gems
+        if (window.HiddenGems && window.HiddenGems.gemShuffler) {
+          const filteredShuffledGems = window.HiddenGems.gemShuffler.filterAndShuffleGemsAlongRoute(
+            allGems, originCoords, destinationCoords, bufferDistanceKm
+          );
+          
+          // Save to sessionStorage (already done in the shuffler)
+          console.log(`Filtered and shuffled ${filteredShuffledGems.length} gems`);
+          
+          // Resolve the promise with the filtered shuffled gems
+          resolve(filteredShuffledGems);
+        } else {
         // Filter gems that are within the bounding box first (quick filter)
         const [minLng, minLat, maxLng, maxLat] = buffer.boundingBox;
         let gemsInBoundingBox = allGems.filter(gem => {
@@ -225,7 +237,8 @@ function filterGemsByRoute(origin, destination, bufferDistanceKm = 30, jsonPath 
         
         // Resolve the promise with the filtered gems
         resolve(filteredGems);
-      })
+  }
+})
       .catch(error => {
         console.error('Error filtering gems by route:', error);
         reject(error);
@@ -320,7 +333,7 @@ function filterGemsByPreferences(preferences) {
   }
   
   // Save filtered gems to sessionStorage
-  sessionStorage.setItem('gems', JSON.stringify(filteredGems));
+  sessionStorage.setItem('preferenceFilteredGems', JSON.stringify(filteredGems));
   console.log(`Saved ${filteredGems.length} preference-filtered gems to sessionStorage`);
   
   return filteredGems;
@@ -352,8 +365,11 @@ function shuffleRouteGems(limit = 20) {
   const limitedGems = shuffledGems.slice(0, limit);
   
   // Save to sessionStorage
-  sessionStorage.setItem('gems', JSON.stringify(limitedGems));
-  console.log(`Saved ${limitedGems.length} shuffled gems to sessionStorage`);
+  //sessionStorage.setItem('gems', JSON.stringify(limitedGems));
+  //console.log(`Saved ${limitedGems.length} shuffled gems to sessionStorage`);
   
   return limitedGems;
 }
+
+window.filterGemsByRoute = filterGemsByRoute;
+window.filterGemsByPreferences = filterGemsByPreferences;
