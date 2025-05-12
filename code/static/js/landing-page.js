@@ -23,6 +23,8 @@ document.addEventListener('DOMContentLoaded', function () {
         sessionStorage.setItem("destinationCoords", JSON.stringify(destinationCoords));
     }
 
+     window.HiddenGems.data.findGemsAlongRoute('landing-page', originCoords, destinationCoords)
+
     // Initialize map if we have coordinates
     if (originCoords && destinationCoords) {
         const midPoint = [
@@ -35,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .setCenter(midPoint)
         .setZoom(7)
 
-        window.map.addControl(new maplibregl.NavigationControl(), 'top-left');
+        
 
         // Load the gems when map is ready
         window.map.on('load', function () {
@@ -48,75 +50,57 @@ document.addEventListener('DOMContentLoaded', function () {
             if (typeof window.notifyMapReady === 'function') {
                 window.notifyMapReady();
             }
-            window.HiddenGems.data.findGemsAlongRoute('landing-page', originCoords, destinationCoords)
-            
+            window.map.addControl(new maplibregl.NavigationControl(), 'top-left');
+
+           
+
             // render gems and cards
-            gems = window.HiddenGems.data.pageGems;
-            
-            renderGems(gems, map);
+            const recommendedGems = window.HiddenGems.data.pageGems;
+            console.log("Recommended gems:", recommendedGems);
+            renderGems(recommendedGems, map);
             // Initialize card display
-            initializeDetailCards(gems);
+            initializeDetailCards(recommendedGems);
             console.log("Map rendering complete with", window.markers.length, "markers");
 
-            gems.forEach((gem, index) => {
-                const coords = gem.coords || gem.coordinates;
-                if (!coords || coords.length !== 2) return;
-
-                // Normalize coordinates using data controller utility if available
-                let lngLat;
-
-                if (window.HiddenGems?.data?.utils?.isValidCoordinate) {
-                  // Use data controller utility to validate and normalize
-                  const [a, b] = coords;
-                
-                  if (window.HiddenGems.data.utils.isValidCoordinate(a, b)) {
-                    lngLat = [a, b]; // Already valid lng/lat format
-                  } else if (window.HiddenGems.data.utils.isValidCoordinate(b, a)) {
-                    lngLat = [b, a]; // Swapped to lng/lat format
-                  } else {
-                    console.warn(`Invalid coordinates for gem ${gem.name || 'unnamed'}: [${coords}]`);
-                    return; // Skip this gem
-                  }
-                } else {
-                  // Fallback to original logic
-                  const [a, b] = coords;
-                
-                  if (Math.abs(a) > 90 && Math.abs(b) <= 90) {
-                    lngLat = [a, b]; // Already in [lng, lat] format
-                  } else if (Math.abs(a) <= 90 && Math.abs(b) > 90) {
-                    lngLat = [b, a]; // Need to swap to [lng, lat] format
-                  } else {
-                    // For Northern California, longitude is negative, latitude is positive
-                    lngLat = a < 0 ? [a, b] : [b, a];
-                  }
+             // Add origin and destination markers only once
+            addTripMarkers(originCoords, destinationCoords);
+            
+            // Add base route (origin to destination)
+            addBaseRoute(originCoords, destinationCoords);
+            
+            // Render route for the initial active gem (assuming first one is active by default)
+            if (recommendedGems.length > 0) {
+                const firstGem = recommendedGems[0];
+                const coords = getValidCoordinates(firstGem.coords || firstGem.coordinates);
+                if (coords) {
+                    renderDetourRoute(originCoords, destinationCoords, coords);
                 }
-                window.renderRoutes(lngLat);
-            });
-
-        
+            }
         });
+
 
         // Define function to render routes
         window.renderRoutes = function (gemCoords) {
             if (!originCoords || !destinationCoords || !gemCoords)
                 return;
-
+                
+            // Clear any existing detour route
+            clearDetourRoute();
+            
+            // Add new detour route
+            renderDetourRoute(originCoords, destinationCoords, gemCoords);
+        };
+        
+        // Function to add base route
+        function addBaseRoute(origin, destination) {
             const baseRoute = {
                 type: 'Feature',
                 geometry: {
                     type: 'LineString',
-                    coordinates: [originCoords, destinationCoords]
+                    coordinates: [origin, destination]
                 }
             };
-
-            const detourRoute = {
-                type: 'Feature',
-                geometry: {
-                    type: 'LineString',
-                    coordinates: [originCoords, gemCoords, destinationCoords]
-                }
-            };
-
+            
             if (!map.getSource('baseRoute')) {
                 map.addSource('baseRoute', {
                     type: 'geojson',
@@ -134,7 +118,18 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 map.getSource('baseRoute').setData(baseRoute);
             }
-
+        }
+        
+        // Function to render detour route
+        function renderDetourRoute(origin, destination, gemCoords) {
+            const detourRoute = {
+                type: 'Feature',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [origin, gemCoords, destination]
+                }
+            };
+            
             if (!map.getSource('detourRoute')) {
                 map.addSource('detourRoute', {
                     type: 'geojson',
@@ -153,7 +148,24 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 map.getSource('detourRoute').setData(detourRoute);
             }
-
+        }
+        
+        // Function to clear detour route
+        function clearDetourRoute() {
+            if (map.getSource('detourRoute')) {
+                const emptyFeature = {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: []
+                    }
+                };
+                map.getSource('detourRoute').setData(emptyFeature);
+            }
+        }
+        
+        // Function to add origin and destination markers
+        function addTripMarkers(origin, destination) {
             // Add origin marker if not already present
             if (!window.originMarker) {
                 const originEl = document.createElement('div');
@@ -169,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     element: originEl,
                     anchor: 'center'
                 })
-                    .setLngLat(originCoords)
+                    .setLngLat(origin)
                     .addTo(map);
             }
 
@@ -188,10 +200,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     element: destEl,
                     anchor: 'center'
                 })
-                    .setLngLat(destinationCoords)
+                    .setLngLat(destination)
                     .addTo(map);
             }
-        };
+        }
+        
     } else {
         console.error("Missing origin or destination coordinates");
         // Handle case where coordinates aren't available
@@ -199,185 +212,6 @@ document.addEventListener('DOMContentLoaded', function () {
             '<div style="padding: 20px; text-align: center;">Please set your trip origin and destination first.</div>';
     }
 });
-
-// shuffle gems from route (TODO change to shuffle recommended gems)
-function loadFilteredGems(originCoords, destinationCoords, map) {
-    const routeFilteredGemsStr = sessionStorage.getItem("routeFilteredGems");
-
-    if (routeFilteredGemsStr) {
-        try {
-            const parsedGems = JSON.parse(routeFilteredGemsStr);
-
-            let filteredGems = parsedGems;
-            let shuffledGems = filteredGems;
-            if (window.HiddenGems && window.HiddenGems.utils && 
-        typeof window.HiddenGems.utils.shuffleArray === 'function') {
-            shuffledGems = window.HiddenGems.utils.shuffleArray(filteredGems);
-            sessionStorage.setItem("shuffledGems", JSON.stringify(shuffledGems));
-        }
-
-            const limitGems = shuffledGems.slice(0, window.HiddenGems.constants.DEFAULT_LIMIT || 10); 
-            console.log("Shuffled gems:", limitGems);
-            sessionStorage.setItem("recommendedGems", JSON.stringify(limitGems));
-
-
-        } catch (error) {
-            console.error("Error processing gems:", error);
-        }
-    } else {
-        console.log("No filtered gems found in sessionStorage, checking if filterGemsByRoute is available");
-
-        // Try to load gems if we have the function but no stored gems
-        // this is a fallback for when landing-page is accessed directly without takin the quiz
-        if (typeof window.filterGemsByRoute === 'function' && originCoords && destinationCoords) {
-            console.log("Attempting to filter gems by route...");
-            window.filterGemsByRoute(originCoords, destinationCoords).then(gems => {
-                if (gems && gems.length > 0) {
-                    sessionStorage.setItem("routeFilteredGems", JSON.stringify(gems));
-                    
-
-                    var shuffledGems = sessionStorage.getItem("shuffledGems")
-                    
-                    
-                    const limitGems = shuffledGems.slice(0, window.HiddenGems.constants.DEFAULT_LIMIT || 10); 
-                    console.log("Shuffled gems:", limitGems);
-                    sessionStorage.setItem("recommendedGems", JSON.stringify(limitGems));
-    
-                } else {
-                    console.log("No gems found along the route");
-                }
-            }).catch(err => {
-                console.error("Error filtering gems:", err);
-            });
-        } else {
-            console.log("Cannot filter gems, function not available or missing coordinates");
-        }
-    }
-}
-
-// Function to render gems on the map
-/*function renderGems(gems, map) {
-    originCoords = JSON.parse(sessionStorage.getItem("originCoords"));
-    destinationCoords = JSON.parse(sessionStorage.getItem("destinationCoords"));
-     // First, ensure any lingering loading elements are removed
-    const locationLoading = document.getElementById('location-loading');
-    if (locationLoading && locationLoading.parentNode) {
-        locationLoading.parentNode.removeChild(locationLoading);
-    }
-    
-
-    if (!Array.isArray(gems)) {
-        console.error("Expected gems to be an array, got:", typeof gems);
-        try {
-            // Try to parse if it's a string
-            if (typeof gems === 'string') {
-                gems = JSON.parse(gems);
-                if (!Array.isArray(gems)) {
-                    console.error("Still not an array after parsing:", typeof gems);
-                    return;
-                }
-            } else {
-                return;
-            }
-        } catch (error) {
-            console.error("Error parsing gems:", error);
-            return;
-        }
-    }
-
-    console.log("Rendering", gems.length, "gems on the map");
-
-    const bounds = new maplibregl.LngLatBounds();
-    window.markers = [];
-
-    gems.forEach((gem, index) => {
-        const coords = gem.coords || gem.coordinates;
-        if (!coords || coords.length !== 2) {
-            console.log("Skipping gem with invalid coordinates:", gem);
-            return;
-        }
-
-        // Get a unique identifier for the gem
-        const gemId = gem.id || `gem-${index}`;
-
-        const [a, b] = coords;
-        const lngLat = (Math.abs(a) > 90 && Math.abs(b) <= 90) ? [a, b] : [b, a];
-
-        // Create the marker element
-        const el = document.createElement('img');
-        el.src = {
-            red: '/static/icons/gem-red.svg',
-            purple: '/static/icons/gem-purple.svg',
-            blue: '/static/icons/gem-blue.svg'
-        }[gem.color] || '/static/icons/gem-blue.svg';
-        
-   
-        el.setAttribute('data-gem-id', gemId.toString());
-        el.setAttribute('data-index', index.toString());
-        el.className = 'gem-marker'; // Use class for styling
-
-        // Create marker and add to map
-        const marker = new maplibregl.Marker({
-            element: el,
-            anchor: 'center'
-        }).setLngLat(lngLat).addTo(map);
-
-        // Store marker in global array for later access and add the gemId and index to the marker object
-        marker.gemId = gemId.toString();
-        marker.gemIndex = index;
-
-        // Add click handler
-        el.addEventListener('click', function(e) {
-
-            // Prevent event propagation to avoid map click events
-            e.stopPropagation();
-            e.preventDefault();
-
-            // Update global active index
-            window.activeGemIndex = index;
-
-            if (typeof window.highlightGemMarker === 'function') {
-                window.highlightGemMarker(index);
-            }
-
-            // Render routes if function exists
-            if (typeof window.HiddenGems.routeUtils.renderRoutes === 'function') {
-            window.HiddenGems.routeUtils.renderRoutes(map, lngLat, originCoords, destinationCoords);
-            }
-
-            // Update card display if needed
-            const detailCards = document.querySelector('gem-cards[variant="detail"]');
-            if (detailCards && typeof detailCards.showCard === 'function') {
-                detailCards.showCard(index);
-            }
-
-            // Dispatch event for other components
-            document.dispatchEvent(new CustomEvent('gemSelected', {
-                detail: {
-                    index: index,
-                    id: gemId,
-                    gem: gem
-                }
-            }));
-        });
-
-        
-        window.markers.push(marker);
-
-        // Extend map bounds
-        bounds.extend(lngLat);
-    });
-
-    // Fit map to show all gems
-    if (!bounds.isEmpty()) {
-        map.fitBounds(bounds, { padding: 40 });
-    }
-
-    // Initialize card display
-    initializeDetailCards(gems);
-
-    console.log("Map rendering complete with", window.markers.length, "markers");
-}*/
 
 // Function to initialize detail cards
 function initializeDetailCards(gems) {
@@ -400,4 +234,52 @@ function initializeDetailCards(gems) {
     if (typeof detailCards.showCard === 'function') {
         detailCards.showCard(0);
     }
+
+// Add event listener for card changes
+    detailCards.addEventListener('card-change', function(event) {
+        const activeIndex = event.detail.index;
+        const activeGem = gems[activeIndex];
+        
+        if (activeGem) {
+            const coords = getValidCoordinates(activeGem.coords || activeGem.coordinates);
+            if (coords) {
+                // Update the route for the active gem
+                window.renderRoutes(coords);
+                
+           
+            }
+        }
+    });
 }
+    
+    // Helper function to get valid coordinates 
+    function getValidCoordinates(coords) {
+        if (!coords || coords.length !== 2) return null;
+        
+        // Normalize coordinates using data controller utility if available
+        if (window.HiddenGems?.data?.utils?.isValidCoordinate) {
+            // Use data controller utility to validate and normalize
+            const [a, b] = coords;
+          
+            if (window.HiddenGems.data.utils.isValidCoordinate(a, b)) {
+                return [a, b]; // Already valid lng/lat format
+            } else if (window.HiddenGems.data.utils.isValidCoordinate(b, a)) {
+                return [b, a]; // Swapped to lng/lat format
+            } else {
+                console.warn(`Invalid coordinates: [${coords}]`);
+                return null;
+            }
+        } else {
+            // Fallback to original logic
+            const [a, b] = coords;
+          
+            if (Math.abs(a) > 90 && Math.abs(b) <= 90) {
+                return [a, b]; // Already in [lng, lat] format
+            } else if (Math.abs(a) <= 90 && Math.abs(b) > 90) {
+                return [b, a]; // Need to swap to [lng, lat] format
+            } else {
+                // For Northern California, longitude is negative, latitude is positive
+                return a < 0 ? [a, b] : [b, a];
+            }
+        }
+    }

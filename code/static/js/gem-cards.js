@@ -816,10 +816,10 @@ handleGemsLoaded(event) {
    */
   updateVariant() {
 
-    console.log('Card variant:', this.cardVariant);
-  console.log('Container:', this.shadowRoot.querySelector('.cards-container'));
-  console.log('Card actions elements:', this.shadowRoot.querySelectorAll('.card-actions'));
-  console.log('Trip distance elements:', this.shadowRoot.querySelectorAll('.trip-distance-info'));
+  //console.log('Card variant:', this.cardVariant);
+  //console.log('Container:', this.shadowRoot.querySelector('.cards-container'));
+  //console.log('Card actions elements:', this.shadowRoot.querySelectorAll('.card-actions'));
+  //console.log('Trip distance elements:', this.shadowRoot.querySelectorAll('.trip-distance-info'));
     // Update container height based on variant
   const cardsContainer = this.shadowRoot.querySelector('.cards-container');
   
@@ -1149,7 +1149,7 @@ handleGemsLoaded(event) {
    * @param {number} index - Index of the gem
    */
   createCard(gem, index) {
-    console.log('Creating card with variant:', this.cardVariant);
+    
     // Create card element
     const card = document.createElement('div');
     card.className = 'gem-card';
@@ -1178,7 +1178,7 @@ handleGemsLoaded(event) {
     const openingHours = gem.opening_hours || '';
 
     const shouldShowActions = this.cardVariant === 'detail';
-    console.log('Should show actions?', shouldShowActions);
+
     
     // Create card HTML content
     card.innerHTML = `
@@ -1222,7 +1222,7 @@ handleGemsLoaded(event) {
     `;
 
     // After setting innerHTML, check if the elements were created
-    console.log('Card actions after creation:', card.querySelector('.card-actions'));
+    //console.log('Card actions after creation:', card.querySelector('.card-actions'));
     
     // Add to container
     this.cardsContainer.appendChild(card);

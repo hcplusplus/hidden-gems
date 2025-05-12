@@ -1,6 +1,5 @@
 /**
- * nav-wheel.js - NAVIGATION FIXED VERSION
- * Navigation wheel with guaranteed navigation and visible text labels
+ * nav-wheel.js
  */
 
 class NavWheel extends HTMLElement {
@@ -131,11 +130,9 @@ class NavWheel extends HTMLElement {
       }
     });
     
-    console.log('NavWheel component initialized');
   }
   
   connectedCallback() {
-    console.log('NavWheel connected to DOM');
     
     // Delay initialization to ensure DOM is fully loaded
     setTimeout(() => {
@@ -150,7 +147,6 @@ class NavWheel extends HTMLElement {
    */
   _initializeNavItems() {
     const navItems = Array.from(this.querySelectorAll('nav-item'));
-    console.log(`Found ${navItems.length} nav items to initialize`);
     
     navItems.forEach(item => {
       // Set initial visibility
@@ -162,7 +158,6 @@ class NavWheel extends HTMLElement {
       const label = item.getAttribute('label');
       item.setAttribute('direct-label', label);
       
-      console.log(`Nav item initialized: ${label}`);
     });
   }
   
@@ -172,7 +167,6 @@ class NavWheel extends HTMLElement {
    */
   _toggleWheel() {
     const isActive = this.navWheel.classList.contains('active');
-    console.log(`Toggling wheel, current state: ${isActive ? 'open' : 'closed'}`);
     
     if (isActive) {
       this._closeWheel();
@@ -186,7 +180,6 @@ class NavWheel extends HTMLElement {
    * @private
    */
   _openWheel() {
-    console.log('Opening wheel');
     
     // Position items before showing
     this._positionNavItems();
@@ -213,7 +206,6 @@ class NavWheel extends HTMLElement {
    * @private
    */
   _closeWheel() {
-    console.log('Closing wheel');
     
     // Hide items first with animation
     this._hideNavItems();
@@ -249,7 +241,6 @@ class NavWheel extends HTMLElement {
       return;
     }
     
-    console.log(`Positioning ${totalItems} nav items`);
     
     // Calculate positions in a circle
     const radius = 90; // Distance from center in pixels
@@ -286,7 +277,6 @@ class NavWheel extends HTMLElement {
         item.forceShow();
       }
       
-      console.log(`Positioned item ${index} at angle ${angle}°, x: ${x}, y: ${y}`);
     });
   }
   
@@ -440,7 +430,6 @@ class NavItem extends HTMLElement {
     // Add click event with direct navigation
     this.shadowRoot.getElementById('nav-item').addEventListener('click', this._handleClick.bind(this));
     
-    console.log(`NavItem initialized: ${label} with href: ${href}`);
   }
   
   /**
@@ -453,16 +442,13 @@ class NavItem extends HTMLElement {
     
     const label = this.getAttribute('label');
     const href = this.getAttribute('href');
-    console.log(`Nav item clicked: ${label} with href: ${href}`);
     
     // Method 1: Use the direct link (most reliable)
     if (this.directLink) {
-      console.log('Using direct link navigation method');
       // Programmatically click the link
       this.directLink.click();
     } else {
       // Method 2: Use window.location directly
-      console.log('Using window.location navigation method');
       setTimeout(() => {
         if (this._href.startsWith('#')) {
           // For function calls
@@ -472,7 +458,6 @@ class NavItem extends HTMLElement {
           }
         } else {
           // For regular navigation
-          console.log(`Navigating to: ${this._href}`);
           window.location.href = this._href;
         }
       }, 150);
@@ -483,7 +468,6 @@ class NavItem extends HTMLElement {
   }
   
   connectedCallback() {
-    console.log(`NavItem connected to DOM: ${this.getAttribute('label')}`);
     
     // Initialize visibility
     this.style.opacity = '1';
@@ -523,7 +507,6 @@ class NavItem extends HTMLElement {
       labelText.style.display = 'inline-block';
     }
     
-    console.log(`Forced show on nav item: ${this.getAttribute('label')}`);
   }
   
   /**
@@ -594,12 +577,10 @@ customElements.define('nav-item', NavItem);
 
 // Add global event listener for wheel toggle events
 document.addEventListener('wheelToggle', function(e) {
-  console.log(`Wheel toggle event: ${e.detail.isOpen ? 'open' : 'closed'}`);
 });
 
 // Add initialization on document ready
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('Document loaded, initializing nav wheel');
   
   // Force the initialization after a delay
   setTimeout(() => {
@@ -610,7 +591,6 @@ document.addEventListener('DOMContentLoaded', () => {
         wheel._positionNavItems();
       }
       
-      console.log('Nav wheel post-initialization complete');
     });
   }, 1000);
 });
@@ -618,7 +598,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // Add a global helper to force navigation
 window.navigateTo = function(url) {
   if (!url) return;
-  console.log(`Forced navigation to: ${url}`);
   window.location.href = url;
 };
 
@@ -635,7 +614,6 @@ window.toggleNavWheel = function() {
 
 // Debug script to help trace navigation issues
 (function() {
-  console.log('Navigation debug helpers installed');
   
   // Monitor navigation attempts
   const originalAssign = window.location.assign;
@@ -644,13 +622,11 @@ window.toggleNavWheel = function() {
   
   // Override location.assign
   window.location.assign = function(url) {
-    console.log(`Navigation attempt via location.assign to: ${url}`);
     return originalAssign.apply(this, arguments);
   };
   
   // Override location.replace
   window.location.replace = function(url) {
-    console.log(`Navigation attempt via location.replace to: ${url}`);
     return originalReplace.apply(this, arguments);
   };
   
@@ -658,7 +634,6 @@ window.toggleNavWheel = function() {
   document.addEventListener('click', function(e) {
     const link = e.target.closest('a');
     if (link && link.href) {
-      console.log(`Link clicked with href: ${link.href}`);
     }
   }, true);
 })();
