@@ -7,46 +7,6 @@
 // Make sure the HiddenGems namespace exists
 window.HiddenGems = window.HiddenGems || {};
 
-// Define application-wide constants
-window.HiddenGems.constants = {
-    // Default location (Berkeley, CA)
-    DEFAULT_CENTER: [-122.2730, 37.8715],
-    DEFAULT_ZOOM: 11,
-
-    // Search settings
-    DEFAULT_RADIUS: 5, // miles
-    DEFAULT_LIMIT: 10,
-    MIN_GEMS: 5,
-    MAX_ATTEMPTS: 3,
-
-    // JSON data path
-    DATA_PATH: 'static/assets/data/hidden_gems.json',
-
-    // Icon paths
-    ICON_PATHS: {
-        red: "static/icons/gem-red.svg",
-        purple: "static/icons/gem-purple.svg",
-        blue: "static/icons/gem-blue.svg"
-    },
-
-    // Category emoji mapping
-    CATEGORY_EMOJI: {
-        'nature': '🌲',
-        'food': '🍽️',
-        'cultural': '🏛️',
-        'viewpoint': '🌄',
-        'hidden-beach': '🏖️',
-        'historic-site': '🏛️',
-        'local-eatery': '🍽️',
-        'natural-wonder': '🌲',
-        'secret-trail': '🥾',
-        'winery': '🍷',
-        'coffee-shop': '☕'
-    },
-
-    // Swipe settings
-    SWIPE_THRESHOLD: 80
-};
 
 // Define utility functions directly on the window.HiddenGems object
 window.HiddenGems.utils = {
@@ -194,7 +154,7 @@ window.hideLoading = function () {
 };
 
 
-// Create a safer async initialization that won't throw uncaught errors
+// async initialization that won't throw uncaught errors
 async function initApp() {
     try {
         // Check if we're on index page with welcome overlay
@@ -216,31 +176,10 @@ async function initApp() {
                 setTimeout(window.showWelcomeMessage, 100);
             }
             
-            return; // Exit early - initialization will happen after user interacts
+            return; // exit- initialization will happen after user interacts
         }
         
         // For non-index pages, or index without welcome overlay, continue with normal init
-        
-        // Show loading indicator
-        try {
-            window.HiddenGems.utils.showLoading('Starting Hidden Gems...');
-        } catch (e) {
-            console.warn('Error using namespaced loading function:', e);
-            // Fallback to direct creation
-            const loadingEl = document.createElement('div');
-            loadingEl.id = 'gems-loading';
-            loadingEl.style.position = 'fixed';
-            loadingEl.style.top = '50%';
-            loadingEl.style.left = '50%';
-            loadingEl.style.transform = 'translate(-50%, -50%)';
-            loadingEl.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-            loadingEl.style.color = 'white';
-            loadingEl.style.padding = '15px 20px';
-            loadingEl.style.borderRadius = '5px';
-            loadingEl.style.zIndex = '2000';
-            loadingEl.innerHTML = 'Starting Hidden Gems...';
-            document.body.appendChild(loadingEl);
-        }
         
         // Get pageName for initialization
         const pageName = getPageName();
@@ -405,11 +344,11 @@ window.HiddenGems.debug = {
     },
 
     inspectGemCoordinates: function () {
-        if (!window.HiddenGems.data || !window.HiddenGems.data.gems) {
+        if (!window.HiddenGems.data || !window.HiddenGems.data.pageGems) {
             return 'No gems data available';
         }
 
-        const gems = window.HiddenGems.data.gems;
+        const gems = window.HiddenGems.data.pageGems;
         const results = [];
 
         gems.forEach((gem, index) => {

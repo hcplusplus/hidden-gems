@@ -4,26 +4,33 @@
  */
 
 document.addEventListener('DOMContentLoaded', function () {
+
+    function getValidCoordinates(coords) {
+      return window.HiddenGems.coordUtil.normalize(coords);
+    }
+
     // Get coordinates from sessionStorage
     var originCoords = JSON.parse(sessionStorage.getItem("originCoords"));
     var destinationCoords = JSON.parse(sessionStorage.getItem("destinationCoords"));
 
-    console.log("Landing page initialized");
+    
 
     // Add fallback coordinates for Berkeley and Sacramento if none exist in sessionStorage
     if (!originCoords) {
         console.log("No origin coordinates found in sessionStorage, using Berkeley as fallback");
-        originCoords = [-122.2714, 37.8705]; // Berkeley coordinates
+        originCoords = window.HiddenGems.constants.DEFAULT_ORIGIN; // Berkeley coordinates
         sessionStorage.setItem("originCoords", JSON.stringify(originCoords));
     }
 
     if (!destinationCoords) {
         console.log("No destination coordinates found in sessionStorage, using Sacramento as fallback");
-        destinationCoords = [-121.4944, 38.5816]; // Sacramento coordinates
+        destinationCoords = window.HiddenGems.constants.DEFAULT_DESTINATION; // Sacramento coordinates
         sessionStorage.setItem("destinationCoords", JSON.stringify(destinationCoords));
     }
 
      window.HiddenGems.data.findGemsAlongRoute('landing-page', originCoords, destinationCoords)
+
+     console.log("Landing page initialized");
 
     // Initialize map if we have coordinates
     if (originCoords && destinationCoords) {
@@ -57,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // render gems and cards
             const recommendedGems = window.HiddenGems.data.pageGems;
             console.log("Recommended gems:", recommendedGems);
-            renderGems(recommendedGems, map);
+            renderGems(recommendedGems);
             // Initialize card display
             initializeDetailCards(recommendedGems);
             console.log("Map rendering complete with", window.markers.length, "markers");
@@ -71,8 +78,10 @@ document.addEventListener('DOMContentLoaded', function () {
             // Render route for the initial active gem (assuming first one is active by default)
             if (recommendedGems.length > 0) {
                 const firstGem = recommendedGems[0];
-                const coords = getValidCoordinates(firstGem.coords || firstGem.coordinates);
+                console.log("First gem for detour route:", firstGem);
+                const coords = window.HiddenGems.coordUtil.fromGem(firstGem);
                 if (coords) {
+                    console.log(coords);
                     renderDetourRoute(originCoords, destinationCoords, coords);
                 }
             }
@@ -81,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Define function to render routes
         window.renderRoutes = function (gemCoords) {
+            console.log(gemCoords);
             if (!originCoords || !destinationCoords || !gemCoords)
                 return;
                 
@@ -122,13 +132,19 @@ document.addEventListener('DOMContentLoaded', function () {
         
         // Function to render detour route
         function renderDetourRoute(origin, destination, gemCoords) {
+            // Normalize all coordinates to ensure consistent format
+            const safeOrigin = window.HiddenGems.coordUtil.normalize(origin);
+            const safeDestination = window.HiddenGems.coordUtil.normalize(destination);
+            const safeGemCoords = window.HiddenGems.coordUtil.normalize(gemCoords);
+
+
             const detourRoute = {
-                type: 'Feature',
-                geometry: {
-                    type: 'LineString',
-                    coordinates: [origin, gemCoords, destination]
-                }
-            };
+    type: 'Feature',
+    geometry: {
+      type: 'LineString',
+      coordinates: [safeOrigin, safeGemCoords, safeDestination]
+    }
+  };
             
             if (!map.getSource('detourRoute')) {
                 map.addSource('detourRoute', {
@@ -241,45 +257,20 @@ function initializeDetailCards(gems) {
         const activeGem = gems[activeIndex];
         
         if (activeGem) {
-            const coords = getValidCoordinates(activeGem.coords || activeGem.coordinates);
-            if (coords) {
-                // Update the route for the active gem
-                window.renderRoutes(coords);
-                
-           
-            }
-        }
+    // Use the unified coordinate utility
+    const coords = window.HiddenGems.coordUtil.fromGem(activeGem);
+    
+    if (coords) {
+      // Debug log
+      console.log(`Card changed to gem at index ${activeIndex}:`, activeGem.name || 'unnamed');
+      window.HiddenGems.coordUtil.debug(coords, "Active Gem");
+      
+      // Update the route for the active gem
+      window.renderRoutes(coords);
+    } else {
+      console.warn(`Invalid coordinates for gem at index ${activeIndex}`);
+    }
+  }
     });
 }
     
-    // Helper function to get valid coordinates 
-    function getValidCoordinates(coords) {
-        if (!coords || coords.length !== 2) return null;
-        
-        // Normalize coordinates using data controller utility if available
-        if (window.HiddenGems?.data?.utils?.isValidCoordinate) {
-            // Use data controller utility to validate and normalize
-            const [a, b] = coords;
-          
-            if (window.HiddenGems.data.utils.isValidCoordinate(a, b)) {
-                return [a, b]; // Already valid lng/lat format
-            } else if (window.HiddenGems.data.utils.isValidCoordinate(b, a)) {
-                return [b, a]; // Swapped to lng/lat format
-            } else {
-                console.warn(`Invalid coordinates: [${coords}]`);
-                return null;
-            }
-        } else {
-            // Fallback to original logic
-            const [a, b] = coords;
-          
-            if (Math.abs(a) > 90 && Math.abs(b) <= 90) {
-                return [a, b]; // Already in [lng, lat] format
-            } else if (Math.abs(a) <= 90 && Math.abs(b) > 90) {
-                return [b, a]; // Need to swap to [lng, lat] format
-            } else {
-                // For Northern California, longitude is negative, latitude is positive
-                return a < 0 ? [a, b] : [b, a];
-            }
-        }
-    }

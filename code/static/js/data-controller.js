@@ -384,8 +384,7 @@ window.HiddenGems.data = {
           (error) => {
             console.error('Geolocation error:', error);
             
-            // Fall back to default location (San Francisco)
-            const defaultLocation = [-122.4194, 37.7749];
+            const defaultLocation = window.HiddenGems.constants.DEFAULT_CENTER;
             
             this.getRegionalGems({
               regionName: 'default',
@@ -416,7 +415,7 @@ window.HiddenGems.data = {
         console.warn('Geolocation not supported by this browser');
         
         // Use default location (San Francisco)
-        const defaultLocation =  [-122.2730, 37.8715];
+        const defaultLocation =  window.HiddenGems.constants.DEFAULT_CENTER;
         
         this.getRegionalGems({
           regionName: 'default',
@@ -648,22 +647,113 @@ hideLoading: function() {
       // Otherwise, take a random sample
       const shuffled = this.shuffleArray(array);
       return shuffled.slice(0, size);
+    }
+  }
+};
+
+/**
+ * Enhanced coordinate handling utility
+ * This will standardize all coordinate operations throughout the application
+ */
+function createCoordinateUtility() {
+  return {
+    /**
+     * Normalize coordinates to ensure consistent [lng, lat] format
+     * @param {Array|Object} coords - Input coordinates
+     * @returns {Array|null} Normalized [lng, lat] array or null if invalid
+     */
+    normalize: function(coords) {
+      // Handle different input formats
+      let lng, lat;
+      
+      // Array format
+      if (Array.isArray(coords)) {
+        if (coords.length !== 2) return null;
+        
+        const [a, b] = coords;
+        
+        // Skip if either value is not a number
+        if (isNaN(a) || isNaN(b)) return null;
+        
+        // Determine correct order based on typical ranges
+        // Longitude: -180 to 180, Latitude: -90 to 90
+        if (Math.abs(a) > 90 && Math.abs(b) <= 90) {
+          // Already in [lng, lat] format
+          lng = a;
+          lat = b;
+        } else if (Math.abs(a) <= 90 && Math.abs(b) > 90) {
+          // Swapped order, needs to be [lng, lat]
+          lng = b;
+          lat = a;
+        } else {
+          // For Northern California context, longitude is negative and latitude is positive
+          lng = a < 0 ? a : b;
+          lat = a < 0 ? b : a;
+        }
+      } 
+      // Object format (e.g. {lng: x, lat: y} or {longitude: x, latitude: y})
+      else if (typeof coords === 'object' && coords !== null) {
+        if (coords.lng !== undefined && coords.lat !== undefined) {
+          lng = coords.lng;
+          lat = coords.lat;
+        } else if (coords.longitude !== undefined && coords.latitude !== undefined) {
+          lng = coords.longitude;
+          lat = coords.latitude;
+        } else {
+          return null; // Unrecognized object format
+        }
+      } else {
+        return null; // Unrecognized input
+      }
+      
+      // Final validation
+      if (!this.isValid(lng, lat)) return null;
+      
+      return [lng, lat];
     },
     
     /**
-     * Validate coordinates
+     * Check if coordinates are valid
      * @param {number} lng - Longitude
      * @param {number} lat - Latitude
-     * @returns {boolean} True if coordinates are valid
+     * @returns {boolean} True if valid
      */
-    isValidCoordinate: function(lng, lat) {
+    isValid: function(lng, lat) {
       if (isNaN(lng) || isNaN(lat)) return false;
       if (lng < -180 || lng > 180) return false;
       if (lat < -90 || lat > 90) return false;
       return true;
+    },
+    
+    /**
+     * Get consistent coordinates from a gem object
+     * @param {Object} gem - Gem object
+     * @returns {Array|null} Normalized [lng, lat] array or null if invalid
+     */
+    fromGem: function(gem) {
+      if (!gem) return null;
+      
+      // Try various property names used in the application
+      const coords = gem.coordinates || gem.coords || null;
+      return this.normalize(coords);
+    },
+    
+    /**
+     * Debug logging of coordinates
+     * @param {Array} coords - Coordinates to log
+     * @param {string} label - Label for logging
+     */
+    debug: function(coords, label) {
+      console.log(`[Coordinates ${label}]:`, coords ? 
+                 `[${coords[0].toFixed(6)}, ${coords[1].toFixed(6)}]` : 'Invalid');
     }
-  }
-};
+  };
+}
+
+// Create the utility
+const coordUtil = createCoordinateUtility();
+// Attach to the HiddenGems namespace
+window.HiddenGems.coordUtil = coordUtil;
 
 /**
  * Safe initialization for data controller
@@ -714,12 +804,11 @@ window.HiddenGems.findGemsAlongRoute = function(pageName, origin, destination, b
 window.loadGems = function(options = {}) {
   console.log('Legacy loadGems function called');
   
-  // Default settings - use constants if available
   const defaultOptions = {
-    limit: window.HiddenGems.constants?.DEFAULT_LIMIT || 10,
+    limit: window.HiddenGems.constants.DEFAULT_LIMIT,
     random: true,
     center: null,
-    radius: window.HiddenGems.constants?.DEFAULT_RADIUS || 30
+    radius: window.HiddenGems.constants.DEFAULT_RADIUS
   };
   
   const mergedOptions = { ...defaultOptions, ...options };
@@ -729,7 +818,7 @@ window.loadGems = function(options = {}) {
     return window.HiddenGems.data.getRegionalGems({
       regionName: `region_${Date.now()}`,
       center: options.center,
-      radius: options.radius || 30
+      radius: options.radius || window.HiddenGems.constants.DEFAULT_RADIUS
     })
     .then(regionalGems => {
       // Either return all gems or shuffle and limit as requested
