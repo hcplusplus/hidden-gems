@@ -1,42 +1,34 @@
 code
 ├── index.html                  # Home/landing page
-├── quiz.html                   # Onboarding quiz page
-├── results.html                # Gem recommendations page
-├── trip.html                   # Trip planning page
+├── add-gem.html                # add gem page
+├── end-survey.html             # survey about gem for user
+├── map-recs.html               # the recommended gems plotted 
+├── select-success.html         # 
+├── gtky.html                   # Onboarding quiz page
+├── trip-select.html            # Gem recommendations page
 ├── add-gem.html                # Form to add a gem
 │
-├── css/
+├── static/css/
+│   ├── add-gem.css             # add gem styles
 │   ├── main.css                # Common styles
+│   ├── map.css                 # map styles
 │   ├── navigation-wheel.css    # Navigation wheel styles
+│   |── quiz.css                # Quiz styles
 │   ├── recommendation-card.css # Recommendation card styles
-│   ├── filters.css             # Filters component styles
-│   └── quiz.css                # Quiz styles
 │
-├── js/
+├── static/js/
 │   ├── main.js                 # Common functionality
-│   ├── components.js           # Component loader utility
-│   ├── navigation-wheel.js     # Navigation wheel functionality
-│   ├── recommendation-card.js  # Recommendation card functionality
-│   ├── filters.js              # Filters functionality
+│   ├── add-gem.js              # add gem functionality
+│   ├── nav-wheel.js            # Navigation wheel functionality
+│   ├── card-controller.js      # Recommendation card functionality
 │   ├── quiz.js                 # Quiz functionality
-│   ├── map.js                  # Map display and interaction
-│   └── mock-data.js            # Mock data for demo purposes
+│   ├── map-controller.js       # Map display and interaction
+│   ├── preferences.js          # user preferences display and functionality
+│   ├── swipe.js                # swipe functionality
 │
-├── components/                 # HTML snippets for components
-│   ├── navigation-wheel.html   # Navigation wheel markup
-│   ├── recommendation-card.html # Recommendation card markup
-│   └── filters.html            # Filters markup
 │
-├── assets/
+├── static/assets/
 │   ├── images/
-│   │   └── placeholders/       # Placeholder images for gems
 │   ├── icons/                  # UI icons
 │   └── data/                   # JSON data files
-│       ├── gems.json           # gem data
-│       ├── routes.json         # route data
-│       └── regions.json        # Geographic region data
-│
-└── demo-api/                   # Simple mock API for demo
-    ├── recommendations.json    # recommendations response
-    ├── routes.json             # route planning response
-    └── demo-server.js          # Simple server for local testing
+│       ├── hidden_gems.json    # gem data

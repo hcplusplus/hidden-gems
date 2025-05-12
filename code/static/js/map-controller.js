@@ -82,7 +82,7 @@ function initializeMap(pageName = 'index', center = null, zoom = null) {
       });
 
       // Fix for sliding markers during zoom
-      map.on('zoom move moveend zoomend', function () {
+     /* map.on('zoom move moveend zoomend', function () {
         // Ensure markers are properly positioned during map movement
         if (markers && markers.length) {
           markers.forEach(marker => {
@@ -91,7 +91,7 @@ function initializeMap(pageName = 'index', center = null, zoom = null) {
             marker.setLngLat(lngLat);
           });
         }
-      });
+      });*/
 
       // Improve touch handling for mobile devices
       if ('ontouchstart' in window) {
