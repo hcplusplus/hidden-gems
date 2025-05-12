@@ -679,7 +679,7 @@ getGemAtIndex(index) {
   ];
   
   for (const source of sources) {
-    const storedData = sessionStorage.getItem(source);
+    const storedData = window.HiddenGems.data.storage.get(source);
     if (storedData) {
       try {
         const gems = JSON.parse(storedData);
@@ -735,7 +735,7 @@ loadGemsFromCommonSources() {
   ];
   
   for (const key of sessionStorageKeys) {
-    const stored = sessionStorage.getItem(key);
+    const stored = window.HiddenGems.data.storage.get(key);
     if (stored) {
       try {
         const gems = JSON.parse(stored);
@@ -1516,7 +1516,7 @@ handleGemsLoaded(event) {
     };
     
     // Store the card data in session storage
-    sessionStorage.setItem('selectedCard', JSON.stringify(cardData));
+    window.HiddenGems.data.storage.set('selectedCard', JSON.stringify(cardData));
 
     // Dispatch navigation event before redirecting
     this.dispatchEvent(new CustomEvent('navigate-to-trip-select', {
@@ -1684,8 +1684,8 @@ if (window.HiddenGems && window.HiddenGems.data) {
     let originCoords, destinationCoords;
     
     try {
-      originCoords = JSON.parse(sessionStorage.getItem('originCoords'));
-      destinationCoords = JSON.parse(sessionStorage.getItem('destinationCoords'));
+      originCoords = JSON.parse(window.HiddenGems.data.storage.get('originCoords'));
+      destinationCoords = JSON.parse(window.HiddenGems.data.storage.get('destinationCoords'));
     } catch (error) {
       console.warn('Error parsing origin/destination coordinates from sessionStorage:', error);
     }
