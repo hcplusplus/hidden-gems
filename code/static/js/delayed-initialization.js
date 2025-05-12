@@ -92,18 +92,13 @@
     window.HiddenGems = window.HiddenGems || {};
     window.HiddenGems.userHasInteracted = true;
 
-    // CRITICAL: Restore the original initializeMap function
-    //if (window._pendingMapInit && window._pendingMapInit.fn) {
-    //    console.log("Restoring original map initialization function");
-    //    window.initializeMap = window._pendingMapInit.fn;
-    //}
     
     // Get pageName from options or default to "index"
     const pageName = options.pageName || "index";
     
     // Show loading
     if (window.HiddenGems && window.HiddenGems.utils && window.HiddenGems.utils.showLoading) {
-        window.HiddenGems.utils.showLoading("Loading your hidden gems...");
+        window.HiddenGems.utils.showLoading("Loading gems...");
     }
     
     // Execute any pending initializations in correct order
@@ -353,7 +348,7 @@ function setupWelcomeMessage(welcomeOverlay) {
     const browseButton = document.createElement('button');
     browseButton.id = 'browse-area-btn';
     browseButton.className = 'welcome-button secondary';
-    browseButton.innerHTML = '<i class="fas fa-compass"></i> Browse Area Gems';
+    browseButton.innerHTML = '<i class="fas fa-compass"></i> Browse Berkeley Gems';
 
     // Create quiz button
     const quizButton = document.createElement('button');
@@ -431,7 +426,7 @@ function setupWelcomeMessage(welcomeOverlay) {
     // Add event listener for browse button
 browseButton.addEventListener('click', function() {
     // Berkeley coordinates as fallback [lng, lat]
-    const berkeleyCoords = [-122.2714, 37.8705];
+    const berkeleyCoords = window.HiddenGems.constants.DEFAULT_CENTER;
     
     // Store default coordinates
     localStorage.setItem('defaultCoords', JSON.stringify(berkeleyCoords));
