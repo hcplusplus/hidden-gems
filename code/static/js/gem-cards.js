@@ -57,6 +57,7 @@ class GemCards extends HTMLElement {
           flex-direction: column;
           pointer-events: auto;
           overflow: hidden;
+          min-height: 200px;
           transition: transform 0.3s ease, box-shadow 0.3s ease;
           opacity: 0;
           transform: translateY(20px);
@@ -228,6 +229,7 @@ class GemCards extends HTMLElement {
           font-size: 14px;
           line-height: 1.5;
           color: #444;
+          max-height: 80px;
           overflow-y: auto;
           margin-bottom: 8px;
           padding-right: 6px;
@@ -250,13 +252,13 @@ class GemCards extends HTMLElement {
         
         /* Trip distance info block - only for detail variant */
         .trip-distance-info {
-          margin: 8px 0;
-          padding: 12px;
-          background-color: #f8f9fa;
-          border-radius: 8px;
-          border-left: 4px solid #94c9ba;
-          display: ${this.cardVariant === 'detail' ? 'block' : 'none'};
-        }
+  margin: 8px 0;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #94c9ba;
+  display: none; /* Default state */
+}
         
         .distance-detail {
           display: flex;
@@ -287,29 +289,22 @@ class GemCards extends HTMLElement {
           margin-right: 4px;
         }
         
-        /* Card actions - only shown for detail variant */
         .card-actions {
-          display: ${this.cardVariant === 'detail' ? 'flex' : 'none'};
-          justify-content: flex-end;
-          padding-top: 8px;
-        }
-        
-        /* Explore button */
-        .explore-now-btn {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          background: linear-gradient(to right, #333, #555);
-          color: white;
-          border: none;
-          border-radius: 20px;
-          padding: 8px 16px;
-          font-size: 13px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
+  /* Debug with a visible background */
+  background-color: rgba(0, 255, 0, 0.1);
+}
+
+.explore-now-btn {
+  /* Make button more visible for debugging */
+  background: red;
+  color: white;
+  padding: 8px 16px;
+  /* Other styles */
+}
         
         .explore-now-btn:hover {
           transform: translateY(-2px);
@@ -820,29 +815,36 @@ handleGemsLoaded(event) {
    * Update the variant-specific styles and elements
    */
   updateVariant() {
+
+    console.log('Card variant:', this.cardVariant);
+  console.log('Container:', this.shadowRoot.querySelector('.cards-container'));
+  console.log('Card actions elements:', this.shadowRoot.querySelectorAll('.card-actions'));
+  console.log('Trip distance elements:', this.shadowRoot.querySelectorAll('.trip-distance-info'));
     // Update container height based on variant
-    const cardsContainer = this.shadowRoot.querySelector('.cards-container');
-    const cardActionsStyle = this.shadowRoot.querySelector('.card-actions');
-    const tripDistanceStyle = this.shadowRoot.querySelector('.trip-distance-info');
+  const cardsContainer = this.shadowRoot.querySelector('.cards-container');
+  
+  if (cardsContainer) {
+    cardsContainer.style.height = this.cardVariant === 'detail' ? '200px' : '170px';
     
-    if (cardsContainer) {
-      cardsContainer.style.height = this.cardVariant === 'detail' ? '200px' : '170px';
-    }
-    
-    // Update visibility of variant-specific elements
-    if (cardActionsStyle) {
-      cardActionsStyle.style.display = this.cardVariant === 'detail' ? 'flex' : 'none';
-    }
-    
-    if (tripDistanceStyle) {
-      tripDistanceStyle.style.display = this.cardVariant === 'detail' ? 'block' : 'none';
-    }
-    
-    // Rerender cards with the new variant if map is ready
-    if (this.mapReady && this.gems.length > 0) {
-      this.renderCards(this.gems);
-    }
+    // Select ALL card actions and trip distance elements
+    const cardActionsElements = this.shadowRoot.querySelectorAll('.card-actions');
+    const tripDistanceElements = this.shadowRoot.querySelectorAll('.trip-distance-info');
+   
+    // Update visibility of ALL variant-specific elements
+    cardActionsElements.forEach(element => {
+      element.style.display = this.cardVariant === 'detail' ? 'flex' : 'none';
+    });
+   
+    tripDistanceElements.forEach(element => {
+      element.style.display = this.cardVariant === 'detail' ? 'block' : 'none';
+    });
   }
+   
+  // Rerender cards with the new variant if map is ready
+  if (this.mapReady && this.gems.length > 0) {
+    this.renderCards(this.gems);
+  }
+}
   
   /**
    * Set up event listeners for card navigation
@@ -1147,6 +1149,7 @@ handleGemsLoaded(event) {
    * @param {number} index - Index of the gem
    */
   createCard(gem, index) {
+    console.log('Creating card with variant:', this.cardVariant);
     // Create card element
     const card = document.createElement('div');
     card.className = 'gem-card';
@@ -1173,6 +1176,9 @@ handleGemsLoaded(event) {
     const distanceText = gem.distance ? `${gem.distance} miles away` : '';
     const address = gem.address || '';
     const openingHours = gem.opening_hours || '';
+
+    const shouldShowActions = this.cardVariant === 'detail';
+    console.log('Should show actions?', shouldShowActions);
     
     // Create card HTML content
     card.innerHTML = `
@@ -1204,9 +1210,9 @@ handleGemsLoaded(event) {
         ${gem.description || 'A hidden gem waiting to be explored.'}
       </div>
       
-      ${this.cardVariant === 'detail' ? this.createTripDistanceInfo() : ''}
+      ${shouldShowActions ? this.createTripDistanceInfo() : ''}
       
-      ${this.cardVariant === 'detail' ? `
+      ${shouldShowActions ? `
         <div class="card-actions">
           <button class="explore-now-btn">
             Explore Now!
@@ -1214,6 +1220,9 @@ handleGemsLoaded(event) {
         </div>
       ` : ''}
     `;
+
+    // After setting innerHTML, check if the elements were created
+    console.log('Card actions after creation:', card.querySelector('.card-actions'));
     
     // Add to container
     this.cardsContainer.appendChild(card);
@@ -1228,7 +1237,7 @@ handleGemsLoaded(event) {
       const exploreButton = card.querySelector('.explore-now-btn');
       if (exploreButton) {
         exploreButton.addEventListener('click', (e) => {
-          e.stopPropagation(); // Don't trigger card click
+          //e.stopPropagation(); // Don't trigger card click
           this.navigateToGemDetails(gem);
         });
       }
@@ -1458,24 +1467,66 @@ handleGemsLoaded(event) {
   navigateToGemDetails(gem) {
     const gemId = gem.id || `gem-${this.activeIndex}`;
     
-    // Store the selected gem ID in sessionStorage for the details page
-    sessionStorage.setItem('viewGemId', gemId);
+  
+    // Process time information for trip details
+    let timeDisplay = '1 hr 30 min';
+    let visitTime = '30'; // Default visit time in minutes
     
-    // If we have coordinates, store them too
-    if (gem.coordinates || gem.coords) {
-      const coords = gem.coordinates || gem.coords;
-      sessionStorage.setItem('viewGemCoords', JSON.stringify(coords));
+    // Process gem time if available (assuming it's stored in minutes)
+    if (gem.time) {
+      visitTime = gem.time.toString();
+      
+      // Calculate total time (visit time + estimated driving time)
+      const visitTimeMinutes = parseInt(visitTime);
+      const drivingTimeMinutes = 60; // Default driving time estimate
+      const totalTimeMinutes = visitTimeMinutes + drivingTimeMinutes;
+      
+      if (totalTimeMinutes >= 60) {
+        const hours = Math.floor(totalTimeMinutes / 60);
+        const minutes = totalTimeMinutes % 60;
+        timeDisplay = minutes > 0 ? `${hours} hr ${minutes} min` : `${hours} hr`;
+      } else {
+        timeDisplay = `${totalTimeMinutes} min`;
+      }
     }
     
+    // Process coordinates for distance calculations
+    let coordinates = '';
+    if (gem.coordinates) {
+      coordinates = gem.coordinates;
+    } else if (gem.latitude && gem.longitude) {
+      coordinates = `${gem.latitude},${gem.longitude}`;
+    }
+    
+    // Create a cardData object with all relevant information directly from your data source
+    const cardData = {
+      id: gem.id || `gem-${gemIndex}`,
+      name: gem.name || 'Hidden Gem',
+      description: gem.description || 'A hidden gem waiting to be explored.',
+      address: gem.address || '',
+      opening_hours: gem.opening_hours || '',
+      dollar_sign: gem.dollar_sign || '$',
+      timeDisplay: timeDisplay,
+      time: visitTime,
+      color: this.getGemColor(gem),
+      category_1: gem.category_1 || '',
+      category_2: gem.category_2 || '',
+      review: gem.review
+
+    };
+    
+    // Store the card data in session storage
+    sessionStorage.setItem('selectedCard', JSON.stringify(cardData));
+
     // Dispatch navigation event before redirecting
-    this.dispatchEvent(new CustomEvent('navigate-to-details', {
+    this.dispatchEvent(new CustomEvent('navigate-to-trip-select', {
       bubbles: true,
       composed: true,
       detail: { gem, gemId }
     }));
     
-    // Navigate to the gem details page
-    window.location.href = `gem-details.html?id=${encodeURIComponent(gemId)}`;
+    // Navigate to the trip-select page
+    window.location.href = "trip-select.html";
   }
   
   /**

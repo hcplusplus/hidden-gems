@@ -49,8 +49,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 window.notifyMapReady();
             }
             window.HiddenGems.data.findGemsAlongRoute('landing-page', originCoords, destinationCoords)
+            
             // render gems and cards
-            gems = JSON.parse(sessionStorage.getItem("recommendedGems"));
+            gems = window.HiddenGems.data.pageGems;
+            
             renderGems(gems, map);
             // Initialize card display
             initializeDetailCards(gems);
