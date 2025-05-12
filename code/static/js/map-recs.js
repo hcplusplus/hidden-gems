@@ -1,6 +1,5 @@
 /**
- * landing-page.js
- * Targeted fix for gem positioning and route rendering issues
+ * map-recs.js
  */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -133,9 +132,9 @@ document.addEventListener('DOMContentLoaded', function () {
         // Function to render detour route
         function renderDetourRoute(origin, destination, gemCoords) {
             // Normalize all coordinates to ensure consistent format
-            const safeOrigin = window.HiddenGems.coordUtil.normalize(origin);
-            const safeDestination = window.HiddenGems.coordUtil.normalize(destination);
-            const safeGemCoords = window.HiddenGems.coordUtil.normalize(gemCoords);
+            const safeOrigin = getValidCoordinates(origin);
+            const safeDestination = getValidCoordinates(destination);
+            const safeGemCoords = getValidCoordinates(gemCoords);
 
 
             const detourRoute = {
@@ -220,12 +219,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     .addTo(map);
             }
         }
-        
+        /*
     } else {
         console.error("Missing origin or destination coordinates");
         // Handle case where coordinates aren't available
         document.getElementById('map').innerHTML =
             '<div style="padding: 20px; text-align: center;">Please set your trip origin and destination first.</div>';
+    }*/
     }
 });
 
@@ -262,8 +262,8 @@ function initializeDetailCards(gems) {
     
     if (coords) {
       // Debug log
-      console.log(`Card changed to gem at index ${activeIndex}:`, activeGem.name || 'unnamed');
-      window.HiddenGems.coordUtil.debug(coords, "Active Gem");
+    //  console.log(`Card changed to gem at index ${activeIndex}:`, activeGem.name || 'unnamed');
+     // window.HiddenGems.coordUtil.debug(coords, "Active Gem");
       
       // Update the route for the active gem
       window.renderRoutes(coords);

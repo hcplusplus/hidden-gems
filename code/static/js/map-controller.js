@@ -179,7 +179,7 @@ function loadGemsWithDataController(pageName, center, radius, sampleSize, origin
 
         // Use findGemsAlongRoute from data-controller
         return window.HiddenGems.data.findGemsAlongRoute(
-          pageName || 'landing-page',
+          pageName || 'map-recs',
           safeOriginCoord,
           safeDestinationCoord,
           bufferDistance,
@@ -364,17 +364,17 @@ function renderGems(gems) {
     validGems.push(gem);
 
     // Create marker DOM element
-    const el = document.createElement('div');
-    el.className = 'gem-marker';
-    el.style.width = '28px';
-    el.style.height = '28px';
-    el.style.cursor = 'pointer';
-    el.style.position = 'relative';
+    //const el = document.createElement('div');
+    //el.className = 'gem-marker';
+    //el.style.width = '28px';
+    //el.style.height = '28px';
+    //el.style.cursor = 'pointer';
+    //el.style.position = 'relative';
 
     // Store gem ID for synchronization
     const gemId = gem.id || gem.index || `gem-${index}`;
-    el.setAttribute('data-gem-id', gemId.toString());
-    el.setAttribute('data-index', index.toString());
+    //el.setAttribute('data-gem-id', gemId.toString());
+    //el.setAttribute('data-index', index.toString());
 
     // Determine gem color
     let iconColor = 'blue'; // Default color
@@ -395,24 +395,24 @@ function renderGems(gems) {
     iconImg.className = `${iconColor}-gem-icon`;
     iconImg.style.width = '100%';
     iconImg.style.height = '100%';
-    el.appendChild(iconImg);
+    //el.appendChild(iconImg);
 
     // Highlight if it's the active gem
     const activeGemIndex = window.HiddenGems.map.activeGemIndex || window.activeGemIndex || 0;
-    if (index === activeGemIndex) {
-      el.style.transform = 'scale(1.4)';
-      el.style.zIndex = '10';
-      el.classList.add('active-gem');
-    }
+    //if (index === activeGemIndex) {
+    //  el.style.transform = 'scale(1.4)';
+    //  el.style.zIndex = '10';
+    //  el.classList.add('active-gem');
+    //}
 
     // Create and add marker to map
-    const marker = createMarker(lngLat, el);
+    //const marker = createMarker(lngLat, el);
 
     // Store gemId on marker object for easier access
-    marker.gemId = gemId.toString();
+    //marker.gemId = gemId.toString();
 
     // Add click handler
-    el.addEventListener('click', function (e) {
+    /*el.addEventListener('click', function (e) {
       // Prevent event propagation
       e.stopPropagation();
       e.preventDefault();
@@ -458,7 +458,7 @@ function renderGems(gems) {
     });
 
     markers.push(marker);
-    bounds.extend(lngLat);
+    bounds.extend(lngLat);*/
   });
 
   // Store markers globally for access by other components
