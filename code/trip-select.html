@@ -9,9 +9,8 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&display=swap" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
+		<link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&display=swap" rel="stylesheet">
+		<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 
 		<style>
@@ -26,25 +25,25 @@
 				font-family: 'Nunito', sans-serif;
 			}
 
-            .fade {
-                opacity: 1;
-                transition: opacity 1s ease;
-            }
+			.fade {
+				opacity: 1;
+				transition: opacity 1s ease;
+			}
 
-            .progress-bar {
-                height: 23px;
-                border-radius: 10px;
-                margin: 0px 40px 10px 40px;
-                background-color: rgb(226, 226, 226);
-                display: flex;
-            }
-            .place-container {
-                margin: 15px 0px 0px 40px;
-            }
-            .title {
-                font-size: 24px;
-                font-weight: 500;
-            }
+			.progress-bar {
+				height: 23px;
+				border-radius: 10px;
+				margin: 0 40px 10px;
+				background-color: rgb(226, 226, 226);
+				display: flex;
+			}
+			.place-container {
+				margin: 15px 0 0 40px;
+			}
+			.title {
+				font-size: 24px;
+				font-weight: 500;
+			}
 
 			.recommendation-image {
 				width: 100%;
@@ -68,62 +67,61 @@
 				margin-right: 3px;
 			}
 
-            .quiz-option {
-                display: inline-flex;
-                align-items: center;
-                padding: 10px 16px;
-                margin: 0px 0px 10px 20px;
-                border-radius: 20px;
-                background-color: #ededed;
-                cursor: pointer;
-                transition: background-color 0.2s;
-            }
-            .moving-progress {
-                height: 23px;
-                width:0%;  /*dynamic */
-                border-radius: 10px;
-                background-color: rgb(179, 217, 179);
-            }
-            .review-box {
-                height: 200px;
-                /* margin: 30px 30px 60px 30px; */
-                background-color: rgba(255, 255, 255, 0.637);
-                border-radius: 10px;
-                padding: 10px 10px 10px 10px;
-            }
-            .state-change {
-                padding:5px;
-                background-color:rgb(230, 230, 230);
-            }
+			.quiz-option {
+				display: inline-flex;
+				align-items: center;
+				padding: 10px 16px;
+				margin: 0 0 10px 20px;
+				border-radius: 20px;
+				background-color: #ededed;
+				cursor: pointer;
+				transition: background-color 0.2s;
+			}
+			.moving-progress {
+				height: 23px;
+				width: 0; /*dynamic */
+				border-radius: 10px;
+				background-color: rgb(179, 217, 179);
+			}
+			.review-box {
+				height: 200px;
+				/* margin: 30px 30px 60px 30px; */
+				background-color: rgba(255, 255, 255, 0.637);
+				border-radius: 10px;
+				padding: 10px;
+			}
+			.state-change {
+				padding: 5px;
+				background-color: rgb(230, 230, 230);
+			}
+		</style>
 
-        </style>
+	</head>
 
-    </head>
+	<body>
+		<div class="page-container">
+			<button onclick="goBack()" style="
+																				                z-index: 1000; font-size: 20px;
+																				                background: none; border: none; cursor: pointer;
+																				                color: black; font-weight: 600;">
+				← Back
+			</button>
+			<div class="flex flex-column" id="progressContainer">
+				<div>
+					<img src="" style="width:100%;height:250px;margin-top:0px" id="trip_mode" alt="cover"/>
+					<div style="position: absolute; top: 150px; left: 240px; color: white; font-size: 20px; font-weight: 600;" id="time-left">
+						1 hr 30 left
+					</div>
+				</div>
+				<div>
+					<div class="progress-bar">
+						<div
+							class="moving-progress" id="moving-progress"><!-- progress div -->
+						</div>
+						<span style="margin-left: 280px; position: absolute; right: 45;">🏁</span>
 
-<body>
-    <div class="page-container">
-        <button onclick="goBack()" style="
-                z-index: 1000; font-size: 20px;
-                background: none; border: none; cursor: pointer;
-                color: black; font-weight: 600;">
-            ← Back
-        </button>
-        <div class="flex flex-column" id="progressContainer">
-            <div>
-                <img src="" style="width:100%;height:250px;margin-top:0px" id="trip_mode" alt="cover"/>
-                <div style="position: absolute; top: 150px; left: 240px; color: white; font-size: 20px; font-weight: 600;" id="time-left">
-                    1 hr 30 left
-                  </div>
-            </div>
-            <div>
-                <div class="progress-bar">
-                    <div class="moving-progress" id="moving-progress">
-                        <!-- progress div -->
-                    </div>
-                    <span style="margin-left: 280px; position: absolute; right: 45;">🏁</span>
-                    
-                </div>
-            </div>
+					</div>
+				</div>
 
 
 				<div class="place-container">
@@ -196,7 +194,7 @@
             .then(data => {
                 console.log(data); // Use your data here
                 data_text = data[0];
-                document.getElementById('title').innerText = data_text["name"];
+                // document.getElementById('title').innerText = data_text["name"];
                 // document.getElementById('address').innerText = data_text["address"];
                 // document.getElementById('cost').innerText = data_text["dollar_sign"];
                 // document.getElementById('open').innerText = data_text["opening_hours"];
@@ -205,9 +203,22 @@
                 // document.getElementById('category-2').innerText = data_text["category_2"];
                 // document.getElementById('review').innerText = data_text["review"];
                 // document.getElementById('time-left').innerText = data_text["time"];
-                const color = data_text["color"];
-                document.getElementById('trip_mode').src = `./assets/${color}_trip_mode.jpg`;
-                
+                // const color = data_text["color"];
+                // document.getElementById('trip_mode').src = `./assets/${color}_trip_mode.jpg`;
+                const gem = JSON.parse(sessionStorage.getItem("selectedGem") || "{}");
+				const review = sessionStorage.getItem("selectedGemReview") || "";
+				
+				document.getElementById("title").innerText = gem.name || "Unknown";
+	            doument.getElementById("quiz-option").innerText = gem.rarity || "Unknown";
+				document.getElementById("address").innerText = gem.coordinates || "No address";
+				document.getElementById("open").innerText = gem.opening_hours || "All day";
+				document.getElementById("cost").innerText = gem.dollar_sign || "$";
+				document.getElementById("description").innerText = gem.description || "";
+				document.getElementById("category-1").innerText = gem.category_1 || "";
+				document.getElementById("category-2").innerText = gem.category_2 || "";
+				document.getElementById("review").innerText = review;
+				document.getElementById("trip_mode").src = `./assets/${gem.color}_trip_mode.jpg`;
+				
             })
             .catch(error => console.error('Error loading JSON:', error));
         let latitude = 0;
@@ -293,7 +304,7 @@
                 document.getElementById('nextScreen').style.display = 'none';
                 document.getElementById('progressContainer').style.display = 'block';
             } else {
-                window.location.href = "landing-page.html?skipWelcome=1";
+                window.location.href = "new-land.html?skipWelcome=1";
             }
         }
 
@@ -316,7 +327,7 @@ function showNextScreen() {
 }
 
 function goBack() {
-	window.location.href = "landing-page.html?skipWelcome=1";
+	window.location.href = "new-land.html?skipWelcome=1";
 }
 
 function feedbackForm() {
