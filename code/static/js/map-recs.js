@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Get coordinates from sessionStorage
-    var originCoords = JSON.parse(sessionStorage.getItem("originCoords"));
-    var destinationCoords = JSON.parse(sessionStorage.getItem("destinationCoords"));
+    var originCoords = JSON.parse(window.HiddenGems.data.storage.get("originCoords"));
+    var destinationCoords = JSON.parse(window.HiddenGems.data.storage.get("destinationCoords"));
 
     
 
@@ -18,13 +18,13 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!originCoords) {
         console.log("No origin coordinates found in sessionStorage, using Berkeley as fallback");
         originCoords = getValidCoordinates(window.HiddenGems.constants.DEFAULT_ORIGIN); // Berkeley coordinates
-        sessionStorage.setItem("originCoords", JSON.stringify(originCoords));
+        window.HiddenGems.data.storage.set("originCoords", JSON.stringify(originCoords));
     }
 
     if (!destinationCoords) {
         console.log("No destination coordinates found in sessionStorage, using Sacramento as fallback");
         destinationCoords = getValidCoordinates(window.HiddenGems.constants.DEFAULT_DESTINATION); // Sacramento coordinates
-        sessionStorage.setItem("destinationCoords", JSON.stringify(destinationCoords));
+        window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
     }
 
      window.HiddenGems.data.findGemsAlongRoute('map-recs', originCoords, destinationCoords)

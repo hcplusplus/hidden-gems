@@ -140,8 +140,8 @@ document.addEventListener('DOMContentLoaded', function() {
     window.renderRoutes = function(gemCoords) {
       if (!window.map) return;
       
-      const originCoords = JSON.parse(sessionStorage.getItem("originCoords"));
-      const destinationCoords = JSON.parse(sessionStorage.getItem("destinationCoords"));
+      const originCoords = JSON.parse(window.HiddenGems.data.storage.get("originCoords"));
+      const destinationCoords = JSON.parse(window.HiddenGems.data.storage.get("destinationCoords"));
       
       if (!originCoords || !destinationCoords || !gemCoords) return;
       

@@ -172,7 +172,7 @@ async function initApp() {
             window.HiddenGems.userHasInteracted = false;
             
             // Show welcome message if it's not been shown
-            if (!localStorage.getItem('welcomeShown') && typeof window.showWelcomeMessage === 'function') {
+            if (!window.HiddenGems.data.storage.get('welcomeShown') && typeof window.showWelcomeMessage === 'function') {
                 setTimeout(window.showWelcomeMessage, 100);
             }
             
@@ -261,7 +261,7 @@ function navigateWithData(url, data) {
     if (window.HiddenGems && window.HiddenGems.data) {
         // Generate URL with minimal data (just a reference ID)
         const sessionId = Date.now().toString();
-        sessionStorage.setItem(`hiddenGems_session_${sessionId}`, JSON.stringify(data));
+        window.HiddenGems.data.storage.set(`hiddenGems_session_${sessionId}`, JSON.stringify(data));
 
         // Navigate with lightweight param instead of all the data
         window.location.href = `${url}?session=${sessionId}`;

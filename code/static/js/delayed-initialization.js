@@ -1,10 +1,7 @@
-/**
- * complete-fix.js - Comprehensive solution to prevent any rendering
- * before user interaction on the index page
- */
 
 // Execute immediately to block any existing initialization
 (function() {
+    window.HiddenGems.data.storage.clear();
     console.log("Applying complete initialization block");
     
     // Check if we're on the index page
@@ -116,7 +113,7 @@
         
         // Call it with coordinates if available
         if (options && options.coordinates) {
-            mapPromise = originalInitializeMap(options.coordinates);
+            mapPromise = originalInitializeMap();
         } else {
             // Use stored args if available
             if (window._hiddenGemsOriginalFunctions.initializeMapArgs) {
@@ -163,16 +160,14 @@
 
          // Restore renderGems function if it was blocked
         if (window._hiddenGemsOriginalFunctions && window._hiddenGemsOriginalFunctions.renderGems) {
-            console.log("Restoring original renderGems function");
             window.renderGems = window._hiddenGemsOriginalFunctions.renderGems;
         }
 
         // If we have coordinates from the user, use them to load gems
         if (options && options.coordinates) {
-            console.log("Using user-provided coordinates:", options.coordinates);
 
             // Store coordinates for use across the app
-            sessionStorage.setItem('userCoords', JSON.stringify(options.coordinates));
+            window.HiddenGems.data.storage.set('userCoords', JSON.stringify(options.coordinates));
 
             // Try to use modern data controller if available
             if (window.HiddenGems && window.HiddenGems.data) {
@@ -377,8 +372,8 @@ function setupWelcomeMessage(welcomeOverlay) {
                 console.log("User location:", userCoords);
                 
                 // Store location in localStorage and sessionStorage for other pages
-                localStorage.setItem('userCoords', JSON.stringify(userCoords));
-                sessionStorage.setItem('userCoords', JSON.stringify(userCoords));
+                window.HiddenGems.data.storage.set('userCoords', JSON.stringify(userCoords));
+                window.HiddenGems.data.storage.set('userCoords', JSON.stringify(userCoords));
                 localStorage.setItem('locationPermissionGranted', 'true');
                 
                 // Hide the welcome overlay with animation
@@ -429,8 +424,8 @@ browseButton.addEventListener('click', function() {
     const berkeleyCoords = window.HiddenGems.constants.DEFAULT_CENTER;
     
     // Store default coordinates
-    localStorage.setItem('defaultCoords', JSON.stringify(berkeleyCoords));
-    sessionStorage.setItem('defaultCoords', JSON.stringify(berkeleyCoords));
+    window.HiddenGems.data.storage.set('defaultCoords', JSON.stringify(berkeleyCoords));
+    window.HiddenGems.data.storage.set('defaultCoords', JSON.stringify(berkeleyCoords));
     
     // Hide the welcome overlay with animation
     welcomeOverlay.style.opacity = '0';
@@ -465,7 +460,7 @@ browseButton.addEventListener('click', function() {
     welcomeOverlay.appendChild(welcomeContainer);
 
     // Mark welcome as seen in localStorage
-    localStorage.setItem('welcomeShown', 'true');
+    window.HiddenGems.data.storage.set('welcomeShown', 'true');
 
     // Override any global showWelcomeMessage function
     window.showWelcomeMessage = function () {

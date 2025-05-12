@@ -59,7 +59,7 @@ window.HiddenGems.data = {
       })
       .then(jsonGems => {
         // Load user-added gems from localStorage
-        const userGems = JSON.parse(localStorage.getItem('userGems') || '[]');
+        const userGems = JSON.parse(window.HiddenGems.data.storage.get('userGems') || '[]');
         
         // Combine and ensure all gems have unique IDs
         const allGems = [...jsonGems, ...userGems].map((gem, index) => {
@@ -873,8 +873,8 @@ window.findNearbyGems = function() {
           const userLocation = [position.coords.longitude, position.coords.latitude];
           
           // Store user location
-          localStorage.setItem('userLocation', JSON.stringify(userLocation));
-          sessionStorage.setItem('userLocation', JSON.stringify(userLocation));
+          window.HiddenGems.data.storage.set('userLocation', JSON.stringify(userLocation));
+          window.HiddenGems.data.storage.set('userLocation', JSON.stringify(userLocation));
           
           // Load gems near user location
           window.loadGems({

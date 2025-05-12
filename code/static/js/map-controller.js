@@ -632,7 +632,7 @@ function loadGemsManually(pageName) {
       // Get user-added gems from localStorage if any
       let userGems = [];
       try {
-        userGems = JSON.parse(localStorage.getItem('userGems') || '[]');
+        userGems = JSON.parse(window.HiddenGems.data.storage.get('userGems') || '[]');
       } catch (error) {
         console.warn('Error parsing user gems from localStorage:', error);
       }

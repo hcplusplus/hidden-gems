@@ -216,9 +216,9 @@ document.addEventListener('DOMContentLoaded', function() {
             userData.destinationCoords = destinationCoords;
 
             // Save to sessionStorage
-            sessionStorage.setItem("originCoords", JSON.stringify(originCoords));
-            sessionStorage.setItem("destinationCoords", JSON.stringify(destinationCoords));
-            sessionStorage.setItem("userPreferences", JSON.stringify(userData));
+            window.HiddenGems.data.storage.set("originCoords", JSON.stringify(originCoords));
+            window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
+            window.HiddenGems.data.storage.set("userPreferences", JSON.stringify(userData));
             
             // Save preferences to our data controller if it exists
             if (window.HiddenGemsData) {
@@ -349,7 +349,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateProgress();
     
     // Check for existing preferences and fill in values
-    const savedPreferences = sessionStorage.getItem('userPreferences');
+    const savedPreferences = window.HiddenGems.data.storage.get('userPreferences');
     if (savedPreferences) {
         try {
             const prefs = JSON.parse(savedPreferences);
