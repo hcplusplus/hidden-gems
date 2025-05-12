@@ -17,10 +17,13 @@ let markers = [];
  * @returns {Promise} Promise that resolves when the map is ready
  */
 function initializeMap(pageName = 'index', center = null, zoom = null) {
+
+  
+
   return new Promise((resolve, reject) => {
     try {
 
-
+      clearMarkers();
 
       // Get constants
       const DEFAULT_CENTER = center || window.HiddenGems.constants.DEFAULT_CENTER; // berkeley default
@@ -142,7 +145,7 @@ function initializeMap(pageName = 'index', center = null, zoom = null) {
  * @param {Array} [destinationCoord] - Optional destination coordinates for route [lng, lat]
  * @returns {Promise} Promise that resolves with the loaded gems
  */
-function loadGemsWithDataController(pageName, center, radius, sampleSize, originCoord, destinationCoord) {
+function loadGemsWithDataController(pageName, center, radius = 10, sampleSize = 10, originCoord, destinationCoord) {
   if (!window.HiddenGems || !window.HiddenGems.data) {
     return Promise.reject(new Error('Data controller not available'));
   }

@@ -248,10 +248,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.HiddenGemsData.preferences.save(userPreferences);
                 
                 // Try to load gems if the function exists
-                if (typeof window.filterGemsByRoute === 'function') {
+                if (typeof window.findGemsAlongRoute === 'function') {
                     try {
                         // First filter by route
-                        await window.filterGemsByRoute(originCoords, destinationCoords, 30);
+                        await window.findGemsAlongRoute(originCoords, destinationCoords);
                     } catch (error) {
                         console.error("Error filtering gems:", error);
                     }

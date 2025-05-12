@@ -292,7 +292,7 @@
 
                 // Save coordinates for Google Maps
                 if (selectedCard.coordinates) {
-                    window.HiddenGems.data.storage.setItem('coordinates', selectedCard.coordinates);
+                    window.HiddenGems.data.storage.set('coordinates', selectedCard.coordinates);
                 }
             } else {
                 // Fall back to fetching from JSON if no data in session storage
@@ -396,7 +396,7 @@
 
 
         function goToSpecificLocation() {
-            const coordinates = data_text["coordinates"];
+            const coordinates = window.HiddenGems.data.storage.get('coordinates');
             const url = `https://www.google.com/maps?q=${coordinates}`;
             window.open(url, "_blank");
         }

@@ -12,7 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var originCoords = JSON.parse(window.HiddenGems.data.storage.get("originCoords"));
     var destinationCoords = JSON.parse(window.HiddenGems.data.storage.get("destinationCoords"));
 
-    
+    window.HiddenGems.map.clearMarkers();
+
 
     // Add fallback coordinates for Berkeley and Sacramento if none exist in sessionStorage
     if (!originCoords) {

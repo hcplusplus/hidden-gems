@@ -1503,6 +1503,7 @@ handleGemsLoaded(event) {
       id: gem.id || `gem-${gemIndex}`,
       name: gem.name || 'Hidden Gem',
       description: gem.description || 'A hidden gem waiting to be explored.',
+      coordinates: coordinates,
       address: gem.address || '',
       opening_hours: gem.opening_hours || '',
       dollar_sign: gem.dollar_sign || '$',

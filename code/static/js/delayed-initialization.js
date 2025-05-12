@@ -113,13 +113,16 @@
         
         // Call it with coordinates if available
         if (options && options.coordinates) {
+            console.log("Using user-provided coordinates for map initialization");
             mapPromise = originalInitializeMap();
         } else {
             // Use stored args if available
+            console.log("Using stored arguments for map initialization");
             if (window._hiddenGemsOriginalFunctions.initializeMapArgs) {
                 mapPromise = originalInitializeMap.apply(window, 
                                       window._hiddenGemsOriginalFunctions.initializeMapArgs);
             } else {
+                console.log("No stored arguments found, using default map initialization");
                 mapPromise = originalInitializeMap();
             }
         }
@@ -173,7 +176,7 @@
             if (window.HiddenGems && window.HiddenGems.data) {
                 // Use HiddenGems.data.findNearbyGems with pageName
                 if (typeof window.HiddenGems.data.findNearbyGems === 'function') {
-                    window.HiddenGems.data.findNearbyGems(pageName, 10, 30)
+                    window.HiddenGems.data.findNearbyGems(pageName, 10, 10)
                         .then(gems => {
                             console.log(`Found ${gems.length} gems near location for ${pageName}`);
 
@@ -220,7 +223,7 @@
                 }
                 // Fallback if findNearbyGems not available but data controller is
                 else if (typeof window.HiddenGems.map?.loadGems === 'function') {
-                    window.HiddenGems.map.loadGems(pageName, options.coordinates, 30, 10);
+                    window.HiddenGems.map.loadGems(pageName, options.coordinates, 10, 10);
                 }
             }
             // Fallback to simpler methods if modern controller not available
@@ -421,10 +424,9 @@ function setupWelcomeMessage(welcomeOverlay) {
     // Add event listener for browse button
 browseButton.addEventListener('click', function() {
     // Berkeley coordinates as fallback [lng, lat]
-    const berkeleyCoords = window.HiddenGems.constants.DEFAULT_CENTER;
+    const berkeleyCoords = window.HiddenGems.coordUtil.normalize(window.HiddenGems.constants.DEFAULT_CENTER);
     
     // Store default coordinates
-    window.HiddenGems.data.storage.set('defaultCoords', JSON.stringify(berkeleyCoords));
     window.HiddenGems.data.storage.set('defaultCoords', JSON.stringify(berkeleyCoords));
     
     // Hide the welcome overlay with animation

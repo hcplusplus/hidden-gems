@@ -350,6 +350,28 @@ window.HiddenGems.data = {
         reject(new Error('Page name is required'));
         return;
       }
+
+      if (pageName === "index") {
+        const defaultLocation = window.HiddenGems.constants.DEFAULT_CENTER;
+            
+            this.getRegionalGems({
+              regionName: 'default',
+              center: defaultLocation,
+              radius: radius
+            })
+            .then(() => {
+              // Get a page sample
+              return this.getPageGems({
+                regionName: 'default',
+                pageName: pageName,
+                sampleSize: sampleSize,
+                forceNew: true
+              });
+            })
+            .then(resolve)
+            .catch(reject);
+      }
+
       
       this.showLoading('Finding your location...');
       
