@@ -16,15 +16,15 @@ let markers = [];
  * Initialize the map and set up event handlers
  * @returns {Promise} Promise that resolves when the map is ready
  */
-function initializeMap(pageName = 'index') {
+function initializeMap(pageName = 'index', center = null, zoom = null) {
   return new Promise((resolve, reject) => {
     try {
 
 
 
       // Get constants
-      const DEFAULT_CENTER = window.HiddenGems.constants.DEFAULT_CENTER; // berkeley default
-      const DEFAULT_ZOOM = window.HiddenGems.constants.DEFAULT_ZOOM;
+      const DEFAULT_CENTER = center || window.HiddenGems.constants.DEFAULT_CENTER; // berkeley default
+      const DEFAULT_ZOOM = zoom || window.HiddenGems.constants.DEFAULT_ZOOM;
 
       // Initialize the map without loading gems
       map = new maplibregl.Map({
@@ -82,7 +82,7 @@ function initializeMap(pageName = 'index') {
       });
 
       // Fix for sliding markers during zoom
-      map.on('zoom move moveend zoomend', function () {
+     /* map.on('zoom move moveend zoomend', function () {
         // Ensure markers are properly positioned during map movement
         if (markers && markers.length) {
           markers.forEach(marker => {
@@ -91,7 +91,7 @@ function initializeMap(pageName = 'index') {
             marker.setLngLat(lngLat);
           });
         }
-      });
+      });*/
 
       // Improve touch handling for mobile devices
       if ('ontouchstart' in window) {

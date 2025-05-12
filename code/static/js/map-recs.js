@@ -17,31 +17,29 @@ document.addEventListener('DOMContentLoaded', function () {
     // Add fallback coordinates for Berkeley and Sacramento if none exist in sessionStorage
     if (!originCoords) {
         console.log("No origin coordinates found in sessionStorage, using Berkeley as fallback");
-        originCoords = window.HiddenGems.constants.DEFAULT_ORIGIN; // Berkeley coordinates
+        originCoords = getValidCoordinates(window.HiddenGems.constants.DEFAULT_ORIGIN); // Berkeley coordinates
         sessionStorage.setItem("originCoords", JSON.stringify(originCoords));
     }
 
     if (!destinationCoords) {
         console.log("No destination coordinates found in sessionStorage, using Sacramento as fallback");
-        destinationCoords = window.HiddenGems.constants.DEFAULT_DESTINATION; // Sacramento coordinates
+        destinationCoords = getValidCoordinates(window.HiddenGems.constants.DEFAULT_DESTINATION); // Sacramento coordinates
         sessionStorage.setItem("destinationCoords", JSON.stringify(destinationCoords));
     }
 
-     window.HiddenGems.data.findGemsAlongRoute('landing-page', originCoords, destinationCoords)
+     window.HiddenGems.data.findGemsAlongRoute('map-recs', originCoords, destinationCoords)
 
      console.log("Landing page initialized");
 
     // Initialize map if we have coordinates
     if (originCoords && destinationCoords) {
-        const midPoint = [
+        const midPoint = getValidCoordinates([
             (originCoords[0] + destinationCoords[0]) / 2,
             (originCoords[1] + destinationCoords[1]) / 2
-        ];
+        ]);
         
-        //const map = window.initializeMap('landing-page')
-        window.map
-        .setCenter(midPoint)
-        .setZoom(7)
+        window.initializeMap('map-recs', midPoint, 7);
+        const map = window.map;
 
         
 
@@ -67,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Initialize card display
             initializeDetailCards(recommendedGems);
             console.log("Map rendering complete with", window.markers.length, "markers");
-
+       
              // Add origin and destination markers only once
             addTripMarkers(originCoords, destinationCoords);
             
@@ -80,6 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log("First gem for detour route:", firstGem);
                 const coords = window.HiddenGems.coordUtil.fromGem(firstGem);
                 if (coords) {
+                    console.log(firstGem);
                     console.log(coords);
                     renderDetourRoute(originCoords, destinationCoords, coords);
                 }
@@ -197,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     anchor: 'center'
                 })
                     .setLngLat(origin)
-                    .addTo(map);
+                    .addTo(window.map);
             }
 
             // Add destination marker if not already present
@@ -216,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     anchor: 'center'
                 })
                     .setLngLat(destination)
-                    .addTo(map);
+                    .addTo(window.map);
             }
         }
         /*
@@ -264,6 +263,7 @@ function initializeDetailCards(gems) {
       // Debug log
     //  console.log(`Card changed to gem at index ${activeIndex}:`, activeGem.name || 'unnamed');
      // window.HiddenGems.coordUtil.debug(coords, "Active Gem");
+     window.map.flyTo(coords);
       
       // Update the route for the active gem
       window.renderRoutes(coords);
