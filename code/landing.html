@@ -168,6 +168,7 @@
 					return;
 				
 
+
 				const baseRoute = {
 					type: 'Feature',
 					geometry: {
@@ -240,6 +241,7 @@
 					if (! coords || coords.length !== 2) 
 						return;
 					
+
 
 					const [a, b] = coords;
 					const lngLat = (Math.abs(a) > 90 && Math.abs(b) <= 90) ? [a, b] : [b, a];
