@@ -145,7 +145,7 @@
 
 						</div>
 						<div style="display: flex; gap: 8px; margin-top: 3px; margin-left:5px">
-							<div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;" id="category-1">Outdoor</div>
+							<div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;" id="category-1">Photography</div>
 							<div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;" id="category-2">Nature</div>
 						</div>
 						<hr>
@@ -156,50 +156,56 @@
 
 					<div class="review-box">
 						<image src="./assets/avataaars.jpg" style="width:60px; height:60px;"></image>
-					<span style="font-size: 16px; font-weight: 700;" id="review">"This trail has amazing views especially for sunset."</span>
+					<span style="font-size: 16px; font-weight: 700;" id="review">"This a great hidden spot to take photos of the sunset."</span>
 					<span style="font-size: 14px; font-weight: 500; text-align: center; display: block; margin-top: 10px;">"Dog friendly!"</span>
 
 					<image src="./assets/dog.jpg" style="width:60px; height:60px; margin-left:190px; margin-top:5px"></image>
 			</div>
 			<button style="background-color: rgb(153, 206, 153); margin-top: 30px; margin-left: 40px" onclick="goToSpecificLocation()">Open in Google Maps</button>
 
-		</div>
-		<div style="margin: 20px 50px 30px 10px; text-align: right;">
-			<button class="state-change" id="state-1">
-				<i class="fas fa-arrow-right"></i>
-			</button>
-			<button class="state-change" id="state-2">
-				<i class="fas fa-arrow-right"></i>
-			</button>
-			<span style="font-size: 12px; font-weight: 300;">for demo</span>
-		</div>
-	</body>
-</html></div><div id="nextScreen" style="display: none;" class="fade">
-<image src="./assets/arrived.jpg" style="width:100%;height:auto;"/>
-<div style="position: absolute; top: 200px; left: 60px; padding: 10px; background-color:rgb(138, 207, 138); border-radius: 16px; border-color: rgb(40, 40, 40); color: white; font-family: 'Cherry Bomb One', system-ui; font-size: 34px; font-weight: 600;" id="arrived">
-	You've Arrived!!
-</div>
-<div class="flex flex-column" style="margin-left: 40px; margin-right: 40px;">
-	<button onclick="feedbackForm()" style="margin-top: 10px; margin-bottom: 10px;">Tell us about this gem!</button>
-	<span style="font-size: 12px; text-align:center; margin-bottom: 10px">We're so proud that you've uncovered this gem! Remember to come back after you've visited. If it was truly a gem, tell us about it!</span>
-</div></div></div><script>let data_text = {};
-				        fetch('./assets/data/gem.json')
-				            .then(response => response.json())
-				            .then(data => {
-				                console.log(data); // Use your data here
-				                data_text = data[0]
-				                // document.getElementById('title').innerText = data_text["name"];
-				                // document.getElementById('address').innerText = data_text["address"];
-				                // document.getElementById('cost').innerText = data_text["dollar_sign"];
-				                // document.getElementById('open').innerText = data_text["opening_hours"];
-				                // document.getElementById('description').innerText = data_text["description"];
-				                // document.getElementById('category-1').innerText = data_text["category_1"];
-				                // document.getElementById('category-2').innerText = data_text["category_2"];
-				                // document.getElementById('review').innerText = data_text["review"];
-				                // document.getElementById('time-left').innerText = data_text["time"];
-				                // const color = data_text["color"];
-				                // document.getElementById('trip_mode').src = `./assets/${color}_trip_mode.jpg`;
-				                const gem = JSON.parse(sessionStorage.getItem("selectedGem") || "{}");
+            </div>
+            <div style="margin: 20px 50px 30px 10px; text-align: right;">
+                <button class="state-change" id="state-1">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button class="state-change" id="state-2">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <span style="font-size: 12px; font-weight: 300;">for demo</span>
+            </div>
+        </div>
+        <div id="nextScreen" style="display: none;" class="fade">
+            <image src="./assets/arrived.jpg" style="width:100%;height:auto;"/>
+            <div style="position: absolute; top: 200px; left: 60px; padding: 10px; background-color:rgb(138, 207, 138); border-radius: 16px; border-color: rgb(40, 40, 40); color: white; font-family: 'Cherry Bomb One', system-ui; font-size: 34px; font-weight: 600;" id="arrived">
+                You've Arrived!!
+            </div>
+            <div class="flex flex-column" style="margin-left: 40px; margin-right: 40px;">
+                <button onclick="feedbackForm()" style="margin-top: 10px; margin-bottom: 10px;">Tell us about this gem!</button>
+                <span style="font-size: 12px; text-align:center; margin-bottom: 10px">We're so proud that you've uncovered this gem! Remember to come back after you've visited. If it was truly a gem, tell us about it!</span>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        let data_text = {};
+        fetch('./assets/data/gem.json')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data); // Use your data here
+                data_text = data[0];
+                // document.getElementById('title').innerText = data_text["name"];
+                // document.getElementById('address').innerText = data_text["address"];
+                // document.getElementById('cost').innerText = data_text["dollar_sign"];
+                // document.getElementById('open').innerText = data_text["opening_hours"];
+                // document.getElementById('description').innerText = data_text["description"];
+                // document.getElementById('category-1').innerText = data_text["category_1"];
+                // document.getElementById('category-2').innerText = data_text["category_2"];
+                // document.getElementById('review').innerText = data_text["review"];
+                // document.getElementById('time-left').innerText = data_text["time"];
+                // const color = data_text["color"];
+                // document.getElementById('trip_mode').src = `./assets/${color}_trip_mode.jpg`;
+                const gem = JSON.parse(sessionStorage.getItem("selectedGem") || "{}");
 				const review = sessionStorage.getItem("selectedGemReview") || "";
 				
 				document.getElementById("title").innerText = gem.name || "Unknown";
@@ -213,110 +219,122 @@
 				document.getElementById("review").innerText = review;
 				document.getElementById("trip_mode").src = `./assets/${gem.color}_trip_mode.jpg`;
 				
-				                
-				            })
-				            .catch(error => console.error('Error loading JSON:', error));
-				        let latitude = 0;
-				        let longitude = 0;
-				        if (navigator.geolocation) {
-				            navigator.geolocation.getCurrentPosition(
-				                (position) => {
-				                    latitude = position.coords.latitude;
-				                    longitude = position.coords.longitude;
-				                    console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-				                    // Initialize MapLibre map
-				                    const map = new maplibregl.Map({
-				                        container: 'map',
-				                        style: 'https://api.maptiler.com/maps/basic-v2/style.json?key=hbvo5fWE9HuC6JUHKB9q',
-				                        center: [
-				                            latitude, longitude
-				                        ],
-				                        zoom: 1
-				                    });
-				                },
-				                (error) => {
-				                    console.error("Error getting location:", error);
-				                }
-				            );
-				        } else {
-				            console.error("Geolocation is not supported by this browser.");
-				        }
-				
-				        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-				
-				       //demo functionality buttons: real progress bar functionality has NOT been implemented
-				        document.getElementById('state-1').onclick = function() {
-				            const progressBar = document.getElementById('moving-progress');
-				            progressBar.style.width = 20 + '%';
-				            document.getElementById('time-left').innerText = "30 min left";
-				        }
-				
-				        document.getElementById('state-2').onclick = function() {
-				            const progressBar = document.getElementById('moving-progress');
-				            progressBar.style.width = 100 + '%';
-				            document.getElementById('time-left').innerText = "Arrived!";
-				            document.getElementById('time-left').style.marginLeft = "15px";
-				
-				            confetti({
-				                particleCount: 250,
-				                spread: 70,
-				                origin: { y: 0.6 }
-				            });
-				            setTimeout(() => {
-				                showNextScreen();
-				            }, 800);
-				
-				        }
-				
-				
-				document.getElementById('state-1').onclick = function () {
-					const progressBar = document.getElementById('moving-progress');
-					progressBar.style.width = 20 + '%';
-					document.getElementById('time-left').innerText = "30 min left";
-				}
-				
-				        //after progress is 100%, image of finish fills the page and put button to feedback quiz 
-				        function showNextScreen() {
-				            document.getElementById('progressContainer').style.display = 'none';
-				            document.getElementById('nextScreen').style.display = 'block';
-				        }
-				
-				        function goBack() {
-				            if (document.getElementById('progressContainer').style.display == 'none') {
-				                document.getElementById('nextScreen').style.display = 'none';
-				                document.getElementById('progressContainer').style.display = 'block';
-				            } else {
-				                window.location.href = "new-land.html?skipWelcome=1";
-				            }
-				        }
-				
-				        function feedbackForm() {
-				            window.location.href = "end-survey.html";
-				        }
-													
-				
-				
-				function goToSpecificLocation() {
-					const coordinates = data_text["coordinates"];
-					const url = `https://www.google.com/maps?q=${coordinates}`;
-					window.open(url, "_blank");
-				}
-				
-				// after progress is 100%, image of finish fills the page and put button to feedback quiz
-				function showNextScreen() {
-					document.getElementById('progressContainer').style.display = 'none';
-					nextScreen.style.display = 'block';
-				}
-				
-				function goBack() {
-					window.location.href = "new-land.html?skipWelcome=1";
-				}
-				
-				function feedbackForm() {
-					window.location.href = "end-survey.html";
-				}
-				
-				
-				// function updateProgress(percent) {
-				
-				// }</script></body></html>
+            })
+            .catch(error => console.error('Error loading JSON:', error));
+        let latitude = 0;
+        let longitude = 0;
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    latitude = position.coords.latitude;
+                    longitude = position.coords.longitude;
+                    console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+                    // Initialize MapLibre map
+                    const map = new maplibregl.Map({
+                        container: 'map',
+                        style: 'https://api.maptiler.com/maps/basic-v2/style.json?key=hbvo5fWE9HuC6JUHKB9q',
+                        center: [
+                            latitude, longitude
+                        ],
+                        zoom: 1
+                    });
+                },
+                (error) => {
+                    console.error("Error getting location:", error);
+                }
+            );
+        } else {
+            console.error("Geolocation is not supported by this browser.");
+        }
+
+        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+
+       //demo functionality buttons: real progress bar functionality has NOT been implemented
+        document.getElementById('state-1').onclick = function() {
+            const progressBar = document.getElementById('moving-progress');
+            progressBar.style.width = 20 + '%';
+            document.getElementById('time-left').innerText = "30 min left";
+
+        }
+
+        document.getElementById('state-2').onclick = function() {
+        //for demo video make progress bar fill slowly 
+        // progressBar.style.width = 100 + '%';
+            const progressBar = document.getElementById('moving-progress');
+            let progress = 0;
+
+            const interval = setInterval(() => {
+                if (progress >= 100) {
+                    clearInterval(interval); // stop once full
+                    console.log('Done!');
+                    return;
+                }
+                progress += 1; // increase this number to fill faster
+                progressBar.style.width = progress + '%';
+
+                if (progress >= 100) {
+                    document.getElementById('time-left').innerText = "Arrived!";
+                    document.getElementById('time-left').style.marginLeft = "15px";
+
+                    confetti({
+                        particleCount: 250,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                    setTimeout(() => {
+                        showNextScreen();
+                    }, 700);
+
+                }
+
+
+            }, 50); // interval in ms; lower = faster fill
+
+        }
+
+
+        //after progress is 100%, image of finish fills the page and put button to feedback quiz 
+        function showNextScreen() {
+            document.getElementById('progressContainer').style.display = 'none';
+            document.getElementById('nextScreen').style.display = 'block';
+        }
+
+        function goBack() {
+            if (document.getElementById('progressContainer').style.display == 'none') {
+                document.getElementById('nextScreen').style.display = 'none';
+                document.getElementById('progressContainer').style.display = 'block';
+            } else {
+                window.location.href = "new-land.html?skipWelcome=1";
+            }
+        }
+
+        function feedbackForm() {
+            window.location.href = "end-survey.html";
+        }
+									
+
+
+function goToSpecificLocation() {
+	const coordinates = data_text["coordinates"];
+	const url = `https://www.google.com/maps?q=${coordinates}`;
+	window.open(url, "_blank");
+}
+
+// after progress is 100%, image of finish fills the page and put button to feedback quiz
+function showNextScreen() {
+	document.getElementById('progressContainer').style.display = 'none';
+	nextScreen.style.display = 'block';
+}
+
+function goBack() {
+	window.location.href = "new-land.html?skipWelcome=1";
+}
+
+function feedbackForm() {
+	window.location.href = "end-survey.html";
+}
+
+
+// function updateProgress(percent) {
+
+// }</script></body></html>

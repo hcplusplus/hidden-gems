@@ -18,71 +18,32 @@
 			</header>
 
 			<main class="form-container">
-				<p class="form-intro">Tell us how your experience with this spot was!</p>
+				<p class="form-intro">Answer some questions to help improve our algorithms!</p>
 
 				<form
 					id="add-gem-form">
 					<!-- Gem Title -->
 					<div class="form-group">
-						<label for="gem-title">Gem Title*</label>
-						<input type="text" id="gem-title" name="title" placeholder="Name of this hidden gem" required>
-					</div>
-
-					<!-- Photos & Videos -->
-					<div class="form-group">
-						<label>Add Photos/Videos</label>
-						<div class="photo-upload-container">
-							<div class="photo-upload-box" id="photo-upload">
-								<span class="upload-icon">+</span>
-								<span class="upload-text">Upload</span>
+						<label for="gem-title">How would you rate the "gem" aspect of this spot?*</label>
+						<div class="tag-options">
+							<div class="tag-option" data-value="morning">
+								<span class="tag-icon">💎</span>
+								super underrated
 							</div>
-							<input type="file" id="photo-input" name="photos" accept="image/*" multiple style="display: none;">
+							<div class="tag-option" data-value="afternoon">
+								<span class="tag-icon">☀️</span>
+                                underrated
+							</div>
+							<div class="tag-option" data-value="evening">
+								<span class="tag-icon">🪨</span>
+								it was ok
+							</div>
 						</div>
-						<div class="photo-preview" id="photo-preview"></div>
-					</div>
-
-					<!-- busy -->
-					<div class="form-group">
-						<label>What was this spot like for you?</label>
-						
-							
-					</div>
-
-
-					<!-- Accessibility -->
-					<div class="form-group">
-						<label>Accessibility Level*</label>
-						<div class="radio-options">
-							<label class="radio-option">
-								<input type="radio" name="accessibility" value="easy" required>
-								<span class="radio-text">Easy (no hiking)</span>
-							</label>
-							<label class="radio-option">
-								<input type="radio" name="accessibility" value="moderate">
-								<span class="radio-text">Moderate (short walks)</span>
-							</label>
-							<label class="radio-option">
-								<input type="radio" name="accessibility" value="difficult">
-								<span class="radio-text">Difficult (hiking required)</span>
-							</label>
-						</div>
-					</div>
-
-					<!-- Cost -->
-					<div class="form-group">
-						<label>Cost*</label>
-						<div class="cost-options">
-							<div class="cost-option" data-value="free">Free</div>
-							<div class="cost-option" data-value="$">$</div>
-							<div class="cost-option" data-value="$$">$$</div>
-							<div class="cost-option" data-value="$$$">$$$</div>
-						</div>
-						<input type="hidden" name="cost" id="selected-cost">
 					</div>
 
 					<!-- Crowdedness -->
 					<div class="form-group">
-						<label>How crowded was this place?*</label>
+						<label>How would you rate the "hiddenness" of this spot?*</label>
 						<div class="slider-container">
 							<input type="range" min="1" max="5" value="2" class="range-slider" id="crowdedness-slider">
 							<div class="slider-labels">
@@ -94,80 +55,23 @@
 						<input type="hidden" name="crowdedness" id="crowdedness-value">
 					</div>
 
-					<!-- Best Time -->
+                    <!-- free space -->
 					<div class="form-group">
-						<label>Best Time to Visit</label>
-						<div class="tag-options">
-							<div class="tag-option" data-value="morning">
-								<span class="tag-icon">🌅</span>
-								Morning
-							</div>
-							<div class="tag-option" data-value="afternoon">
-								<span class="tag-icon">☀️</span>
-								Afternoon
-							</div>
-							<div class="tag-option" data-value="evening">
-								<span class="tag-icon">🌇</span>
-								Evening
-							</div>
-							<div class="tag-option" data-value="weekday">
-								<span class="tag-icon">📅</span>
-								Weekday
-							</div>
-							<div class="tag-option" data-value="weekend">
-								<span class="tag-icon">🎉</span>
-								Weekend
-							</div>
-						</div>
+						<label>Write something about this spot</label>
+                        <textarea id="gem-description" name="description" rows="4" placeholder="Tell us why this spot was a hidden gem for you or not. What was amazing or not so amazing about it? Any comments you'd like to make that others absolutely should know?" ></textarea>   
 					</div>
 
-					<!-- Amenities -->
+                    <!-- Photos & Videos -->
 					<div class="form-group">
-						<label>Available Amenities</label>
-						<div class="checkbox-options">
-							<label class="checkbox-option">
-								<input type="checkbox" name="amenities" value="parking">
-								<span class="checkbox-text">Parking</span>
-							</label>
-							<label class="checkbox-option">
-								<input type="checkbox" name="amenities" value="restrooms">
-								<span class="checkbox-text">Restrooms</span>
-							</label>
-							<label class="checkbox-option">
-								<input type="checkbox" name="amenities" value="food">
-								<span class="checkbox-text">Food/Drinks</span>
-							</label>
-							<label class="checkbox-option">
-								<input type="checkbox" name="amenities" value="wheelchair">
-								<span class="checkbox-text">Wheelchair Accessible</span>
-							</label>
-							<label class="checkbox-option">
-								<input type="checkbox" name="amenities" value="picnic">
-								<span class="checkbox-text">Picnic Area</span>
-							</label>
+						<label>Add Photos/Videos</label>
+						<div class="photo-upload-container">
+							<div class="photo-upload-box" id="photo-upload">
+								<span class="upload-icon">+</span>
+								<span class="upload-text">Upload</span>
+							</div>
+							<input type="file" id="photo-input" name="photos" accept="image/*" multiple style="display: none;">
 						</div>
-					</div>
-
-					<!-- Description -->
-					<div class="form-group">
-						<label for="gem-description">Description*</label>
-						<textarea id="gem-description" name="description" rows="4" placeholder="What makes this place special? Include any tips for visiting." required></textarea>
-					</div>
-
-					<!-- Is it Hidden? -->
-					<div class="form-group">
-						<label class="highlight-label">Is this place a true hidden gem?</label>
-						<p class="form-note">A hidden gem is a high-quality location that's not widely known or visited by most travelers.</p>
-						<div class="radio-options highlight-options">
-							<label class="radio-option">
-								<input type="radio" name="is_hidden" value="yes" required>
-								<span class="radio-text">Yes, it's a true hidden gem!</span>
-							</label>
-							<label class="radio-option">
-								<input type="radio" name="is_hidden" value="no">
-								<span class="radio-text">No, it's somewhat well-known</span>
-							</label>
-						</div>
+						<div class="photo-preview" id="photo-preview"></div>
 					</div>
 
 					<!-- Submit Button -->
@@ -244,18 +148,6 @@
 					});
 				});
 
-				// Handle cost selection
-				const costOptions = document.querySelectorAll('.cost-option');
-				const selectedCostInput = document.getElementById('selected-cost');
-
-				costOptions.forEach(option => {
-					option.addEventListener('click', function () {
-						costOptions.forEach(opt => opt.classList.remove('selected'));
-						this.classList.add('selected');
-						selectedCostInput.value = this.getAttribute('data-value');
-					});
-				});
-
 				// Handle crowdedness slider
 				const crowdednessSlider = document.getElementById('crowdedness-slider');
 				const crowdednessValue = document.getElementById('crowdedness-value');
@@ -276,28 +168,8 @@
 				document.getElementById('add-gem-form').addEventListener('submit', function (event) {
 					event.preventDefault();
 
-					// Validate gem type selection
-					const gemTypeGroup = document.querySelector('.form-group:nth-of-type(4)');
-					const selectedGemType = gemTypeGroup.querySelector('.tag-option.selected');
-
-					if (! selectedGemType) {
-						alert('Please select a gem type');
-						return;
-					}
-
 					// Get all form values
 					const formData = new FormData(this);
-
-					// Add gem type
-					formData.append('gemType', selectedGemType.getAttribute('data-value'));
-
-					// Add activities
-					const selectedActivities = Array.from(document.querySelectorAll('.form-group:nth-of-type(5) .tag-option.selected')).map(el => el.getAttribute('data-value'));
-					formData.append('activities', JSON.stringify(selectedActivities));
-
-					// Add best times
-					const selectedTimes = Array.from(document.querySelectorAll('.form-group:nth-of-type(9) .tag-option.selected')).map(el => el.getAttribute('data-value'));
-					formData.append('bestTimes', JSON.stringify(selectedTimes));
 
 					// In a real app, we would send this data to the server
 					// For this demo, we'll just log it and show a success message
@@ -306,22 +178,23 @@
 					// Show success message
 					alert('Thank you for your feedback! After review, it will be added to our collection.');
 
-					// Reset form
-					this.reset();
+					// // Reset form
+					// this.reset();
 
-					// Reset UI state
-					document.querySelectorAll('.tag-option.selected').forEach(el => {
-						el.classList.remove('selected');
-					});
+					// // Reset UI state
+					// document.querySelectorAll('.tag-option.selected').forEach(el => {
+					// 	el.classList.remove('selected');
+					// });
 
-					document.querySelectorAll('.cost-option.selected').forEach(el => {
-						el.classList.remove('selected');
-					});
+					// document.querySelectorAll('.cost-option.selected').forEach(el => {
+					// 	el.classList.remove('selected');
+					// });
 
-					photoPreview.innerHTML = '';
-					selectedCostInput.value = '';
-					crowdednessSlider.value = 2;
-					crowdednessValue.value = 2;
+					// photoPreview.innerHTML = '';
+					// selectedCostInput.value = '';
+					// crowdednessSlider.value = 2;
+					// crowdednessValue.value = 2;
+                    window.location.href = "landing-page.html";
 				});
 			});
 		</script>
