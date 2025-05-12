@@ -263,6 +263,7 @@ function initializeDetailCards(gems) {
       // Debug log
     //  console.log(`Card changed to gem at index ${activeIndex}:`, activeGem.name || 'unnamed');
      // window.HiddenGems.coordUtil.debug(coords, "Active Gem");
+     window.map.flyTo(coords);
       
       // Update the route for the active gem
       window.renderRoutes(coords);
