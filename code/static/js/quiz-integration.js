@@ -258,8 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
-            // IMPORTANT: Navigate to landing page after processing (not back to gtky.html)
-            window.location.href = "landing-page.html";
+            window.location.href = "map-recs.html";
             
         } catch (err) {
             console.error("Error in quiz processing:", err);
