@@ -1,104 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Add a Gem - Hidden Gems</title>
-		<link rel="stylesheet" href="css/main.css">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&display=swap" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Add a Gem - Hidden Gems</title>
+    <link rel="stylesheet" href="static/styles/main.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="static/js/trip-distance-calculator.js"></script>
 
 
+    <style>
+        *,
+        *::before,
+        *::after {
+            font-family: inherit;
+            box-sizing: border-box;
+        }
 
-		<style>
-			*,
-			*::before,
-			*::after {
-				font-family: inherit;
-				box-sizing: border-box;
-			}
+        body {
+            font-family: 'Nunito', sans-serif;
+        }
 
-			body {
-				font-family: 'Nunito', sans-serif;
-			}
+        .fade {
+            opacity: 1;
+            transition: opacity 1s ease;
+        }
 
-            .fade {
-                opacity: 1;
-                transition: opacity 1s ease;
-            }
+        .progress-bar {
+            height: 23px;
+            border-radius: 10px;
+            margin: 0px 40px 10px 40px;
+            background-color: rgb(226, 226, 226);
+            display: flex;
+        }
 
-            .progress-bar {
-                height: 23px;
-                border-radius: 10px;
-                margin: 0px 40px 10px 40px;
-                background-color: rgb(226, 226, 226);
-                display: flex;
-            }
-            .place-container {
-                margin: 15px 0px 0px 40px;
-            }
-            .title {
-                font-size: 24px;
-                font-weight: 500;
-            }
+        .place-container {
+            margin: 15px 0px 0px 40px;
+        }
 
-			.recommendation-image {
-				width: 100%;
-				height: 200px;
-				background-color: #ddd;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-			}
-			.recommendation-details {
-				padding: 12px;
-			}
+        .title {
+            font-size: 24px;
+            font-weight: 500;
+        }
 
-			.detail {
-				margin-bottom: 5px;
-				font-size: 14px;
-				font-weight: 700;
-			}
+        .recommendation-image {
+            width: 100%;
+            height: 200px;
+            background-color: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-			.recommendation-detail-icon {
-				margin-right: 3px;
-			}
+        .recommendation-details {
+            padding: 12px;
+        }
 
-            .quiz-option {
-                display: inline-flex;
-                align-items: center;
-                padding: 10px 16px;
-                margin: 0px 0px 10px 20px;
-                border-radius: 20px;
-                background-color: #ededed;
-                cursor: pointer;
-                transition: background-color 0.2s;
-            }
-            .moving-progress {
-                height: 23px;
-                width:0%;  /*dynamic */
-                border-radius: 10px;
-                background-color: rgb(179, 217, 179);
-            }
-            .review-box {
-                height: 200px;
-                /* margin: 30px 30px 60px 30px; */
-                background-color: rgba(255, 255, 255, 0.637);
-                border-radius: 10px;
-                padding: 10px 10px 10px 10px;
-            }
-            .state-change {
-                padding:5px;
-                background-color:rgb(230, 230, 230);
-            }
+        .detail {
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 700;
+        }
 
-        </style>
+        .recommendation-detail-icon {
+            margin-right: 3px;
+        }
 
-    </head>
+        .quiz-option {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 16px;
+            margin: 0px 0px 10px 20px;
+            border-radius: 20px;
+            background-color: #ededed;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .moving-progress {
+            height: 23px;
+            width: 0%;
+            /*dynamic */
+            border-radius: 10px;
+            background-color: rgb(179, 217, 179);
+        }
+
+        .review-box {
+            height: 200px;
+            /* margin: 30px 30px 60px 30px; */
+            background-color: rgba(255, 255, 255, 0.637);
+            border-radius: 10px;
+            padding: 10px 10px 10px 10px;
+        }
+
+        .state-change {
+            padding: 5px;
+            background-color: rgb(230, 230, 230);
+        }
+    </style>
+
+</head>
 
 <body>
     <div class="page-container">
@@ -110,10 +120,12 @@
         </button>
         <div class="flex flex-column" id="progressContainer">
             <div>
-                <img src="" style="width:100%;height:250px;margin-top:0px" id="trip_mode" alt="cover"/>
-                <div style="position: absolute; top: 150px; left: 240px; color: white; font-size: 20px; font-weight: 600;" id="time-left">
+                <img src="static/assets/red_trip_mode.jpg" style="width:100%;height:250px;margin-top:0px" id="trip_mode"
+                    alt="cover" />
+                <div style="position: absolute; top: 150px; left: 240px; color: white; font-size: 20px; font-weight: 600;"
+                    id="time-left">
                     1 hr 30 left
-                  </div>
+                </div>
             </div>
             <div>
                 <div class="progress-bar">
@@ -121,49 +133,60 @@
                         <!-- progress div -->
                     </div>
                     <span style="margin-left: 280px; position: absolute; right: 45;">🏁</span>
-                    
+
                 </div>
             </div>
 
 
-				<div class="place-container">
-					<div>
-						<div class="title" id="title" style="font-weight: 800; font-size: xx-large;"></div>
-					</div>
+            <div class="place-container">
+                <div>
+                    <div class="title" id="title" style="font-weight: 800; font-size: xx-large;"></div>
+                </div>
 
-					<div style="margin-right: 40px">
-						<div class="quiz-option" style="font-size: 14px; font-weight: 700; color:rgb(255, 255, 255); padding: 6px 12px; margin-left: 0; background-color: #f6d375;">Super Rare Gem</div>
-						<div class="detail">
-							<i class="fas fa-location-dot" style="color:#f6d375"></i>
-							<span id="address">43600 Mission Blvd, Fremont, CA</span>
-						</div>
-						<div class="detail">
-							<i class="fas fa-clock" style="color:#f6d375"></i>
-							<span id="open">6:00 AM - 10:00 PM |
-							</span>
-							<span id="cost">
-								$
-							</span>
+                <div style="margin-right: 40px">
+                    <div class="quiz-option"
+                        style="font-size: 14px; font-weight: 700; color:rgb(255, 255, 255); padding: 6px 12px; margin-left: 0; background-color: #f6d375;">
+                        Super Rare Gem</div>
+                    <div class="detail">
+                        <i class="fas fa-location-dot" style="color:#f6d375"></i>
+                        <span id="address">43600 Mission Blvd, Fremont, CA</span>
+                    </div>
+                    <div class="detail">
+                        <i class="fas fa-clock" style="color:#f6d375"></i>
+                        <span id="open">6:00 AM - 10:00 PM |
+                        </span>
+                        <span id="cost">
+                            $
+                        </span>
 
-						</div>
-						<div style="display: flex; gap: 8px; margin-top: 3px; margin-left:5px">
-							<div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;" id="category-1">Outdoor</div>
-							<div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;" id="category-2">Nature</div>
-						</div>
-						<hr>
-						<span style="font-size: 13px; font-weight:500; display:block; margin-top:0px; margin-right: 40px; margin-left: 10px" id="description">This is a small pond with a small trail and a lot of good views and good photos
-						</span>
-					</div>
+                    </div>
+                    <div style="display: flex; gap: 8px; margin-top: 3px; margin-left:5px">
+                        <div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;" id="category-1">
+                            Outdoor</div>
+                        <div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;" id="category-2">
+                            Nature</div>
+                    </div>
+                    <hr>
+                    <span
+                        style="font-size: 13px; font-weight:500; display:block; margin-top:0px; margin-right: 40px; margin-left: 10px"
+                        id="description">This is a small pond with a small trail and a lot of good views and good photos
+                    </span>
+                </div>
 
 
-					<div class="review-box">
-						<image src="./assets/avataaars.jpg" style="width:60px; height:60px;"></image>
-					<span style="font-size: 16px; font-weight: 700;" id="review">"This trail has amazing views especially for sunset."</span>
-					<span style="font-size: 14px; font-weight: 500; text-align: center; display: block; margin-top: 10px;">"Dog friendly!"</span>
+                <div class="review-box">
+                    <image src="static/assets/avataaars.jpg" style="width:60px; height:60px;"></image>
+                    <span style="font-size: 16px; font-weight: 700;" id="review">"This trail has amazing views
+                        especially for sunset."</span>
+                    <span
+                        style="font-size: 14px; font-weight: 500; text-align: center; display: block; margin-top: 10px;">"Dog
+                        friendly!"</span>
 
-					<image src="./assets/dog.jpg" style="width:60px; height:60px; margin-left:190px; margin-top:5px"></image>
-			</div>
-			<button style="background-color: rgb(153, 206, 153); margin-top: 30px; margin-left: 40px" onclick="goToSpecificLocation()">Open in Google Maps</button>
+                    <image src="static/assets/dog.jpg"
+                        style="width:60px; height:60px; margin-left:190px; margin-top:5px"></image>
+                </div>
+                <button style="background-color: rgb(153, 206, 153); margin-top: 30px; margin-left: 40px"
+                    onclick="goToSpecificLocation()">Open in Google Maps</button>
 
             </div>
             <div style="margin: 20px 50px 30px 10px; text-align: right;">
@@ -177,39 +200,128 @@
             </div>
         </div>
         <div id="nextScreen" style="display: none;" class="fade">
-            <image src="./assets/arrived.jpg" style="width:100%;height:auto;"/>
-            <div style="position: absolute; top: 200px; left: 60px; padding: 10px; background-color:rgb(138, 207, 138); border-radius: 16px; border-color: rgb(40, 40, 40); color: white; font-family: 'Cherry Bomb One', system-ui; font-size: 34px; font-weight: 600;" id="arrived">
+            <image src="static/assets/arrived.jpg" style="width:100%;height:auto;" />
+            <div style="position: absolute; top: 200px; left: 60px; padding: 10px; background-color:rgb(138, 207, 138); border-radius: 16px; border-color: rgb(40, 40, 40); color: white; font-family: 'Cherry Bomb One', system-ui; font-size: 34px; font-weight: 600;"
+                id="arrived">
                 You've Arrived!!
             </div>
             <div class="flex flex-column" style="margin-left: 40px; margin-right: 40px;">
-                <button onclick="feedbackForm()" style="margin-top: 10px; margin-bottom: 10px;">Tell us about this gem!</button>
-                <span style="font-size: 12px; text-align:center; margin-bottom: 10px">We're so proud that you've uncovered this gem! Remember to come back after you've visited. If it was truly a gem, tell us about it!</span>
+                <button onclick="feedbackForm()" style="margin-top: 10px; margin-bottom: 10px;">Tell us about this
+                    gem!</button>
+                <span style="font-size: 12px; text-align:center; margin-bottom: 10px">We're so proud that you've
+                    uncovered this gem! Remember to come back after you've visited. If it was truly a gem, tell us about
+                    it!</span>
             </div>
-            
+
         </div>
     </div>
 
     <script>
-        let data_text = {};
-        fetch('./assets/data/gem.json')
-            .then(response => response.json())
-            .then(data => {
-                console.log(data); // Use your data here
-                data_text = data[0]
-                document.getElementById('title').innerText = data_text["name"];
-                // document.getElementById('address').innerText = data_text["address"];
-                // document.getElementById('cost').innerText = data_text["dollar_sign"];
-                // document.getElementById('open').innerText = data_text["opening_hours"];
-                // document.getElementById('description').innerText = data_text["description"];
-                // document.getElementById('category-1').innerText = data_text["category_1"];
-                // document.getElementById('category-2').innerText = data_text["category_2"];
-                // document.getElementById('review').innerText = data_text["review"];
-                // document.getElementById('time-left').innerText = data_text["time"];
-                const color = data_text["color"];
-                document.getElementById('trip_mode').src = `./assets/${color}_trip_mode.jpg`;
-                
-            })
-            .catch(error => console.error('Error loading JSON:', error));
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const selectedCard = JSON.parse(sessionStorage.getItem('selectedCard'));
+
+            if (selectedCard) {
+                // If we have data in session storage, use that instead of fetching
+                console.log('Using data from session storage:', selectedCard);
+
+                // Populate page with card data
+                document.getElementById('title').innerText = selectedCard.name || 'Hidden Gem';
+                document.getElementById('address').innerText = selectedCard.address || '';
+                document.getElementById('cost').innerText = selectedCard.price || '$';
+
+                // Format opening hours with a pipe separator for the UI
+                const openingHoursText = selectedCard.openingHours ? selectedCard.openingHours + ' | ' : 'Hours not specified | ';
+                document.getElementById('open').innerText = openingHoursText;
+
+                document.getElementById('description').innerText = selectedCard.description || 'A hidden gem waiting to be explored.';
+
+                // Set categories if available
+                if (selectedCard.categories && selectedCard.categories.length > 0) {
+                    document.getElementById('category-1').innerText = selectedCard.categories[0] || 'Category';
+                    if (selectedCard.categories.length > 1) {
+                        document.getElementById('category-2').innerText = selectedCard.categories[1] || 'Category';
+                    } else {
+                        document.getElementById('category-2').style.display = 'none';
+                    }
+                }
+
+                // Set review if available
+                if (selectedCard.review) {
+                    document.getElementById('review').innerText = `"${selectedCard.review}"`;
+                }
+
+                // Set rarity label if available
+                const rarityElement = document.querySelector('.quiz-option[style*="background-color: #f6d375"]');
+                if (rarityElement && selectedCard.rarity) {
+                    let rarityText = 'Gem';
+                    if (selectedCard.rarity === 'rare') rarityText = 'Rare Gem';
+                    if (selectedCard.rarity === 'super-rare') rarityText = 'Super Rare Gem';
+                    if (selectedCard.rarity === 'ultra-rare') rarityText = 'Ultra Rare Gem';
+                    rarityElement.innerText = rarityText;
+                }
+
+                // Set time left if available
+                if (selectedCard.timeDisplay) {
+                    document.getElementById('time-left').innerText = selectedCard.timeDisplay;
+                }
+
+                // Set gem color for the trip image
+                const gemColor = selectedCard.gemColor || 'red';
+                document.getElementById('trip_mode').src = `static/assets/${gemColor}_trip_mode.jpg`;
+
+                // Add trip distance info styles to document head
+                const style = document.createElement('style');
+                style.textContent = tripInfoStyles;
+                document.head.appendChild(style);
+
+                // Add trip distance info section after description
+                const descriptionElement = document.querySelector('#description');
+                if (descriptionElement && descriptionElement.parentNode) {
+                    const tripInfoHTML = createTripDistanceInfo(selectedCard);
+                    const tripInfoContainer = document.createElement('div');
+                    tripInfoContainer.innerHTML = tripInfoHTML;
+
+                    // Insert after the description's parent div
+                    descriptionElement.parentNode.parentNode.insertBefore(
+                        tripInfoContainer,
+                        descriptionElement.parentNode.nextSibling
+                    );
+                }
+
+                // Save coordinates for Google Maps
+                if (selectedCard.coordinates) {
+                    sessionStorage.setItem('coordinates', selectedCard.coordinates);
+                }
+            } else {
+                // Fall back to fetching from JSON if no data in session storage
+                let data_text = {};
+                fetch('static/assets/data/gem.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Fetched data from JSON:', data);
+                        data_text = data[0];
+
+                        // Populate basic info
+                        document.getElementById('title').innerText = data_text["name"];
+                        //document.getElementById('address').innerText = data_text["address"] || '';
+                        //document.getElementById('cost').innerText = data_text["dollar_sign"] || '$';
+                        //document.getElementById('open').innerText = data_text["opening_hours"] ? data_text["opening_hours"] + ' | ' : 'Hours not specified | ';
+                        //document.getElementById('description').innerText = data_text["description"] || '';
+                        document.getElementById('category-1').innerText = data_text["category"] || 'Category';
+                        //document.getElementById('category-2').innerText = data_text["category_2"] || 'Category';
+                        document.getElementById('review').innerText = data_text["review"] ? `"${data_text["review"]}"` : '';
+                        //document.getElementById('time-left').innerText = data_text["time"] || '1 hr 30 left';
+
+                        const color = data_text["color"] || 'red';
+                        document.getElementById('trip_mode').src = `./assets/${color}_trip_mode.jpg`;
+
+
+                    })
+                    .catch(error => console.error('Error loading JSON:', error));
+            }
+        });
+
         let latitude = 0;
         let longitude = 0;
         if (navigator.geolocation) {
@@ -218,15 +330,7 @@
                     latitude = position.coords.latitude;
                     longitude = position.coords.longitude;
                     console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-                    // Initialize MapLibre map
-                    const map = new maplibregl.Map({
-                        container: 'map',
-                        style: 'https://api.maptiler.com/maps/basic-v2/style.json?key=hbvo5fWE9HuC6JUHKB9q',
-                        center: [
-                            latitude, longitude
-                        ],
-                        zoom: 1
-                    });
+
                 },
                 (error) => {
                     console.error("Error getting location:", error);
@@ -238,14 +342,14 @@
 
         console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
 
-       //demo functionality buttons: real progress bar functionality has NOT been implemented
-        document.getElementById('state-1').onclick = function() {
+        //demo functionality buttons: real progress bar functionality has NOT been implemented
+        document.getElementById('state-1').onclick = function () {
             const progressBar = document.getElementById('moving-progress');
             progressBar.style.width = 20 + '%';
             document.getElementById('time-left').innerText = "30 min left";
         }
 
-        document.getElementById('state-2').onclick = function() {
+        document.getElementById('state-2').onclick = function () {
             const progressBar = document.getElementById('moving-progress');
             progressBar.style.width = 100 + '%';
             document.getElementById('time-left').innerText = "Arrived!";
@@ -263,11 +367,11 @@
         }
 
 
-document.getElementById('state-1').onclick = function () {
-	const progressBar = document.getElementById('moving-progress');
-	progressBar.style.width = 20 + '%';
-	document.getElementById('time-left').innerText = "30 min left";
-}
+        document.getElementById('state-1').onclick = function () {
+            const progressBar = document.getElementById('moving-progress');
+            progressBar.style.width = 20 + '%';
+            document.getElementById('time-left').innerText = "30 min left";
+        }
 
         //after progress is 100%, image of finish fills the page and put button to feedback quiz 
         function showNextScreen() {
@@ -287,30 +391,33 @@ document.getElementById('state-1').onclick = function () {
         function feedbackForm() {
             window.location.href = "end-survey.html";
         }
-									
 
 
-function goToSpecificLocation() {
-	const coordinates = data_text["coordinates"];
-	const url = `https://www.google.com/maps?q=${coordinates}`;
-	window.open(url, "_blank");
-}
 
-// after progress is 100%, image of finish fills the page and put button to feedback quiz
-function showNextScreen() {
-	document.getElementById('progressContainer').style.display = 'none';
-	nextScreen.style.display = 'block';
-}
+        function goToSpecificLocation() {
+            const coordinates = data_text["coordinates"];
+            const url = `https://www.google.com/maps?q=${coordinates}`;
+            window.open(url, "_blank");
+        }
 
-function goBack() {
-	window.location.href = "landing-page.html?skipWelcome=1";
-}
+        // after progress is 100%, image of finish fills the page and put button to feedback quiz
+        function showNextScreen() {
+            document.getElementById('progressContainer').style.display = 'none';
+            nextScreen.style.display = 'block';
+        }
 
-function feedbackForm() {
-	window.location.href = "end-survey.html";
-}
+        function goBack() {
+            window.location.href = "landing-page.html?skipWelcome=1";
+        }
+
+        function feedbackForm() {
+            window.location.href = "end-survey.html";
+        }
 
 
-// function updateProgress(percent) {
+        // function updateProgress(percent) {
 
-// }</script></body></html>
+        // }</script>
+</body>
+
+</html>

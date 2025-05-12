@@ -1,0 +1,327 @@
+/* Reset body background */
+body {
+    /* background: linear-gradient(to bottom, #eaf6f2, #ffffff); */
+    font-family: 'Helvetica Neue', sans-serif;
+    margin: 0;
+}
+
+/* Page Container */
+.page-container {
+    background: linear-gradient(to bottom, #eaf6f2, #ffffff);
+    max-width: 430px;
+    margin: 0 auto;
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 100px; /* Space for bottom nav if needed */
+}
+
+/* Header */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background: white;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* Title */
+.page-title {
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    flex-grow: 1;
+    color: #333;
+}
+
+/* Back button */
+.back-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Spacer to center title */
+.header-spacer {
+    width: 32px;
+}
+
+/* Main form */
+.form-container {
+    padding: 24px 16px;
+}
+
+/* Form intro */
+.form-intro {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+/* Form group */
+.form-group {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* Labels */
+label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+/* Inputs, selects, textareas */
+input[type="text"],
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    background: #f8f8f8;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    box-shadow: inset 0 0 2px rgba(0,0,0,0.05);
+}
+
+input[type="text"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    background: #eef5f2;
+}
+
+/* Location input container */
+.location-input-container {
+    display: flex;
+    gap: 8px;
+}
+
+/* Location button */
+.location-button {
+    background: #eaf6f2;
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+}
+
+/* Map placeholder */
+.map-placeholder {
+    margin-top: 10px;
+    background: #f4f4f4;
+    height: 140px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #999;
+    font-size: 14px;
+}
+
+/* Upload Section */
+.photo-upload-container {
+    display: flex;
+    gap: 12px;
+}
+
+.photo-upload-box {
+    width: 72px;
+    height: 72px;
+    background: #f4f7f6;
+    border: 2px dashed #cce2dc;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #88a3a0;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+/* Photo preview */
+.photo-preview {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.preview-item {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.remove-photo {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 20px;
+    height: 20px;
+    background: rgba(0,0,0,0.6);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* Tag Options */
+.tag-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.tag-option {
+    background: #f0f5f3;
+    color: #333;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.tag-option.selected {
+    background: #94c9ba;
+    color: white;
+}
+
+/* Radio / Checkbox Options */
+.radio-options,
+.checkbox-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.radio-option,
+.checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.radio-text,
+.checkbox-text {
+    font-size: 14px;
+}
+
+/* Cost Options */
+.cost-options {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.cost-option {
+    width: 48px;
+    height: 48px;
+    background: #f0f5f3;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.cost-option.selected {
+    background: #94c9ba;
+    color: white;
+}
+
+/* Range slider */
+.slider-container {
+    margin-top: 8px;
+}
+
+.range-slider {
+    width: 100%;
+    height: 6px;
+    background: #cfe9e1;
+    border-radius: 3px;
+}
+
+.range-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #94c9ba;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -7px; /* align thumb */
+}
+
+/* Slider labels */
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #666;
+}
+
+/* Form actions */
+.form-actions {
+    margin-top: 32px;
+}
+
+.submit-button {
+    width: 100%;
+    background: #94c9ba;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: background 0.2s;
+}
+
+.submit-button:hover {
+    background: #7fb7a7;
+}
+
+
