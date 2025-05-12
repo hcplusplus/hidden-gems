@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (closeButton) {
         closeButton.addEventListener('click', function() {
             if (confirm('Are you sure you want to exit the quiz? Your progress will be lost.')) {
-                window.location.href = "landing-page.html?skipWelcome=1";
+                window.location.href = "index.html?skipWelcome=1";
             }
         });
     }

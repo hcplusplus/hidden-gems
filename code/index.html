@@ -24,14 +24,15 @@
 
 
 	<!-- javascripts -->
-	<script src="static/js/data-controller.js"></script>
 
-	<script src="static/js/main.js"></script>
-	<script src="static/js/gem-cards.js"></script>
-	<script src="static/js/map-controller.js"></script>
+<script src="static/js/data-controller.js"></script>
+<script src="static/js/main.js"></script>
+<script src="static/js/gem-cards.js"></script>
+<script src="static/js/map-controller.js"></script>
 
-	<script src="static/js/swipe.js"></script>
-	<script src="static/js/nav-wheel.js"></script>
+<script src="static/js/nav-wheel.js"></script>
+<script src="static/js/swipe.js"></script>
+
 	
 
 	<style>
@@ -130,9 +131,6 @@
 	<div class="container">
 		<div id="map"></div>
 
-
-
-
 		<div class="legend">
 			<div>
 				<img src="static/icons/gem-red.svg" class="legend-icon" alt="Most Hidden Gem" />
@@ -149,7 +147,6 @@
 		</div>
 
 
-
 		<!-- Swipe indicators above the cards -->
 		<div class="swipe-indicator">
 			<!-- Will be populated by JavaScript -->
@@ -159,7 +156,6 @@
 		<gem-cards variant="index" marker-id=".maplibregl-marker"></gem-cards>
 
 		<!-- Navigation wheel positioned at top right of cards-section -->
-		<!-- Replace your existing nav wheel HTML with this -->
 		<nav-wheel>
 			<nav-item label="Add a Gem" icon="💎" href="/add-gem.html"></nav-item>
 			<nav-item label="Start a Trip" icon="🗺️" href="/gtky.html"></nav-item>
@@ -175,61 +171,7 @@
 	</div>
 
 	<script>
-		document.addEventListener('DOMContentLoaded', function () {
-    console.log("Index page initialized");
-    
-    // Check if welcome should be shown based on URL parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    const skipWelcome = urlParams.get('skipWelcome') === '1';
-    
-    // Handle welcome overlay visibility
-    const welcomeOverlay = document.getElementById('welcome-overlay');
-    if (skipWelcome) {
-        welcomeOverlay.style.display = 'none';
-        // Initialize app directly if skipping welcome
-        window.initializeAppDirectly();
-    } else {
-        welcomeOverlay.style.display = 'flex';
-        window.showWelcomeMessage();
-    }
-    
-    // We don't need the existing button event handlers as they'll be
-    // assigned in showWelcomeMessage() function
-    
-    // Still keep the other event listeners for data management
-    if (window.HiddenGems && window.HiddenGems.cards) {
-        const originalToggle = window.HiddenGems.cards.toggleGemSelection;
 
-        window.HiddenGems.cards.toggleGemSelection = function (gemId, buttonEl) {
-            console.log("Toggling gem selection:", gemId);
-
-            // First, use the original function for UI updates
-            if (typeof originalToggle === 'function') {
-                originalToggle.call(this, gemId, buttonEl);
-            }
-
-            // Then, ensure the data controller is updated
-            if (window.HiddenGems.data) {
-                // Toggle the gem selection in data controller
-                window.HiddenGems.data.selectedGems.toggle(gemId);
-                console.log("Updated gem selection in data controller");
-            }
-        };
-    }
-
-    // Initialize gems-loading logic via observer
-    document.addEventListener('gemsLoaded', function (event) {
-        console.log("Gems loaded event received");
-
-        if (event.detail && event.detail.gems) {
-            // Save gems to data controller
-            if (window.HiddenGems && window.HiddenGems.data) {
-                window.HiddenGems.data.saveGems(event.detail.gems);
-                console.log("Saved gems to data controller:", event.detail.gems.length);
-            }
-        }
-    });
-});
 	</script>
 <script src="static/js/delayed-initialization.js"></script>
 </body>

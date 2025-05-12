@@ -580,6 +580,25 @@ class GemCards extends HTMLElement {
       this.loadGemsFromCommonSources();
     }
   }
+
+  /**
+ * Load gems from data controller
+ */
+loadGemsFromDataController() {
+  if (!window.HiddenGems || !window.HiddenGems.data) return;
+  
+  console.log('Attempting to load gems from data controller');
+  
+  // Listen for data controller initialization if not already initialized
+  if (!window.HiddenGems.data.initialized) {
+    document.addEventListener('dataControllerInitialized', () => {
+      this.loadGemsFromCommonSources();
+    });
+    return;
+  }
+  
+  this.loadGemsFromCommonSources();
+}
   
   /**
    * Handle app initialization
@@ -633,20 +652,150 @@ class GemCards extends HTMLElement {
     return ['variant', 'active-index', 'marker-id', 'gems-data'];
   }
   
-  /**
-   * Handle gems loaded event from document
-   * @param {CustomEvent} event - The gemsLoaded event
-   */
-  handleGemsLoaded(event) {
-    if (event.detail && event.detail.gems) {
-      if (this.mapReady) {
-        this.renderCards(event.detail.gems);
-      } else {
-        // Store for later rendering
-        this.pendingGems = event.detail.gems;
+/**
+ * Get gem data at index - Updated to use data controller
+ * @param {number} index - Index of the gem
+ * @returns {Object|null} Gem data or null if not found
+ */
+getGemAtIndex(index) {
+  // First try data controller's gems
+  if (window.HiddenGems && window.HiddenGems.data) {
+    if (window.HiddenGems.data.gems && 
+        index >= 0 && index < window.HiddenGems.data.gems.length) {
+      return window.HiddenGems.data.gems[index];
+    }
+    
+    // Try to get from storage through data controller
+    const storageSources = [
+      'pageGems', 'recommendedGems', 'shuffledGems', 'routeFilteredGems', 'gems'
+    ];
+    
+    for (const source of storageSources) {
+      const gems = window.HiddenGems.data.storage.getSession(source);
+      if (gems && index >= 0 && index < gems.length) {
+        return gems[index];
       }
     }
   }
+  
+  // Fallback to direct sessionStorage checks
+  const sources = [
+    'recommendedGems', 'shuffledGems', 'routeFilteredGems', 'gems'
+  ];
+  
+  for (const source of sources) {
+    const storedData = sessionStorage.getItem(source);
+    if (storedData) {
+      try {
+        const gems = JSON.parse(storedData);
+        if (index >= 0 && index < gems.length) {
+          return gems[index];
+        }
+      } catch (error) {
+        console.error(`Error parsing ${source}:`, error);
+      }
+    }
+  }
+  
+  // Last resort - return from this.gems array
+  if (this.gems && index >= 0 && index < this.gems.length) {
+    return this.gems[index];
+  }
+  
+  return null;
+}
+
+/**
+ * Load gems from common sources - Updated to use data controller
+ */
+loadGemsFromCommonSources() {
+  if (!this.mapReady) return;
+  
+  // First check data controller
+  if (window.HiddenGems && window.HiddenGems.data) {
+    // Try to access current page gems
+    if (window.HiddenGems.data.pageGems && 
+        window.HiddenGems.data.pageGems.length > 0) {
+      this.renderCards(window.HiddenGems.data.pageGems);
+      return;
+    }
+    
+    // Try to get gems from data controller storage
+    const storageSources = [
+      'pageGems', 'recommendedGems', 'shuffledGems', 'routeFilteredGems', 'gems'
+    ];
+    
+    for (const source of storageSources) {
+      const gems = window.HiddenGems.data.storage.getSession(source);
+      if (gems && gems.length > 0) {
+        this.renderCards(gems);
+        return;
+      }
+    }
+  }
+  
+  // Fall back to checking sessionStorage directly
+  const sessionStorageKeys = [
+    'recommendedGems', 'routeFilteredGems', 'shuffledGems', 'gems'
+  ];
+  
+  for (const key of sessionStorageKeys) {
+    const stored = sessionStorage.getItem(key);
+    if (stored) {
+      try {
+        const gems = JSON.parse(stored);
+        if (Array.isArray(gems) && gems.length > 0) {
+          this.renderCards(gems);
+          return;
+        }
+      } catch (error) {
+        console.warn(`Error parsing gems from sessionStorage key ${key}:`, error);
+      }
+    }
+  }
+  
+  // If nothing found, try to load from data controller's allGems
+  if (window.HiddenGems?.data?.allGems?.length > 0) {
+    // Take a random sample
+    const sampleSize = 10;
+    const allGems = window.HiddenGems.data.allGems;
+    
+    if (window.HiddenGems.data.utils.sampleArray) {
+      const sample = window.HiddenGems.data.utils.sampleArray(allGems, sampleSize);
+      this.renderCards(sample);
+    } else {
+      // Simple random sample
+      const shuffled = [...allGems].sort(() => 0.5 - Math.random());
+      const sample = shuffled.slice(0, sampleSize);
+      this.renderCards(sample);
+    }
+    return;
+  }
+}
+
+/**
+ * Handle gems loaded event from document - Updated to use data controller
+ * @param {CustomEvent} event - The gemsLoaded event
+ */
+handleGemsLoaded(event) {
+  if (event.detail && event.detail.gems) {
+    // Process gems from event
+    const gems = event.detail.gems;
+    
+    // Always save to data controller if available
+    if (window.HiddenGems?.data?.saveGems) {
+      window.HiddenGems.data.saveGems(gems);
+    }
+    
+    // Render in this component
+    if (this.mapReady) {
+      this.renderCards(gems);
+    } else {
+      // Store for later rendering
+      this.pendingGems = gems;
+    }
+  }
+}
   
   /**
    * Load gems from the gems-data attribute
@@ -665,51 +814,8 @@ class GemCards extends HTMLElement {
     }
   }
   
-  /**
-   * Load gems from common sources (window.HiddenGems, sessionStorage, etc.)
-   */
-  loadGemsFromCommonSources() {
-    if (!this.mapReady) return;
-    
-    // Check if gems are in HiddenGems namespace
-    if (window.HiddenGems && window.HiddenGems.data && window.HiddenGems.data.gems) {
-      this.renderCards(window.HiddenGems.data.gems);
-      return;
-    }
-    
-    // Check sessionStorage for common gem storage keys
-    const sessionStorageKeys = [
-      'recommendedGems',
-      'routeFilteredGems',
-      'shuffledGems',
-      'gems'
-    ];
-    
-    for (const key of sessionStorageKeys) {
-      const stored = sessionStorage.getItem(key);
-      if (stored) {
-        try {
-          const gems = JSON.parse(stored);
-          if (Array.isArray(gems) && gems.length > 0) {
-            this.renderCards(gems);
-            return;
-          }
-        } catch (error) {
-          console.warn(`Error parsing gems from sessionStorage key ${key}:`, error);
-        }
-      }
-    }
-    
-    // Check the data controller if available
-    if (window.HiddenGemsData && window.HiddenGemsData.gemsData) {
-      const gems = window.HiddenGemsData.gemsData.getAll();
-      if (gems && gems.length > 0) {
-        this.renderCards(gems);
-        return;
-      }
-    }
-  }
-  
+ 
+
   /**
    * Update the variant-specific styles and elements
    */
@@ -1132,6 +1238,34 @@ class GemCards extends HTMLElement {
     card.addEventListener('click', () => {
       // Only apply marker highlighting, not card switch (since we're already on it)
       this.highlightMarker(index);
+
+      // Get gem coordinates
+  const gem = this.gems[index];
+  const coords = gem.coords || gem.coordinates;
+  
+  // Center map on gem if map is available and coordinates exist
+  if (window.map && coords && coords.length === 2) {
+    // Ensure coordinates are in the correct format [lng, lat]
+    let lngLat;
+    if (Math.abs(coords[0]) > 90 && Math.abs(coords[1]) <= 90) {
+      lngLat = coords; // Already in [lng, lat] format
+    } else if (Math.abs(coords[0]) <= 90 && Math.abs(coords[1]) > 90) {
+      lngLat = [coords[1], coords[0]]; // Need to swap to [lng, lat] format
+    } else {
+      // For Northern California, longitude is negative, latitude is positive
+      lngLat = coords[0] < 0 ? coords : [coords[1], coords[0]];
+    }
+    
+    // Center map on gem with smooth animation
+    window.map.flyTo({
+      center: lngLat,
+      essential: true,
+      duration: 800,
+      easing: function(t) {
+        return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+      }
+    });
+  }
       
       // Dispatch card click event
       this.dispatchEvent(new CustomEvent('card-click', {
@@ -1349,6 +1483,13 @@ class GemCards extends HTMLElement {
    * @param {number} index - Index of card to show
    */
   showCard(index) {
+
+
+// Update data controller state
+if (window.HiddenGems && window.HiddenGems.data) {
+  window.HiddenGems.data.activeGemIndex = index;
+}
+
     if (!this.mapReady || !this.gems || !this.gems.length) return;
 
     // Prevent recursive calls
@@ -1416,6 +1557,35 @@ class GemCards extends HTMLElement {
     if (this.cardVariant === 'detail') {
       this.updateTripDistanceInfo(index);
     }
+
+    // NEW CODE: Center map on the active gem
+  if (window.map && this.gems[index]) {
+    const gem = this.gems[index];
+    const coords = gem.coords || gem.coordinates;
+    
+    if (coords && coords.length === 2) {
+      // Ensure coordinates are in the correct format [lng, lat]
+      let lngLat;
+      if (Math.abs(coords[0]) > 90 && Math.abs(coords[1]) <= 90) {
+        lngLat = coords; // Already in [lng, lat] format
+      } else if (Math.abs(coords[0]) <= 90 && Math.abs(coords[1]) > 90) {
+        lngLat = [coords[1], coords[0]]; // Need to swap to [lng, lat] format
+      } else {
+        // For Northern California, longitude is negative, latitude is positive
+        lngLat = coords[0] < 0 ? coords : [coords[1], coords[0]];
+      }
+      
+      // Center map on gem with smooth animation
+      window.map.flyTo({
+        center: lngLat,
+        essential: true,
+        duration: 800,
+        easing: function(t) {
+          return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+        }
+      });
+    }
+  }
     
     // Dispatch event for card change
     this.dispatchEvent(new CustomEvent('card-change', {

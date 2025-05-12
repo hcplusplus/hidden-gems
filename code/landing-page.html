@@ -1,415 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		<title>Hidden Gems - Northern California</title>
-		<link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet"/>
-		<script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
-		
-		<link rel="stylesheet" href="static/styles/new-aesthetics.css">
-		
-		<link rel="stylesheet" href="static/styles/layout-fixes.css">
-		<link rel="stylesheet" href="static/styles/card-styles.css">
-		<!-- javascripts -->
-	
-		<script src="static/js/data-controller.js"></script>
-		<script src="static/js/main.js"></script>
-		<script src="static/js/gem-cards.js"></script>
-		<script src="static/js/gem-navigation.js"></script>
-		<script src="static/js/gem-sparkle.js"></script>
-		<script src="static/js/preferences.js"></script>
-		<script src="static/js/nav-wheel.js"></script>
-		<script src="static/js/swipe.js"></script>
-		<script src="static/js/route-renderer.js"></script>
-	
-	
-	</head>
-	<body>
-		<div class="container">
-			<div id="map"></div>
-			<div class="legend">
-				<div>
-					<img src="/static/icons/gem-red.svg" class="legend-icon" alt="Most Hidden Gem"/>
-					Most Hidden
-				</div>
-				<div>
-					<img src="/static/icons/gem-purple.svg" class="legend-icon" alt="Moderately Hidden Gem"/>
-					Moderately Hidden
-				</div>
-				<div>
-					<img src="/static/icons/gem-blue.svg" class="legend-icon" alt="Least Hidden Gem"/>
-					Least Hidden
-				</div>
-			</div>
 
-			
-    <!-- Swipe indicators above the cards -->
-    <div class="swipe-indicator">
-      <!-- Will be populated by JavaScript -->
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hidden Gems - Northern California</title>
+    <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+    <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+
+    <link rel="stylesheet" href="static/styles/new-aesthetics.css">
+    <link rel="stylesheet" href="static/styles/layout-fixes.css">
+    <link rel="stylesheet" href="static/styles/card-styles.css">
+    
+    <!-- Core JavaScript files -->
+    <script src="static/js/data-controller.js"></script>
+    <script src="static/js/main.js"></script>
+    <script src="static/js/gem-cards.js"></script>
+    <script src="static/js/map-controller.js"></script>
+    <script src="static/js/nav-wheel.js"></script>
+    <script src="static/js/swipe.js"></script>
+    
+    <script src="static/js/landing-page.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div id="map"></div>
+        <div class="legend">
+            <div>
+                <img src="/static/icons/gem-red.svg" class="legend-icon" alt="Most Hidden Gem" />
+                Most Hidden
+            </div>
+            <div>
+                <img src="/static/icons/gem-purple.svg" class="legend-icon" alt="Moderately Hidden Gem" />
+                Moderately Hidden
+            </div>
+            <div>
+                <img src="/static/icons/gem-blue.svg" class="legend-icon" alt="Least Hidden Gem" />
+                Least Hidden
+            </div>
+        </div>
+
+        <!-- Swipe indicators above the cards -->
+        <div class="swipe-indicator">
+            <!-- Will be populated by JavaScript -->
+        </div>
+
+        <!-- Cards container -->
+        <gem-cards variant="detail" marker-id=".maplibregl-marker"></gem-cards>
+
+        <!-- Navigation wheel positioned at top right of cards-section -->
+        <nav-wheel>
+            <nav-item label="Add a Gem" icon="💎" href="/add-gem.html"></nav-item>
+            <nav-item label="Start a Trip" icon="🗺️" href="/gtky.html"></nav-item>
+        </nav-wheel>
     </div>
-    
-    <!-- Cards container -->
-	<gem-cards variant="detail" marker-id=".maplibregl-marker"></gem-cards>
+</body>
 
-	   <!-- Navigation wheel positioned at top right of cards-section -->
- <!-- Replace your existing nav wheel HTML with this -->
-<nav-wheel>
-  <nav-item label="Add a Gem" icon="💎" href="/add-gem.html"></nav-item>
-  <nav-item label="Start a Trip" icon="🗺️" href="/gtky.html"></nav-item>
-</nav-wheel>
-			
-
-		</div>
-
-		<script>
-	
-			document.addEventListener('DOMContentLoaded', function() {
-    // Get coordinates from sessionStorage
-    var originCoords = JSON.parse(sessionStorage.getItem("originCoords"));
-    var destinationCoords = JSON.parse(sessionStorage.getItem("destinationCoords"));
-
-
-    console.log("Landing page initialized");
-
-    // Initialize map if we have coordinates
-    if (originCoords && destinationCoords) {
-        const midPoint = [
-            (originCoords[0] + destinationCoords[0]) / 2,
-            (originCoords[1] + destinationCoords[1]) / 2
-        ];
-
-				// Check what's in window.map before we create our map
-console.log("Before map creation, window.map is:", typeof window.map, window.map ? window.map.constructor.name : 'null');
-        
-        const map = new maplibregl.Map({
-            container: 'map',
-            style: 'https://api.maptiler.com/maps/basic-v2/style.json?key=hbvo5fWE9HuC6JUHKB9q',
-            center: midPoint,
-            zoom: 10
-        });
-
-		//window.map = map;
-        map.addControl(new maplibregl.NavigationControl(), 'top-left');
-
-
-        // Load the gems when map is ready
-        map.on('load', function() {
-            loadFilteredGems(originCoords, destinationCoords, map);
-
-        });
-
-        // Define function to render routes
-        window.renderRoutes = function(gemCoords) {
-            if (!originCoords || !destinationCoords || !gemCoords) 
-                return;
-            
-            const baseRoute = {
-                type: 'Feature',
-                geometry: {
-                    type: 'LineString',
-                    coordinates: [originCoords, destinationCoords]
-                }
-            };
-
-            const detourRoute = {
-                type: 'Feature',
-                geometry: {
-                    type: 'LineString',
-                    coordinates: [originCoords, gemCoords, destinationCoords]
-                }
-            };
-
-            if (!map.getSource('baseRoute')) {
-                map.addSource('baseRoute', {
-                    type: 'geojson',
-                    data: baseRoute
-                });
-                map.addLayer({
-                    id: 'baseRouteLine',
-                    type: 'line',
-                    source: 'baseRoute',
-                    paint: {
-                        'line-color': '#000',
-                        'line-width': 4
-                    }
-                });
-            } else {
-                map.getSource('baseRoute').setData(baseRoute);
-            }
-
-            if (!map.getSource('detourRoute')) {
-                map.addSource('detourRoute', {
-                    type: 'geojson',
-                    data: detourRoute
-                });
-                map.addLayer({
-                    id: 'detourRouteLine',
-                    type: 'line',
-                    source: 'detourRoute',
-                    paint: {
-                        'line-color': '#000',
-                        'line-width': 2,
-                        'line-dasharray': [2, 2]
-                    }
-                });
-            } else {
-                map.getSource('detourRoute').setData(detourRoute);
-            }
-        };
-    } else {
-        console.error("Missing origin or destination coordinates");
-        // Handle case where coordinates aren't available
-        document.getElementById('map').innerHTML = 
-            '<div style="padding: 20px; text-align: center;">Please set your trip origin and destination first.</div>';
-    }
-});
-
-// Function to load and process gems
-function loadFilteredGems(originCoords, destinationCoords, map) {
-    const routeFilteredGemsStr = sessionStorage.getItem("routeFilteredGems");
-
-    if (routeFilteredGemsStr) {
-        try {
-            const parsedGems = JSON.parse(routeFilteredGemsStr);
-            
-
-            const shuffledGems = window.HiddenGems.gemShuffler.filterAndShuffleGemsAlongRoute(parsedGems, originCoords, destinationCoords);
-			const limitGems = shuffledGems.slice(0, window.HiddenGems.constants.DEFAULT_LIMIT); // Limit to 10 gems
-			console.log("Shuffled gems:", limitGems);
-            sessionStorage.setItem("recommendedGems", JSON.stringify(limitGems));
-            renderGems(limitGems, map);
-				
-             // Initialize enhanced cards if available
-            if (window.HiddenGems && window.HiddenGems.enhancedCards) {
-                window.HiddenGems.enhancedCards.initialize();
-            }
-            
-           
-        } catch (error) {
-            console.error("Error processing gems:", error);
-        }
-    } else {
-        console.log("No filtered gems found in sessionStorage, checking if filterGemsByRoute is available");
-        
-        // Try to load gems if we have the function but no stored gems
-        if (typeof window.filterGemsByRoute === 'function' && originCoords && destinationCoords) {
-            console.log("Attempting to filter gems by route...");
-            window.filterGemsByRoute(originCoords, destinationCoords).then(gems => {
-                if (gems && gems.length > 0) {
-                    sessionStorage.setItem("routeFilteredGems", JSON.stringify(gems));
-                    const shuffledGems = window.HiddenGems.utils.ShuffleArray(gems);
-					console.log("Shuffled gems:", shuffledGems);
-               		sessionStorage.setItem("recommendedGems", JSON.stringify(shuffledGems));
-                    renderGems(shuffledGems, map);
-                    
-                    if (window.HiddenGems && window.HiddenGems.enhancedCards) {
-                        window.HiddenGems.enhancedCards.initialize();
-                    }
-                } else {
-                    console.log("No gems found along the route");
-                }
-            }).catch(err => {
-                console.error("Error filtering gems:", err);
-            });
-        } else {
-            console.log("Cannot filter gems, function not available or missing coordinates");
-        }
-    }
-}
-
-// Function to initialize detail cards
-function initializeDetailCards(gems) {
-  // Find the detail cards element
-  const detailCards = document.querySelector('gem-cards[variant="detail"]');
-  
-  if (!detailCards) {
-    console.error("Detail cards element not found");
-    return;
-  }
-  
-  console.log("Initializing detail cards with", gems.length, "gems");
-  
-  // Set the gems data
-  detailCards.setGems(gems);
-  
-  // Listen for card changes
-  detailCards.addEventListener('card-change', function(event) {
-    const { index, gem } = event.detail;
-    console.log(`Detail view changed to: ${gem.name} (index: ${index})`);
-    
-    // If you want to sync with other components
-    if (window.activeGemIndex !== index) {
-      window.activeGemIndex = index;
-      
-      // Update marker highlighting if needed
-      if (window.markers && window.markers.length > index) {
-        // Trigger marker click event
-        const markerEl = window.markers[index].getElement();
-        if (markerEl) {
-          // Don't actually click (would cause loop), just update visuals
-          updateMarkerStyles(index);
-        }
-      }
-      
-      // Update route display if needed
-      if (typeof window.renderRoutes === 'function') {
-        const coords = gem.coords || gem.coordinates;
-        if (coords) {
-          window.renderRoutes(coords);
-        }
-      }
-    }
-  });
-  
- 
-  // Show the first gem
-  detailCards.showCard(0);
-  
-  // Helper function to update marker styles
-  function updateMarkerStyles(activeIndex) {
-    window.markers.forEach((marker, i) => {
-      const el = marker.getElement();
-      if (!el) return;
-      
-      if (i === activeIndex) {
-        // Active marker
-        el.style.transform = 'scale(1.4)';
-        el.style.zIndex = '100';
-        el.style.filter = 'drop-shadow(0 0 4px rgba(0, 0, 0, 0.3))';
-      } else {
-        // Inactive marker
-        el.style.transform = 'scale(1.0)';
-        el.style.zIndex = '1';
-        el.style.filter = 'none';
-      }
-    });
-  }
-}
-
-// Function to render gems on the map
-function renderGems(gems, map) {
-    if (!Array.isArray(gems)) {
-        console.error("Expected gems to be an array, got:", typeof gems);
-        try {
-            // Try to parse if it's a string
-            if (typeof gems === 'string') {
-                gems = JSON.parse(gems);
-                if (!Array.isArray(gems)) {
-                    console.error("Still not an array after parsing:", typeof gems);
-                    return;
-                }
-            } else {
-                return;
-            }
-        } catch (error) {
-            console.error("Error parsing gems:", error);
-            return;
-        }
-    }
-
-    console.log("Rendering", gems.length, "gems on the map");
-    
-    const bounds = new maplibregl.LngLatBounds();
-	window.markers = [];
-
-    gems.forEach((gem, index) => {
-        const coords = gem.coords || gem.coordinates;
-        if (!coords || coords.length !== 2) {
-            console.log("Skipping gem with invalid coordinates:", gem);
-            return;
-        }
-
-		// Get a unique identifier for the gem
-        const gemId = gem.id || `gem-${index}`;
-
-        const [a, b] = coords;
-        const lngLat = (Math.abs(a) > 90 && Math.abs(b) <= 90) ? [a, b] : [b, a];
-
-        const el = document.createElement('img');
-        el.src = {
-            red: '/static/icons/gem-red.svg',
-            purple: '/static/icons/gem-purple.svg',
-            blue: '/static/icons/gem-blue.svg'
-        }[gem.color] || '/static/icons/gem-blue.svg';
-        el.style.width = '28px';
-        el.style.height = '28px';
-        el.style.cursor = 'pointer';
-
-		el.style.transition = 'transform 0.2s ease, filter 0.2s ease';
-        
-        // Add data attributes for identification
-        el.dataset.gemId = gemId;
-        el.dataset.gemIndex = index;
-        
-        el.addEventListener('click', () => {
-
-			// Update global active index
-            window.activeGemIndex = index;
-            
-            // Style all markers (reset previous active)
-            window.markers.forEach((m, i) => {
-                const markerEl = m.getElement();
-                if (i === index) {
-                    // Active marker
-                    markerEl.style.transform = 'scale(1.4)';
-                    markerEl.style.zIndex = '100';
-                    markerEl.style.filter = 'drop-shadow(0 0 4px rgba(0, 0, 0, 0.3))';
-                } else {
-                    // Inactive marker
-                    markerEl.style.transform = 'scale(1.0)';
-                    markerEl.style.zIndex = '1';
-                    markerEl.style.filter = 'none';
-                }
-            });
-
-            //map.flyTo({center: lngLat, zoom: 11});
-
-             // Render routes if function exists
-            if (typeof window.renderRoutes === 'function') {
-                window.renderRoutes(lngLat);
-            }
-            
-            // Update cards display
-            updateCardDisplay(index);
-            
-            // Dispatch event for other components
-            document.dispatchEvent(new CustomEvent('gemSelected', {
-                detail: { 
-                    index: index, 
-                    id: gemId,
-                    gem: gem 
-                }
-            }));
-        });
-        
-		 // Create marker and add to map
-        const marker = new maplibregl.Marker(el).setLngLat(lngLat).addTo(map);
-        
-        // Store marker in global array for later access
-        window.markers.push(marker);
-        
-        // Extend map bounds
-        bounds.extend(lngLat);
-           
-        });
-        
-
-       // Fit map to show all gems
-    if (!bounds.isEmpty()) {
-        map.fitBounds(bounds, {padding: 40});
-    }
-    
-
-	// Initialize our integrated enhanced cards
-	if (window.HiddenGems && window.HiddenGems.enhancedCards) {
-		window.HiddenGems.enhancedCards.initialize();
-	}
-    initializeDetailCards(gems);
-    console.log("Map rendering complete with", window.markers.length, "markers");
-}
-
-			</script>
-
-	</body>
 </html>

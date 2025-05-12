@@ -1,7 +1,7 @@
 /**
  * data-controller.js
- * Unified data management system for Northern California Hidden Gems
- * Handles all data loading, manipulation, shuffling, and persistence
+ * Streamlined data management system for Northern California Hidden Gems
+ * Handles data loading, regional filtering, and random sampling
  */
 
 // Ensure the namespace exists
@@ -10,162 +10,201 @@ window.HiddenGems = window.HiddenGems || {};
 // Create the data controller object
 window.HiddenGems.data = {
   // Core data state
-  gems: [],
-  gemsLoaded: false,
+  allGems: [],             // Complete dataset from JSON
+  allGemsLoaded: false,    // Flag to track if full dataset is loaded
+  regionGems: {},          // Regional subsets indexed by region name
+  pageGems: [],            // Current page's display gems (random sample)
   initialized: false,
   
   /**
    * Initialize the data controller
+   * @returns {Promise} Promise that resolves when initialization is complete
    */
   initialize: function() {
     if (this.initialized) {
       console.log('Data controller already initialized');
-      return;
+      return Promise.resolve();
     }
     
     console.log('Initializing HiddenGems data controller');
     this.initialized = true;
     
-    // Set up event listeners
-    document.addEventListener('gemsLoaded', (event) => {
-      if (event.detail && event.detail.gems) {
-        this.gems = event.detail.gems;
-        this.gemsLoaded = true;
-      }
-    });
-    
-    // Check for stored gems on initialization
-    this.checkStoredGems();
-  },
-  
-  /**
-   * Load gems with various options
-   * @param {Object} options - Loading options
-   * @returns {Promise} Promise that resolves with loaded gems
-   */
-  loadGems: function(options = {}) {
-    // Show loading animation
-    this.showLoading('Loading gems...');
-    
-    // Default settings
-    const defaultOptions = {
-      limit: 10,
-      random: true
-    };
-    
-    options = { ...defaultOptions, ...options };
-    
-    return new Promise((resolve, reject) => {
-      // First try to load from user-added gems in localStorage
-      const userGems = JSON.parse(localStorage.getItem('userGems') || '[]');
-      
-      // Then load from the JSON file
-      fetch('static/assets/data/hidden_gems.json')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Failed to load gems data: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(jsonGems => {
-          // Combine user gems with JSON gems
-          const allGems = [...jsonGems, ...userGems];
-          
-          // Filter gems by distance from center if specified
-          let filteredGems = allGems;
-          
-          if (options.center) {
-            filteredGems = allGems.filter(gem => {
-              const coords = gem.coords || gem.coordinates;
-              if (!coords || coords.length !== 2) return false;
-              
-              // Calculate distance from center
-              const distance = this.utils.calculateDistance(
-                options.center[1], options.center[0],
-                coords[1], coords[0]
-              );
-              
-              // Add distance to gem object for display
-              gem.distance = Math.round(distance * 10) / 10;
-              
-              // Include if within radius
-              return distance <= (options.radius || 30);
-            });
-          }
-          
-          // Add ID if missing
-          filteredGems = filteredGems.map((gem, index) => {
-            if (!gem.id) {
-              gem.id = `gem-${index}`;
-            }
-            return gem;
-          });
-          
-          // Randomize if requested
-          if (options.random) {
-            filteredGems = this.utils.shuffleArray(filteredGems);
-          }
-          
-          // Limit the number of gems
-          if (options.limit && options.limit > 0) {
-            filteredGems = filteredGems.slice(0, options.limit);
-          }
-          
-          // Save to storage
-          this.saveGems(filteredGems);
-          
-          // Dispatch event
-          document.dispatchEvent(new CustomEvent('gemsLoaded', {
-            detail: { gems: filteredGems }
-          }));
-          
-          // Hide loading
-          this.hideLoading();
-          
-          resolve(filteredGems);
-        })
-        .catch(error => {
-          console.error('Error loading gems:', error);
-          this.hideLoading();
-          
-          // Show error message
-          alert('Error loading gems. Please try again.');
-          reject(error);
-        });
-    });
-  },
-  
-  /**
-   * Save gems to storage
-   * @param {Array} gems - Gems to save
-   */
-  saveGems: function(gems) {
-    if (!Array.isArray(gems)) return;
-    
-    // Save to instance
-    this.gems = gems;
-    this.gemsLoaded = true;
-    
-    // Save to localStorage
-    localStorage.setItem('hiddenGems_gems', JSON.stringify(gems));
-    
-    // Save to sessionStorage for page transitions
-    sessionStorage.setItem('gems', JSON.stringify(gems));
-    sessionStorage.setItem('shuffledGems', JSON.stringify(gems));
-  },
-  
-  /**
-   * Get all stored gems
-   * @returns {Array} Array of gems
-   */
-  getGems: function() {
-    // Return from memory if available
-    if (this.gems && this.gems.length > 0) {
-      return this.gems;
+    // Check if we already have the full dataset in storage
+    const storedAllGems = this.storage.get('allGems');
+    if (storedAllGems && storedAllGems.length > 0) {
+      this.allGems = storedAllGems;
+      this.allGemsLoaded = true;
+      console.log(`Loaded ${this.allGems.length} gems from storage`);
+      return Promise.resolve(this.allGems);
     }
     
-    // Try to get from storage
-    return this.getFromStorage();
+    // Otherwise, load the full dataset from JSON
+    return this.loadAllGems();
+  },
+  
+  /**
+   * Load the complete dataset of gems from JSON file
+   * @returns {Promise} Promise that resolves with loaded gems
+   */
+  loadAllGems: function() {
+    console.log('Loading all gems from JSON...');
+    this.showLoading('Loading gems database...');
+    
+    return fetch('static/assets/data/hidden_gems.json')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Failed to load gems data: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(jsonGems => {
+        // Load user-added gems from localStorage
+        const userGems = JSON.parse(localStorage.getItem('userGems') || '[]');
+        
+        // Combine and ensure all gems have unique IDs
+        const allGems = [...jsonGems, ...userGems].map((gem, index) => {
+          if (!gem.id) {
+            gem.id = `gem-${index}`;
+          }
+          return gem;
+        });
+        
+        // Save to instance and storage
+        this.allGems = allGems;
+        this.allGemsLoaded = true;
+        this.storage.set('allGems', allGems);
+        
+        console.log(`Loaded ${allGems.length} gems from JSON and user data`);
+        this.hideLoading();
+        
+        return allGems;
+      })
+      .catch(error => {
+        console.error('Error loading gems:', error);
+        this.hideLoading();
+        alert('Error loading gems database. Please try again.');
+        throw error;
+      });
+  },
+  
+  /**
+   * Get or create a regional subset of gems
+   * @param {Object} options - Regional filtering options
+   * @param {string} options.regionName - Unique name for this region
+   * @param {Array} [options.center] - Center coordinates [lng, lat]
+   * @param {number} [options.radius] - Radius in kilometers (default: 30)
+   * @param {Function} [options.filterFn] - Custom filter function
+   * @returns {Promise} Promise that resolves with regional gems
+   */
+  getRegionalGems: function(options) {
+    if (!options || !options.regionName) {
+      return Promise.reject(new Error('Region name is required'));
+    }
+    
+    // Initialize if needed
+    if (!this.initialized || !this.allGemsLoaded) {
+      return this.initialize().then(() => this.getRegionalGems(options));
+    }
+    
+    // Check if we already have this region cached
+    const cachedRegion = this.storage.get(`region_${options.regionName}`);
+    if (cachedRegion && cachedRegion.length > 0) {
+      this.regionGems[options.regionName] = cachedRegion;
+      console.log(`Loaded ${cachedRegion.length} gems for region "${options.regionName}" from cache`);
+      return Promise.resolve(cachedRegion);
+    }
+    
+    // Otherwise, create the regional subset
+    console.log(`Creating regional subset "${options.regionName}"...`);
+    this.showLoading('Finding gems in your area...');
+    
+    // Select filtering method based on options
+    let filteredGems;
+    
+    if (options.filterFn && typeof options.filterFn === 'function') {
+      // Use custom filter function if provided
+      filteredGems = this.allGems.filter(options.filterFn);
+    } 
+    else if (options.center && options.center.length === 2) {
+      // Filter by distance from center
+      const radius = options.radius || 30;
+      
+      filteredGems = this.allGems.filter(gem => {
+        const coords = gem.coords || gem.coordinates;
+        if (!coords || coords.length !== 2) return false;
+        
+        // Calculate distance from center
+        const distance = this.utils.calculateDistance(
+          options.center[1], options.center[0],
+          coords[1], coords[0]
+        );
+        
+        // Add distance to gem object for display
+        gem.distance = Math.round(distance * 10) / 10;
+        
+        // Include if within radius
+        return distance <= radius;
+      });
+    } 
+    else {
+      // Default: return all gems
+      filteredGems = [...this.allGems];
+    }
+    
+    // Store the regional subset
+    this.regionGems[options.regionName] = filteredGems;
+    this.storage.set(`region_${options.regionName}`, filteredGems);
+    
+    console.log(`Created regional subset "${options.regionName}" with ${filteredGems.length} gems`);
+    this.hideLoading();
+    
+    return Promise.resolve(filteredGems);
+  },
+  
+  /**
+   * Get a random sample of gems for the current page
+   * @param {Object} options - Sampling options
+   * @param {string} options.regionName - Region name to sample from
+   * @param {string} options.pageName - Unique name for this page
+   * @param {number} [options.sampleSize] - Number of gems to sample (default: 10)
+   * @param {boolean} [options.forceNew] - Force new sample even if one exists
+   * @returns {Promise} Promise that resolves with sampled gems
+   */
+  getPageGems: function(options) {
+    if (!options || !options.regionName || !options.pageName) {
+      return Promise.reject(new Error('Region name and page name are required'));
+    }
+    
+    const sampleSize = options.sampleSize || 10;
+    const storageName = `page_${options.pageName}`;
+    
+    // Check if we already have this page's gems and aren't forcing new
+    if (!options.forceNew) {
+      const cachedPageGems = this.storage.get(storageName);
+      if (cachedPageGems && cachedPageGems.length > 0) {
+        this.pageGems = cachedPageGems;
+        console.log(`Loaded ${cachedPageGems.length} gems for page "${options.pageName}" from cache`);
+        return Promise.resolve(cachedPageGems);
+      }
+    }
+    
+    // Get or create the regional subset first
+    return this.getRegionalGems({ regionName: options.regionName })
+      .then(regionGems => {
+        // If we have fewer gems than the sample size, use all of them
+        if (regionGems.length <= sampleSize) {
+          this.pageGems = [...regionGems];
+        } else {
+          // Otherwise, take a random sample
+          this.pageGems = this.utils.sampleArray(regionGems, sampleSize);
+        }
+        
+        // Store the page gems (in session storage, as these are temporary)
+        this.storage.setSession(storageName, this.pageGems);
+        
+        console.log(`Created page sample "${options.pageName}" with ${this.pageGems.length} gems`);
+        return this.pageGems;
+      });
   },
   
   /**
@@ -174,141 +213,196 @@ window.HiddenGems.data = {
    * @returns {Object|null} The gem or null if not found
    */
   getGemById: function(gemId) {
-    const gems = this.getGems();
-    return gems.find(g => (g.id || g.index).toString() === gemId.toString()) || null;
+    // First, initialize if needed
+    if (!this.initialized || !this.allGemsLoaded) {
+      console.warn('Trying to get gem by ID before initialization');
+      return null;
+    }
+    
+    // Search in all gems
+    return this.allGems.find(g => (g.id || g.index).toString() === gemId.toString()) || null;
   },
   
   /**
-   * Check for stored gems and load if available
+   * Storage abstraction to handle localStorage and sessionStorage
    */
-  checkStoredGems: function() {
-    const storedGems = this.getFromStorage();
-    
-    if (storedGems && storedGems.length > 0) {
-      this.gems = storedGems;
-      this.gemsLoaded = true;
-      
-      // Shuffle stored gems if they exist
-      this.shuffleStoredGems();
-    }
-  },
-  
-  /**
-   * Get gems from storage (localStorage or sessionStorage)
-   */
-  getFromStorage: function() {
-    // Check sessionStorage first (for page transitions)
-    const sessionSources = ['shuffledGems', 'gems', 'routeFilteredGems'];
-    
-    for (const source of sessionSources) {
-      const storedGems = sessionStorage.getItem(source);
-      if (storedGems) {
-        try {
-          const parsedGems = JSON.parse(storedGems);
-          if (Array.isArray(parsedGems) && parsedGems.length > 0) {
-            return parsedGems;
-          }
-        } catch (e) {
-          console.warn(`Error parsing gems from ${source}:`, e);
-        }
-      }
-    }
-    
-    // Fall back to localStorage
-    const localGems = localStorage.getItem('hiddenGems_gems');
-    if (localGems) {
+  storage: {
+    /**
+     * Get item from storage (localStorage)
+     * @param {string} key - Storage key
+     * @returns {*} Parsed value or null
+     */
+    get: function(key) {
       try {
-        const parsedGems = JSON.parse(localGems);
-        if (Array.isArray(parsedGems) && parsedGems.length > 0) {
-          return parsedGems;
-        }
+        const item = localStorage.getItem(`hiddenGems_${key}`);
+        return item ? JSON.parse(item) : null;
       } catch (e) {
-        console.warn('Error parsing gems from localStorage:', e);
+        console.warn(`Error reading ${key} from localStorage:`, e);
+        return null;
       }
-    }
+    },
     
-    return [];
-  },
-  
-  /**
-   * Show loading indicator
-   * @param {string} message - Message to display
-   */
-  showLoading: function(message) {
-    if (window.HiddenGems && window.HiddenGems.utils && window.HiddenGems.utils.showLoading) {
-      return window.HiddenGems.utils.showLoading(message);
-    }
+    /**
+     * Save item to storage (localStorage)
+     * @param {string} key - Storage key
+     * @param {*} value - Value to store
+     */
+    set: function(key, value) {
+      try {
+        localStorage.setItem(`hiddenGems_${key}`, JSON.stringify(value));
+        return true;
+      } catch (e) {
+        console.error(`Error saving ${key} to localStorage:`, e);
+        return false;
+      }
+    },
     
-    // Fallback if utils not available
-    let loadingEl = document.getElementById('gems-loading');
+    /**
+     * Get item from session storage
+     * @param {string} key - Storage key
+     * @returns {*} Parsed value or null
+     */
+    getSession: function(key) {
+      try {
+        const item = sessionStorage.getItem(`hiddenGems_${key}`);
+        return item ? JSON.parse(item) : null;
+      } catch (e) {
+        console.warn(`Error reading ${key} from sessionStorage:`, e);
+        return null;
+      }
+    },
     
-    if (!loadingEl) {
-      loadingEl = document.createElement('div');
-      loadingEl.id = 'gems-loading';
-      loadingEl.style.position = 'fixed';
-      loadingEl.style.top = '50%';
-      loadingEl.style.left = '50%';
-      loadingEl.style.transform = 'translate(-50%, -50%)';
-      loadingEl.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-      loadingEl.style.color = 'white';
-      loadingEl.style.padding = '15px 20px';
-      loadingEl.style.borderRadius = '5px';
-      loadingEl.style.zIndex = '2000';
-      
-      document.body.appendChild(loadingEl);
-    }
+    /**
+     * Save item to session storage
+     * @param {string} key - Storage key
+     * @param {*} value - Value to store
+     */
+    setSession: function(key, value) {
+      try {
+        sessionStorage.setItem(`hiddenGems_${key}`, JSON.stringify(value));
+        return true;
+      } catch (e) {
+        console.error(`Error saving ${key} to sessionStorage:`, e);
+        return false;
+      }
+    },
     
-    loadingEl.innerHTML = message;
-    loadingEl.style.display = 'block';
+    /**
+     * Remove item from storage
+     * @param {string} key - Storage key
+     * @param {boolean} [session] - Whether to remove from sessionStorage
+     */
+    remove: function(key, session = false) {
+      try {
+        if (session) {
+          sessionStorage.removeItem(`hiddenGems_${key}`);
+        } else {
+          localStorage.removeItem(`hiddenGems_${key}`);
+        }
+        return true;
+      } catch (e) {
+        console.error(`Error removing ${key} from storage:`, e);
+        return false;
+      }
+    },
     
-    return loadingEl;
-  },
-  
-  /**
-   * Hide loading indicator
-   */
-  hideLoading: function() {
-    if (window.HiddenGems && window.HiddenGems.utils && window.HiddenGems.utils.hideLoading) {
-      window.HiddenGems.utils.hideLoading();
-      return;
-    }
-    
-    // Fallback if utils not available
-    const loadingEl = document.getElementById('gems-loading');
-    if (loadingEl) {
-      loadingEl.style.display = 'none';
+    /**
+     * Clear all HiddenGems data from storage
+     * @param {boolean} [clearAll] - Whether to clear non-HiddenGems data
+     */
+    clear: function(clearAll = false) {
+      try {
+        if (clearAll) {
+          localStorage.clear();
+          sessionStorage.clear();
+        } else {
+          // Only clear HiddenGems-related items
+          Object.keys(localStorage).forEach(key => {
+            if (key.startsWith('hiddenGems_')) {
+              localStorage.removeItem(key);
+            }
+          });
+          
+          Object.keys(sessionStorage).forEach(key => {
+            if (key.startsWith('hiddenGems_')) {
+              sessionStorage.removeItem(key);
+            }
+          });
+        }
+        return true;
+      } catch (e) {
+        console.error('Error clearing storage:', e);
+        return false;
+      }
     }
   },
   
   /**
    * Find nearby gems based on geolocation
-   * @returns {Promise} Promise that resolves with found gems
+   * @param {string} pageName - Name of the page for gem sample
+   * @param {number} [sampleSize] - Number of gems to sample (default: 10)
+   * @param {number} [radius] - Radius in kilometers (default: 30)
+   * @returns {Promise} Promise that resolves with gems
    */
-  findNearbyGems: function() {
+  findNearbyGems: function(pageName, sampleSize = 10, radius = 30) {
     return new Promise((resolve, reject) => {
+      if (!pageName) {
+        reject(new Error('Page name is required'));
+        return;
+      }
+      
+      this.showLoading('Finding your location...');
+      
       if (navigator.geolocation) {
-        this.showLoading('Finding your location...');
-        
         navigator.geolocation.getCurrentPosition(
           // Success callback
           (position) => {
             const userLocation = [position.coords.longitude, position.coords.latitude];
             
-            this.loadGems({
+            // Store user location
+            this.storage.set('userLocation', userLocation);
+            
+            // Create a region based on user location
+            this.getRegionalGems({
+              regionName: 'nearby',
               center: userLocation,
-              radius: 10,
-              limit: 10,
-              random: true
-            }).then(resolve).catch(reject);
+              radius: radius
+            })
+            .then(() => {
+              // Get a page sample
+              return this.getPageGems({
+                regionName: 'nearby',
+                pageName: pageName,
+                sampleSize: sampleSize,
+                forceNew: true
+              });
+            })
+            .then(resolve)
+            .catch(reject);
           },
           // Error callback
           (error) => {
             console.error('Geolocation error:', error);
             
-            // Use default location
-            this.loadGems({
-              random: true
-            }).then(resolve).catch(reject);
+            // Fall back to default location (San Francisco)
+            const defaultLocation = [-122.4194, 37.7749];
+            
+            this.getRegionalGems({
+              regionName: 'default',
+              center: defaultLocation,
+              radius: radius
+            })
+            .then(() => {
+              // Get a page sample
+              return this.getPageGems({
+                regionName: 'default',
+                pageName: pageName,
+                sampleSize: sampleSize,
+                forceNew: true
+              });
+            })
+            .then(resolve)
+            .catch(reject);
           },
           // Options
           {
@@ -319,296 +413,139 @@ window.HiddenGems.data = {
         );
       } else {
         // Geolocation not supported
-        this.loadGems({
-          random: true
-        }).then(resolve).catch(reject);
-      }
-    });
-  },
-  
-  /**
-   * Shuffle stored gems
-   */
-  shuffleStoredGems: function() {
-    // Check if we've already shuffled the gems
-    if (sessionStorage.getItem('shuffledGems') || !this.gems || this.gems.length === 0) {
-      return;
-    }
-    
-    // Shuffle the gems
-    const shuffledGems = this.utils.shuffleArray([...this.gems]);
-    
-    // Store the shuffled gems
-    this.saveGems(shuffledGems);
-    
-    console.log(`Shuffled ${shuffledGems.length} gems`);
-  },
-  
-  /**
-   * Find and shuffle gems near a location
-   * @param {Array} allGems - All available gems
-   * @param {Array} centerCoords - Center coordinates [lng, lat]
-   * @param {number} radiusKm - Radius in kilometers
-   * @param {number} maxGems - Maximum number of gems to return
-   * @returns {Array} Filtered and shuffled gems
-   */
-  findGemsNearLocation: function(allGems, centerCoords, radiusKm = 20, maxGems = 20) {
-    if (!Array.isArray(allGems) || !centerCoords || centerCoords.length !== 2) {
-      console.error('Invalid parameters for finding gems near location');
-      return [];
-    }
-    
-    console.log(`Finding and shuffling gems near [${centerCoords}] with radius ${radiusKm}km`);
-    
-    // Filter gems within radius
-    const nearbyGems = allGems.filter(gem => {
-      const coords = gem.coordinates || gem.coords;
-      if (!coords || coords.length !== 2) return false;
-      
-      // Calculate distance from center
-      const distance = this.utils.calculateDistance(
-        coords[1], coords[0],
-        centerCoords[1], centerCoords[0]
-      );
-      
-      // Save distance to gem for sorting
-      gem.distanceFromCenter = distance;
-      
-      // Return true if within radius
-      return distance <= radiusKm;
-    });
-    
-    console.log(`Found ${nearbyGems.length} gems within ${radiusKm}km`);
-    
-    // Sort by distance from center
-    nearbyGems.sort((a, b) => a.distanceFromCenter - b.distanceFromCenter);
-    
-    // Take the closest maxGems
-    const closestGems = nearbyGems.slice(0, maxGems);
-    
-    // Shuffle the closest gems
-    const shuffledGems = this.utils.shuffleArray([...closestGems]);
-    
-    // Save the gems
-    this.saveGems(shuffledGems);
-    
-    return shuffledGems;
-  },
-  
-  /**
-   * Get user's current location and find nearby gems
-   * @param {Array} allGems - All available gems
-   * @param {Array} fallbackCoords - Fallback coordinates if location unavailable
-   * @param {number} radiusKm - Radius in kilometers
-   * @param {number} maxGems - Maximum number of gems to return
-   * @returns {Promise} Promise that resolves to filtered and shuffled gems
-   */
-  findGemsNearUser: function(allGems, fallbackCoords, radiusKm = 20, maxGems = 20) {
-    return new Promise((resolve, reject) => {
-      this.showLoading('Finding your location...');
-      
-      // Try to get user's location
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          // Success callback
-          (position) => {
-            const userCoords = [position.coords.longitude, position.coords.latitude];
-            console.log(`User location: [${userCoords}]`);
-            
-            // Store user location
-            sessionStorage.setItem('userLocation', JSON.stringify(userCoords));
-            
-            // Hide loading since we'll show another when loading gems
-            this.hideLoading();
-            
-            // Find and shuffle gems near user
-            const shuffledGems = this.findGemsNearLocation(
-              allGems, userCoords, radiusKm, maxGems
-            );
-            
-            resolve(shuffledGems);
-          },
-          // Error callback
-          (error) => {
-            console.warn(`Geolocation error (${error.code}): ${error.message}`);
-            console.log(`Using fallback location: [${fallbackCoords}]`);
-            
-            // Hide loading
-            this.hideLoading();
-            
-            // Find and shuffle gems near fallback location
-            const shuffledGems = this.findGemsNearLocation(
-              allGems, fallbackCoords, radiusKm, maxGems
-            );
-            
-            resolve(shuffledGems);
-          },
-          // Options
-          {
-            enableHighAccuracy: false,
-            timeout: 5000,
-            maximumAge: 0
-          }
-        );
-      } else {
-        // Geolocation not supported
         console.warn('Geolocation not supported by this browser');
-        console.log(`Using fallback location: [${fallbackCoords}]`);
         
-        // Hide loading
-        this.hideLoading();
+        // Use default location (San Francisco)
+        const defaultLocation =  [-122.2730, 37.8715];
         
-        // Find and shuffle gems near fallback location
-        const shuffledGems = this.findGemsNearLocation(
-          allGems, fallbackCoords, radiusKm, maxGems
-        );
-        
-        resolve(shuffledGems);
+        this.getRegionalGems({
+          regionName: 'default',
+          center: defaultLocation,
+          radius: radius
+        })
+        .then(() => {
+          // Get a page sample
+          return this.getPageGems({
+            regionName: 'default',
+            pageName: pageName,
+            sampleSize: sampleSize,
+            forceNew: true
+          });
+        })
+        .then(resolve)
+        .catch(reject);
       }
     });
   },
   
   /**
-   * Filter and shuffle gems along a route
-   * @param {Array} allGems - All available gems
+   * Filter gems along a route for road trip planning
+   * @param {string} pageName - Name of the page for gem sample
    * @param {Array} originCoords - Origin coordinates [lng, lat]
    * @param {Array} destinationCoords - Destination coordinates [lng, lat]
-   * @param {number} bufferDistanceKm - Buffer distance in kilometers
-   * @returns {Array} Filtered and shuffled gems
+   * @param {number} [bufferDistanceKm] - Buffer distance in kilometers (default: 30)
+   * @param {number} [sampleSize] - Number of gems to sample (default: 10)
+   * @returns {Promise} Promise that resolves with gems
    */
-  filterGemsAlongRoute: function(allGems, originCoords, destinationCoords, bufferDistanceKm = 30) {
-    if (!Array.isArray(allGems) || !originCoords || !destinationCoords) {
-      console.error('Invalid parameters for filtering gems along route');
-      return [];
+  findGemsAlongRoute: function(pageName, originCoords, destinationCoords, bufferDistanceKm = 30, sampleSize = 10) {
+    if (!pageName || !originCoords || !destinationCoords) {
+      return Promise.reject(new Error('Page name, origin, and destination are required'));
     }
     
-    console.log(`Filtering and shuffling ${allGems.length} gems along route`);
-    
-    // Create a buffer around the route
-    const buffer = this.createRouteBuffer(originCoords, destinationCoords, bufferDistanceKm);
-    
-    // Filter gems that are within the route buffer
-    const filteredGems = allGems.filter(gem => {
-      const coords = gem.coordinates || gem.coords;
+    // Create a region filter function for route
+    const routeFilterFn = (gem) => {
+      const coords = gem.coords || gem.coordinates;
       if (!coords || coords.length !== 2) return false;
       
-      // Check if gem is within the buffer polygon
-      if (this.isPointInPolygon(coords, buffer.bufferPoints)) {
-        return true;
-      }
-      
-      // If not in polygon, check if it's close to the route
+      // Calculate distance to route line
       const distanceToRoute = this.distanceToLineSegment(
         coords, originCoords, destinationCoords
       );
       
+      // Save distance to gem for sorting
+      gem.distanceFromRoute = distanceToRoute;
+      
+      // Return true if within buffer distance
       return distanceToRoute <= bufferDistanceKm;
+    };
+    
+    // Define unique region name based on origin/destination
+    const regionName = `route_${originCoords.join('_')}_${destinationCoords.join('_')}`;
+    
+    // Store route info
+    this.storage.set('currentRoute', {
+      origin: originCoords,
+      destination: destinationCoords,
+      bufferDistance: bufferDistanceKm
     });
     
-    console.log(`Found ${filteredGems.length} gems along route`);
-    
-    // Shuffle the filtered gems
-    const shuffledGems = this.utils.shuffleArray([...filteredGems]);
-    
-    // Store in sessionStorage
-    sessionStorage.setItem('routeFilteredGems', JSON.stringify(shuffledGems));
-    sessionStorage.setItem('shuffledGems', JSON.stringify(shuffledGems));
-    
-    // Save to instance
-    this.saveGems(shuffledGems);
-    
-    return shuffledGems;
+    return this.getRegionalGems({
+      regionName: regionName,
+      filterFn: routeFilterFn
+    })
+    .then(() => {
+      // Get a page sample
+      return this.getPageGems({
+        regionName: regionName,
+        pageName: pageName,
+        sampleSize: sampleSize,
+        forceNew: true
+      });
+    });
   },
   
   /**
-   * Create a buffer around the direct line between origin and destination
-   * @param {Array} origin - [lng, lat] coordinates of origin
-   * @param {Array} destination - [lng, lat] coordinates of destination
-   * @param {number} bufferDistanceKm - Buffer distance in kilometers
-   * @return {Object} Object with buffer polygon and bounding box
-   */
-  createRouteBuffer: function(origin, destination, bufferDistanceKm = 30) {
-    // Calculate route direction vector
-    const dx = destination[0] - origin[0];
-    const dy = destination[1] - origin[1];
+ * Show loading indicator with safety checks for document.body
+ * @param {string} message - Message to display
+ */
+showLoading: function(message) {
+  // First check if document and body are available
+  if (!document || !document.body) {
+    console.log('Loading indicator requested but document.body not available yet:', message);
     
-    // Calculate route length
-    const routeLength = Math.sqrt(dx * dx + dy * dy);
-    
-    // Normalize direction vector
-    const nx = dx / routeLength;
-    const ny = dy / routeLength;
-    
-    // Calculate perpendicular vector
-    const px = -ny;
-    const py = nx;
-    
-    // Convert buffer distance from km to degrees (rough approximation)
-    // 1 degree is approximately 111 km at the equator
-    const bufferDistanceDeg = bufferDistanceKm / 111;
-    
-    // Calculate buffer points (rectangular buffer around the route line)
-    const bufferPoints = [
-      [
-        origin[0] + px * bufferDistanceDeg,
-        origin[1] + py * bufferDistanceDeg
-      ],
-      [
-        destination[0] + px * bufferDistanceDeg,
-        destination[1] + py * bufferDistanceDeg
-      ],
-      [
-        destination[0] - px * bufferDistanceDeg,
-        destination[1] - py * bufferDistanceDeg
-      ],
-      [
-        origin[0] - px * bufferDistanceDeg,
-        origin[1] - py * bufferDistanceDeg
-      ]
-    ];
-    
-    // Calculate bounding box of the buffer
-    let minLng = Math.min(...bufferPoints.map(p => p[0]), origin[0], destination[0]);
-    let minLat = Math.min(...bufferPoints.map(p => p[1]), origin[1], destination[1]);
-    let maxLng = Math.max(...bufferPoints.map(p => p[0]), origin[0], destination[0]);
-    let maxLat = Math.max(...bufferPoints.map(p => p[1]), origin[1], destination[1]);
-    
-    // Add a small padding to the bounding box
-    const padding = 0.01; // About 1km
-    minLng -= padding;
-    minLat -= padding;
-    maxLng += padding;
-    maxLat += padding;
-    
+    // Return a dummy element that won't cause errors
     return {
-      bufferPoints: bufferPoints,
-      boundingBox: [minLng, minLat, maxLng, maxLat] // [west, south, east, north]
+      remove: function() {},
+      style: {}
     };
-  },
+  }
   
-  /**
-   * Check if a point is within a polygon defined by an array of points
-   * @param {Array} point - [lng, lat] coordinates of the point
-   * @param {Array} polygon - Array of [lng, lat] coordinates forming a polygon
-   * @return {boolean} True if the point is within the polygon
-   */
-  isPointInPolygon: function(point, polygon) {
-    // Ray casting algorithm
-    let inside = false;
-    const x = point[0];
-    const y = point[1];
+  let loadingEl = document.getElementById('gems-loading');
+  
+  if (!loadingEl) {
+    loadingEl = document.createElement('div');
+    loadingEl.id = 'gems-loading';
+    loadingEl.style.position = 'fixed';
+    loadingEl.style.top = '50%';
+    loadingEl.style.left = '50%';
+    loadingEl.style.transform = 'translate(-50%, -50%)';
+    loadingEl.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    loadingEl.style.color = 'white';
+    loadingEl.style.padding = '15px 20px';
+    loadingEl.style.borderRadius = '5px';
+    loadingEl.style.zIndex = '2000';
     
-    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-      const xi = polygon[i][0], yi = polygon[i][1];
-      const xj = polygon[j][0], yj = polygon[j][1];
-      
-      const intersect = ((yi > y) !== (yj > y)) &&
-          (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-      if (intersect) inside = !inside;
-    }
-    
-    return inside;
-  },
+    document.body.appendChild(loadingEl);
+  }
+  
+  loadingEl.innerHTML = message;
+  loadingEl.style.display = 'block';
+  
+  return loadingEl;
+},
+
+/**
+ * Hide loading indicator with safety checks
+ */
+hideLoading: function() {
+  // Check if document is available
+  if (!document) return;
+  
+  const loadingEl = document.getElementById('gems-loading');
+  if (loadingEl) {
+    loadingEl.style.display = 'none';
+  }
+},
   
   /**
    * Calculate the distance from a point to a line segment
@@ -652,22 +589,15 @@ window.HiddenGems.data = {
   // Utility functions
   utils: {
     /**
-     * Calculate distance between two points in miles
+     * Calculate distance between two points in kilometers
      * @param {number} lat1 - Latitude of first point
      * @param {number} lon1 - Longitude of first point
      * @param {number} lat2 - Latitude of second point
      * @param {number} lon2 - Longitude of second point
-     * @returns {number} Distance in miles
+     * @returns {number} Distance in kilometers
      */
     calculateDistance: function(lat1, lon1, lat2, lon2) {
-      // If we have access to the main utils function, use that
-      if (window.HiddenGems && window.HiddenGems.utils && 
-          typeof window.HiddenGems.utils.calculateDistance === 'function') {
-        return window.HiddenGems.utils.calculateDistance(lat1, lon1, lat2, lon2);
-      }
-      
-      // Otherwise use our own implementation
-      const R = 3958.8; // Earth's radius in miles
+      const R = 6371; // Earth's radius in kilometers
       const dLat = this.toRadians(lat2 - lat1);
       const dLon = this.toRadians(lon2 - lon1);
       
@@ -692,16 +622,9 @@ window.HiddenGems.data = {
     /**
      * Fisher-Yates shuffle algorithm
      * @param {Array} array - Array to shuffle
-     * @returns {Array} Shuffled array
+     * @returns {Array} New shuffled array (original not modified)
      */
     shuffleArray: function(array) {
-      // If we have access to the main utils function, use that
-      if (window.HiddenGems && window.HiddenGems.utils && 
-          typeof window.HiddenGems.utils.shuffleArray === 'function') {
-        return window.HiddenGems.utils.shuffleArray(array);
-      }
-      
-      // Otherwise use our own implementation
       const newArray = [...array];
       for (let i = newArray.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -711,240 +634,199 @@ window.HiddenGems.data = {
     },
     
     /**
+     * Take a random sample from an array
+     * @param {Array} array - Source array
+     * @param {number} size - Sample size
+     * @returns {Array} New array with random samples
+     */
+    sampleArray: function(array, size) {
+      // If size is greater than array length, return the shuffled array
+      if (size >= array.length) {
+        return this.shuffleArray(array);
+      }
+      
+      // Otherwise, take a random sample
+      const shuffled = this.shuffleArray(array);
+      return shuffled.slice(0, size);
+    },
+    
+    /**
      * Validate coordinates
      * @param {number} lng - Longitude
      * @param {number} lat - Latitude
      * @returns {boolean} True if coordinates are valid
      */
     isValidCoordinate: function(lng, lat) {
-      if (window.HiddenGems && window.HiddenGems.utils && 
-          typeof window.HiddenGems.utils.isValidCoordinate === 'function') {
-        return window.HiddenGems.utils.isValidCoordinate(lng, lat);
-      }
-      
       if (isNaN(lng) || isNaN(lat)) return false;
       if (lng < -180 || lng > 180) return false;
       if (lat < -90 || lat > 90) return false;
       return true;
     }
-  },
-  
-
-  preferences: {
-    save: function(data) {
-      localStorage.setItem('hiddenGems_preferences', JSON.stringify(data));
-    },
-    
-    get: function() {
-      const savedPrefs = localStorage.getItem('hiddenGems_preferences');
-      return savedPrefs ? JSON.parse(savedPrefs) : {
-        activities: [],
-        amenities: [],
-        accessibility: [],
-        effortLevel: '',
-        detourTime: 60,
-        maxDetour: 15,
-        selectedGems: [],
-        origin: null,
-        destination: null
-      };
-    },
-    
-    // Update specific preference value
-    update: function(key, value) {
-      const prefs = this.get();
-      prefs[key] = value;
-      this.save(prefs);
-      return prefs;
-    }
-  },
-  
-  // Selected gems management
-  selectedGems: {
-    add: function(gemId) {
-      const prefs = window.HiddenGems.data.preferences.get();
-      if (!prefs.selectedGems) prefs.selectedGems = [];
-      if (!prefs.selectedGems.includes(gemId.toString())) {
-        prefs.selectedGems.push(gemId.toString());
-        window.HiddenGems.data.preferences.save(prefs);
-        return true;
-      }
-      return false;
-    },
-    
-    remove: function(gemId) {
-      const prefs = window.HiddenGems.data.preferences.get();
-      if (!prefs.selectedGems) return false;
-      
-      const index = prefs.selectedGems.indexOf(gemId.toString());
-      if (index !== -1) {
-        prefs.selectedGems.splice(index, 1);
-        window.HiddenGems.data.preferences.save(prefs);
-        return true;
-      }
-      return false;
-    },
-    
-    toggle: function(gemId) {
-      const prefs = window.HiddenGems.data.preferences.get();
-      if (!prefs.selectedGems) prefs.selectedGems = [];
-      
-      const gemIdStr = gemId.toString();
-      const index = prefs.selectedGems.indexOf(gemIdStr);
-      
-      if (index === -1) {
-        // Add to selected gems
-        prefs.selectedGems.push(gemIdStr);
-        window.HiddenGems.data.preferences.save(prefs);
-        return true; // Added
-      } else {
-        // Remove from selected gems
-        prefs.selectedGems.splice(index, 1);
-        window.HiddenGems.data.preferences.save(prefs);
-        return false; // Removed
-      }
-    },
-    
-    isSelected: function(gemId) {
-      const prefs = window.HiddenGems.data.preferences.get();
-      return prefs.selectedGems && prefs.selectedGems.includes(gemId.toString());
-    },
-    
-    getAll: function() {
-      const prefs = window.HiddenGems.data.preferences.get();
-      return prefs.selectedGems || [];
-    },
-    
-    count: function() {
-      return this.getAll().length;
-    },
-    
-    clear: function() {
-      const prefs = window.HiddenGems.data.preferences.save();
-      prefs.selectedGems = [];
-      window.HiddenGems.data.preferences.save(prefs);
-    }
-  },
-  
-  // Trip state tracking
-  tripState: {
-    save: function(state) {
-      localStorage.setItem('hiddenGems_tripState', JSON.stringify(state));
-    },
-    
-    get: function() {
-      const savedState = localStorage.getItem('hiddenGems_tripState');
-      return savedState ? JSON.parse(savedState) : {
-        currentStep: 'browse', // browse, planning, traveling, arrived
-        lastGemVisited: null,
-        currentRoute: null,
-        progress: 0, // 0-100 percentage of journey completed
-        timeRemaining: null // Time remaining in minutes
-      };
-    },
-    
-    update: function(key, value) {
-      const state = this.get();
-      state[key] = value;
-      this.save(state);
-      return state;
-    },
-    
-    setProgress: function(percent) {
-      const state = this.get();
-      state.progress = Math.min(100, Math.max(0, percent));
-      this.save(state);
-      return state;
-    },
-    
-    advanceToNextGem: function() {
-      // Logic to move to the next gem in the journey
-      const state = this.get();
-      const selected = window.HiddenGems.data.selectedGems.getAll().map(id => 
-        window.HiddenGems.data.getGemById(id)
-      ).filter(g => g !== null);
-      
-      if (selected.length === 0) return state;
-      
-      let nextIndex = 0;
-      if (state.lastGemVisited) {
-        const currentIndex = selected.findIndex(g => 
-          (g.id || g.index).toString() === state.lastGemVisited.toString());
-        nextIndex = (currentIndex + 1) % selected.length;
-      }
-      
-      state.lastGemVisited = (selected[nextIndex].id || selected[nextIndex].index).toString();
-      state.progress = (nextIndex + 1) * 100 / selected.length;
-      
-      this.save(state);
-      return state;
-    }
-  },
-  
-  // Statistics tracking
-  stats: {
-    increment: function(statName) {
-      const stats = this.getAll();
-      stats[statName] = (stats[statName] || 0) + 1;
-      localStorage.setItem('hiddenGems_stats', JSON.stringify(stats));
-      return stats[statName];
-    },
-    
-    getAll: function() {
-      const savedStats = localStorage.getItem('hiddenGems_stats');
-      return savedStats ? JSON.parse(savedStats) : {
-        gemsDiscovered: 0,
-        tripsCompleted: 0,
-        hiddenGemsFound: 0,
-        totalDistance: 0,
-        lastActive: new Date().toISOString()
-      };
-    },
-    
-    recordGemVisit: function(gemId) {
-      // Record that user has visited this gem
-      const visitedGems = JSON.parse(localStorage.getItem('hiddenGems_visited') || '[]');
-      
-      if (!visitedGems.includes(gemId.toString())) {
-        visitedGems.push(gemId.toString());
-        localStorage.setItem('hiddenGems_visited', JSON.stringify(visitedGems));
-        
-        // Increment stats
-        this.increment('gemsDiscovered');
-        
-        // Check if it's a hidden gem
-        const gem = window.HiddenGems.data.getGemById(gemId);
-        if (gem && (gem.isHidden || gem.popularity < 2)) {
-          this.increment('hiddenGemsFound');
-        }
-        
-        return true;
-      }
-      return false;
-    },
-    
-    isGemVisited: function(gemId) {
-      const visitedGems = JSON.parse(localStorage.getItem('hiddenGems_visited') || '[]');
-      return visitedGems.includes(gemId.toString());
-    }
   }
 };
 
-// Initialize the data controller when the script loads
-window.HiddenGems.data.initialize();
+/**
+ * Safe initialization for data controller
+ * Replace the current initialization code at the bottom of data-controller.js
+ */
 
-// Make common functions globally available
-window.loadGems = function(options) {
-  return window.HiddenGems.data.loadGems(options);
+// Safely initialize the data controller when the DOM is ready
+function safeInitializeDataController() {
+  // Check if document.body exists
+  if (document && document.body) {
+    // Safe to initialize now
+    window.HiddenGems.data.initialize().catch(err => {
+      console.error('Failed to initialize data controller:', err);
+    });
+  } else {
+    // Wait for DOM to be ready
+    if (document.addEventListener) {
+      document.addEventListener('DOMContentLoaded', function() {
+        window.HiddenGems.data.initialize().catch(err => {
+          console.error('Failed to initialize data controller:', err);
+        });
+      });
+    } else {
+      // Fallback for older browsers
+      window.addEventListener('load', function() {
+        window.HiddenGems.data.initialize().catch(err => {
+          console.error('Failed to initialize data controller:', err);
+        });
+      });
+    }
+  }
+}
+
+// Make common functions available
+window.HiddenGems.getPageGems = function(options) {
+  return window.HiddenGems.data.getPageGems(options);
 };
 
-window.shuffleGems = function() {
-  const gems = window.HiddenGems.data.getGems();
-  const shuffled = window.HiddenGems.data.utils.shuffleArray(gems);
-  window.HiddenGems.data.saveGems(shuffled);
-  return shuffled;
+window.HiddenGems.findNearbyGems = function(pageName, sampleSize, radius) {
+  return window.HiddenGems.data.findNearbyGems(pageName, sampleSize, radius);
+};
+
+window.HiddenGems.findGemsAlongRoute = function(pageName, origin, destination, buffer, sampleSize) {
+  return window.HiddenGems.data.findGemsAlongRoute(pageName, origin, destination, buffer, sampleSize);
+};
+
+// Legacy support for older code
+window.loadGems = function(options = {}) {
+  console.log('Legacy loadGems function called');
+  
+  // Default settings - use constants if available
+  const defaultOptions = {
+    limit: window.HiddenGems.constants?.DEFAULT_LIMIT || 10,
+    random: true,
+    center: null,
+    radius: window.HiddenGems.constants?.DEFAULT_RADIUS || 30
+  };
+  
+  const mergedOptions = { ...defaultOptions, ...options };
+  
+  // If options have center coordinates, create a regional filter
+  if (options.center) {
+    return window.HiddenGems.data.getRegionalGems({
+      regionName: `region_${Date.now()}`,
+      center: options.center,
+      radius: options.radius || 30
+    })
+    .then(regionalGems => {
+      // Either return all gems or shuffle and limit as requested
+      if (!options.random) {
+        const result = regionalGems.slice(0, mergedOptions.limit);
+        window.HiddenGems.data.saveGems(result);
+        return result;
+      } else {
+        const shuffled = window.HiddenGems.data.utils.shuffleArray(regionalGems);
+        const result = shuffled.slice(0, mergedOptions.limit);
+        window.HiddenGems.data.saveGems(result);
+        return result;
+      }
+    })
+    .catch(err => {
+      console.error('Error in legacy loadGems:', err);
+      return [];
+    });
+  } 
+  // Otherwise just load all gems and shuffle/limit
+  else {
+    return window.HiddenGems.data.initialize()
+      .then(() => {
+        const allGems = window.HiddenGems.data.allGems;
+        let result;
+        
+        if (mergedOptions.random) {
+          const shuffled = window.HiddenGems.data.utils.shuffleArray(allGems);
+          result = shuffled.slice(0, mergedOptions.limit);
+        } else {
+          result = allGems.slice(0, mergedOptions.limit);
+        }
+        
+        window.HiddenGems.data.saveGems(result);
+        return result;
+      })
+      .catch(err => {
+        console.error('Error in legacy loadGems:', err);
+        return [];
+      });
+  }
 };
 
 window.findNearbyGems = function() {
-  return window.HiddenGems.data.findNearbyGems();
+  console.log('Legacy findNearbyGems function called');
+  
+  return new Promise((resolve, reject) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        // Success callback
+        (position) => {
+          const userLocation = [position.coords.longitude, position.coords.latitude];
+          
+          // Store user location
+          localStorage.setItem('userLocation', JSON.stringify(userLocation));
+          sessionStorage.setItem('userLocation', JSON.stringify(userLocation));
+          
+          // Load gems near user location
+          window.loadGems({
+            center: userLocation,
+            radius: window.HiddenGems.constants.DEFAULT_RADIUS,
+            limit: window.HiddenGems.constants.DEFAULT_LIMIT,
+            random: true
+          }).then(resolve).catch(reject);
+        },
+        // Error callback
+        (error) => {
+          console.error('Geolocation error:', error);
+          
+          // Use default location
+          const defaultLocation = window.HiddenGems.constants.DEFAULT_CENTER;
+          
+          window.loadGems({
+            center: defaultLocation,
+            random: true
+          }).then(resolve).catch(reject);
+        },
+        // Options
+        {
+          enableHighAccuracy: false,
+          timeout: 8000,
+          maximumAge: 60000
+        }
+      );
+    } else {
+      // Geolocation not supported
+      console.warn('Geolocation not supported, using default location');
+      
+      const defaultLocation = window.HiddenGems.constants.DEFAULT_CENTER;
+      
+      window.loadGems({
+        center: defaultLocation,
+        random: true
+      }).then(resolve).catch(reject);
+    }
+  });
 };
+
+// Call the safe initialization function
+safeInitializeDataController();
