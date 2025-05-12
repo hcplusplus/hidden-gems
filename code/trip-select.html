@@ -147,7 +147,7 @@
 
 						</div>
 						<div style="display: flex; gap: 8px; margin-top: 3px; margin-left:5px">
-							<div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;" id="category-1">Outdoor</div>
+							<div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;" id="category-1">Photography</div>
 							<div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;" id="category-2">Nature</div>
 						</div>
 						<hr>
@@ -158,7 +158,7 @@
 
 					<div class="review-box">
 						<image src="./assets/avataaars.jpg" style="width:60px; height:60px;"></image>
-					<span style="font-size: 16px; font-weight: 700;" id="review">"This trail has amazing views especially for sunset."</span>
+					<span style="font-size: 16px; font-weight: 700;" id="review">"This a great hidden spot to take photos of the sunset."</span>
 					<span style="font-size: 14px; font-weight: 500; text-align: center; display: block; margin-top: 10px;">"Dog friendly!"</span>
 
 					<image src="./assets/dog.jpg" style="width:60px; height:60px; margin-left:190px; margin-top:5px"></image>
@@ -195,7 +195,7 @@
             .then(response => response.json())
             .then(data => {
                 console.log(data); // Use your data here
-                data_text = data[0]
+                data_text = data[0];
                 document.getElementById('title').innerText = data_text["name"];
                 // document.getElementById('address').innerText = data_text["address"];
                 // document.getElementById('cost').innerText = data_text["dollar_sign"];
@@ -243,31 +243,44 @@
             const progressBar = document.getElementById('moving-progress');
             progressBar.style.width = 20 + '%';
             document.getElementById('time-left').innerText = "30 min left";
+
         }
 
         document.getElementById('state-2').onclick = function() {
+        //for demo video make progress bar fill slowly 
+        // progressBar.style.width = 100 + '%';
             const progressBar = document.getElementById('moving-progress');
-            progressBar.style.width = 100 + '%';
-            document.getElementById('time-left').innerText = "Arrived!";
-            document.getElementById('time-left').style.marginLeft = "15px";
+            let progress = 0;
 
-            confetti({
-                particleCount: 250,
-                spread: 70,
-                origin: { y: 0.6 }
-            });
-            setTimeout(() => {
-                showNextScreen();
-            }, 800);
+            const interval = setInterval(() => {
+                if (progress >= 100) {
+                    clearInterval(interval); // stop once full
+                    console.log('Done!');
+                    return;
+                }
+                progress += 1; // increase this number to fill faster
+                progressBar.style.width = progress + '%';
+
+                if (progress >= 100) {
+                    document.getElementById('time-left').innerText = "Arrived!";
+                    document.getElementById('time-left').style.marginLeft = "15px";
+
+                    confetti({
+                        particleCount: 250,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                    setTimeout(() => {
+                        showNextScreen();
+                    }, 700);
+
+                }
+
+
+            }, 50); // interval in ms; lower = faster fill
 
         }
 
-
-document.getElementById('state-1').onclick = function () {
-	const progressBar = document.getElementById('moving-progress');
-	progressBar.style.width = 20 + '%';
-	document.getElementById('time-left').innerText = "30 min left";
-}
 
         //after progress is 100%, image of finish fills the page and put button to feedback quiz 
         function showNextScreen() {
