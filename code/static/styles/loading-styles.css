@@ -1,109 +1,95 @@
-/* loading-styles.css */
 
+
+/* Use existing loading overlay structure but enhance it */
 .loading-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.85);
-    display: flex;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.9);
+    display: none;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
+    z-index: 2000;
 }
 
-.loading-overlay.visible {
-    opacity: 1;
-}
-
-.loading-spinner {
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top: 4px solid #64B5F6;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 20px;
-}
-
+/* Container for loading content */
 .loading-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 80%;
-    max-width: 500px;
+    text-align: center;
+    max-width: 450px;
+    width: 85%;
 }
 
-.thinking-dots {
-    display: inline-block;
-    vertical-align: middle;
+/* Keep existing spinner */
+.spinner {
+    border: 6px solid #ccc;
+    border-top: 6px solid #94c9ba; /* Match your UI color theme */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+    animation: spin 1s linear infinite;
+}
+
+/* Add a custom progress container for the LLM loading state specifically */
+.llm-progress-container {
+    width: 100%;
+    height: 6px;
+    background: #dfe6e4; /* Match your quiz styling */
+    border-radius: 3px;
+    margin: 20px 0;
+    overflow: hidden;
+}
+
+/* Add a custom progress bar for the LLM loading state */
+.llm-progress-bar {
+    height: 100%;
+    background: #94c9ba; /* Match your quiz styling */
+    width: 0%;
+    transition: width 1s ease-in-out;
+}
+
+/* Style the loading message to match your quiz font styling */
+.llm-message {
     font-size: 16px;
-    overflow: hidden;
-    width: 24px;
-    text-align: left;
+    color: #333;
+    margin-top: 12px;
+    margin-bottom: 8px;
+    font-weight: 600;
 }
 
-.thinking-dots:after {
-    content: '...';
-    display: inline-block;
-    animation: ellipsis 1.5s infinite;
+/* Style for the time remaining text */
+.llm-time-remaining {
+    font-size: 14px;
+    color: #666;
+    margin-top: 8px;
 }
 
+/* Keep your existing spin animation */
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-@keyframes ellipsis {
-    0% { width: 0; }
-    33% { width: 8px; }
-    66% { width: 16px; }
-    100% { width: 24px; }
-}
-
-/* Progress bar animation */
-@keyframes pulse {
-    0% { opacity: 0.6; }
-    50% { opacity: 1; }
-    100% { opacity: 0.6; }
-}
-
-.progress-bar {
-    position: relative;
-    overflow: hidden;
-}
-
-.progress-bar:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background-image: linear-gradient(
-        -45deg,
-        rgba(255, 255, 255, 0.2) 25%,
-        transparent 25%,
-        transparent 50%,
-        rgba(255, 255, 255, 0.2) 50%,
-        rgba(255, 255, 255, 0.2) 75%,
-        transparent 75%,
-        transparent
-    );
-    background-size: 50px 50px;
-    animation: move 2s linear infinite;
-    border-radius: 2px;
-}
-
-@keyframes move {
     0% {
-        background-position: 0 0;
+        transform: rotate(0deg);
     }
     100% {
-        background-position: 50px 50px;
+        transform: rotate(360deg);
+    }
+}
+
+/* Landscape adjustments to match your quiz styles */
+@media (orientation: landscape) and (max-height: 500px) {
+    .loading-content {
+        max-width: 500px;
+    }
+}
+
+/* Handle iPhone notch - match your quiz container */
+@supports (padding: max(0px)) {
+    .loading-overlay {
+        padding-top: max(16px, env(safe-area-inset-top));
+        padding-bottom: max(16px, env(safe-area-inset-bottom));
+        padding-left: max(16px, env(safe-area-inset-left));
+        padding-right: max(16px, env(safe-area-inset-right));
     }
 }

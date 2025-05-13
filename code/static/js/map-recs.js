@@ -15,58 +15,99 @@ document.addEventListener('DOMContentLoaded', function () {
     var originCoords = JSON.parse(window.HiddenGems.data.storage.get("originCoords"));
     var destinationCoords = JSON.parse(window.HiddenGems.data.storage.get("destinationCoords"));
 
-    //window.HiddenGems.map.clearMarkers();
+    // Get city names from sessionStorage
+    var originCity = window.HiddenGems.data.storage.get("originName") || "unknown";
+    var destinationCity = window.HiddenGems.data.storage.get("destinationName") || "unknown";
 
 
     // Add fallback coordinates for Berkeley and Sacramento if none exist in sessionStorage
     if (!originCoords) {
         console.log("No origin coordinates found in sessionStorage, using Berkeley as fallback");
         originCoords = getValidCoordinates(window.HiddenGems.constants.DEFAULT_ORIGIN); // Berkeley coordinates
-        window.HiddenGems.data.storage.set("originCoords", JSON.stringify(originCoords));
+        window.HiddenGems.data.storage.set("originCoords", originCoords);
+        originCity = "berkeley";
+        window.HiddenGems.data.storage.set("originName", originCity);
     }
 
     if (!destinationCoords) {
         console.log("No destination coordinates found in sessionStorage, using Sacramento as fallback");
         destinationCoords = getValidCoordinates(window.HiddenGems.constants.DEFAULT_DESTINATION); // Sacramento coordinates
-        window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
+        window.HiddenGems.data.storage.set("destinationCoords", destinationCoords);
+        destinationCity = "sacramento";
+        window.HiddenGems.data.storage.set("destinationName", destinationCity);
     }
-
-
-  
-
 
 
     async function prepareGemsForPlotting() {
         try {
+            // Create sanitized filename based on origin and destination
+            const sanitizeForFilename = (name) => {
+                return name.replace(/[^\w\s]/g, '').trim().replace(/\s+/g, '_').toLowerCase();
+            };
 
+            const origin = sanitizeForFilename(originCity);
+            const destination = sanitizeForFilename(destinationCity);
+            const recommendationsFilename = `recommendations_${origin}_to_${destination}.json`;
+            
+            console.log(`Looking for recommendations file: ${recommendationsFilename}`);
 
-            // Then, fetch and wait for the recommendations
-            const response = await fetch("static/assets/data/recommendations.json");
-            const recommendedGems = await response.json();
+            // First try to fetch specific recommendation file for this trip
+            try {
+                const response = await fetch(`/static/assets/data/recommendations/${recommendationsFilename}`);
+                
+                if (response.ok) {
+                    const recommendedGems = await response.json();
+                    console.log(`Successfully loaded trip-specific recommendations for ${originCity} to ${destinationCity}`);
+                    
+                    // Find matches with all gems
+                    const plotGems = [];
+                    recommendedGems.forEach(recommendedGem => {
+                        const matchingGem = window.HiddenGems.data.allGems.find(sampledGem =>
+                            sampledGem.id === recommendedGem.id
+                        );
 
-            // Now both async operations are complete, find matches
-            const plotGems = [];
+                        if (matchingGem) {
+                            plotGems.push(matchingGem);
+                        }
+                    });
 
-            recommendedGems.forEach(recommendedGem => {
-                const matchingGem = window.HiddenGems.data.allGems.find(sampledGem =>
-                    sampledGem.id === recommendedGem.id
-                );
-
-                if (matchingGem) {
-                    plotGems.push(matchingGem);
+                    console.log(`Found ${plotGems.length} matching gems for plotting`);
+                    return plotGems;
+                } else {
+                    console.log(`Trip-specific recommendations not found, falling back to default recommendations`);
+                    throw new Error('Trip-specific recommendations not found');
                 }
-            });
+            } catch (error) {
+                // If specific recommendations don't exist, fall back to general recommendations
+                console.log(`Falling back to default recommendations: ${error.message}`);
+                
+                const fallbackResponse = await fetch("static/assets/data/recommendations.json");
+                if (!fallbackResponse.ok) {
+                    throw new Error('Failed to load default recommendations');
+                }
+                
+                const recommendedGems = await fallbackResponse.json();
+                
+                // Find matches with all gems
+                const plotGems = [];
+                recommendedGems.forEach(recommendedGem => {
+                    const matchingGem = window.HiddenGems.data.allGems.find(sampledGem =>
+                        sampledGem.id === recommendedGem.id
+                    );
 
-            console.log(`Found ${plotGems.length} matching gems for plotting`);
+                    if (matchingGem) {
+                        plotGems.push(matchingGem);
+                    }
+                });
 
-            return plotGems;
-
-       
+                console.log(`Found ${plotGems.length} matching gems for plotting from default recommendations`);
+                return plotGems;
+            }
         } catch (error) {
             console.error("Error preparing gems for plotting:", error);
+            return []; // Return empty array on error
         }
     }
-
 
 
 
@@ -83,20 +124,14 @@ document.addEventListener('DOMContentLoaded', function () {
             (originCoords[1] + destinationCoords[1]) / 2
         ]);
 
-        //window.initializeMap('map-recs', midPoint, 7);
-        //const map = window.map;
         // Initialize map 
         window.initializeMap()
             .then(map => {
-                // Load gems along the route
-                return window.HiddenGems.map.loadGems(
-                    'map-recs', // pageName
-                    midPoint,    // center
-                    10,      // radius
-                    10,      // sampleSize
-                    originCoords,  // originCoord
-                    destinationCoords // destinationCoord
-                );
+                window.clearMarkers();
+                // Set the map view to the midpoint
+                map.setCenter(midPoint);
+                map.setZoom(7);
+
             })
             .catch(error => {
                 console.error('Error initializing route page:', error);
@@ -288,13 +323,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     .addTo(window.map);
             }
         }
-        /*
-    } else {
-        console.error("Missing origin or destination coordinates");
-        // Handle case where coordinates aren't available
-        document.getElementById('map').innerHTML =
-            '<div style="padding: 20px; text-align: center;">Please set your trip origin and destination first.</div>';
-    }*/
     }
 });
 
@@ -330,10 +358,7 @@ function initializeDetailCards(gems) {
             const coords = window.HiddenGems.data.coordUtils.fromGem(activeGem);
 
             if (coords) {
-                // Debug log
-                //  console.log(`Card changed to gem at index ${activeIndex}:`, activeGem.name || 'unnamed');
-                // window.HiddenGems.coordUtil.debug(coords, "Active Gem");
-                // Fly to the gem
+ 
                 window.map.flyTo({
                   center: coords,
                   zoom: window.map.getZoom()

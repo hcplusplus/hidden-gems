@@ -1,134 +1,10 @@
 /**
  * main.js
- * Main entry point for the Hidden Gems application
- * Now leverages the consolidated data controller for all data operations
  */
 
 // Make sure the HiddenGems namespace exists
 window.HiddenGems = window.HiddenGems || {};
 
-
-// Define utility functions directly on the window.HiddenGems object
-window.HiddenGems.utils = {
-    // Get previous index with wraparound
-    getPrevIndex: function (currentIndex, total) {
-        return (currentIndex - 1 + total) % total;
-    },
-
-    // Get next index with wraparound
-    getNextIndex: function (currentIndex, total) {
-        return (currentIndex + 1) % total;
-    },
-
-    // Convert degrees to radians
-    toRadians: function (degrees) {
-        return degrees * Math.PI / 180;
-    },
-
-    // Calculate distance between two points in miles
-    calculateDistance: function (lat1, lon1, lat2, lon2) {
-        const R = 3958.8; // Earth's radius in miles
-        const dLat = this.toRadians(lat2 - lat1);
-        const dLon = this.toRadians(lon2 - lon1);
-
-        const a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(this.toRadians(lat1)) * Math.cos(this.toRadians(lat2)) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
-    },
-
-    // Fisher-Yates shuffle algorithm
-    shuffleArray: function (array) {
-        const newArray = [...array];
-        for (let i = newArray.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-        }
-        return newArray;
-    },
-
-    // Show loading animation
-    showLoading: function (message = 'Loading...') {
-        let loadingEl = document.getElementById('gems-loading');
-
-        if (!loadingEl) {
-            loadingEl = document.createElement('div');
-            loadingEl.id = 'gems-loading';
-            loadingEl.style.position = 'fixed';
-            loadingEl.style.top = '50%';
-            loadingEl.style.left = '50%';
-            loadingEl.style.transform = 'translate(-50%, -50%)';
-            loadingEl.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-            loadingEl.style.color = 'white';
-            loadingEl.style.padding = '15px 20px';
-            loadingEl.style.borderRadius = '5px';
-            loadingEl.style.zIndex = '2000';
-            loadingEl.innerHTML = message;
-
-            document.body.appendChild(loadingEl);
-        } else {
-            loadingEl.innerHTML = message;
-            loadingEl.style.display = 'block';
-        }
-
-        return loadingEl;
-    },
-
-    // Hide loading animation
-    hideLoading: function () {
-        const loadingEl = document.getElementById('gems-loading');
-        if (loadingEl) {
-            loadingEl.style.display = 'none';
-        }
-    },
-
-    // Validate coordinates
-    isValidCoordinate: function (lng, lat) {
-        if (isNaN(lng) || isNaN(lat)) return false;
-        if (lng < -180 || lng > 180) return false;
-        if (lat < -90 || lat > 90) return false;
-        return true;
-    },
-
-    // Escape HTML for safe insertion
-    escapeHtml: function (unsafe) {
-        if (!unsafe) return '';
-        return unsafe
-            .toString()
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    },
-
-    // Get device size information
-    getDeviceSize: function () {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        const isLandscape = width > height;
-
-        let deviceCategory = 'phone';
-        if (width >= 768 || height >= 768) {
-            deviceCategory = 'tablet';
-        }
-        if (width >= 1024 || height >= 1024) {
-            deviceCategory = 'desktop';
-        }
-
-        return {
-            width: width,
-            height: height,
-            isLandscape: isLandscape,
-            deviceCategory: deviceCategory,
-            isSmallPhone: height < 600,
-            hasSafeArea: CSS.supports('padding: env(safe-area-inset-top)')
-        };
-    }
-};
 
 // Create a map namespace placeholder - will be populated by map-controller.js
 window.HiddenGems.map = {
@@ -142,15 +18,6 @@ window.HiddenGems.map = {
         });
     },
 
-};
-
-// Define global functions that can be called from anywhere
-window.showLoading = function (message) {
-    return window.HiddenGems.utils.showLoading(message);
-};
-
-window.hideLoading = function () {
-    window.HiddenGems.utils.hideLoading();
 };
 
 
@@ -202,15 +69,6 @@ async function initApp() {
         
         console.log('Hidden Gems App initialized successfully!');
         
-        // Try to hide loading indicator
-        try {
-            window.HiddenGems.utils.hideLoading();
-        } catch (e) {
-            console.warn('Error hiding loading indicator:', e);
-            // Fallback approach
-            const loadingEl = document.getElementById('gems-loading');
-            if (loadingEl) loadingEl.style.display = 'none';
-        }
     } catch (err) {
         console.error('Error initializing app:', err);
         // Try to hide loading indicator

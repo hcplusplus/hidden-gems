@@ -43,47 +43,50 @@ class LLMProgressIndicator {
     }
 
     /**
-     * Create the progress UI elements
-     * @param {HTMLElement} container - Container element for the progress UI
+     * Initialize the loading UI
+     * @param {HTMLElement} overlayElement - The loading overlay element
      */
-    createProgressUI(container) {
-        // Create progress bar container
-        const progressContainer = document.createElement("div");
-        progressContainer.className = "progress-container";
-        progressContainer.style.width = "80%";
-        progressContainer.style.maxWidth = "400px";
-        progressContainer.style.margin = "0 auto";
-        progressContainer.style.marginTop = "20px";
-        progressContainer.style.background = "rgba(255, 255, 255, 0.2)";
-        progressContainer.style.borderRadius = "8px";
-        progressContainer.style.overflow = "hidden";
+    start(overlayElement) {
+        console.log(`Starting LLM progress indicator with estimated time: ${this.estimatedSeconds} seconds`);
+        this.startTime = Date.now();
         
-        // Create progress bar
-        this.progressBarEl = document.createElement("div");
-        this.progressBarEl.className = "progress-bar";
-        this.progressBarEl.style.height = "8px";
-        this.progressBarEl.style.width = "0%";
-        this.progressBarEl.style.background = "linear-gradient(to right, #64B5F6, #1976D2)";
-        this.progressBarEl.style.transition = "width 0.5s ease-in-out";
-        
-        // Create message element
-        this.messageEl = document.createElement("div");
-        this.messageEl.className = "progress-message";
-        this.messageEl.style.color = "white";
-        this.messageEl.style.marginTop = "10px";
-        this.messageEl.style.marginBottom = "5px";
-        this.messageEl.style.textAlign = "center";
-        this.messageEl.style.fontSize = "16px";
-        this.messageEl.textContent = this.config.progressSteps[0].message;
-        
-        // Create time remaining element
-        this.timeRemainingEl = document.createElement("div");
-        this.timeRemainingEl.className = "time-remaining";
-        this.timeRemainingEl.style.color = "rgba(255, 255, 255, 0.8)";
-        this.timeRemainingEl.style.fontSize = "14px";
-        this.timeRemainingEl.style.textAlign = "center";
-        this.timeRemainingEl.textContent = `Estimated time: about ${Math.ceil(this.estimatedSeconds)} seconds`;
+        // Get or create the content container
+        let contentContainer = overlayElement.querySelector('.loading-content');
+        if (!contentContainer) {
+            contentContainer = document.createElement('div');
+            contentContainer.className = 'loading-content';
+            overlayElement.appendChild(contentContainer);
+        } else {
+            // Clear existing content
+            contentContainer.innerHTML = '';
+        }
 
+        // Create spinner (reusing existing style)
+        const spinner = document.createElement('div');
+        spinner.className = 'spinner';
+        contentContainer.appendChild(spinner);
+        
+        // Create message element with a unique class name
+        this.messageEl = document.createElement('p');
+        this.messageEl.className = 'llm-message';
+        this.messageEl.textContent = this.config.progressSteps[0].message;
+        contentContainer.appendChild(this.messageEl);
+        
+        // Create progress container with a unique class name
+        const progressContainer = document.createElement('div');
+        progressContainer.className = 'llm-progress-container';
+        contentContainer.appendChild(progressContainer);
+        
+        // Create progress bar with a unique class name
+        this.progressBarEl = document.createElement('div');
+        this.progressBarEl.className = 'llm-progress-bar';
+        this.progressBarEl.style.width = '0%';
+        progressContainer.appendChild(this.progressBarEl);
+        
+        // Create time remaining element with a unique class name
+        this.timeRemainingEl = document.createElement('p');
+        this.timeRemainingEl.className = 'llm-time-remaining';
+        
         // Format the time nicely (e.g., "about 1.5 minutes" instead of "90 seconds")
         let timeStr;
         if (this.estimatedSeconds < 60) {
@@ -98,25 +101,13 @@ class LLMProgressIndicator {
             }
         }
         this.timeRemainingEl.textContent = `Estimated time: about ${timeStr}`;
+        contentContainer.appendChild(this.timeRemainingEl);
         
-        // Add elements to container
-        progressContainer.appendChild(this.progressBarEl);
-        container.appendChild(this.messageEl);
-        container.appendChild(progressContainer);
-        container.appendChild(this.timeRemainingEl);
-    }
+        // Make sure the overlay is visible
+        overlayElement.style.display = 'flex';
 
-    /**
-     * Start the progress indicator
-     * @param {HTMLElement} container - Container element for the progress UI
-     */
-    start(container) {
-        console.log(`Starting progress indicator with estimated time: ${this.estimatedSeconds} seconds`);
-        this.startTime = Date.now();
-        this.createProgressUI(container);
-        
-        // Update progress every 300ms for smooth animation
-        this.intervalId = setInterval(() => this.updateProgress(), 300);
+        // Update progress every 2 seconds
+        this.intervalId = setInterval(() => this.updateProgress(), 2000);
     }
 
     /**
@@ -127,7 +118,8 @@ class LLMProgressIndicator {
         
         const elapsedSeconds = (Date.now() - this.startTime) / 1000;
         
-        // non-linear progress curve that starts faster and slows down
+        // Use a non-linear progress curve that starts faster and slows down
+        // This feels more realistic for long waits
         const linearProgress = elapsedSeconds / this.estimatedSeconds;
         const progress = Math.min(98, Math.sqrt(linearProgress) * 100);
         
@@ -183,10 +175,11 @@ class LLMProgressIndicator {
         const actualSeconds = (Date.now() - this.startTime) / 1000;
         console.log(`LLM response completed in ${actualSeconds.toFixed(2)} seconds`);
         
+        
         // Update UI to show completion
         if (this.progressBarEl) {
             this.progressBarEl.style.width = "100%";
-            this.progressBarEl.style.background = "linear-gradient(to right, #4CAF50, #2E7D32)";
+            this.progressBarEl.style.background = "#4CAF50"; // Green for completion
         }
         
         if (this.messageEl) {
@@ -215,11 +208,6 @@ class LLMProgressIndicator {
     }
 }
 
-
-/**
- * quiz-integration.js
- * Integrates the quiz with the data controller to save user preferences and filters gems along a route
- */
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize variables
@@ -341,8 +329,8 @@ function generateRouteGemsQuietly() {
             quizState.answers.destinationCoords = destinationCoords;
             
             // Save to storage
-            window.HiddenGems.data.storage.set("originCoords", JSON.stringify(originCoords));
-            window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
+            window.HiddenGems.data.storage.set("originCoords", originCoords);
+            window.HiddenGems.data.storage.set("destinationCoords", destinationCoords);
             window.HiddenGems.data.storage.set("originName", JSON.stringify(originName));
             window.HiddenGems.data.storage.set("destinationName", JSON.stringify(destinationName));
             
@@ -555,7 +543,7 @@ function generateRouteGemsQuietly() {
         
         // Show loading overlay immediately for user feedback
         if (overlay) {
-            overlay.style.display = "flex";
+            //overlay.style.display = "flex";
 
             // Use the progress indicator instead of simple loading message
             progressIndicator.start(overlay);
@@ -571,6 +559,7 @@ function generateRouteGemsQuietly() {
         let originCoords = userData.originCoords;
         let destinationCoords = userData.destinationCoords;
         
+        
          // Try to get gems from quizState
         if (quizState.sampledGems && quizState.sampledGems.length > 0) {
             console.log(`Using pre-generated gems for route from ${originName} to ${destinationName}`);
@@ -578,7 +567,7 @@ function generateRouteGemsQuietly() {
         } 
         // Then try from sessionStorage
         else {
-            const storedGems = sessionStorage.getItem("backgroundRouteGems");
+            
             if (storedGems) {
                 console.log(`Using pre-generated gems from sessionStorage for route from ${originName} to ${destinationName}`);
                 sampledGems = JSON.parse(storedGems);
@@ -610,8 +599,8 @@ function generateRouteGemsQuietly() {
                 userData.destinationCoords = destinationCoords;
                 
                 // Save to storage
-                window.HiddenGems.data.storage.set("originCoords", JSON.stringify(originCoords));
-                window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
+                window.HiddenGems.data.storage.set("originCoords", originCoords);
+                window.HiddenGems.data.storage.set("destinationCoords", destinationCoords);
                 window.HiddenGems.data.storage.set("originName", JSON.stringify(originName));
                 window.HiddenGems.data.storage.set("destinationName", JSON.stringify(destinationName));
             }

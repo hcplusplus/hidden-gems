@@ -14,7 +14,7 @@ ROOT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, os.pardir))  # Parent direct
 
 # Adjust paths based on where the script is run from
 GEMS_PATH = os.path.join(ROOT_DIR, "static/assets/data/hidden_gems.json")
-RECOMMENDATIONS_PATH = os.path.join(ROOT_DIR, "static/assets/data/recommendations.json")
+RECOMMENDATIONS_DIR = os.path.join(ROOT_DIR, "static/assets/data/recommendations")
 RESPONSE_TIMES_PATH = os.path.join(ROOT_DIR, "static/assets/data/response_times.json")
 
 # Function to track response times
@@ -82,15 +82,14 @@ Return only a JSON array with these fields for each selected gem:
 [
   {{
     "id": "same as input",
-    "name": "same as input",
-    "coordinates": "same as input",
-    "category_1": "same as input",
-    "category_2": "same as input",
-    "description": "same as input",
-    "rarity": "same as input",
-    "color": "same as input",
-    "time": "same as input",
-    "dollar_sign": "same as input",
+    "name": "gem name",
+    "coordinates": [longitude, latitude],
+    "category": "type of place",
+    "description": "1-sentence description",
+    "rarity": "most hidden | moderately hidden | least hidden",
+    "color": "red | purple | blue",
+    "time": number of minutes it takes for the detour,
+     "dollar_sign": "price level ($, $$, $$$)"
   }}
 ]
 """
@@ -130,14 +129,70 @@ def call_ollama(prompt, stream=False):
         return raw
     except Exception as e:
         return str(e)
+    
+def get_recommendations_filename(origin, destination):
+    """Create a sanitized filename from origin and destination"""
+    # Remove special characters and replace spaces with underscores
+    origin = re.sub(r'[^\w\s]', '', origin).strip().replace(' ', '_').lower()
+    destination = re.sub(r'[^\w\s]', '', destination).strip().replace(' ', '_').lower()
+    return f"recommendations_{origin}_to_{destination}.json"
+    
+def list_saved_recommendations():
+    """List all saved recommendation files"""
+    try:
+        files = os.listdir(RECOMMENDATIONS_DIR)
+        # Filter to only include recommendation JSON files
+        recommendation_files = [f for f in files if f.startswith("recommendations_") and f.endswith(".json")]
+        
+        # Extract metadata for each file
+        recommendations = []
+        for filename in recommendation_files:
+            try:
+                # Parse origin and destination from filename
+                match = re.match(r'recommendations_(.+)_to_(.+)\.json', filename)
+                if match:
+                    origin = match.group(1).replace('_', ' ').title()
+                    destination = match.group(2).replace('_', ' ').title()
+                    
+                    # Get file creation/modification time
+                    filepath = os.path.join(RECOMMENDATIONS_DIR, filename)
+                    timestamp = os.path.getmtime(filepath)
+                    
+                    # Read the file to get recommendation count
+                    with open(filepath, 'r') as f:
+                        data = json.load(f)
+                        count = len(data) if isinstance(data, list) else 0
+                    
+                    recommendations.append({
+                        "filename": filename,
+                        "origin": origin,
+                        "destination": destination,
+                        "timestamp": timestamp,
+                        "date": time.strftime("%Y-%m-%d", time.localtime(timestamp)),
+                        "count": count
+                    })
+            except Exception as e:
+                print(f"Error processing file {filename}: {e}")
+                
+        # Sort by most recent first
+        recommendations.sort(key=lambda x: x["timestamp"], reverse=True)
+        return recommendations
+        
+    except Exception as e:
+        print(f"Error listing recommendations: {e}")
+        return []
 
 @app.route("/generate_recommendations", methods=["POST"])
 def generate_recommendations():
     start_time = time.time()
     user_data = request.get_json()
 
-    #with open(GEMS_PATH, "r") as f:
-    #    all_gems = json.load(f)
+    origin = user_data.get('origin', 'unknown')
+    destination = user_data.get('destination', 'unknown')
+    
+    # Generate filename based on origin and destination
+    filename = get_recommendations_filename(origin, destination)
+    filepath = os.path.join(RECOMMENDATIONS_DIR, filename)
     
     prompt = build_recommendation_prompt(user_data)
     print("📤 Prompt to LLM:\n", prompt)
@@ -152,7 +207,7 @@ def generate_recommendations():
     except Exception as e:
         return jsonify({"error": "JSON parse failed", "details": str(e), "raw": response}), 500
 
-    with open(RECOMMENDATIONS_PATH, "w") as f:
+    with open(filepath, "w") as f:
         json.dump(selected, f, indent=2)
     
     # Calculate total duration
@@ -162,7 +217,9 @@ def generate_recommendations():
     return jsonify({
         "recommendations": selected,
         "meta": {
-            "processingTime": total_duration
+            "processingTime": total_duration,
+            "filename": filename,
+            "filepath": filepath
         }
     })
 
@@ -182,6 +239,28 @@ def get_response_time():
         return jsonify(data)
     except (FileNotFoundError, json.JSONDecodeError):
         return jsonify({"average": 8, "times": []})
+    
+@app.route("/api/saved_recommendations", methods=["GET"])
+def get_saved_recommendations():
+    """Endpoint to list all saved recommendations"""
+    recommendations = list_saved_recommendations()
+    return jsonify(recommendations)
+
+@app.route("/api/recommendation/<path:filename>", methods=["GET"])
+def get_recommendation_by_filename(filename):
+    """Retrieve a specific recommendation by filename"""
+    try:
+        filepath = os.path.join(RECOMMENDATIONS_DIR, filename)
+        print(filepath)
+        if not os.path.exists(filepath):
+            return jsonify({"error": "Recommendation not found"}), 404
+            
+        with open(filepath, "r") as f:
+            data = json.load(f)
+        
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

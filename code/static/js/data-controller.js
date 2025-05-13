@@ -487,6 +487,7 @@ window.HiddenGems.data = {
  */
 findGemsAlongRoute: function(pageName, originCoords, destinationCoords, bufferDistanceKm = 30, sampleSize = 10, originName = '', destinationName = '') {
   if (!pageName || !originCoords || !destinationCoords) {
+    console.log(pageName, originCoords, destinationCoords);
     return Promise.reject(new Error('Page name, origin, and destination are required'));
   }
   
@@ -537,11 +538,8 @@ findGemsAlongRoute: function(pageName, originCoords, destinationCoords, bufferDi
     regionName = `route_${cleanOriginName}_to_${cleanDestName}`;
     
     // Store the original names for display
-    this.storage.set('routeOriginName', originName);
-    this.storage.set('routeDestinationName', destinationName);
-  } else {
-    // Fall back to coordinate-based name if no names provided
-    regionName = `route_${normalizedOrigin.join('_')}_${normalizedDestination.join('_')}`;
+    this.storage.set('originName', originName);
+    this.storage.set('destinationName', destinationName);
   }
   
   console.log(`Finding gems along route from ${originName || 'origin'} to ${destinationName || 'destination'}`);
@@ -555,6 +553,27 @@ findGemsAlongRoute: function(pageName, originCoords, destinationCoords, bufferDi
     bufferDistance: bufferDistanceKm
   });
   
+  // Create a specific storage key for the complete set of gems along this route
+  const routeGemsKey = `route_gems_${regionName}`;
+  
+  // First check if we already have the complete set in session storage
+  const existingRouteGems = this.storage.getSession(routeGemsKey);
+  
+  if (existingRouteGems && existingRouteGems.length > 0) {
+    console.log(`Found ${existingRouteGems.length} existing gems for route ${regionName} in session storage`);
+    
+    // Use the existing route gems, just create a new sample
+    const distributedGems = this.getEvenlyDistributedGems(existingRouteGems, sampleSize);
+    
+    // Store as page gems
+    this.pageGems = distributedGems;
+    this.storage.setSession(`page_${pageName}`, distributedGems);
+    
+    console.log(`Created route page sample "${pageName}" with ${distributedGems.length} evenly distributed gems from existing route data`);
+    return Promise.resolve(distributedGems);
+  }
+  
+  // If no existing route gems, get them using the filter
   return this.getRegionalGems({
     regionName: regionName,
     filterFn: routeFilterFn
@@ -562,6 +581,10 @@ findGemsAlongRoute: function(pageName, originCoords, destinationCoords, bufferDi
   .then(regionGems => {
     // Sort gems by their progress along the route
     regionGems.sort((a, b) => a.routeProgress - b.routeProgress);
+    
+    // Store the complete set of filtered gems BEFORE sampling
+    this.storage.setSession(routeGemsKey, regionGems);
+    console.log(`Stored ${regionGems.length} complete route gems to session storage with key: ${routeGemsKey}`);
     
     // Ensure even distribution by dividing the route into segments
     return this.getEvenlyDistributedGems(regionGems, sampleSize);

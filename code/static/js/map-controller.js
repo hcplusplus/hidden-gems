@@ -145,7 +145,7 @@ function initializeMap(pageName = 'index', center = null, zoom = null) {
  * @param {Array} [destinationCoord] - Optional destination coordinates for route [lng, lat]
  * @returns {Promise} Promise that resolves with the loaded gems
  */
-function loadGemsWithDataController(pageName, center, radius = 10, sampleSize = 10, originCoord, destinationCoord) {
+function loadGemsWithDataController(pageName, center, buffer = 10, sampleSize = 10, originCoord, destinationCoord) {
   if (!window.HiddenGems || !window.HiddenGems.data) {
     return Promise.reject(new Error('Data controller not available'));
   }
@@ -166,40 +166,48 @@ function loadGemsWithDataController(pageName, center, radius = 10, sampleSize = 
       if (isNotIndexPage) {
         console.log(`Loading gems along route for non-index page: ${pageName}`);
 
+        const originName = window.HiddenGems.data.storage.get('originName');
+        const destinationName = window.HiddenGems.data.storage.get('destinationName');
+        const originCoords = window.HiddenGems.data.coordUtils.normalize(JSON.parse(window.HiddenGems.data.storage.get('originCoords')));
+        const destinationCoords = window.HiddenGems.data.coordUtils.normalize(JSON.parse(window.HiddenGems.data.storage.get('destinationCoords')));
+        console.log(originCoords, destinationCoords);
         // Default route coordinates if not provided
-        const defaultOriginCoord = window.HiddenGems.constants.DEFAULT_ORIGIN;      // Berkeley
-        const defaultDestinationCoord = window.HiddenGems.constants.DEFAULT_DESTINATION; // Sacramento
+        //const defaultOriginCoord = window.HiddenGems.constants.DEFAULT_ORIGIN;      // Berkeley
+        //const defaultDestinationCoord = window.HiddenGems.constants.DEFAULT_DESTINATION; // Sacramento
 
         // Use provided coords or defaults
-        const safeOriginCoord = originCoord || defaultOriginCoord;
-        const safeDestinationCoord = destinationCoord || defaultDestinationCoord;
+        //const safeOriginCoord = originCoord || defaultOriginCoord;
+        //const safeDestinationCoord = destinationCoord || defaultDestinationCoord;
 
         // Use default values if not provided
         const safeSampleSize = sampleSize || window.HiddenGems.constants.DEFAULT_LIMIT;
-        const bufferDistance = radius || window.HiddenGems.constants.DEFAULT_RADIUS;
+        const bufferDistance = window.HiddenGems.constants.DEFAULT_BUFFER;
 
-        console.log(`Finding gems along route from [${safeOriginCoord}] to [${safeDestinationCoord}]`);
+        console.log(`Finding gems along route from [${originName}] to [${destinationName}]`);
 
         // Use findGemsAlongRoute from data-controller
         return window.HiddenGems.data.findGemsAlongRoute(
-          pageName || 'map-recs',
-          safeOriginCoord,
-          safeDestinationCoord,
+          'map-recs',
+          originCoords,
+          destinationCoords,
           bufferDistance,
-          safeSampleSize
+          safeSampleSize,
+          originName,
+          destinationName
         );
       }
       // If on index page and center coordinates provided, find gems near that location
       else if (center && center.length === 2) {
         window.map.setCenter(center);
-        const safeRadius = radius || window.HiddenGems.constants?.DEFAULT_RADIUS;
-        const safeSampleSize = sampleSize || window.HiddenGems.constants?.DEFAULT_LIMIT;
-
-        console.log(`Finding gems near center [${center}] with radius ${safeRadius}km`);
+        const safeRadius = radius || window.HiddenGems.constants.DEFAULT_RADIUS;
+        const safeSampleSize = sampleSize || window.HiddenGems.constants.DEFAULT_LIMIT;
+        const safeCenter = center || window.HiddenGems.constants.DEFAULT_CENTER;
+        safeCenter = window.HiddenGems.data.coordUtils.normalize(safeCenter);
+        console.log(`Finding gems near center [${safeCenter}] with radius ${safeRadius}km`);
 
         return window.HiddenGems.data.getRegionalGems({
           regionName: pageName || 'current-page',
-          center: center,
+          center: safeCenter,
           radius: safeRadius
         })
           .then(() => {
@@ -213,7 +221,7 @@ function loadGemsWithDataController(pageName, center, radius = 10, sampleSize = 
       }
       // Default: Try to find gems near the user with geolocation
       else {
-        console.log(`Finding nearby gems for ${pageName} using geolocation`);
+        //console.log(`Finding nearby gems for ${pageName} using geolocation`);
 
         return window.HiddenGems.data.findNearbyGems(
           pageName || 'current-page',
@@ -654,6 +662,7 @@ window.HiddenGems.map = {
   },
 
   // Function to clear map routes
+
   clearRoutes: function () {
     if (!map) return;
 
