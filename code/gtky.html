@@ -6,6 +6,7 @@
 		<title>Getting to Know You - Hidden Gems</title>
 		<link rel="stylesheet" href="css/main.css">
 		<link rel="stylesheet" href="css/quiz.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 
 	</head>
@@ -31,11 +32,14 @@
 				<p class="step-description">Let us know your starting point and destination to find hidden gems along your route.</p>
 
 				<form class="quiz-form">
-					<label for="origin">From</label>
+					<label for="origin">From*</label>
+					<button type ="button" class="flex" id="get-location" style="height:40px; padding: 8px; background-color: white; color:#666; font-size: 13px">
+						<i class="fas fa-location-dot" style="color:#c9e9d5; margin-right: 10px"></i>  Use my current location
+					</button>
 					<input type="text" id="origin" placeholder="Enter starting location">
 					<div class="error-message" id="origin-error">Please enter a starting location</div>
 
-					<label for="destination">To</label>
+					<label for="destination">To*</label>
 					<input type="text" id="destination" placeholder="Enter destination">
 					<div class="error-message" id="destination-error">Please enter a destination</div>
 				</form>
@@ -167,7 +171,7 @@
 
 			<!-- Step 4: Time Available -->
 			<div class="quiz-step" id="step-2">
-				<h2 class="step-title">How much time do you have?</h2>
+				<h2 class="step-title">How much time do you have?*</h2>
 				<p class="step-description">Let us know how long you'd like to spend discovering hidden gems on this trip.</p>
 
 				<div class="options-container">
@@ -189,7 +193,7 @@
 					</div>
 				</div>
 
-				<div class="option-group">
+				<!-- <div class="option-group">
 					<div class="option-title">Maximum detour distance</div>
 					<div class="option-flex">
 						<div class="option-button" data-value="5">
@@ -209,7 +213,7 @@
 							Any Distance
 						</div>
 					</div>
-				</div>
+				</div> -->
 
 				<p class="footer-note">We'll adjust recommendations based on your available time and detour preferences.</p>
 			</div>
@@ -261,6 +265,30 @@
 				const destinationInput = document.getElementById('destination');
 				const originError = document.getElementById('origin-error');
 				const destinationError = document.getElementById('destination-error');
+				let origincoords;
+
+				document.getElementById('get-location').onclick = function (){
+					document.getElementById("origin").value = "Current Location";
+					if (navigator.geolocation) {
+						
+						navigator.geolocation.getCurrentPosition(
+							(position) => {
+								const latitude = position.coords.latitude;
+								const longitude = position.coords.longitude;
+								console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+								origincoords = [longitude, latitude];
+								sessionStorage.setItem("originCoords", JSON.stringify(origincoords));
+								
+							},
+							(error) => {
+								console.error("Error getting location:", error);
+							}
+						);
+					} else {
+						console.error("Geolocation is not supported by this browser.");
+					}
+				}
+				
 
 				function updateProgress() {
 					const progress = (quizState.currentStep / quizState.totalSteps) * 100;
@@ -319,9 +347,9 @@
 							const selectedTime = document.querySelector('input[name="time"]:checked');
 							quizState.answers.time = selectedTime ? selectedTime.value : '';
 
-							const detourButtons = document.querySelectorAll('#step-4 .option-button.selected');
-							const selectedDetour = Array.from(detourButtons).find(btn => ['5', '15', '30', '50+'].includes(btn.getAttribute('data-value')));
-							quizState.answers.maxDetour = selectedDetour ? selectedDetour.getAttribute('data-value') : '';
+							// const detourButtons = document.querySelectorAll('#step-4 .option-button.selected');
+							// const selectedDetour = Array.from(detourButtons).find(btn => ['5', '15', '30', '50+'].includes(btn.getAttribute('data-value')));
+							// quizState.answers.maxDetour = selectedDetour ? selectedDetour.getAttribute('data-value') : '';
 
 							return true;
 					}
@@ -340,24 +368,34 @@
 					overlay.style.display = "flex";
 
 					try {
-						const [originCoords, destinationCoords] = await Promise.all([
-							geocode(userData.origin),
-							geocode(userData.destination)
-						]);
+						//if my location then don't use geocode 
+						if (document.getElementById("origin").value != "Current Location" && sessionStorage.getItem("originCoords") == null) { 
+							const [originCoords, destinationCoords] = await Promise.all([
+								geocode(userData.origin),
+								geocode(userData.destination)
+							]);
 
-						console.log("originCoords:", originCoords);
-						console.log("destinationCoords:", destinationCoords);
+							console.log("originCoords:", originCoords);
+							console.log("destinationCoords:", destinationCoords);
 
-						if (!originCoords || !destinationCoords) 
-							throw new Error("Geocoding failed");
+							if (!originCoords || !destinationCoords) 
+								throw new Error("Geocoding failed");
+							
+							userData.originCoords = originCoords;
+							userData.destinationCoords = destinationCoords;	
+							sessionStorage.setItem("originCoords", JSON.stringify(originCoords));
+						} else {
+							const [destinationCoords] = await Promise.all([
+								geocode(userData.destination)
+							]);
+							console.log("destinationCoords:", destinationCoords);
+							if (!destinationCoords) 
+								throw new Error("Geocoding failed");
+							userData.destinationCoords = destinationCoords;
+							sessionStorage.setItem("destinationCoords", JSON.stringify(destinationCoords));
+							console.log("check");
+						}
 						
-
-
-						userData.originCoords = originCoords;
-						userData.destinationCoords = destinationCoords;
-
-						sessionStorage.setItem("originCoords", JSON.stringify(originCoords));
-						sessionStorage.setItem("destinationCoords", JSON.stringify(destinationCoords));
 
 						const res = await fetch("http://127.0.0.1:5000/generate_recommendations", {
 							method: "POST",
@@ -371,6 +409,9 @@
 						sessionStorage.setItem("gems", JSON.stringify(gems));
 						sessionStorage.setItem("userPreferences", JSON.stringify(userData));
 						window.location.href = "new-land.html?skipWelcome=1";
+						document.getElementById("origin").value = "";
+						document.getElementById("destination").value ="";
+
 					} catch (err) {
 						console.error("Error generating gems:", err);
 						alert("Something went wrong. Please try again.");
@@ -397,7 +438,11 @@
 
 				closeButton.addEventListener('click', function () {
 					if (confirm('Are you sure you want to exit the quiz? Your progress will be lost.')) {
+						document.getElementById("origin").value = "";
+						document.getElementById("destination").value ="";
+						sessionStorage.clear();
 						window.location.href = "new-land.html?skipWelcome=1";
+						
 					}
 				});
 
@@ -423,14 +468,9 @@
 					const savedAnswers = JSON.parse(savedPreferences);
 					if (savedAnswers.origin) 
 						originInput.value = savedAnswers.origin;
-					
-
 
 					if (savedAnswers.destination) 
 						destinationInput.value = savedAnswers.destination;
-					
-
-
 				}
 			});
 		</script>

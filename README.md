@@ -8,14 +8,14 @@
 ```
 2. **Pull Mistral from Ollama**
 ```bash
-    ollama pull mistral:7b
+    ollama pull gemma3:1b
 ```
 
 ## Usage
 
 Before running the webpage, make sure to open your terminal and run this command first to allow the LLM to run on the backend side
 ```bash
-    python3 code/scripts/hidden_gems_generator_local.py
+    python3 code/scripts/generate_recommendations.py
 ```
 
 **Alternative**

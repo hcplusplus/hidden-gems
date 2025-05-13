@@ -223,29 +223,6 @@
             .catch(error => console.error('Error loading JSON:', error));
         let latitude = 0;
         let longitude = 0;
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    latitude = position.coords.latitude;
-                    longitude = position.coords.longitude;
-                    console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-                    // Initialize MapLibre map
-                    const map = new maplibregl.Map({
-                        container: 'map',
-                        style: 'https://api.maptiler.com/maps/basic-v2/style.json?key=hbvo5fWE9HuC6JUHKB9q',
-                        center: [
-                            latitude, longitude
-                        ],
-                        zoom: 1
-                    });
-                },
-                (error) => {
-                    console.error("Error getting location:", error);
-                }
-            );
-        } else {
-            console.error("Geolocation is not supported by this browser.");
-        }
 
         console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
 
