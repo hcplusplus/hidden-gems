@@ -1,7 +1,6 @@
 /**
  * quiz-integration.js
- * Integrates the quiz with the data controller to save user preferences
- * Combined and fixed version with proper option selection behavior and free response fields
+ * Integrates the quiz with the data controller to save user preferences and filters gems along a route
  */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -9,24 +8,154 @@ document.addEventListener('DOMContentLoaded', function() {
     const GEOCODE_API = 'https://api.opencagedata.com/geocode/v1/json';
     const GEOCODE_KEY = 'fa00c10bb490481abc0614f3d6c9af3b';
     
-    /**
-     * Geocode a location string to coordinates
-     * @param {string} location - Location text to geocode
-     * @returns {Promise<Array>} - Promise resolving to [longitude, latitude] coordinates
-     */
-    async function geocode(location) {
-        try {
-            const res = await fetch(`${GEOCODE_API}?q=${
-                encodeURIComponent(location)
-            }&key=${GEOCODE_KEY}`);
-            const data = await res.json();
+ /**
+ * Geocode a location string to coordinates within Northern California bounds
+ * @param {string} location - Location text to geocode
+ * @returns {Promise<Array>} - Promise resolving to [longitude, latitude] coordinates
+ */
+async function geocode(location) {
+    try {
+        // Northern California bounds: West/South to East/North
+        const NORCAL_BOUNDS = "-125,37,-118,42";
+        
+        // Check if the location already includes state information
+        const hasStateOrZip = /\b(CA|California|[0-9]{5}(-[0-9]{4})?)\b/i.test(location);
+        
+        // Append ", California" if it doesn't already have state info
+        const searchLocation = hasStateOrZip ? location : `${location}, California`;
+        console.log(`Geocoding: ${searchLocation}`);
+        
+        // First attempt: With California and bounds
+        const res = await fetch(`${GEOCODE_API}?q=${
+            encodeURIComponent(searchLocation)
+        }&key=${GEOCODE_KEY}&countrycode=us&bounds=${NORCAL_BOUNDS}`);
+        
+        const data = await res.json();
+        
+        // Check if we got valid results
+        if (data.results && data.results.length > 0) {
             const coords = data.results[0]?.geometry;
-            return coords ? [coords.lng, coords.lat] : null;
-        } catch (error) {
-            console.error("Geocoding error:", error);
-            return null;
+            
+            // Verify the coordinates are within Northern California bounds
+            if (coords) {
+                const { lng, lat } = coords;
+                const inNorCal = lng >= -125 && lng <= -118 && lat >= 37 && lat <= 42;
+                
+                if (inNorCal) {
+                    console.log(`Found location in Northern California: [${lng}, ${lat}]`);
+                    return [lng, lat];
+                } else {
+                    console.log("Location found but outside Northern California bounds");
+                }
+            }
         }
+        
+        // Second attempt: Without bounds if the first attempt failed or was out of bounds
+        console.log("Trying second geocoding attempt without bounds restriction");
+        const fallbackRes = await fetch(`${GEOCODE_API}?q=${
+            encodeURIComponent(searchLocation)
+        }&key=${GEOCODE_KEY}&countrycode=us`);
+        
+        const fallbackData = await fallbackRes.json();
+        
+        // Check second attempt results
+        if (fallbackData.results && fallbackData.results.length > 0) {
+            const fallbackCoords = fallbackData.results[0]?.geometry;
+            
+            // Still verify the coordinates are within Northern California bounds
+            if (fallbackCoords) {
+                const { lng, lat } = fallbackCoords;
+                const inNorCal = lng >= -125 && lng <= -118 && lat >= 37 && lat <= 42;
+                
+                if (inNorCal) {
+                    console.log(`Found location in Northern California (second attempt): [${lng}, ${lat}]`);
+                    return [lng, lat];
+                } else {
+                    console.log("Second attempt location also outside Northern California bounds");
+                }
+            }
+        }
+        
+        // If we got here, no valid location was found within bounds
+        console.log("No valid location found within Northern California bounds");
+        return null;
+        
+    } catch (error) {
+        console.error("Geocoding error:", error);
+        return null;
     }
+}
+
+/**
+ * Generate route gems quietly in the background
+ * This function runs asynchronously without blocking the UI
+ */
+function generateRouteGemsQuietly() {
+    console.log("Starting quiet background route gem generation");
+    
+    // Schedule the geocoding and processing to happen asynchronously
+    setTimeout(async function() {
+        try {
+            // Clear any previous route cache
+            if (typeof window.HiddenGems.data.clearRouteCache === 'function') {
+                window.HiddenGems.data.clearRouteCache();
+            }
+
+            // Store the city names
+            const originName = quizState.answers.origin;
+            const destinationName = quizState.answers.destination;
+            
+            // Geocode the origin and destination
+            const [originCoords, destinationCoords] = await Promise.all([
+                geocode(quizState.answers.origin),
+                geocode(quizState.answers.destination)
+            ]);
+            
+            console.log("Geocoded coordinates:", { origin: originCoords, destination: destinationCoords });
+            
+            if (!originCoords || !destinationCoords) {
+                console.error("Background geocoding failed for one or both locations");
+                return;
+            }
+            
+            // Store coordinates in quiz state
+            quizState.answers.originCoords = originCoords;
+            quizState.answers.destinationCoords = destinationCoords;
+            
+            // Save to storage
+            window.HiddenGems.data.storage.set("originCoords", JSON.stringify(originCoords));
+            window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
+            window.HiddenGems.data.storage.set("originName", JSON.stringify(originName));
+            window.HiddenGems.data.storage.set("destinationName", JSON.stringify(destinationName));
+            
+            
+            // Find gems along the route
+            if (typeof window.HiddenGems.data.findGemsAlongRoute === 'function') {
+                // Use "backgroundQuiz" as page name to differentiate from final results
+                const routeGems = await window.HiddenGems.data.findGemsAlongRoute(
+                    "backgroundQuiz", 
+                    originCoords, 
+                    destinationCoords, 
+                    30,  // Buffer distance in km
+                    50,  // Get a larger initial sample to filter later
+                    originName,
+                    destinationName  // Pass city names to use in region naming
+                );
+                
+                console.log(`Quietly found ${routeGems.length} gems along route`);
+                
+                // Store the gems in session storage
+                sessionStorage.setItem("backgroundRouteGems", JSON.stringify(routeGems));
+                quizState.sampledGems = routeGems;
+            } else {
+                console.error("findGemsAlongRoute function not available for background processing");
+            }
+        } catch (error) {
+            console.error("Error in background route gem generation:", error);
+            // Fail silently - we'll try again at finish if needed
+        }
+    }, 100); // Tiny delay to ensure the UI isn't blocked
+}
     
     const quizState = {
         currentStep: 1,
@@ -40,8 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
             effortLevel: '',
             accessibility: [],
             otherAccessibility: '',
-            time: '',
-            maxDetour: ''
+            time: ''
         }
     };
     
@@ -114,24 +242,34 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function validateCurrentStep() {
         switch (quizState.currentStep) {
-            case 1:
-                let isValid = true;
-                if (!originInput.value.trim()) {
-                    originError.style.display = 'block';
-                    isValid = false;
-                } else {
-                    originError.style.display = 'none';
-                    quizState.answers.origin = originInput.value.trim();
-                }
+        case 1:
+            let isValid = true;
+            if (!originInput.value.trim()) {
+                originError.style.display = 'block';
+                isValid = false;
+            } else {
+                originError.style.display = 'none';
+                quizState.answers.origin = originInput.value.trim();
+            }
+            
+            if (!destinationInput.value.trim()) {
+                destinationError.style.display = 'block';
+                isValid = false;
+            } else {
+                destinationError.style.display = 'none';
+                quizState.answers.destination = destinationInput.value.trim();
+            }
+            
+            // If valid locations are entered, proceed to next step immediately
+            // but also start the geocoding/route gem generation in the background
+            if (isValid) {
+                // Start background process to generate route gems
+                generateRouteGemsQuietly();
                 
-                if (!destinationInput.value.trim()) {
-                    destinationError.style.display = 'block';
-                    isValid = false;
-                } else {
-                    destinationError.style.display = 'none';
-                    quizState.answers.destination = destinationInput.value.trim();
-                }
-                return isValid;
+                // Return true to allow normal step navigation
+                return true;
+            }
+            return isValid;
                 
             case 2:
                 // Activities step (now with separated activity and amenity collection)
@@ -178,10 +316,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const selectedTime = document.querySelector('input[name="time"]:checked');
                 quizState.answers.time = selectedTime ? selectedTime.value : '';
                 
-                // Maximum detour (single select)
-                const detourButtons = document.querySelectorAll('#step-2 .option-button.selected[data-value="5"], #step-2 .option-button.selected[data-value="15"], #step-2 .option-button.selected[data-value="30"], #step-2 .option-button.selected[data-value="50+"]');
-                const selectedDetour = Array.from(detourButtons)[0];
-                quizState.answers.maxDetour = selectedDetour ? selectedDetour.getAttribute('data-value') : '';
                 
                 return true;
         }
@@ -196,49 +330,126 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Running finishQuiz");
         
         const userData = quizState.answers;
-        const overlay = document.getElementById("loading-overlay");
-        if (overlay) overlay.style.display = "flex";
+    const overlay = document.getElementById("loading-overlay");
+    
+    // Show loading overlay immediately for user feedback
+    if (overlay) {
+        overlay.style.display = "flex";
+        
+        // Add a message element if it doesn't exist
+        if (!document.getElementById("loading-message")) {
+            const messageEl = document.createElement("div");
+            messageEl.id = "loading-message";
+            messageEl.style.color = "white";
+            messageEl.style.marginTop = "15px";
+            messageEl.style.textAlign = "center";
+            messageEl.textContent = "Generating recommendations...";
+            overlay.appendChild(messageEl);
+        } else {
+            document.getElementById("loading-message").textContent = "Generating recommendations...";
+        }
+    }
         
         try {
-            const [originCoords, destinationCoords] = await Promise.all([
-                geocode(userData.origin),
-                geocode(userData.destination)
-            ]);
+        // Get city names
+        const originName = userData.origin;
+        const destinationName = userData.destination;
+        
+        // First check if we have the pre-generated route gems
+        let sampledGems = [];
+        let originCoords = userData.originCoords;
+        let destinationCoords = userData.destinationCoords;
+        
+         // Try to get gems from quizState
+        if (quizState.sampledGems && quizState.sampledGems.length > 0) {
+            console.log(`Using pre-generated gems for route from ${originName} to ${destinationName}`);
+            sampledGems = quizState.sampledGems;
+        } 
+        // Then try from sessionStorage
+        else {
+            const storedGems = sessionStorage.getItem("backgroundRouteGems");
+            if (storedGems) {
+                console.log(`Using pre-generated gems from sessionStorage for route from ${originName} to ${destinationName}`);
+                sampledGems = JSON.parse(storedGems);
+            }
+        }
+        
+        // If no gems found, or if coordinates are missing, we need to generate them now
+        if (sampledGems.length === 0 || !originCoords || !destinationCoords) {
+            // Update loading message
+            if (document.getElementById("loading-message")) {
+                document.getElementById("loading-message").textContent = "Finding your locations...";
+            }
             
-            console.log("originCoords:", originCoords);
-            console.log("destinationCoords:", destinationCoords);
-
-               // Define unique region name based on origin/destination
-            const routeName = `route_${originCoords.join('_')}_${destinationCoords.join('_')}`;
-    
+            console.log("No pre-generated gems found, generating now");
             
+            // If coordinates are missing, geocode them now
             if (!originCoords || !destinationCoords) {
-                throw new Error("Geocoding failed");
-            }
-            
-            userData.originCoords = originCoords;
-            userData.destinationCoords = destinationCoords;
-
-            // Save to sessionStorage
-            window.HiddenGems.data.storage.set("originCoords", JSON.stringify(originCoords));
-            window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
-            sessionStorage.setItem("userPreferences", JSON.stringify(userData));
-
-            // Try to load gems if the function exists
-            if (typeof window.HiddenGems.data.findGemsAlongRoute === 'function') {
-                try {
-                    // First filter by route
-                    sampledGems = await window.HiddenGems.data.findGemsAlongRoute("quiz", originCoords, destinationCoords);
-                } catch (error) {
-                    console.error("Error filtering gems:", error);
+                [originCoords, destinationCoords] = await Promise.all([
+                    geocode(originName),
+                    geocode(destinationName)
+                ]);
+                
+                if (!originCoords || !destinationCoords) {
+                    throw new Error("Geocoding failed. Please check your location names.");
                 }
+                
+                // Update user data
+                userData.originCoords = originCoords;
+                userData.destinationCoords = destinationCoords;
+                
+                // Save to storage
+                window.HiddenGems.data.storage.set("originCoords", JSON.stringify(originCoords));
+                window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
+                window.HiddenGems.data.storage.set("originName", JSON.stringify(originName));
+                window.HiddenGems.data.storage.set("destinationName", JSON.stringify(destinationName));
             }
             
+            // Get buffer distance from user selection
+            const bufferDistance = 30;
+            
+            // Generate gems
+            if (typeof window.HiddenGems.data.findGemsAlongRoute === 'function') {
+                sampledGems = await window.HiddenGems.data.findGemsAlongRoute(
+                    "quiz", 
+                    originCoords, 
+                    destinationCoords,
+                    bufferDistance,
+                    10,  // Standard sample size
+                    originName,
+                    destinationName
+                );
+            } else {
+                throw new Error("Route gem generation function not available");
+            }
+        }
+
+        // Update loading message for API call
+        if (document.getElementById("loading-message")) {
+            document.getElementById("loading-message").textContent = "Generating personalized recommendations...";
+        }
+        
+        console.log("Final sampledGems:", sampledGems);
+        userData.candidates = sampledGems;
+        
+        // Also store route information in a more readable format
+        userData.routeInfo = {
+            origin: originName,
+            destination: destinationName,
+            originCoords: originCoords,
+            destinationCoords: destinationCoords,
+            detourTime: userData.selectedTime
+        };
+        
+        sessionStorage.setItem("sampledGems", JSON.stringify(sampledGems));
+        sessionStorage.setItem("routeInfo", JSON.stringify(userData.routeInfo));
+        
+        
         
             console.log("sampledGems:", sampledGems);
             userData.candidates = sampledGems;
             console.log("userData.candidates:", userData.candidates);
-            sessionStorage.setItem("sampledGems", JSON.stringify(sampledGems));
+
 
             try {
             const res = await fetch("http://127.0.0.1:5000/generate_recommendations", {
@@ -253,7 +464,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         console.log("Recommended gems:", gems);
 						sessionStorage.setItem("recommendedGems", JSON.stringify(gems));
 				
-						window.location.href = "map-recs.html";
+						// Update message before navigation
+                        if (document.getElementById("loading-message")) {
+                            document.getElementById("loading-message").textContent = "Ready! Taking you to your recommendations...";
+                        }
+
+                        // Short delay before redirecting for better UX
+                        setTimeout(() => {
+                            window.location.href = "map-recs.html";
+                        }, 500);
+
 					} catch (err) {
 						console.error("Error generating gems:", err);
 						alert("Something went wrong. Please try again.");
@@ -261,31 +481,31 @@ document.addEventListener('DOMContentLoaded', function() {
 					}
             
             // Save preferences to our data controller if it exists
-            if (window.HiddenGemsData) {
+            if (window.HiddenGems.data) {
                 const userPreferences = {
-                    activities: userData.activities || [],
-                    otherActivities: userData.otherActivities || '',
-                    amenities: userData.amenities || [],
-                    accessibility: userData.accessibility || [],
-                    otherAccessibility: userData.otherAccessibility || '',
-                    effortLevel: userData.effortLevel || 'moderate',
-                    detourTime: userData.time === 'quick' ? 30 : 
-                                userData.time === 'short' ? 60 : 
-                                userData.time === 'half-day' ? 180 : 240, // Full day in minutes
-                    maxDetour: parseInt(userData.maxDetour || 15),
-                    selectedGems: [],
-                    origin: {
-                        name: userData.origin,
-                        coordinates: originCoords
-                    },
-                    destination: {
-                        name: userData.destination,
-                        coordinates: destinationCoords
-                    }
-                };
+                activities: userData.activities || [],
+                otherActivities: userData.otherActivities || '',
+                amenities: userData.amenities || [],
+                accessibility: userData.accessibility || [],
+                otherAccessibility: userData.otherAccessibility || '',
+                effortLevel: userData.effortLevel || 'moderate',
+                detourTime: userData.time === 'quick' ? 30 : 
+                            userData.time === 'short' ? 60 : 
+                            userData.time === 'half-day' ? 180 : 240, // Full day in minutes
+                maxDetour: parseInt(userData.maxDetour || 15),
+                selectedGems: [],
+                origin: {
+                    name: originName,
+                    coordinates: originCoords
+                },
+                destination: {
+                    name: destinationName,
+                    coordinates: destinationCoords
+                }
+            };
                 
                 // Save to data controller
-                window.HiddenGemsData.preferences.save(userPreferences);
+                window.HiddenGems.data.storage.set(userPreferences);
                 
       
             }
@@ -401,17 +621,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch (e) {
             console.error("Error parsing saved preferences:", e);
-        }
-    } else if (window.HiddenGemsData) {
-        // Fallback to data controller if available
-        const savedUserPrefs = window.HiddenGemsData.preferences.get();
-        
-        if (savedUserPrefs.origin && savedUserPrefs.origin.name && originInput) {
-            originInput.value = savedUserPrefs.origin.name;
-        }
-        
-        if (savedUserPrefs.destination && savedUserPrefs.destination.name && destinationInput) {
-            destinationInput.value = savedUserPrefs.destination.name;
         }
     }
 });

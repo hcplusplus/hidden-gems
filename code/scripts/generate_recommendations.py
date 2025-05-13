@@ -38,7 +38,6 @@ User preferences:
 - Effort Level: {user_data.get('effortLevel', 'any')}
 - Accessibility: {fmt('accessibility')}
 - Time Available: {user_data.get('time')}
-- Max Detour: {user_data.get('maxDetour')} miles
 
 Hidden gem candidates:
 {user_data.get('candidates', 'None')}
