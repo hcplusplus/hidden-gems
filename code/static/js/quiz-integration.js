@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const otherAccessibilityButton = document.getElementById('other-accessibility-button');
     const otherAccessibilityContainer = document.getElementById('other-accessibility-container');
     const otherAccessibilityInput = document.getElementById('other-accessibility-input');
+    const getLocationButton = document.getElementById('get-location');
     
     // Set up the "Other" option toggles
     if (otherActivityButton) {
@@ -84,6 +85,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.querySelectorAll('.option-button[data-value="none"]')
                     .forEach(btn => btn.classList.remove('selected'));
             }
+        });
+    }
+
+    if (getLocationButton) {
+        getLocationButton.addEventListener('click', function() {
+            let origincoords;
+            document.getElementById("origin").value = "Current Location";
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+                        origincoords = [longitude, latitude];
+                        sessionStorage.setItem("originCoords", JSON.stringify(origincoords));
+                    },
+                    (error) => {
+                        throw new Error("Error getting location:", error);
+                    }
+                );
+            } else {
+                throw new Error("Geolocation is not supported by this browser.");
+            }
+				
         });
     }
     
@@ -179,9 +204,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 quizState.answers.time = selectedTime ? selectedTime.value : '';
                 
                 // Maximum detour (single select)
-                const detourButtons = document.querySelectorAll('#step-2 .option-button.selected[data-value="5"], #step-2 .option-button.selected[data-value="15"], #step-2 .option-button.selected[data-value="30"], #step-2 .option-button.selected[data-value="50+"]');
-                const selectedDetour = Array.from(detourButtons)[0];
-                quizState.answers.maxDetour = selectedDetour ? selectedDetour.getAttribute('data-value') : '';
+                // const detourButtons = document.querySelectorAll('#step-2 .option-button.selected[data-value="5"], #step-2 .option-button.selected[data-value="15"], #step-2 .option-button.selected[data-value="30"], #step-2 .option-button.selected[data-value="50+"]');
+                // const selectedDetour = Array.from(detourButtons)[0];
+                // quizState.answers.maxDetour = selectedDetour ? selectedDetour.getAttribute('data-value') : '';
                 
                 return true;
         }
@@ -200,24 +225,35 @@ document.addEventListener('DOMContentLoaded', function() {
         if (overlay) overlay.style.display = "flex";
         
         try {
-            const [originCoords, destinationCoords] = await Promise.all([
-                geocode(userData.origin),
-                geocode(userData.destination)
-            ]);
-            
-            console.log("originCoords:", originCoords);
-            console.log("destinationCoords:", destinationCoords);
-            
-            if (!originCoords || !destinationCoords) {
-                throw new Error("Geocoding failed");
-            }
-            
-            userData.originCoords = originCoords;
-            userData.destinationCoords = destinationCoords;
+            //if my location then don't use geocode 
+            if (document.getElementById("origin").value != "Current Location" && sessionStorage.getItem("originCoords") == null) { 
+                const [originCoords, destinationCoords] = await Promise.all([
+                    geocode(userData.origin),
+                    geocode(userData.destination)
+                ]);
 
+                console.log("originCoords:", originCoords);
+                console.log("destinationCoords:", destinationCoords);
+
+                if (!originCoords || !destinationCoords) 
+                    throw new Error("Geocoding failed");
+                
+                userData.originCoords = originCoords;
+                userData.destinationCoords = destinationCoords;	
+                window.HiddenGems.data.storage.set("originCoords", JSON.stringify(originCoords));
+                window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
+            } else {
+                const [destinationCoords] = await Promise.all([
+                    geocode(userData.destination)
+                ]);
+                console.log("destinationCoords:", destinationCoords);
+                if (!destinationCoords) 
+                    throw new Error("Geocoding failed");
+                userData.destinationCoords = destinationCoords;
+                window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
+                console.log("check");
+            }
             // Save to sessionStorage
-            window.HiddenGems.data.storage.set("originCoords", JSON.stringify(originCoords));
-            window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
             window.HiddenGems.data.storage.set("userPreferences", JSON.stringify(userData));
             
             // Save preferences to our data controller if it exists
@@ -291,6 +327,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (closeButton) {
         closeButton.addEventListener('click', function() {
             if (confirm('Are you sure you want to exit the quiz? Your progress will be lost.')) {
+                document.getElementById("origin").value = "";
+				document.getElementById("destination").value ="";
                 window.location.href = "index.html?skipWelcome=1";
             }
         });
@@ -311,6 +349,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 1. Effort level buttons (first group in step 3) - single select
             if (['easy', 'moderate', 'challenging'].includes(value)) {
+                if (this.classList.contains('selected')) {
+                    this.classList.remove('selected');
+                    return;
+                }
                 document.querySelectorAll('.option-button[data-value="easy"], .option-button[data-value="moderate"], .option-button[data-value="challenging"]')
                     .forEach(btn => btn.classList.remove('selected'));
             }
@@ -340,7 +382,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Toggle selection of clicked button
-            this.classList.toggle('selected');
+            if (this.classList.contains('selected')) {
+                this.classList.remove('selected');
+              } else {
+                this.classList.add('selected');
+              }
         });
     });
     

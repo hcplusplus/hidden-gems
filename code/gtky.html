@@ -8,6 +8,7 @@
 	
 		<link rel="stylesheet" href="static/styles/new-aesthetics.css">
 		<link rel="stylesheet" href="static/styles/quiz.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 
 
@@ -34,11 +35,14 @@
 				<p class="step-description">Let us know your starting point and destination to find hidden gems along your route.</p>
 
 				<form class="quiz-form">
-					<label for="origin">From</label>
+					<label for="origin">From*</label>
+					<button type ="button" class="flex" id="get-location" style="height:40px; padding: 8px; background-color: white; color:#666; font-size: 13px">
+						<i class="fas fa-location-dot" style="color:#c9e9d5; margin-right: 10px"></i>  Use my current location
+					</button>
 					<input type="text" id="origin" placeholder="Enter starting location">
 					<div class="error-message" id="origin-error">Please enter a starting location</div>
 
-					<label for="destination">To</label>
+					<label for="destination">To*</label>
 					<input type="text" id="destination" placeholder="Enter destination">
 					<div class="error-message" id="destination-error">Please enter a destination</div>
 				</form>
@@ -54,7 +58,7 @@
 
 			<!-- Step 2: Time Available -->
 			<div class="quiz-step" id="step-2">
-				<h2 class="step-title">How much time do you have?</h2>
+				<h2 class="step-title">How much time do you have?*</h2>
 				<p class="step-description">Let us know how long you'd like to spend discovering hidden gems on this trip.</p>
 
 				<div class="options-container">
@@ -76,7 +80,7 @@
 					</div>
 				</div>
 
-				<div class="option-group">
+				<!-- <div class="option-group">
 					<div class="option-title">Maximum detour distance</div>
 					<div class="option-flex">
 						<div class="option-button" data-value="5">
@@ -96,7 +100,7 @@
 							Any Distance
 						</div>
 					</div>
-				</div>
+				</div> -->
 
 				<p class="footer-note">We'll adjust recommendations based on your available time and detour preferences.</p>
 			</div>
