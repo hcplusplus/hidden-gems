@@ -1,4 +1,222 @@
 /**
+ * LLM Progress Indicator
+ * Provides realistic progress estimation for LLM inference
+ */
+
+// Constants for time estimation
+const LLM_CONFIG = {
+    baseTimeSeconds: 120,     // Base time for inference
+    variabilityFactor: 0.1, 
+    progressSteps: [        // Artificial progress steps for smoother UX
+        { percent: 0, message: "Initializing..." },
+        { percent: 15, message: "Finding hidden gems along your route..." },
+        { percent: 40, message: "Analyzing your preferences..." },
+        { percent: 65, message: "Generating personalized recommendations..." },
+        { percent: 85, message: "Finalizing results..." },
+        { percent: 100, message: "Ready! Taking you to your recommendations..." }
+    ]
+};
+
+/**
+ * Manages the LLM progress indicator
+ */
+class LLMProgressIndicator {
+    constructor(config = LLM_CONFIG) {
+        this.config = config;
+        this.startTime = null;
+        this.estimatedSeconds = this.getEstimatedTime();
+        this.currentStep = 0;
+        this.intervalId = null;
+        this.progressBarEl = null;
+        this.messageEl = null;
+        this.timeRemainingEl = null;
+        this.isComplete = false;
+    }
+
+    /**
+     * Get estimated time
+     * @returns {number} Estimated time in seconds
+     */
+    getEstimatedTime() {
+        const variability = (Math.random() * 2 - 1) * this.config.variabilityFactor;
+        return Math.max(30, this.config.baseTimeSeconds * (1 + variability));
+    }
+
+    /**
+     * Create the progress UI elements
+     * @param {HTMLElement} container - Container element for the progress UI
+     */
+    createProgressUI(container) {
+        // Create progress bar container
+        const progressContainer = document.createElement("div");
+        progressContainer.className = "progress-container";
+        progressContainer.style.width = "80%";
+        progressContainer.style.maxWidth = "400px";
+        progressContainer.style.margin = "0 auto";
+        progressContainer.style.marginTop = "20px";
+        progressContainer.style.background = "rgba(255, 255, 255, 0.2)";
+        progressContainer.style.borderRadius = "8px";
+        progressContainer.style.overflow = "hidden";
+        
+        // Create progress bar
+        this.progressBarEl = document.createElement("div");
+        this.progressBarEl.className = "progress-bar";
+        this.progressBarEl.style.height = "8px";
+        this.progressBarEl.style.width = "0%";
+        this.progressBarEl.style.background = "linear-gradient(to right, #64B5F6, #1976D2)";
+        this.progressBarEl.style.transition = "width 0.5s ease-in-out";
+        
+        // Create message element
+        this.messageEl = document.createElement("div");
+        this.messageEl.className = "progress-message";
+        this.messageEl.style.color = "white";
+        this.messageEl.style.marginTop = "10px";
+        this.messageEl.style.marginBottom = "5px";
+        this.messageEl.style.textAlign = "center";
+        this.messageEl.style.fontSize = "16px";
+        this.messageEl.textContent = this.config.progressSteps[0].message;
+        
+        // Create time remaining element
+        this.timeRemainingEl = document.createElement("div");
+        this.timeRemainingEl.className = "time-remaining";
+        this.timeRemainingEl.style.color = "rgba(255, 255, 255, 0.8)";
+        this.timeRemainingEl.style.fontSize = "14px";
+        this.timeRemainingEl.style.textAlign = "center";
+        this.timeRemainingEl.textContent = `Estimated time: about ${Math.ceil(this.estimatedSeconds)} seconds`;
+
+        // Format the time nicely (e.g., "about 1.5 minutes" instead of "90 seconds")
+        let timeStr;
+        if (this.estimatedSeconds < 60) {
+            timeStr = `${Math.ceil(this.estimatedSeconds)} seconds`;
+        } else {
+            const minutes = Math.floor(this.estimatedSeconds / 60);
+            const seconds = Math.round(this.estimatedSeconds % 60);
+            if (seconds === 0) {
+                timeStr = `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`;
+            } else {
+                timeStr = `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} and ${seconds} seconds`;
+            }
+        }
+        this.timeRemainingEl.textContent = `Estimated time: about ${timeStr}`;
+        
+        // Add elements to container
+        progressContainer.appendChild(this.progressBarEl);
+        container.appendChild(this.messageEl);
+        container.appendChild(progressContainer);
+        container.appendChild(this.timeRemainingEl);
+    }
+
+    /**
+     * Start the progress indicator
+     * @param {HTMLElement} container - Container element for the progress UI
+     */
+    start(container) {
+        console.log(`Starting progress indicator with estimated time: ${this.estimatedSeconds} seconds`);
+        this.startTime = Date.now();
+        this.createProgressUI(container);
+        
+        // Update progress every 300ms for smooth animation
+        this.intervalId = setInterval(() => this.updateProgress(), 300);
+    }
+
+    /**
+     * Update the progress indicator
+     */
+    updateProgress() {
+        if (this.isComplete) return;
+        
+        const elapsedSeconds = (Date.now() - this.startTime) / 1000;
+        
+        // non-linear progress curve that starts faster and slows down
+        const linearProgress = elapsedSeconds / this.estimatedSeconds;
+        const progress = Math.min(98, Math.sqrt(linearProgress) * 100);
+        
+        // Update progress bar width
+        if (this.progressBarEl) {
+            this.progressBarEl.style.width = `${progress}%`;
+        }
+        
+        // Update time remaining
+        if (this.timeRemainingEl) {
+            const remaining = Math.max(0, Math.ceil(this.estimatedSeconds - elapsedSeconds));
+            
+            if (remaining > 60) {
+                const minutes = Math.floor(remaining / 60);
+                const seconds = remaining % 60;
+                this.timeRemainingEl.textContent = `Estimated time remaining: about ${minutes} min ${seconds} sec`;
+            } else if (remaining > 0) {
+                this.timeRemainingEl.textContent = `Estimated time remaining: about ${remaining} seconds`;
+            } else {
+                this.timeRemainingEl.textContent = "Almost ready...";
+            }
+        }
+        
+        // Update message based on progress
+        this.updateMessage(progress);
+    }
+
+    /**
+     * Update the message based on current progress
+     * @param {number} progress - Current progress percentage
+     */
+    updateMessage(progress) {
+        if (!this.messageEl) return;
+        
+        // Find the appropriate message for the current progress
+        const nextStep = this.config.progressSteps.findIndex(step => step.percent > progress);
+        const currentStepIndex = nextStep > 0 ? nextStep - 1 : this.config.progressSteps.length - 2;
+        
+        // Only update message if we've moved to a new step
+        if (currentStepIndex > this.currentStep) {
+            this.currentStep = currentStepIndex;
+            this.messageEl.textContent = this.config.progressSteps[currentStepIndex].message;
+        }
+    }
+
+    /**
+     * Complete the progress indicator
+     */
+    complete() {
+        if (this.isComplete) return;
+        
+        this.isComplete = true;
+        const actualSeconds = (Date.now() - this.startTime) / 1000;
+        console.log(`LLM response completed in ${actualSeconds.toFixed(2)} seconds`);
+        
+        // Update UI to show completion
+        if (this.progressBarEl) {
+            this.progressBarEl.style.width = "100%";
+            this.progressBarEl.style.background = "linear-gradient(to right, #4CAF50, #2E7D32)";
+        }
+        
+        if (this.messageEl) {
+            this.messageEl.textContent = this.config.progressSteps[this.config.progressSteps.length - 1].message;
+        }
+        
+        if (this.timeRemainingEl) {
+            this.timeRemainingEl.textContent = `Completed in ${actualSeconds.toFixed(1)} seconds`;
+        }
+        
+        // Clear the update interval
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+        }
+    }
+
+    /**
+     * Stop and clean up the progress indicator
+     */
+    stop() {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+        }
+    }
+}
+
+
+/**
  * quiz-integration.js
  * Integrates the quiz with the data controller to save user preferences and filters gems along a route
  */
@@ -330,25 +548,18 @@ function generateRouteGemsQuietly() {
         console.log("Running finishQuiz");
         
         const userData = quizState.answers;
-    const overlay = document.getElementById("loading-overlay");
-    
-    // Show loading overlay immediately for user feedback
-    if (overlay) {
-        overlay.style.display = "flex";
+        const overlay = document.getElementById("loading-overlay");
         
-        // Add a message element if it doesn't exist
-        if (!document.getElementById("loading-message")) {
-            const messageEl = document.createElement("div");
-            messageEl.id = "loading-message";
-            messageEl.style.color = "white";
-            messageEl.style.marginTop = "15px";
-            messageEl.style.textAlign = "center";
-            messageEl.textContent = "Generating recommendations...";
-            overlay.appendChild(messageEl);
-        } else {
-            document.getElementById("loading-message").textContent = "Generating recommendations...";
+        // Initialize progress indicator
+        const progressIndicator = new LLMProgressIndicator();
+        
+        // Show loading overlay immediately for user feedback
+        if (overlay) {
+            overlay.style.display = "flex";
+
+            // Use the progress indicator instead of simple loading message
+            progressIndicator.start(overlay);
         }
-    }
         
         try {
         // Get city names
@@ -405,8 +616,6 @@ function generateRouteGemsQuietly() {
                 window.HiddenGems.data.storage.set("destinationName", JSON.stringify(destinationName));
             }
             
-            // Get buffer distance from user selection
-            const bufferDistance = 30;
             
             // Generate gems
             if (typeof window.HiddenGems.data.findGemsAlongRoute === 'function') {
@@ -414,7 +623,7 @@ function generateRouteGemsQuietly() {
                     "quiz", 
                     originCoords, 
                     destinationCoords,
-                    bufferDistance,
+                    30,
                     10,  // Standard sample size
                     originName,
                     destinationName
@@ -460,14 +669,16 @@ function generateRouteGemsQuietly() {
 							body: JSON.stringify(userData)
 						});
 
-						const gems = await res.json();
+						const data = await res.json();
+                        const gems = data.recommendations || data;
+                        const meta = data.meta || {};
+
                         console.log("Recommended gems:", gems);
-						sessionStorage.setItem("recommendedGems", JSON.stringify(gems));
+                        console.log("Processing time:", meta.processingTime || "unknown");
+                        sessionStorage.setItem("recommendedGems", JSON.stringify(gems));
 				
-						// Update message before navigation
-                        if (document.getElementById("loading-message")) {
-                            document.getElementById("loading-message").textContent = "Ready! Taking you to your recommendations...";
-                        }
+						// Mark progress as complete
+                        progressIndicator.complete();
 
                         // Short delay before redirecting for better UX
                         setTimeout(() => {
@@ -475,10 +686,11 @@ function generateRouteGemsQuietly() {
                         }, 500);
 
 					} catch (err) {
-						console.error("Error generating gems:", err);
-						alert("Something went wrong. Please try again.");
-						overlay.style.display = "none";
-					}
+                         console.error("Error in quiz processing:", err);
+                         if (overlay) overlay.style.display = "none";
+                         alert(`Something went wrong: ${err.message}. Please try again.`);
+                         progressIndicator.stop();
+                     }
             
             // Save preferences to our data controller if it exists
             if (window.HiddenGems.data) {

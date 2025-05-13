@@ -1459,13 +1459,16 @@ handleGemsLoaded(event) {
       return remainingMinutes > 0 ? `${hours} hr ${remainingMinutes} min` : `${hours} hr`;
     }
   }
-  
+
+
   /**
    * Navigate to gem details page
    * @param {Object} gem - Gem object
    */
   navigateToGemDetails(gem) {
     const gemId = gem.id || `gem-${this.activeIndex}`;
+
+    exploreGem(gemId);
     
   
     // Process time information for trip details
@@ -2017,6 +2020,28 @@ if (window.HiddenGems && window.HiddenGems.data) {
 
 // Register the custom element
 customElements.define('gem-cards', GemCards);
+
+// Define the exploreGem function in the global scope
+window.exploreGem = function(gemId) {
+  fetch("static/assets/data/recommendations.json")
+    .then(res => res.json())
+    .then(gems => {
+      const selected = gems.find(g => g.id === gemId);
+      return fetch("http://127.0.0.1:5000/generate_review", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(selected)
+      });
+    })
+    .then(res => res.json())
+    .then(data => {
+      window.HiddenGems.data.storage.set("selectedGemReview", data.review);
+      window.location.href = "trip-select.html";
+    })
+    .catch(err => console.error("Error generating review:", err));
+};
 
 window.highlightGemMarker = function(index, skipCardUpdate = false) {
  // Update map markers

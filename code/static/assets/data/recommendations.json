@@ -1,130 +1,130 @@
 [
   {
-    "id": "same as input",
-    "name": "Mimosa House",
+    "id": "Healdsburg Museum",
+    "name": "Healdsburg Museum",
     "coordinates": [
-      38.6893889,
-      38.728514
+      37.9388,
+      -121.245
     ],
-    "category_1": "Food & Drink",
-    "category_2": "Outdoor adventure",
-    "description": "A charming spot where you can experience local culture",
-    "rarity": "least hidden | moderately hidden | most hidden",
+    "category_1": "Historical site",
+    "category_2": "Historical site",
+    "description": "A stunning lookout spot off the beaten tourist path, offering insights into the history and culture of the Sonoma Valley.",
+    "rarity": "moderately hidden",
     "color": "blue",
-    "time": 55,
-    "time_spent": 55,
-    "dolar_sign": "$$"
-  },
-  {
-    "id": "same as input",
-    "name": "El Dorado Historical Museum",
-    "coordinates": [
-      38.7285141,
-      38.7291027
-    ],
-    "category_1": "Tourism",
-    "category_2": "Nature escape",
-    "description": "Capture amazing photos at this hidden viewpoint",
-    "rarity": "moderately hidden | least hidden | most hidden",
-    "color": "purple",
-    "time": 34,
-    "time_spent": 34,
-    "dolar_sign": "$$"
-  },
-  {
-    "id": "same as input",
-    "name": "Old Bird's Store (Tahoe NF)",
-    "coordinates": [
-      -120.7631505,
-      38.6462124
-    ],
-    "category_1": "Historic",
-    "category_2": "Unique find",
-    "description": "Experience the past in this atmospheric historical site",
-    "rarity": "least hidden | moderately hidden | most hidden",
-    "color": "purple",
-    "time": 61,
-    "time_spent": 61,
-    "dolar_sign": "$$"
-  },
-  {
-    "id": "same as input",
-    "name": "Dave Moore Nature Area",
-    "coordinates": [
-      -120.8341027,
-      38.7237919
-    ],
-    "category_1": "Leisure",
-    "category_2": "Outdoor adventure",
-    "description": "A hidden recreational gem frequented by locals",
-    "rarity": "least hidden | moderately hidden | most hidden",
-    "color": "purple",
-    "time": 104,
-    "time_spent": 104,
-    "dolar_sign": "$$"
-  },
-  {
-    "id": "same as input",
-    "name": "El Dorado County Library",
-    "coordinates": [
-      -120.8291027,
-      38.728514
-    ],
-    "category_1": "Leisure",
-    "category_2": "Outdoor adventure",
-    "description": "A charming spot where you can experience local culture",
-    "rarity": "least hidden | moderately hidden | most hidden",
-    "color": "purple",
-    "time": 40,
-    "time_spent": 40,
-    "dolar_sign": "$$"
-  },
-  {
-    "id": "same as input",
-    "name": "Sigwarts Opera House",
-    "coordinates": [
-      -120.8341027,
-      38.7291027
-    ],
-    "category_1": "Tourism",
-    "category_2": "Nature escape",
-    "description": "A charming spot where you can experience local culture",
-    "rarity": "least hidden | moderately hidden | most hidden",
-    "color": "purple",
     "time": 60,
-    "time_spent": 60,
+    "time_spent": 30,
     "dolar_sign": "$$"
   },
   {
-    "id": "same as input",
-    "name": "Taqueria Tepa",
+    "id": "Lake Berryessa Recreation Area",
+    "name": "Lake Berryessa Recreation Area",
     "coordinates": [
-      -120.8007682,
-      38.7285141
+      37.9396,
+      -121.2462
     ],
-    "category_1": "Food & Drink",
-    "category_2": "Outdoor adventure",
-    "description": "Experience genuine Northern California flavors in this unassuming Restaurant",
-    "rarity": "least hidden | moderately hidden | most hidden",
+    "category_1": "Recreation",
+    "category_2": "Recreation",
+    "description": "A tranquil setting for leisure activities, providing a peaceful escape with scenic views.",
+    "rarity": "most hidden",
     "color": "blue",
-    "time": 55,
-    "time_spent": 55,
+    "time": 90,
+    "time_spent": 120,
     "dolar_sign": "$$"
   },
   {
-    "id": "same as input",
-    "name": "Peet\u2019s Tea & Coffee",
+    "id": "Culinary Garden",
+    "name": "Culinary Garden",
     "coordinates": [
-      -120.8291027,
-      38.7285141
+      37.9388,
+      -121.245
     ],
-    "category_1": "Food & Drink",
-    "category_2": "Outdoor adventure",
-    "description": "A charming spot where you can experience local culture",
-    "rarity": "least hidden | moderately hidden | most hidden",
+    "category_1": "Recreation",
+    "category_2": "Scenic viewpoint",
+    "description": "Experience authentic local culture at this laid-back spot, featuring a vibrant garden.",
+    "rarity": "moderately hidden",
     "color": "blue",
-    "time": 55,
-    "time_spent": 55,
+    "time": 60,
+    "time_spent": 90,
+    "dolar_sign": "$$"
+  },
+  {
+    "id": "Charlie Brown",
+    "name": "Charlie Brown",
+    "coordinates": [
+      37.9396,
+      -121.245
+    ],
+    "category_1": "Cultural experience",
+    "category_2": "Scenic viewpoint",
+    "description": "A spectacular vista point that remains a local secret, offering a unique and memorable experience.",
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 60,
+    "time_spent": 90,
+    "dolar_sign": "$$"
+  },
+  {
+    "id": "Steady Eddy's",
+    "name": "Steady Eddy's",
+    "coordinates": [
+      37.9388,
+      -121.245
+    ],
+    "category_1": "Local Amenity",
+    "category_2": "Scenic viewpoint",
+    "description": "A local establishment with unique character and charm, offering a cozy and authentic experience.",
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "time_spent": 90,
+    "dolar_sign": "$$"
+  },
+  {
+    "id": "Calistoga Roastery",
+    "name": "Calistoga Roastery",
+    "coordinates": [
+      37.9396,
+      -121.245
+    ],
+    "category_1": "Local Amenity",
+    "category_2": "Scenic viewpoint",
+    "description": "A hidden recreational gem frequented by locals, offering a taste of the region's specialty coffee.",
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "time_spent": 90,
+    "dolar_sign": "$$"
+  },
+  {
+    "id": "Rose Garden",
+    "name": "Rose Garden",
+    "coordinates": [
+      37.9396,
+      -121.245
+    ],
+    "category_1": "Recreation",
+    "category_2": "Peaceful retreat",
+    "description": "A hidden recreational gem frequented by locals, offering a serene escape.",
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 60,
+    "time_spent": 90,
+    "dolar_sign": "$$"
+  },
+  {
+    "id": "Wheels For Peace",
+    "name": "Wheels For Peace",
+    "coordinates": [
+      37.9388,
+      -121.245
+    ],
+    "category_1": "Peaceful retreat",
+    "category_2": "Peaceful retreat",
+    "description": "Capture amazing photos at this hidden viewpoint, a perfect spot for a peaceful retreat.",
+    "rarity": "moderately hidden",
+    "color": "blue",
+    "time": 60,
+    "time_spent": 90,
     "dolar_sign": "$$"
   }
 ]

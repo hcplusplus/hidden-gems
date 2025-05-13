@@ -2,28 +2,9 @@
  * map-recs.js
  */
 
-// Map initialization variables
-
-
 
 document.addEventListener('DOMContentLoaded', function () {
 
-
-    function exploreGem(gemId) {
-        fetch("static/assets/data/recommendations.json").then(res => res.json()).then(gems => {
-            const selected = gems.find(g => g.id === gemId);
-            return fetch("http://127.0.0.1:5000/generate_review", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(selected)
-            });
-        }).then(res => res.json()).then(data => {
-            window.HiddenGems.data.storage.set("selectedGemReview", data.review);
-            window.location.href = "trip-select.html";
-        }).catch(err => console.error("Error generating review:", err));
-    }
 
 
     function getValidCoordinates(coords) {
