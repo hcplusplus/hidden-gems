@@ -17,10 +17,13 @@ let markers = [];
  * @returns {Promise} Promise that resolves when the map is ready
  */
 function initializeMap(pageName = 'index', center = null, zoom = null) {
+
+
+
   return new Promise((resolve, reject) => {
     try {
 
-
+   
 
       // Get constants
       const DEFAULT_CENTER = center || window.HiddenGems.constants.DEFAULT_CENTER; // berkeley default
@@ -78,20 +81,20 @@ function initializeMap(pageName = 'index', center = null, zoom = null) {
         }));
 
         resolve(map);
-    
+
       });
 
       // Fix for sliding markers during zoom
-     /* map.on('zoom move moveend zoomend', function () {
-        // Ensure markers are properly positioned during map movement
-        if (markers && markers.length) {
-          markers.forEach(marker => {
-            // Force marker update by getting and setting its position
-            const lngLat = marker.getLngLat();
-            marker.setLngLat(lngLat);
-          });
-        }
-      });*/
+      /* map.on('zoom move moveend zoomend', function () {
+         // Ensure markers are properly positioned during map movement
+         if (markers && markers.length) {
+           markers.forEach(marker => {
+             // Force marker update by getting and setting its position
+             const lngLat = marker.getLngLat();
+             marker.setLngLat(lngLat);
+           });
+         }
+       });*/
 
       // Improve touch handling for mobile devices
       if ('ontouchstart' in window) {
@@ -142,7 +145,7 @@ function initializeMap(pageName = 'index', center = null, zoom = null) {
  * @param {Array} [destinationCoord] - Optional destination coordinates for route [lng, lat]
  * @returns {Promise} Promise that resolves with the loaded gems
  */
-function loadGemsWithDataController(pageName, center, radius, sampleSize, originCoord, destinationCoord) {
+function loadGemsWithDataController(pageName, center, buffer = 10, sampleSize = 10, originCoord, destinationCoord) {
   if (!window.HiddenGems || !window.HiddenGems.data) {
     return Promise.reject(new Error('Data controller not available'));
   }
@@ -163,39 +166,48 @@ function loadGemsWithDataController(pageName, center, radius, sampleSize, origin
       if (isNotIndexPage) {
         console.log(`Loading gems along route for non-index page: ${pageName}`);
 
+        const originName = window.HiddenGems.data.storage.get('originName');
+        const destinationName = window.HiddenGems.data.storage.get('destinationName');
+        const originCoords = window.HiddenGems.data.coordUtils.normalize(JSON.parse(window.HiddenGems.data.storage.get('originCoords')));
+        const destinationCoords = window.HiddenGems.data.coordUtils.normalize(JSON.parse(window.HiddenGems.data.storage.get('destinationCoords')));
+        console.log(originCoords, destinationCoords);
         // Default route coordinates if not provided
-        const defaultOriginCoord = window.HiddenGems.constants.DEFAULT_ORIGIN;      // Berkeley
-        const defaultDestinationCoord = window.HiddenGems.constants.DEFAULT_DESTINATION; // Sacramento
+        //const defaultOriginCoord = window.HiddenGems.constants.DEFAULT_ORIGIN;      // Berkeley
+        //const defaultDestinationCoord = window.HiddenGems.constants.DEFAULT_DESTINATION; // Sacramento
 
         // Use provided coords or defaults
-        const safeOriginCoord = originCoord || defaultOriginCoord;
-        const safeDestinationCoord = destinationCoord || defaultDestinationCoord;
+        //const safeOriginCoord = originCoord || defaultOriginCoord;
+        //const safeDestinationCoord = destinationCoord || defaultDestinationCoord;
 
         // Use default values if not provided
         const safeSampleSize = sampleSize || window.HiddenGems.constants.DEFAULT_LIMIT;
-        const bufferDistance = radius || window.HiddenGems.constants.DEFAULT_RADIUS;
+        const bufferDistance = window.HiddenGems.constants.DEFAULT_BUFFER;
 
-        console.log(`Finding gems along route from [${safeOriginCoord}] to [${safeDestinationCoord}]`);
+        console.log(`Finding gems along route from [${originName}] to [${destinationName}]`);
 
         // Use findGemsAlongRoute from data-controller
         return window.HiddenGems.data.findGemsAlongRoute(
-          pageName || 'map-recs',
-          safeOriginCoord,
-          safeDestinationCoord,
+          'map-recs',
+          originCoords,
+          destinationCoords,
           bufferDistance,
-          safeSampleSize
+          safeSampleSize,
+          originName,
+          destinationName
         );
       }
       // If on index page and center coordinates provided, find gems near that location
       else if (center && center.length === 2) {
-        const safeRadius = radius || window.HiddenGems.constants?.DEFAULT_RADIUS;
-        const safeSampleSize = sampleSize || window.HiddenGems.constants?.DEFAULT_LIMIT;
-
-        console.log(`Finding gems near center [${center}] with radius ${safeRadius}km`);
+        window.map.setCenter(center);
+        const safeRadius = radius || window.HiddenGems.constants.DEFAULT_RADIUS;
+        const safeSampleSize = sampleSize || window.HiddenGems.constants.DEFAULT_LIMIT;
+        const safeCenter = center || window.HiddenGems.constants.DEFAULT_CENTER;
+        safeCenter = window.HiddenGems.data.coordUtils.normalize(safeCenter);
+        console.log(`Finding gems near center [${safeCenter}] with radius ${safeRadius}km`);
 
         return window.HiddenGems.data.getRegionalGems({
           regionName: pageName || 'current-page',
-          center: center,
+          center: safeCenter,
           radius: safeRadius
         })
           .then(() => {
@@ -209,7 +221,7 @@ function loadGemsWithDataController(pageName, center, radius, sampleSize, origin
       }
       // Default: Try to find gems near the user with geolocation
       else {
-        console.log(`Finding nearby gems for ${pageName} using geolocation`);
+        //console.log(`Finding nearby gems for ${pageName} using geolocation`);
 
         return window.HiddenGems.data.findNearbyGems(
           pageName || 'current-page',
@@ -277,14 +289,14 @@ function showErrorMessage(message) {
   }, 5000);
 }
 
-function createMarker(lngLat, el) {
+function createMarker(lngLat, color) {
   return new maplibregl.Marker({
-    element: el,
+    color: color,
     anchor: 'center',
     offset: [0, 0]
   })
     .setLngLat(lngLat)
-    .addTo(map);
+    .addTo(window.map);
 }
 
 /**
@@ -293,30 +305,15 @@ function createMarker(lngLat, el) {
  * @returns {Array} Array of gems that were successfully rendered
  */
 function renderGems(gems) {
-  // First ensure we have gems to render
+// Proper validation of gems array
   if (!gems || !Array.isArray(gems) || gems.length === 0) {
     console.warn('No gems to render');
-
-    // Try to get gems from data controller as fallback
-    if (window.HiddenGems && window.HiddenGems.data) {
-      if (window.HiddenGems.data.pageGems && window.HiddenGems.data.pageGems.length > 0) {
-        gems = window.HiddenGems.data.pageGems;
-      } else if (window.HiddenGems.data.allGems && window.HiddenGems.data.allGems.length > 0) {
-        // Take a sample of all gems
-        if (window.HiddenGems.data.utils && window.HiddenGems.data.utils.sampleArray) {
-          gems = window.HiddenGems.data.utils.sampleArray(window.HiddenGems.data.allGems, 10);
-        } else {
-          gems = window.HiddenGems.data.allGems.slice(0, 10);
-        }
-      } else {
-        console.error('No gems available to render, even from data controller');
-        return [];
-      }
-    } else {
-      console.error('No gems available to render');
-      return [];
-    }
+    showNoGemsMessage();
+    return [];
+    
   }
+
+  clearMarkers();
 
   // First, ensure any lingering loading elements are removed
   const loadingElements = document.querySelectorAll('[id$="-loading"]');
@@ -326,8 +323,6 @@ function renderGems(gems) {
     }
   });
 
-  // Clear existing markers if needed
-  clearMarkers();
 
   // Clear any existing routes
   if (window.HiddenGems.map && typeof window.HiddenGems.map.clearRoutes === 'function') {
@@ -340,8 +335,9 @@ function renderGems(gems) {
     return [];
   }
 
+  window.markers = [];
   const bounds = new maplibregl.LngLatBounds();
-  markers = [];
+
 
   // Track number of valid gems rendered
   let validGemsCount = 0;
@@ -356,25 +352,21 @@ function renderGems(gems) {
 
 
 
-    // Normalize coordinates using dunified coordinate utility
-    const lngLat = window.HiddenGems.coordUtil.fromGem(gem);
+    // Normalize coordinates using unified coordinate utility
+    const lngLat = window.HiddenGems.data.coordUtils.fromGem(gem);
 
-
+    // Create marker DOM element
+    const el = document.createElement('div');
+    el.className = 'gem-marker';
+    el.style.width = '24px';
+    el.style.height = '24px';
+    el.style.cursor = 'pointer';
     validGemsCount++;
     validGems.push(gem);
 
-    // Create marker DOM element
-    //const el = document.createElement('div');
-    //el.className = 'gem-marker';
-    //el.style.width = '28px';
-    //el.style.height = '28px';
-    //el.style.cursor = 'pointer';
-    //el.style.position = 'relative';
 
     // Store gem ID for synchronization
     const gemId = gem.id || gem.index || `gem-${index}`;
-    //el.setAttribute('data-gem-id', gemId.toString());
-    //el.setAttribute('data-index', index.toString());
 
     // Determine gem color
     let iconColor = 'blue'; // Default color
@@ -399,70 +391,30 @@ function renderGems(gems) {
 
     // Highlight if it's the active gem
     const activeGemIndex = window.HiddenGems.map.activeGemIndex || window.activeGemIndex || 0;
-    //if (index === activeGemIndex) {
-    //  el.style.transform = 'scale(1.4)';
-    //  el.style.zIndex = '10';
-    //  el.classList.add('active-gem');
-    //}
+
+    // Add color to the marker
+    el.style.backgroundColor = gem.color;
+    el.style.borderRadius = '50%';
+    el.style.border = '2px solid white';
+    el.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
+
+    // Store gem ID for synchronization
+    el.setAttribute('data-gem-id', gemId.toString());
+    el.setAttribute('data-index', index.toString());
 
     // Create and add marker to map
-    //const marker = createMarker(lngLat, el);
+    const marker = createMarker(lngLat, gem.color);
 
-    // Store gemId on marker object for easier access
-    //marker.gemId = gemId.toString();
+    // Add to markers array
+    window.markers.push(marker);
 
-    // Add click handler
-    /*el.addEventListener('click', function (e) {
-      // Prevent event propagation
-      e.stopPropagation();
-      e.preventDefault();
+    // Extend bounds
+    bounds.extend(lngLat);
 
-      // Update active gem index
-      window.activeGemIndex = index;
-      if (window.HiddenGems && window.HiddenGems.map) {
-        window.HiddenGems.map.activeGemIndex = index;
-      }
-
-      // Important: Apply highlighting before animation starts
-      if (typeof window.highlightGemMarker === 'function') {
-        window.highlightGemMarker(index, true);  // Pass true to skip card updates
-      }
-
-
-      // Center map on gem
-      map.flyTo({
-        center: lngLat,
-        essential: true,
-        duration: 800,
-        easing: function (t) {
-          return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-        }
-      });
-
-      // Update UI after a slight delay
-      setTimeout(() => {
-        // Use global highlightGemMarker function
-        if (typeof window.highlightGemMarker === 'function') {
-          window.highlightGemMarker(index);
-        }
-
-        // Dispatch event
-        document.dispatchEvent(new CustomEvent('gemSelected', {
-          detail: {
-            index: index,
-            id: gemId,
-            gem: gem
-          }
-        }));
-      }, 100);
-    });
-
-    markers.push(marker);
-    bounds.extend(lngLat);*/
   });
 
   // Store markers globally for access by other components
-  window.markers = markers;
+  //window.markers = markers;
 
   // Ensure pageGems in data controller are updated with valid gems
   if (window.HiddenGems && window.HiddenGems.data) {
@@ -477,25 +429,22 @@ function renderGems(gems) {
   // Log results
   console.log(`Rendered ${validGemsCount} valid gems out of ${gems.length} total`);
 
-  // Fit map to show all markers with padding
-  if (!bounds.isEmpty() && validGemsCount > 0) {
-    map.fitBounds(bounds, {
-      padding: 40,
-      animate: true,
-      duration: 1000,
-      maxZoom: 12 // Prevent zooming in too far
-    });
-  } else if (validGemsCount === 0) {
-    console.warn('No valid gems found to render on the map');
-    showNoGemsMessage();
-  }
-
-  // Highlight the active gem marker
-  const activeGemIndex = window.HiddenGems?.map?.activeGemIndex || window.activeGemIndex || 0;
-  if (activeGemIndex >= 0 && activeGemIndex < validGems.length && typeof window.highlightGemMarker === 'function') {
-    const gemId = validGems[activeGemIndex].id || validGems[activeGemIndex].index || `gem-${activeGemIndex}`;
-    window.highlightGemMarker(activeGemIndex);
-  }
+      // Fit map to bounds if we have markers
+    if (window.markers.length > 0 && !bounds.isEmpty()) {
+        window.map.fitBounds(bounds, {
+            padding: 40,
+            animate: true,
+            duration: 1000,
+            maxZoom: 14  // Don't zoom in too far
+        });
+    }
+    
+    console.log(`Successfully rendered ${window.markers.length} gems`);
+    
+    // Store valid gems in the data controller for consistency
+    if (window.HiddenGems && window.HiddenGems.data) {
+        window.HiddenGems.data.pageGems = gems;
+    }
 
   // Dispatch a custom event
   document.dispatchEvent(new CustomEvent('gemsLoaded', {
@@ -539,11 +488,20 @@ function showNoGemsMessage() {
  * Clear existing markers from the map
  */
 function clearMarkers() {
-  if (markers && markers.length) {
-    markers.forEach(marker => marker.remove());
+  // Check if markers array exists and has items
+  if (window.markers && Array.isArray(window.markers)) {
+    // Remove each marker from the map
+    window.markers.forEach(marker => {
+      if (marker && typeof marker.remove === 'function') {
+        marker.remove();
+      }
+    });
+    
+    // Reset the array
+    window.markers = [];
+    
+    console.log('All markers cleared from map');
   }
-  markers = [];
-  window.markers = markers;
 }
 
 /**
@@ -632,7 +590,7 @@ function loadGemsManually(pageName) {
       // Get user-added gems from localStorage if any
       let userGems = [];
       try {
-        userGems = JSON.parse(localStorage.getItem('userGems') || '[]');
+        userGems = JSON.parse(window.HiddenGems.data.storage.get('userGems') || '[]');
       } catch (error) {
         console.warn('Error parsing user gems from localStorage:', error);
       }
@@ -704,6 +662,7 @@ window.HiddenGems.map = {
   },
 
   // Function to clear map routes
+
   clearRoutes: function () {
     if (!map) return;
 

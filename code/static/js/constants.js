@@ -18,7 +18,8 @@ window.HiddenGems.constants = {
     DEFAULT_ZOOM: 11,
 
     // Search settings (ALL IN KILOMETERS)
-    DEFAULT_RADIUS: 8, // 8 km (≈ 5 miles)
+    DEFAULT_RADIUS: 8, // 8 km 
+    DEFAULT_BUFFER: 30, // 30 km deviation from route
     DEFAULT_LIMIT: 10, // number of gems to sample
     MIN_GEMS: 5,
     MAX_ATTEMPTS: 3,

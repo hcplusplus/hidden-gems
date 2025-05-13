@@ -666,7 +666,7 @@ getGemAtIndex(index) {
     ];
     
     for (const source of storageSources) {
-      const gems = window.HiddenGems.data.storage.getSession(source);
+      const gems = window.HiddenGems.data.storage.get(source);
       if (gems && index >= 0 && index < gems.length) {
         return gems[index];
       }
@@ -679,7 +679,7 @@ getGemAtIndex(index) {
   ];
   
   for (const source of sources) {
-    const storedData = sessionStorage.getItem(source);
+    const storedData = window.HiddenGems.data.storage.get(source);
     if (storedData) {
       try {
         const gems = JSON.parse(storedData);
@@ -721,7 +721,7 @@ loadGemsFromCommonSources() {
     ];
     
     for (const source of storageSources) {
-      const gems = window.HiddenGems.data.storage.getSession(source);
+      const gems = window.HiddenGems.data.storage.get(source);
       if (gems && gems.length > 0) {
         this.renderCards(gems);
         return;
@@ -735,7 +735,7 @@ loadGemsFromCommonSources() {
   ];
   
   for (const key of sessionStorageKeys) {
-    const stored = sessionStorage.getItem(key);
+    const stored = window.HiddenGems.data.storage.get(key);
     if (stored) {
       try {
         const gems = JSON.parse(stored);
@@ -1459,13 +1459,16 @@ handleGemsLoaded(event) {
       return remainingMinutes > 0 ? `${hours} hr ${remainingMinutes} min` : `${hours} hr`;
     }
   }
-  
+
+
   /**
    * Navigate to gem details page
    * @param {Object} gem - Gem object
    */
   navigateToGemDetails(gem) {
     const gemId = gem.id || `gem-${this.activeIndex}`;
+
+    exploreGem(gemId);
     
   
     // Process time information for trip details
@@ -1503,6 +1506,7 @@ handleGemsLoaded(event) {
       id: gem.id || `gem-${gemIndex}`,
       name: gem.name || 'Hidden Gem',
       description: gem.description || 'A hidden gem waiting to be explored.',
+      coordinates: coordinates,
       address: gem.address || '',
       opening_hours: gem.opening_hours || '',
       dollar_sign: gem.dollar_sign || '$',
@@ -1516,7 +1520,7 @@ handleGemsLoaded(event) {
     };
     
     // Store the card data in session storage
-    sessionStorage.setItem('selectedCard', JSON.stringify(cardData));
+    window.HiddenGems.data.storage.set('selectedCard', JSON.stringify(cardData));
 
     // Dispatch navigation event before redirecting
     this.dispatchEvent(new CustomEvent('navigate-to-trip-select', {
@@ -1684,8 +1688,8 @@ if (window.HiddenGems && window.HiddenGems.data) {
     let originCoords, destinationCoords;
     
     try {
-      originCoords = JSON.parse(sessionStorage.getItem('originCoords'));
-      destinationCoords = JSON.parse(sessionStorage.getItem('destinationCoords'));
+      originCoords = JSON.parse(window.HiddenGems.data.storage.get('originCoords'));
+      destinationCoords = JSON.parse(window.HiddenGems.data.storage.get('destinationCoords'));
     } catch (error) {
       console.warn('Error parsing origin/destination coordinates from sessionStorage:', error);
     }
@@ -2016,6 +2020,28 @@ if (window.HiddenGems && window.HiddenGems.data) {
 
 // Register the custom element
 customElements.define('gem-cards', GemCards);
+
+// Define the exploreGem function in the global scope
+window.exploreGem = function(gemId) {
+  fetch("static/assets/data/recommendations.json")
+    .then(res => res.json())
+    .then(gems => {
+      const selected = gems.find(g => g.id === gemId);
+      return fetch("http://127.0.0.1:5000/generate_review", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(selected)
+      });
+    })
+    .then(res => res.json())
+    .then(data => {
+      window.HiddenGems.data.storage.set("selectedGemReview", data.review);
+      window.location.href = "trip-select.html";
+    })
+    .catch(err => console.error("Error generating review:", err));
+};
 
 window.highlightGemMarker = function(index, skipCardUpdate = false) {
  // Update map markers

@@ -2,34 +2,120 @@
  * map-recs.js
  */
 
+
 document.addEventListener('DOMContentLoaded', function () {
 
+
+
     function getValidCoordinates(coords) {
-      return window.HiddenGems.coordUtil.normalize(coords);
+        return window.HiddenGems.data.coordUtils.normalize(coords);
     }
 
     // Get coordinates from sessionStorage
-    var originCoords = JSON.parse(sessionStorage.getItem("originCoords"));
-    var destinationCoords = JSON.parse(sessionStorage.getItem("destinationCoords"));
+    var originCoords = JSON.parse(window.HiddenGems.data.storage.get("originCoords"));
+    var destinationCoords = JSON.parse(window.HiddenGems.data.storage.get("destinationCoords"));
 
-    
+    // Get city names from sessionStorage
+    var originCity = window.HiddenGems.data.storage.get("originName") || "unknown";
+    var destinationCity = window.HiddenGems.data.storage.get("destinationName") || "unknown";
+
 
     // Add fallback coordinates for Berkeley and Sacramento if none exist in sessionStorage
     if (!originCoords) {
         console.log("No origin coordinates found in sessionStorage, using Berkeley as fallback");
         originCoords = getValidCoordinates(window.HiddenGems.constants.DEFAULT_ORIGIN); // Berkeley coordinates
-        sessionStorage.setItem("originCoords", JSON.stringify(originCoords));
+        window.HiddenGems.data.storage.set("originCoords", originCoords);
+        originCity = "berkeley";
+        window.HiddenGems.data.storage.set("originName", originCity);
     }
 
     if (!destinationCoords) {
         console.log("No destination coordinates found in sessionStorage, using Sacramento as fallback");
         destinationCoords = getValidCoordinates(window.HiddenGems.constants.DEFAULT_DESTINATION); // Sacramento coordinates
-        sessionStorage.setItem("destinationCoords", JSON.stringify(destinationCoords));
+        window.HiddenGems.data.storage.set("destinationCoords", destinationCoords);
+        destinationCity = "sacramento";
+        window.HiddenGems.data.storage.set("destinationName", destinationCity);
     }
 
-     window.HiddenGems.data.findGemsAlongRoute('map-recs', originCoords, destinationCoords)
 
-     console.log("Landing page initialized");
+    async function prepareGemsForPlotting() {
+        try {
+            // Create sanitized filename based on origin and destination
+            const sanitizeForFilename = (name) => {
+                return name.replace(/[^\w\s]/g, '').trim().replace(/\s+/g, '_').toLowerCase();
+            };
+
+            const origin = sanitizeForFilename(originCity);
+            const destination = sanitizeForFilename(destinationCity);
+            const recommendationsFilename = `recommendations_${origin}_to_${destination}.json`;
+            
+            console.log(`Looking for recommendations file: ${recommendationsFilename}`);
+
+            // First try to fetch specific recommendation file for this trip
+            try {
+                const response = await fetch(`/static/assets/data/recommendations/${recommendationsFilename}`);
+                
+                if (response.ok) {
+                    const recommendedGems = await response.json();
+                    console.log(`Successfully loaded trip-specific recommendations for ${originCity} to ${destinationCity}`);
+                    
+                    // Find matches with all gems
+                    const plotGems = [];
+                    recommendedGems.forEach(recommendedGem => {
+                        const matchingGem = window.HiddenGems.data.allGems.find(sampledGem =>
+                            sampledGem.id === recommendedGem.id
+                        );
+
+                        if (matchingGem) {
+                            plotGems.push(matchingGem);
+                        }
+                    });
+
+                    console.log(`Found ${plotGems.length} matching gems for plotting`);
+                    return plotGems;
+                } else {
+                    console.log(`Trip-specific recommendations not found, falling back to default recommendations`);
+                    throw new Error('Trip-specific recommendations not found');
+                }
+            } catch (error) {
+                // If specific recommendations don't exist, fall back to general recommendations
+                console.log(`Falling back to default recommendations: ${error.message}`);
+                
+                const fallbackResponse = await fetch("static/assets/data/recommendations.json");
+                if (!fallbackResponse.ok) {
+                    throw new Error('Failed to load default recommendations');
+                }
+                
+                const recommendedGems = await fallbackResponse.json();
+                
+                // Find matches with all gems
+                const plotGems = [];
+                recommendedGems.forEach(recommendedGem => {
+                    const matchingGem = window.HiddenGems.data.allGems.find(sampledGem =>
+                        sampledGem.id === recommendedGem.id
+                    );
+
+                    if (matchingGem) {
+                        plotGems.push(matchingGem);
+                    }
+                });
+
+                console.log(`Found ${plotGems.length} matching gems for plotting from default recommendations`);
+                return plotGems;
+            }
+        } catch (error) {
+            console.error("Error preparing gems for plotting:", error);
+            return []; // Return empty array on error
+        }
+    }
+
+
+
+    //console.log("Sampled gems:", sampledGems);
+    //console.log("Plot gems:", plotGems);
+
+
+
 
     // Initialize map if we have coordinates
     if (originCoords && destinationCoords) {
@@ -37,14 +123,26 @@ document.addEventListener('DOMContentLoaded', function () {
             (originCoords[0] + destinationCoords[0]) / 2,
             (originCoords[1] + destinationCoords[1]) / 2
         ]);
-        
-        window.initializeMap('map-recs', midPoint, 7);
-        const map = window.map;
 
-        
+        // Initialize map 
+        window.initializeMap()
+            .then(map => {
+                window.clearMarkers();
+                // Set the map view to the midpoint
+                map.setCenter(midPoint);
+                map.setZoom(7);
+
+            })
+            .catch(error => {
+                console.error('Error initializing route page:', error);
+            });
+
+
 
         // Load the gems when map is ready
         window.map.on('load', function () {
+
+            window.clearMarkers();
             // Dispatch mapReady event for gem-cards component
             document.dispatchEvent(new CustomEvent('mapReady', {
                 bubbles: true
@@ -56,33 +154,36 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             window.map.addControl(new maplibregl.NavigationControl(), 'top-left');
 
-           
 
-            // render gems and cards
-            const recommendedGems = window.HiddenGems.data.pageGems;
-            console.log("Recommended gems:", recommendedGems);
-            renderGems(recommendedGems);
-            // Initialize card display
-            initializeDetailCards(recommendedGems);
-            console.log("Map rendering complete with", window.markers.length, "markers");
-       
-             // Add origin and destination markers only once
-            addTripMarkers(originCoords, destinationCoords);
-            
-            // Add base route (origin to destination)
-            addBaseRoute(originCoords, destinationCoords);
-            
-            // Render route for the initial active gem (assuming first one is active by default)
-            if (recommendedGems.length > 0) {
-                const firstGem = recommendedGems[0];
-                console.log("First gem for detour route:", firstGem);
-                const coords = window.HiddenGems.coordUtil.fromGem(firstGem);
-                if (coords) {
-                    console.log(firstGem);
-                    console.log(coords);
-                    renderDetourRoute(originCoords, destinationCoords, coords);
+            // Call the function and handle the result
+            prepareGemsForPlotting().then(plotGems => {
+                // Your code to plot the gems goes here
+                console.log("Ready to plot these gems:", plotGems);
+
+                renderGems(plotGems);
+                initializeDetailCards(plotGems)
+
+                console.log("Map rendering complete with", window.markers.length, "markers");
+
+                // Add origin and destination markers only once
+                addTripMarkers(originCoords, destinationCoords);
+
+                // Add base route (origin to destination)
+                addBaseRoute(originCoords, destinationCoords);
+
+                // Render route for the initial active gem (assuming first one is active by default)
+                if (plotGems.length > 0) {
+                    const firstGem = plotGems[0];
+                    console.log("First gem for detour route:", firstGem);
+                    const coords = window.HiddenGems.data.coordUtils.fromGem(firstGem);
+                    if (coords) {
+                        console.log(firstGem);
+                        console.log(coords);
+                        renderDetourRoute(originCoords, destinationCoords, coords);
+                    }
                 }
-            }
+            });
+
         });
 
 
@@ -91,14 +192,14 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log(gemCoords);
             if (!originCoords || !destinationCoords || !gemCoords)
                 return;
-                
+
             // Clear any existing detour route
             clearDetourRoute();
-            
+
             // Add new detour route
             renderDetourRoute(originCoords, destinationCoords, gemCoords);
         };
-        
+
         // Function to add base route
         function addBaseRoute(origin, destination) {
             const baseRoute = {
@@ -108,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     coordinates: [origin, destination]
                 }
             };
-            
+
             if (!map.getSource('baseRoute')) {
                 map.addSource('baseRoute', {
                     type: 'geojson',
@@ -127,23 +228,27 @@ document.addEventListener('DOMContentLoaded', function () {
                 map.getSource('baseRoute').setData(baseRoute);
             }
         }
-        
+
         // Function to render detour route
         function renderDetourRoute(origin, destination, gemCoords) {
+
+
+
             // Normalize all coordinates to ensure consistent format
             const safeOrigin = getValidCoordinates(origin);
             const safeDestination = getValidCoordinates(destination);
             const safeGemCoords = getValidCoordinates(gemCoords);
 
 
+
             const detourRoute = {
-    type: 'Feature',
-    geometry: {
-      type: 'LineString',
-      coordinates: [safeOrigin, safeGemCoords, safeDestination]
-    }
-  };
-            
+                type: 'Feature',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [safeOrigin, safeGemCoords, safeDestination]
+                }
+            };
+
             if (!map.getSource('detourRoute')) {
                 map.addSource('detourRoute', {
                     type: 'geojson',
@@ -163,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 map.getSource('detourRoute').setData(detourRoute);
             }
         }
-        
+
         // Function to clear detour route
         function clearDetourRoute() {
             if (map.getSource('detourRoute')) {
@@ -177,7 +282,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 map.getSource('detourRoute').setData(emptyFeature);
             }
         }
-        
+
         // Function to add origin and destination markers
         function addTripMarkers(origin, destination) {
             // Add origin marker if not already present
@@ -218,13 +323,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     .addTo(window.map);
             }
         }
-        /*
-    } else {
-        console.error("Missing origin or destination coordinates");
-        // Handle case where coordinates aren't available
-        document.getElementById('map').innerHTML =
-            '<div style="padding: 20px; text-align: center;">Please set your trip origin and destination first.</div>';
-    }*/
     }
 });
 
@@ -250,27 +348,29 @@ function initializeDetailCards(gems) {
         detailCards.showCard(0);
     }
 
-// Add event listener for card changes
-    detailCards.addEventListener('card-change', function(event) {
+    // Add event listener for card changes
+    detailCards.addEventListener('card-change', function (event) {
         const activeIndex = event.detail.index;
         const activeGem = gems[activeIndex];
-        
+
         if (activeGem) {
-    // Use the unified coordinate utility
-    const coords = window.HiddenGems.coordUtil.fromGem(activeGem);
-    
-    if (coords) {
-      // Debug log
-    //  console.log(`Card changed to gem at index ${activeIndex}:`, activeGem.name || 'unnamed');
-     // window.HiddenGems.coordUtil.debug(coords, "Active Gem");
-     window.map.flyTo(coords);
-      
-      // Update the route for the active gem
-      window.renderRoutes(coords);
-    } else {
-      console.warn(`Invalid coordinates for gem at index ${activeIndex}`);
-    }
-  }
+            // Use the unified coordinate utility
+            const coords = window.HiddenGems.data.coordUtils.fromGem(activeGem);
+
+            if (coords) {
+ 
+                window.map.flyTo({
+                  center: coords,
+                  zoom: window.map.getZoom()
+                });
+
+                // Update the route for the active gem
+                window.renderRoutes(coords);
+            } else {
+                console.warn(`Invalid coordinates for gem at index ${activeIndex}`);
+            }
+        }
     });
 }
-    
+
+

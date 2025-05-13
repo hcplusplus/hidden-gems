@@ -15,8 +15,9 @@
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="static/js/data-controller.js"></script>
     <script src="static/js/trip-distance-calculator.js"></script>
-
+    
 
     <style>
         *,
@@ -219,7 +220,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
 
-            const selectedCard = JSON.parse(sessionStorage.getItem('selectedCard'));
+            const selectedCard = JSON.parse(window.HiddenGems.data.storage.get('selectedCard'));
 
             if (selectedCard) {
                 // If we have data in session storage, use that instead of fetching
@@ -291,7 +292,7 @@
 
                 // Save coordinates for Google Maps
                 if (selectedCard.coordinates) {
-                    sessionStorage.setItem('coordinates', selectedCard.coordinates);
+                    window.HiddenGems.data.storage.set('coordinates', selectedCard.coordinates);
                 }
             } else {
                 // Fall back to fetching from JSON if no data in session storage
@@ -395,7 +396,7 @@
 
 
         function goToSpecificLocation() {
-            const coordinates = data_text["coordinates"];
+            const coordinates = window.HiddenGems.data.storage.get('coordinates');
             const url = `https://www.google.com/maps?q=${coordinates}`;
             window.open(url, "_blank");
         }
