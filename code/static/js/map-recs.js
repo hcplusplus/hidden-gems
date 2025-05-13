@@ -4,7 +4,7 @@
 
 // Map initialization variables
 
-//window.clearMarkers();
+
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -125,6 +125,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Load the gems when map is ready
         window.map.on('load', function () {
+
+            window.clearMarkers();
             // Dispatch mapReady event for gem-cards component
             document.dispatchEvent(new CustomEvent('mapReady', {
                 bubbles: true

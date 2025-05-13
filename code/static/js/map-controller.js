@@ -23,7 +23,7 @@ function initializeMap(pageName = 'index', center = null, zoom = null) {
   return new Promise((resolve, reject) => {
     try {
 
-      clearMarkers();
+   
 
       // Get constants
       const DEFAULT_CENTER = center || window.HiddenGems.constants.DEFAULT_CENTER; // berkeley default
@@ -302,7 +302,10 @@ function renderGems(gems) {
     console.warn('No gems to render');
     showNoGemsMessage();
     return [];
+    
   }
+
+  clearMarkers();
 
   // First, ensure any lingering loading elements are removed
   const loadingElements = document.querySelectorAll('[id$="-loading"]');
@@ -312,8 +315,6 @@ function renderGems(gems) {
     }
   });
 
-  // Clear existing markers if needed
-  clearMarkers();
 
   // Clear any existing routes
   if (window.HiddenGems.map && typeof window.HiddenGems.map.clearRoutes === 'function') {
@@ -405,7 +406,7 @@ function renderGems(gems) {
   });
 
   // Store markers globally for access by other components
-  window.markers = markers;
+  //window.markers = markers;
 
   // Ensure pageGems in data controller are updated with valid gems
   if (window.HiddenGems && window.HiddenGems.data) {
@@ -479,11 +480,20 @@ function showNoGemsMessage() {
  * Clear existing markers from the map
  */
 function clearMarkers() {
-  if (markers && markers.length) {
-    markers.forEach(marker => marker.remove());
+  // Check if markers array exists and has items
+  if (window.markers && Array.isArray(window.markers)) {
+    // Remove each marker from the map
+    window.markers.forEach(marker => {
+      if (marker && typeof marker.remove === 'function') {
+        marker.remove();
+      }
+    });
+    
+    // Reset the array
+    window.markers = [];
+    
+    console.log('All markers cleared from map');
   }
-  markers = [];
-  window.markers = markers;
 }
 
 /**
