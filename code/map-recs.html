@@ -24,25 +24,113 @@
 		<script src="static/js/swipe.js"></script>
 		<script src="static/js/map-recs.js"></script>
 
+		<style>
+			html,
+			body {
+				margin: 0;
+				padding: 0;
+				height: 100%;
+				font-family: sans-serif;
+				display: flex;
+				justify-content: center;
+				background: #f5f5f5;
+			}
+
+			.container {
+				position: relative;
+				width: 390px;
+				height: 100%;
+				background: white;
+				border-left: 1px solid #ccc;
+				border-right: 1px solid #ccc;
+				overflow: hidden;
+			}
+
+			#map {
+				width: 100%;
+				height: 100%;
+			}
+
+			#gem-card-container {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				background: white;
+				border-top: 1px solid #ccc;
+				box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+				overflow-x: scroll;
+				white-space: nowrap;
+				display: flex;
+				scroll-snap-type: x mandatory;
+				scroll-behavior: smooth;
+				z-index: 999;
+				max-height: 180px;
+			}
+
+			/* ===== Navigation Wheel Styling ===== */
+			nav-wheel {
+				position: absolute;
+				bottom: 250px;
+				right: 16px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 4px;
+				z-index: 1000;
+			}
+
+			nav-item {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				text-align: center;
+			}
+
+			.nav-icon {
+				width: 60px;
+				height: 60px;
+				background-color: #90d4c5;
+				color: white;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 28px;
+				cursor: pointer;
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+			}
+
+			.nav-label {
+				margin-top: 6px;
+				background-color: white;
+				color: #222;
+				font-size: 14px;
+				font-weight: 600;
+				padding: 4px 12px;
+				border-radius: 16px;
+				box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+			}
+		</style>
 	</head>
 
 	<body>
 		<div class="container">
 			<div id="map"></div>
 			<!--<div class="legend">
-			            <div>
-			                <img src="/static/icons/gem-red.svg" class="legend-icon" alt="Most Hidden Gem" />
-			                Most Hidden
-			            </div>
-			            <div>
-			                <img src="/static/icons/gem-purple.svg" class="legend-icon" alt="Moderately Hidden Gem" />
-			                Moderately Hidden
-			            </div>
-			            <div>
-			                <img src="/static/icons/gem-blue.svg" class="legend-icon" alt="Least Hidden Gem" />
-			                Least Hidden
-			            </div>
-			        </div>-->
+												            <div>
+												                <img src="/static/icons/gem-red.svg" class="legend-icon" alt="Most Hidden Gem" />
+												                Most Hidden
+												            </div>
+												            <div>
+												                <img src="/static/icons/gem-purple.svg" class="legend-icon" alt="Moderately Hidden Gem" />
+												                Moderately Hidden
+												            </div>
+												            <div>
+												                <img src="/static/icons/gem-blue.svg" class="legend-icon" alt="Least Hidden Gem" />
+												                Least Hidden
+												            </div>
+												        </div>-->
 
 			<!-- Swipe indicators above the cards -->
 			<div
