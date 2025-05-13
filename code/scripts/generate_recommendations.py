@@ -57,10 +57,10 @@ def build_recommendation_prompt(user_data):
 
 
 
-    context = "\n".join([
-        f"{g['name']} | {g['description']} | {g['category_1']} |{g['category_2']} | {g.get('rarity', 'unknown')}" 
-        for g in gem_sample
-    ])
+    #context = "\n".join([
+    #    f"{g['name']} | {g['description']} | {g['category_1']} |{g['category_2']} | {g.get('rarity', 'unknown')}" 
+    #    for g in gem_sample
+    #])
 
     return f"""
 
@@ -76,22 +76,21 @@ User preferences:
 - Time Available: {user_data.get('time')}
 
 Hidden gem candidates:
-{context}
+{user_data.get('candidates', [])}
 
 Return only a JSON array with these fields for each selected gem:
 [
   {{
     "id": "same as input",
-    "name": "gem name",
-    "coordinates": [longitude, latitude],
-    "category_1": category_1,
-    "category_2": category_2,
-    "description": "1-sentence description",
-    "rarity": "most hidden | moderately hidden | least hidden",
-    "color": "red | purple | blue",
-    "time": number of minutes it takes for the detour,
-    "time_spent": number of minutes spent at the gem,
-    "dolar_sign": "price level ($, $$, $$$)",
+    "name": "same as input",
+    "coordinates": "same as input",
+    "category_1": "same as input",
+    "category_2": "same as input",
+    "description": "same as input",
+    "rarity": "same as input",
+    "color": "same as input",
+    "time": "same as input",
+    "dollar_sign": "same as input",
   }}
 ]
 """
