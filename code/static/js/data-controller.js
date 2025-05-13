@@ -128,14 +128,19 @@ window.HiddenGems.data = {
     else if (options.center && options.center.length === 2) {
       // Filter by distance from center
       const radius = options.radius || 30;
+      const normalizedCenter = this.coordUtils.normalize(options.center);
+      
+      if (!normalizedCenter) {
+        return Promise.reject(new Error('Invalid center coordinates'));
+      }
       
       filteredGems = this.allGems.filter(gem => {
-        const coords = gem.coords || gem.coordinates;
-        if (!coords || coords.length !== 2) return false;
+        const coords = this.coordUtils.fromGem(gem);
+        if (!coords) return false;
         
         // Calculate distance from center
         const distance = this.utils.calculateDistance(
-          options.center[1], options.center[0],
+          normalizedCenter[1], normalizedCenter[0],
           coords[1], coords[0]
         );
         
@@ -338,7 +343,7 @@ window.HiddenGems.data = {
   },
   
   /**
-   * Find nearby gems based on geolocation
+   * Find nearby gems based on geolocation or default location
    * @param {string} pageName - Name of the page for gem sample
    * @param {number} [sampleSize] - Number of gems to sample (default: 10)
    * @param {number} [radius] - Radius in kilometers (default: 30)
@@ -350,29 +355,38 @@ window.HiddenGems.data = {
         reject(new Error('Page name is required'));
         return;
       }
-
-      if (pageName === "index") {
-        const defaultLocation = window.HiddenGems.constants.DEFAULT_CENTER;
-            
-            this.getRegionalGems({
-              regionName: 'default',
-              center: defaultLocation,
-              radius: radius
-            })
-            .then(() => {
-              // Get a page sample
-              return this.getPageGems({
-                regionName: 'default',
-                pageName: pageName,
-                sampleSize: sampleSize,
-                forceNew: true
-              });
-            })
-            .then(resolve)
-            .catch(reject);
-      }
-
       
+      // Check if we're using a default location (Berkeley) instead of geolocation
+      // First check for stored preference in local storage
+      const shouldUseGeolocation = localStorage.getItem('locationPermissionGranted') === 'true';
+      const storedCoords = this.storage.get('defaultCoords');
+      
+      // If we have defaultCoords and are not using geolocation, use those
+      if (storedCoords && !shouldUseGeolocation) {
+        console.log('Using stored default coordinates instead of requesting location');
+        
+        // Create a region based on default location
+        this.getRegionalGems({
+          regionName: 'default',
+          center: storedCoords,
+          radius: radius
+        })
+        .then(() => {
+          // Get a page sample
+          return this.getPageGems({
+            regionName: 'default',
+            pageName: pageName,
+            sampleSize: sampleSize,
+            forceNew: true
+          });
+        })
+        .then(resolve)
+        .catch(reject);
+        
+        return;
+      }
+      
+      // If we're using geolocation, proceed with current logic
       this.showLoading('Finding your location...');
       
       if (navigator.geolocation) {
@@ -381,13 +395,14 @@ window.HiddenGems.data = {
           (position) => {
             const userLocation = [position.coords.longitude, position.coords.latitude];
             
-            // Store user location
-            this.storage.set('userLocation', userLocation);
+            // Normalize and store user location
+            const normalizedLocation = this.coordUtils.normalize(userLocation);
+            this.storage.set('userLocation', normalizedLocation);
             
             // Create a region based on user location
             this.getRegionalGems({
               regionName: 'nearby',
-              center: userLocation,
+              center: normalizedLocation,
               radius: radius
             })
             .then(() => {
@@ -402,7 +417,7 @@ window.HiddenGems.data = {
             .then(resolve)
             .catch(reject);
           },
-          // Error callback
+          // Error callback - use default coordinates
           (error) => {
             console.error('Geolocation error:', error);
             
@@ -433,11 +448,11 @@ window.HiddenGems.data = {
           }
         );
       } else {
-        // Geolocation not supported
+        // Geolocation not supported - use default location
         console.warn('Geolocation not supported by this browser');
         
-        // Use default location (San Francisco)
-        const defaultLocation =  window.HiddenGems.constants.DEFAULT_CENTER;
+        // Use default location (Berkeley/SF)
+        const defaultLocation = window.HiddenGems.constants.DEFAULT_CENTER;
         
         this.getRegionalGems({
           regionName: 'default',
@@ -473,14 +488,22 @@ window.HiddenGems.data = {
       return Promise.reject(new Error('Page name, origin, and destination are required'));
     }
     
+    // Normalize coordinates
+    const normalizedOrigin = this.coordUtils.normalize(originCoords);
+    const normalizedDestination = this.coordUtils.normalize(destinationCoords);
+    
+    if (!normalizedOrigin || !normalizedDestination) {
+      return Promise.reject(new Error('Invalid coordinates'));
+    }
+    
     // Create a region filter function for route
     const routeFilterFn = (gem) => {
-      const coords = gem.coords || gem.coordinates;
-      if (!coords || coords.length !== 2) return false;
+      const coords = this.coordUtils.fromGem(gem);
+      if (!coords) return false;
       
       // Calculate distance to route line
       const distanceToRoute = this.distanceToLineSegment(
-        coords, originCoords, destinationCoords
+        coords, normalizedOrigin, normalizedDestination
       );
       
       // Save distance to gem for sorting
@@ -491,12 +514,12 @@ window.HiddenGems.data = {
     };
     
     // Define unique region name based on origin/destination
-    const regionName = `route_${originCoords.join('_')}_${destinationCoords.join('_')}`;
+    const regionName = `route_${normalizedOrigin.join('_')}_${normalizedDestination.join('_')}`;
     
     // Store route info
     this.storage.set('currentRoute', {
-      origin: originCoords,
-      destination: destinationCoords,
+      origin: normalizedOrigin,
+      destination: normalizedDestination,
       bufferDistance: bufferDistanceKm
     });
     
@@ -516,57 +539,57 @@ window.HiddenGems.data = {
   },
   
   /**
- * Show loading indicator with safety checks for document.body
- * @param {string} message - Message to display
- */
-showLoading: function(message) {
-  // First check if document and body are available
-  if (!document || !document.body) {
-    console.log('Loading indicator requested but document.body not available yet:', message);
+   * Show loading indicator with safety checks for document.body
+   * @param {string} message - Message to display
+   */
+  showLoading: function(message) {
+    // First check if document and body are available
+    if (!document || !document.body) {
+      console.log('Loading indicator requested but document.body not available yet:', message);
+      
+      // Return a dummy element that won't cause errors
+      return {
+        remove: function() {},
+        style: {}
+      };
+    }
     
-    // Return a dummy element that won't cause errors
-    return {
-      remove: function() {},
-      style: {}
-    };
-  }
-  
-  let loadingEl = document.getElementById('gems-loading');
-  
-  if (!loadingEl) {
-    loadingEl = document.createElement('div');
-    loadingEl.id = 'gems-loading';
-    loadingEl.style.position = 'fixed';
-    loadingEl.style.top = '50%';
-    loadingEl.style.left = '50%';
-    loadingEl.style.transform = 'translate(-50%, -50%)';
-    loadingEl.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-    loadingEl.style.color = 'white';
-    loadingEl.style.padding = '15px 20px';
-    loadingEl.style.borderRadius = '5px';
-    loadingEl.style.zIndex = '2000';
+    let loadingEl = document.getElementById('gems-loading');
     
-    document.body.appendChild(loadingEl);
-  }
+    if (!loadingEl) {
+      loadingEl = document.createElement('div');
+      loadingEl.id = 'gems-loading';
+      loadingEl.style.position = 'fixed';
+      loadingEl.style.top = '50%';
+      loadingEl.style.left = '50%';
+      loadingEl.style.transform = 'translate(-50%, -50%)';
+      loadingEl.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+      loadingEl.style.color = 'white';
+      loadingEl.style.padding = '15px 20px';
+      loadingEl.style.borderRadius = '5px';
+      loadingEl.style.zIndex = '2000';
+      
+      document.body.appendChild(loadingEl);
+    }
+    
+    loadingEl.innerHTML = message;
+    loadingEl.style.display = 'block';
+    
+    return loadingEl;
+  },
   
-  loadingEl.innerHTML = message;
-  loadingEl.style.display = 'block';
-  
-  return loadingEl;
-},
-
-/**
- * Hide loading indicator with safety checks
- */
-hideLoading: function() {
-  // Check if document is available
-  if (!document) return;
-  
-  const loadingEl = document.getElementById('gems-loading');
-  if (loadingEl) {
-    loadingEl.style.display = 'none';
-  }
-},
+  /**
+   * Hide loading indicator with safety checks
+   */
+  hideLoading: function() {
+    // Check if document is available
+    if (!document) return;
+    
+    const loadingEl = document.getElementById('gems-loading');
+    if (loadingEl) {
+      loadingEl.style.display = 'none';
+    }
+  },
   
   /**
    * Calculate the distance from a point to a line segment
@@ -607,78 +630,11 @@ hideLoading: function() {
     );
   },
   
-  // Utility functions
-  utils: {
-    /**
-     * Calculate distance between two points in kilometers
-     * @param {number} lat1 - Latitude of first point
-     * @param {number} lon1 - Longitude of first point
-     * @param {number} lat2 - Latitude of second point
-     * @param {number} lon2 - Longitude of second point
-     * @returns {number} Distance in kilometers
-     */
-    calculateDistance: function(lat1, lon1, lat2, lon2) {
-      const R = 6371; // Earth's radius in kilometers
-      const dLat = this.toRadians(lat2 - lat1);
-      const dLon = this.toRadians(lon2 - lon1);
-      
-      const a = 
-        Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.cos(this.toRadians(lat1)) * Math.cos(this.toRadians(lat2)) * 
-        Math.sin(dLon/2) * Math.sin(dLon/2);
-      
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-      return R * c;
-    },
-    
-    /**
-     * Convert degrees to radians
-     * @param {number} degrees - Angle in degrees
-     * @returns {number} Angle in radians
-     */
-    toRadians: function(degrees) {
-      return degrees * Math.PI / 180;
-    },
-    
-    /**
-     * Fisher-Yates shuffle algorithm
-     * @param {Array} array - Array to shuffle
-     * @returns {Array} New shuffled array (original not modified)
-     */
-    shuffleArray: function(array) {
-      const newArray = [...array];
-      for (let i = newArray.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-      }
-      return newArray;
-    },
-    
-    /**
-     * Take a random sample from an array
-     * @param {Array} array - Source array
-     * @param {number} size - Sample size
-     * @returns {Array} New array with random samples
-     */
-    sampleArray: function(array, size) {
-      // If size is greater than array length, return the shuffled array
-      if (size >= array.length) {
-        return this.shuffleArray(array);
-      }
-      
-      // Otherwise, take a random sample
-      const shuffled = this.shuffleArray(array);
-      return shuffled.slice(0, size);
-    }
-  }
-};
-
-/**
- * Enhanced coordinate handling utility
- * This will standardize all coordinate operations throughout the application
- */
-function createCoordinateUtility() {
-  return {
+  /**
+   * Coordinate handling utilities
+   * Standardized coordinate operations throughout the application
+   */
+  coordUtils: {
     /**
      * Normalize coordinates to ensure consistent [lng, lat] format
      * @param {Array|Object} coords - Input coordinates
@@ -769,17 +725,76 @@ function createCoordinateUtility() {
       console.log(`[Coordinates ${label}]:`, coords ? 
                  `[${coords[0].toFixed(6)}, ${coords[1].toFixed(6)}]` : 'Invalid');
     }
-  };
-}
-
-// Create the utility
-const coordUtil = createCoordinateUtility();
-// Attach to the HiddenGems namespace
-window.HiddenGems.coordUtil = coordUtil;
+  },
+  
+  // Utility functions
+  utils: {
+    /**
+     * Calculate distance between two points in kilometers
+     * @param {number} lat1 - Latitude of first point
+     * @param {number} lon1 - Longitude of first point
+     * @param {number} lat2 - Latitude of second point
+     * @param {number} lon2 - Longitude of second point
+     * @returns {number} Distance in kilometers
+     */
+    calculateDistance: function(lat1, lon1, lat2, lon2) {
+      const R = 6371; // Earth's radius in kilometers
+      const dLat = this.toRadians(lat2 - lat1);
+      const dLon = this.toRadians(lon2 - lon1);
+      
+      const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(this.toRadians(lat1)) * Math.cos(this.toRadians(lat2)) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+      
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    },
+    
+    /**
+     * Convert degrees to radians
+     * @param {number} degrees - Angle in degrees
+     * @returns {number} Angle in radians
+     */
+    toRadians: function(degrees) {
+      return degrees * Math.PI / 180;
+    },
+    
+    /**
+     * Fisher-Yates shuffle algorithm
+     * @param {Array} array - Array to shuffle
+     * @returns {Array} New shuffled array (original not modified)
+     */
+    shuffleArray: function(array) {
+      const newArray = [...array];
+      for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+      }
+      return newArray;
+    },
+    
+    /**
+     * Take a random sample from an array
+     * @param {Array} array - Source array
+     * @param {number} size - Sample size
+     * @returns {Array} New array with random samples
+     */
+    sampleArray: function(array, size) {
+      // If size is greater than array length, return the shuffled array
+      if (size >= array.length) {
+        return this.shuffleArray(array);
+      }
+      
+      // Otherwise, take a random sample
+      const shuffled = this.shuffleArray(array);
+      return shuffled.slice(0, size);
+    }
+  }
+};
 
 /**
  * Safe initialization for data controller
- * Replace the current initialization code at the bottom of data-controller.js
  */
 
 // Safely initialize the data controller when the DOM is ready
@@ -882,61 +897,6 @@ window.loadGems = function(options = {}) {
         return [];
       });
   }
-};
-
-window.findNearbyGems = function() {
-  console.log('Legacy findNearbyGems function called');
-  
-  return new Promise((resolve, reject) => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        // Success callback
-        (position) => {
-          const userLocation = [position.coords.longitude, position.coords.latitude];
-          
-          // Store user location
-          window.HiddenGems.data.storage.set('userLocation', JSON.stringify(userLocation));
-          window.HiddenGems.data.storage.set('userLocation', JSON.stringify(userLocation));
-          
-          // Load gems near user location
-          window.loadGems({
-            center: userLocation,
-            radius: window.HiddenGems.constants.DEFAULT_RADIUS,
-            limit: window.HiddenGems.constants.DEFAULT_LIMIT,
-            random: true
-          }).then(resolve).catch(reject);
-        },
-        // Error callback
-        (error) => {
-          console.error('Geolocation error:', error);
-          
-          // Use default location
-          const defaultLocation = window.HiddenGems.constants.DEFAULT_CENTER;
-          
-          window.loadGems({
-            center: defaultLocation,
-            random: true
-          }).then(resolve).catch(reject);
-        },
-        // Options
-        {
-          enableHighAccuracy: false,
-          timeout: 8000,
-          maximumAge: 60000
-        }
-      );
-    } else {
-      // Geolocation not supported
-      console.warn('Geolocation not supported, using default location');
-      
-      const defaultLocation = window.HiddenGems.constants.DEFAULT_CENTER;
-      
-      window.loadGems({
-        center: defaultLocation,
-        random: true
-      }).then(resolve).catch(reject);
-    }
-  });
 };
 
 // Call the safe initialization function

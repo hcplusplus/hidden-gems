@@ -207,6 +207,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             console.log("originCoords:", originCoords);
             console.log("destinationCoords:", destinationCoords);
+
+               // Define unique region name based on origin/destination
+            const routeName = `route_${originCoords.join('_')}_${destinationCoords.join('_')}`;
+    
             
             if (!originCoords || !destinationCoords) {
                 throw new Error("Geocoding failed");
@@ -218,7 +222,43 @@ document.addEventListener('DOMContentLoaded', function() {
             // Save to sessionStorage
             window.HiddenGems.data.storage.set("originCoords", JSON.stringify(originCoords));
             window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
-            window.HiddenGems.data.storage.set("userPreferences", JSON.stringify(userData));
+            sessionStorage.setItem("userPreferences", JSON.stringify(userData));
+
+            // Try to load gems if the function exists
+            if (typeof window.HiddenGems.data.findGemsAlongRoute === 'function') {
+                try {
+                    // First filter by route
+                    sampledGems = await window.HiddenGems.data.findGemsAlongRoute("quiz", originCoords, destinationCoords);
+                } catch (error) {
+                    console.error("Error filtering gems:", error);
+                }
+            }
+            
+        
+            console.log("sampledGems:", sampledGems);
+            userData.candidates = sampledGems;
+            console.log("userData.candidates:", userData.candidates);
+            sessionStorage.setItem("sampledGems", JSON.stringify(sampledGems));
+
+            try {
+            const res = await fetch("http://127.0.0.1:5000/generate_recommendations", {
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json"
+							},
+							body: JSON.stringify(userData)
+						});
+
+						const gems = await res.json();
+                        console.log("Recommended gems:", gems);
+						sessionStorage.setItem("recommendedGems", JSON.stringify(gems));
+				
+						window.location.href = "map-recs.html";
+					} catch (err) {
+						console.error("Error generating gems:", err);
+						alert("Something went wrong. Please try again.");
+						overlay.style.display = "none";
+					}
             
             // Save preferences to our data controller if it exists
             if (window.HiddenGemsData) {
@@ -247,15 +287,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Save to data controller
                 window.HiddenGemsData.preferences.save(userPreferences);
                 
-                // Try to load gems if the function exists
-                if (typeof window.findGemsAlongRoute === 'function') {
-                    try {
-                        // First filter by route
-                        await window.findGemsAlongRoute(originCoords, destinationCoords);
-                    } catch (error) {
-                        console.error("Error filtering gems:", error);
-                    }
-                }
+      
             }
             
             window.location.href = "map-recs.html";

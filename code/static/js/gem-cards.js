@@ -666,7 +666,7 @@ getGemAtIndex(index) {
     ];
     
     for (const source of storageSources) {
-      const gems = window.HiddenGems.data.storage.getSession(source);
+      const gems = window.HiddenGems.data.storage.get(source);
       if (gems && index >= 0 && index < gems.length) {
         return gems[index];
       }
@@ -721,7 +721,7 @@ loadGemsFromCommonSources() {
     ];
     
     for (const source of storageSources) {
-      const gems = window.HiddenGems.data.storage.getSession(source);
+      const gems = window.HiddenGems.data.storage.get(source);
       if (gems && gems.length > 0) {
         this.renderCards(gems);
         return;

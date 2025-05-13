@@ -10,11 +10,12 @@ app = Flask(__name__)
 CORS(app)
 
 OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
-OLLAMA_MODEL = "gemma3:4b"
+OLLAMA_MODEL = "gemma3:1b"
 
 
-GEMS_PATH = "./gems.json"
-RECOMMENDATIONS_PATH = "./recommendations.json"
+
+GEMS_PATH = "static/assets/data/hidden_gems.json"
+RECOMMENDATIONS_PATH = "static/assets/data/recommendations.json"
 
 def build_recommendation_prompt(user_data, all_gems):
     def fmt(field):
@@ -22,7 +23,7 @@ def build_recommendation_prompt(user_data, all_gems):
     
     gem_sample = random.sample(all_gems, min(15, len(all_gems)))
     context = "\n".join([
-        f"{g['name']} | {g['description']} | {g['category']} | {g.get('rarity', 'unknown')}" 
+        f"{g['name']} | {g['description']} | {g['category_1']} |{g['category_2']} | {g.get('rarity', 'unknown')}" 
         for g in gem_sample
     ])
 
@@ -40,7 +41,7 @@ User preferences:
 - Max Detour: {user_data.get('maxDetour')} miles
 
 Hidden gem candidates:
-{context}
+{user_data.get('candidates', 'None')}
 
 Return only a JSON array with these fields for each selected gem:
 [
@@ -48,11 +49,14 @@ Return only a JSON array with these fields for each selected gem:
     "id": "same as input",
     "name": "gem name",
     "coordinates": [longitude, latitude],
-    "category": "type of place",
+    "category_1": category_1,
+    "category_2": category_2,
     "description": "1-sentence description",
     "rarity": "most hidden | moderately hidden | least hidden",
     "color": "red | purple | blue",
-    "time": number of minutes it takes for the detour
+    "time": number of minutes it takes for the detour,
+    "time_spent": number of minutes spent at the gem,
+    "dolar_sign": "price level ($, $$, $$$)",
   }}
 ]
 """
@@ -64,7 +68,7 @@ You're a helpful assistant generating a realistic review for a hidden gem based 
 Gem:
 - Name: {gem['name']}
 - Description: {gem['description']}
-- Category: {gem['category']}
+- Category: {gem['category_1']}, {gem['category_2']}
 - Rarity: {gem.get('rarity', 'unknown')}
 
 Generate 1 short review (1-2 sentences) from a visitor.

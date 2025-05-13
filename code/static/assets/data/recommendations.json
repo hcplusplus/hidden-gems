@@ -1,0 +1,114 @@
+[
+  {
+    "id": "node/571374368",
+    "name": "Good Prospect Community Garden",
+    "coordinates": [
+      -122.420967,
+      37.739994
+    ],
+    "category_1": "Recreation",
+    "category_2": "Outdoor adventure",
+    "description": "A hidden recreational gem frequented by locals",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 114,
+    "distanceFromRoute": 14.976601446898698,
+    "dolar_sign": "$"
+  },
+  {
+    "id": "node/358771283",
+    "name": "Mount Tamalpais Game Refuge",
+    "coordinates": [
+      -122.6019242,
+      37.9296473
+    ],
+    "category_1": "Recreation",
+    "category_2": "Outdoor adventure",
+    "description": "A hidden recreational gem frequented by locals",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 82,
+    "distanceFromRoute": 29.603669720801346,
+    "dolar_sign": "$"
+  },
+  {
+    "id": "node/3976247868",
+    "name": "Chantellope Field",
+    "coordinates": [
+      -122.3139714,
+      37.5385357
+    ],
+    "category_1": "Recreation",
+    "category_2": "Nature escape",
+    "description": "A hidden recreational gem frequented by locals",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 106,
+    "distanceFromRoute": 29.805890650940604,
+    "dolar_sign": "$"
+  },
+  {
+    "id": "node/4829949951",
+    "name": "T's Fire House Indian Cuisine & Sports Bar",
+    "coordinates": [
+      -122.1312943,
+      37.8891596
+    ],
+    "category_1": "Food & Drink",
+    "category_2": "Family-friendly",
+    "description": "A foodie's hidden treasure with character and authentic taste",
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 92,
+    "distanceFromRoute": 12.590805822452948,
+    "dolar_sign": "$$"
+  },
+  {
+    "id": "node/4112105591",
+    "name": "Mykonos",
+    "coordinates": [
+      -122.345213,
+      37.5785397
+    ],
+    "category_1": "Food",
+    "category_2": "Nature escape",
+    "description": "Experience genuine Northern California flavors in this unassuming Restaurant",
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 67,
+    "distanceFromRoute": 25.947697478843637,
+    "dolar_sign": "$$"
+  },
+  {
+    "id": "node/6651230375",
+    "name": "Schooner Parallel \u201cBlown To Atoms\u201d 1887",
+    "coordinates": [
+      -122.5140691,
+      37.7787999
+    ],
+    "category_1": "Historical Site",
+    "category_2": "Off the beaten path",
+    "description": "Step back in time at this hidden historic Memorial",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 47,
+    "distanceFromRoute": 21.51189027773801,
+    "dolar_sign": "$$"
+  },
+  {
+    "id": "node/6346291228",
+    "name": "Library Cafe",
+    "coordinates": [
+      -122.060107,
+      37.9009558
+    ],
+    "category_1": "Local Amenity",
+    "category_2": "Historical site",
+    "description": "Small cafe within the Walnut Creek library",
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 43,
+    "distanceFromRoute": 18.96917696568631,
+    "dolar_sign": "$$"
+  }
+]
