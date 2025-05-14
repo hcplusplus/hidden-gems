@@ -1,12 +1,12 @@
 // Configure API URL dynamically based on where the app is accessed from
 const getApiUrl = () => {
     const hostname = window.location.hostname;
-    
+
     // If running on localhost or 127.0.0.1, use localhost for the API
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
         return 'http://127.0.0.1:5000';
     }
-    
+
     return `http://${hostname}:5000`;
 };
 
@@ -415,6 +415,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const otherAccessibilityContainer = document.getElementById('other-accessibility-container');
     const otherAccessibilityInput = document.getElementById('other-accessibility-input');
 
+
+
+
     // Set up the "Other" option toggles
     if (otherActivityButton) {
         otherActivityButton.addEventListener('click', function () {
@@ -433,6 +436,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.querySelectorAll('.option-button[data-value="none"]')
                     .forEach(btn => btn.classList.remove('selected'));
             }
+        });
+    }
+
+
+    const getLocationButton = document.getElementById('get-location');
+    if (getLocationButton) {
+        getLocationButton.addEventListener('click', function () {
+            let origincoords;
+            document.getElementById("origin").value = "Current Location";
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+                        origincoords = [longitude, latitude];
+                        sessionStorage.setItem("originCoords", JSON.stringify(origincoords));
+                    },
+                    (error) => {
+                        throw new Error("Error getting location:", error);
+                    }
+                );
+            } else {
+                throw new Error("Geolocation is not supported by this browser.");
+            }
+
         });
     }
 
@@ -537,7 +566,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 const selectedTime = document.querySelector('input[name="time"]:checked');
                 quizState.answers.time = selectedTime ? selectedTime.value : '';
 
-
                 return true;
         }
 
@@ -565,6 +593,41 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         try {
+            //if my location then don't use geocode 
+            if (document.getElementById("origin").value != "Current Location" && sessionStorage.getItem("originCoords") == null) {
+                const [originCoords, destinationCoords] = await Promise.all([
+                    geocode(userData.origin),
+                    geocode(userData.destination)
+                ]);
+
+                console.log("originCoords:", originCoords);
+                console.log("destinationCoords:", destinationCoords);
+
+                if (!originCoords || !destinationCoords)
+                    throw new Error("Geocoding failed");
+
+                userData.originCoords = originCoords;
+                userData.destinationCoords = destinationCoords;
+                window.HiddenGems.data.storage.set("originCoords", JSON.stringify(originCoords));
+                window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
+            } else {
+                const [destinationCoords] = await Promise.all([
+                    geocode(userData.destination)
+                ]);
+                console.log("destinationCoords:", destinationCoords);
+                if (!destinationCoords)
+                    throw new Error("Geocoding failed");
+                userData.destinationCoords = destinationCoords;
+                window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
+                console.log("check");
+            }
+            // Save to sessionStorage
+            window.HiddenGems.data.storage.set("userPreferences", JSON.stringify(userData));
+        } catch (error) {
+            console.error("Error in geocoding:", error);
+        }
+
+        try {
             // Get city names
             const originName = userData.origin;
             const destinationName = userData.destination;
@@ -589,53 +652,29 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
-            // If no gems found, or if coordinates are missing, we need to generate them now
-            if (sampledGems.length === 0 || !originCoords || !destinationCoords) {
-                // Update loading message
-                if (document.getElementById("loading-message")) {
-                    document.getElementById("loading-message").textContent = "Finding your locations...";
-                }
+            // If no gems are cached for this route, we need to generate them now
+            if (sampledGems.length === 0) {
 
                 console.log("No pre-generated gems found, generating now");
-
-                // If coordinates are missing, geocode them now
-                if (!originCoords || !destinationCoords) {
-                    [originCoords, destinationCoords] = await Promise.all([
-                        geocode(originName),
-                        geocode(destinationName)
-                    ]);
-
-                    if (!originCoords || !destinationCoords) {
-                        throw new Error("Geocoding failed. Please check your location names.");
-                    }
-
-                    // Update user data
-                    userData.originCoords = originCoords;
-                    userData.destinationCoords = destinationCoords;
-
-                    // Save to storage
-                    window.HiddenGems.data.storage.set("originCoords", JSON.stringify(originCoords));
-                    window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
-                    window.HiddenGems.data.storage.set("originName", JSON.stringify(originName));
-                    window.HiddenGems.data.storage.set("destinationName", JSON.stringify(destinationName));
-                }
-
-
-                // Generate gems
-                if (typeof window.HiddenGems.data.findGemsAlongRoute === 'function') {
-                    sampledGems = await window.HiddenGems.data.findGemsAlongRoute(
-                        "quiz",
-                        originCoords,
-                        destinationCoords,
-                        30,
-                        10,  // Standard sample size
-                        originName,
-                        destinationName
-                    );
-                } else {
-                    throw new Error("Route gem generation function not available");
-                }
+                window.HiddenGems.data.storage.set("originName", JSON.stringify(originName));
+                window.HiddenGems.data.storage.set("destinationName", JSON.stringify(destinationName));
             }
+
+            // Generate gems
+            if (typeof window.HiddenGems.data.findGemsAlongRoute === 'function') {
+                sampledGems = await window.HiddenGems.data.findGemsAlongRoute(
+                    "quiz",
+                    originCoords,
+                    destinationCoords,
+                    30,
+                    10,  // Standard sample size
+                    originName,
+                    destinationName
+                );
+            } else {
+                throw new Error("Route gem generation function not available");
+            }
+
 
             // Update loading message for API call
             if (document.getElementById("loading-message")) {
@@ -666,8 +705,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             try {
                 console.log("Sending data to API:", JSON.stringify(userData));
-
-
 
                 // First check if API is available
                 const checkResponse = await fetch(`${API_URL}`, {
@@ -728,6 +765,41 @@ document.addEventListener('DOMContentLoaded', function () {
                     window.location.href = "map-recs.html";
                 }, 500);
 
+                // Save preferences to our data controller if it exists
+                if (window.HiddenGems.data) {
+                    const userPreferences = {
+                        activities: userData.activities || [],
+                        otherActivities: userData.otherActivities || '',
+                        amenities: userData.amenities || [],
+                        accessibility: userData.accessibility || [],
+                        otherAccessibility: userData.otherAccessibility || '',
+                        effortLevel: userData.effortLevel || 'moderate',
+                        detourTime: userData.time === 'quick' ? 30 :
+                            userData.time === 'short' ? 60 :
+                                userData.time === 'half-day' ? 180 : 240, // Full day in minutes
+                        maxDetour: parseInt(userData.maxDetour || 15),
+                        selectedGems: [],
+                        origin: {
+                            name: originName,
+                            coordinates: originCoords
+                        },
+                        destination: {
+                            name: destinationName,
+                            coordinates: destinationCoords
+                        }
+                    };
+
+                    // Save to data controller
+                    window.HiddenGems.data.storage.set(userPreferences);
+
+
+                }
+
+                // clear the locations before moving on
+                document.getElementById("origin").value = "";
+                document.getElementById("destination").value = "";
+                window.location.href = "map-recs.html";
+
             } catch (err) {
                 console.error("Error in quiz processing:", err);
                 if (err.name === "AbortError") {
@@ -740,148 +812,125 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (overlay) overlay.style.display = "none";
                 progressIndicator.stop();
             }
-
-            // Save preferences to our data controller if it exists
-            if (window.HiddenGems.data) {
-                const userPreferences = {
-                    activities: userData.activities || [],
-                    otherActivities: userData.otherActivities || '',
-                    amenities: userData.amenities || [],
-                    accessibility: userData.accessibility || [],
-                    otherAccessibility: userData.otherAccessibility || '',
-                    effortLevel: userData.effortLevel || 'moderate',
-                    detourTime: userData.time === 'quick' ? 30 :
-                        userData.time === 'short' ? 60 :
-                            userData.time === 'half-day' ? 180 : 240, // Full day in minutes
-                    maxDetour: parseInt(userData.maxDetour || 15),
-                    selectedGems: [],
-                    origin: {
-                        name: originName,
-                        coordinates: originCoords
-                    },
-                    destination: {
-                        name: destinationName,
-                        coordinates: destinationCoords
-                    }
-                };
-
-                // Save to data controller
-                window.HiddenGems.data.storage.set(userPreferences);
-
-
-            }
-
-            window.location.href = "map-recs.html";
-
-        } catch (err) {
-            console.error("Error in quiz processing:", err);
+        } catch (error) {
+            console.error("Error in finishQuiz:", error);
             if (overlay) overlay.style.display = "none";
-            alert(`Something went wrong: ${err.message}. Please try again.`);
+            progressIndicator.stop();
         }
     }
 
     // Event listeners
     if (nextButton) {
-        nextButton.addEventListener('click', function () {
-            if (validateCurrentStep()) {
-                if (quizState.currentStep === quizState.totalSteps) {
-                    finishQuiz();
-                } else {
-                    goToStep(quizState.currentStep + 1);
-                }
-            }
-        });
-    }
-
-    if (backButton) {
-        backButton.addEventListener('click', function () {
-            if (quizState.currentStep > 1) {
-                goToStep(quizState.currentStep - 1);
-            }
-        });
-    }
-
-    if (closeButton) {
-        closeButton.addEventListener('click', function () {
-            if (confirm('Are you sure you want to exit the quiz? Your progress will be lost.')) {
-                window.location.href = "index.html?skipWelcome=1";
-            }
-        });
-    }
-
-    // FIXED: Option button selection with proper group handling
-    const optionButtons = document.querySelectorAll('.option-button');
-    optionButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            const value = this.getAttribute('data-value');
-
-            // Skip special handling for "other" buttons since we handle them separately
-            if (value === 'other-activity' || value === 'other-accessibility') {
-                return;
-            }
-
-            // Handle specific selection behaviors by group
-
-            // 1. Effort level buttons (first group in step 3) - single select
-            if (['easy', 'moderate', 'challenging'].includes(value)) {
-                document.querySelectorAll('.option-button[data-value="easy"], .option-button[data-value="moderate"], .option-button[data-value="challenging"]')
-                    .forEach(btn => btn.classList.remove('selected'));
-            }
-
-            // 2. Detour distance buttons (in step 2) - single select
-            if (['5', '15', '30', '50+'].includes(value)) {
-                document.querySelectorAll('.option-button[data-value="5"], .option-button[data-value="15"], .option-button[data-value="30"], .option-button[data-value="50+"]')
-                    .forEach(btn => btn.classList.remove('selected'));
-            }
-
-            // 3. Special behavior for accessibility requirements
-            if (['wheelchair', 'stroller', 'elderly', 'none'].includes(value)) {
-                if (value === 'none') {
-                    // If 'None' is selected, deselect all other accessibility options
-                    document.querySelectorAll('.option-button[data-value="wheelchair"], .option-button[data-value="stroller"], .option-button[data-value="elderly"], .option-button[data-value="other-accessibility"]')
-                        .forEach(btn => btn.classList.remove('selected'));
-
-                    // Also hide the "Other" input if it's visible
-                    if (otherAccessibilityContainer) {
-                        otherAccessibilityContainer.style.display = 'none';
+            nextButton.addEventListener('click', function () {
+                if (validateCurrentStep()) {
+                    if (quizState.currentStep === quizState.totalSteps) {
+                        finishQuiz();
+                    } else {
+                        goToStep(quizState.currentStep + 1);
                     }
-                } else {
-                    // If any other accessibility option is selected, deselect 'None'
-                    document.querySelectorAll('.option-button[data-value="none"]')
+                }
+            });
+        }
+
+        if (backButton) {
+            backButton.addEventListener('click', function () {
+                if (quizState.currentStep > 1) {
+                    goToStep(quizState.currentStep - 1);
+                }
+            });
+        }
+
+        if (closeButton) {
+            closeButton.addEventListener('click', function () {
+                if (confirm('Are you sure you want to exit the quiz? Your progress will be lost.')) {
+                    document.getElementById("origin").value = "";
+                    document.getElementById("destination").value = "";
+                    window.location.href = "index.html?skipWelcome=1";
+                }
+            });
+        }
+
+        // FIXED: Option button selection with proper group handling
+        const optionButtons = document.querySelectorAll('.option-button');
+        optionButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const value = this.getAttribute('data-value');
+
+                // Skip special handling for "other" buttons since we handle them separately
+                if (value === 'other-activity' || value === 'other-accessibility') {
+                    return;
+                }
+
+                // Handle specific selection behaviors by group
+
+                // 1. Effort level buttons (first group in step 3) - single select
+                if (['easy', 'moderate', 'challenging'].includes(value)) {
+                    if (this.classList.contains('selected')) {
+                        this.classList.remove('selected');
+                        return;
+                    }
+                    document.querySelectorAll('.option-button[data-value="easy"], .option-button[data-value="moderate"], .option-button[data-value="challenging"]')
                         .forEach(btn => btn.classList.remove('selected'));
                 }
-            }
 
-            // Toggle selection of clicked button
-            this.classList.toggle('selected');
+                // 2. Detour distance buttons (in step 2) - single select
+                if (['5', '15', '30', '50+'].includes(value)) {
+                    document.querySelectorAll('.option-button[data-value="5"], .option-button[data-value="15"], .option-button[data-value="30"], .option-button[data-value="50+"]')
+                        .forEach(btn => btn.classList.remove('selected'));
+                }
+
+                // 3. Special behavior for accessibility requirements
+                if (['wheelchair', 'stroller', 'elderly', 'none'].includes(value)) {
+                    if (value === 'none') {
+                        // If 'None' is selected, deselect all other accessibility options
+                        document.querySelectorAll('.option-button[data-value="wheelchair"], .option-button[data-value="stroller"], .option-button[data-value="elderly"], .option-button[data-value="other-accessibility"]')
+                            .forEach(btn => btn.classList.remove('selected'));
+
+                        // Also hide the "Other" input if it's visible
+                        if (otherAccessibilityContainer) {
+                            otherAccessibilityContainer.style.display = 'none';
+                        }
+                    } else {
+                        // If any other accessibility option is selected, deselect 'None'
+                        document.querySelectorAll('.option-button[data-value="none"]')
+                            .forEach(btn => btn.classList.remove('selected'));
+                    }
+                }
+
+                // Toggle selection of clicked button
+                if (this.classList.contains('selected')) {
+                    this.classList.remove('selected');
+                } else {
+                    this.classList.add('selected');
+                }
+            });
         });
-    });
 
-    // Initialize the quiz
-    updateProgress();
+        // Initialize the quiz
+        updateProgress();
 
-    // Check for existing preferences and fill in values
-    const savedPreferences = window.HiddenGems.data.storage.get('userPreferences');
-    if (savedPreferences) {
-        try {
-            const prefs = JSON.parse(savedPreferences);
-            if (prefs.origin && originInput) originInput.value = prefs.origin;
-            if (prefs.destination && destinationInput) destinationInput.value = prefs.destination;
+        // Check for existing preferences and fill in values
+        const savedPreferences = window.HiddenGems.data.storage.get('userPreferences');
+        if (savedPreferences) {
+            try {
+                const prefs = JSON.parse(savedPreferences);
+                if (prefs.origin && originInput) originInput.value = prefs.origin;
+                if (prefs.destination && destinationInput) destinationInput.value = prefs.destination;
 
-            // Restore other free-text values if they exist
-            if (prefs.otherActivities && otherActivityInput) {
-                otherActivityInput.value = prefs.otherActivities;
-                if (otherActivityButton) otherActivityButton.classList.add('selected');
-                if (otherActivityContainer) otherActivityContainer.style.display = 'block';
+                // Restore other free-text values if they exist
+                if (prefs.otherActivities && otherActivityInput) {
+                    otherActivityInput.value = prefs.otherActivities;
+                    if (otherActivityButton) otherActivityButton.classList.add('selected');
+                    if (otherActivityContainer) otherActivityContainer.style.display = 'block';
+                }
+
+                if (prefs.otherAccessibility && otherAccessibilityInput) {
+                    otherAccessibilityInput.value = prefs.otherAccessibility;
+                    if (otherAccessibilityButton) otherAccessibilityButton.classList.add('selected');
+                    if (otherAccessibilityContainer) otherAccessibilityContainer.style.display = 'block';
+                }
+            } catch (e) {
+                console.error("Error parsing saved preferences:", e);
             }
-
-            if (prefs.otherAccessibility && otherAccessibilityInput) {
-                otherAccessibilityInput.value = prefs.otherAccessibility;
-                if (otherAccessibilityButton) otherAccessibilityButton.classList.add('selected');
-                if (otherAccessibilityContainer) otherAccessibilityContainer.style.display = 'block';
-            }
-        } catch (e) {
-            console.error("Error parsing saved preferences:", e);
         }
-    }
-});
+    });
