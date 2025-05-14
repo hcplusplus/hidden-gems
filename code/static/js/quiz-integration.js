@@ -1,12 +1,13 @@
 // Configure API URL dynamically based on where the app is accessed from
 const getApiUrl = () => {
-    // If running locally on desktop
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    const hostname = window.location.hostname;
+    
+    // If running on localhost or 127.0.0.1, use localhost for the API
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
         return 'http://127.0.0.1:5000';
     }
-
-    // When accessed from another device on the network
-    return 'http://192.168.7.168:5000';
+    
+    return `http://${hostname}:5000`;
 };
 
 const API_URL = getApiUrl();

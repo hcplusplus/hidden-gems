@@ -1,0 +1,102 @@
+[
+  {
+    "id": "node/368170469",
+    "name": "Galt Neighborhood Library",
+    "coordinates": [
+      -121.2957835,
+      38.251074
+    ],
+    "category": "amenity",
+    "address": "CA",
+    "opening_hours": "",
+    "dollar_sign": "$",
+    "category_1": "Local Amenity",
+    "category_2": "Peaceful retreat",
+    "description": "Enjoy this local favorite away from typical tourist routes",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 48,
+    "distanceFromRoute": 9.92568656580082,
+    "routeProgress": 0.90437040952709
+  },
+  {
+    "id": "node/2392156810",
+    "name": "Toyota Amphitheatre",
+    "coordinates": [
+      -121.512912,
+      39.0311465
+    ],
+    "category": "amenity",
+    "address": "2677, Forty Mile Road, Wheatland, CA, 95692",
+    "opening_hours": "",
+    "dollar_sign": "$$",
+    "category_1": "Local Amenity",
+    "category_2": "Peaceful retreat",
+    "description": "A local establishment with unique character and charm",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 49,
+    "distanceFromRoute": 18.996052613263185,
+    "routeProgress": 0.6224651870890447
+  },
+  {
+    "id": "node/10292125550",
+    "name": "Nur Pon Salmon Run",
+    "coordinates": [
+      -122.3738077,
+      40.5698432
+    ],
+    "category": "tourism",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$",
+    "category_1": "Much Loved",
+    "category_2": "Off the beaten path",
+    "description": "Breathtaking views without the typical tourist crowds",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 36,
+    "distanceFromRoute": 0.8986934097865737,
+    "routeProgress": 0.007766418303125417
+  },
+  {
+    "id": "node/358803026",
+    "name": "California-Oregon Highway Historical Marker",
+    "coordinates": [
+      -122.3245714,
+      40.465896
+    ],
+    "category": "historic",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$",
+    "category_1": "Historical Site",
+    "category_2": "Family-friendly",
+    "description": "Experience the past in this atmospheric historical site",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 37,
+    "distanceFromRoute": 1.368297584822467,
+    "routeProgress": 0.048083274289714976
+  },
+  {
+    "id": "node/6981097639",
+    "name": "CHP Memorial Fountain",
+    "coordinates": [
+      -121.5585989,
+      38.5957755
+    ],
+    "category": "historic",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$$",
+    "category_1": "Historical Site",
+    "category_2": "Local favorite",
+    "description": "Step back in time at this hidden historic Memorial",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 49,
+    "distanceFromRoute": 0.04955937510607535,
+    "routeProgress": 0.75718210108051
+  }
+]
