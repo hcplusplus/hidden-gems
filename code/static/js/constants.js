@@ -9,8 +9,6 @@ window.HiddenGems = window.HiddenGems || {};
 // Define application-wide constants in one place
 window.HiddenGems.constants = {
 
-    // API settings
-    NETWORK_API: ' http://192.168.7.168:5000', // Placeholder for actual API URL
 
     // Location settings
     // Default location (Berkeley, CA)
@@ -24,7 +22,7 @@ window.HiddenGems.constants = {
     // Search settings (ALL IN KILOMETERS)
     DEFAULT_RADIUS: 8, // 8 km 
     DEFAULT_BUFFER: 30, // 30 km deviation from route
-    DEFAULT_LIMIT: 10, // number of gems to sample
+    DEFAULT_LIMIT: 30, // number of gems to sample
     MIN_GEMS: 5,
     MAX_ATTEMPTS: 3,
 

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "node/3445074952",
+    "name": "Dragon Slide",
+    "coordinates": [
+      -122.2605165,
+      37.8087661
+    ],
+    "category": "leisure",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$",
+    "category_1": "Recreation",
+    "category_2": "Photography spot",
+    "description": "A peaceful Playground where you can escape the tourist crowds",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 109,
+    "distanceFromRoute": 0.8761299001786623,
+    "routeProgress": 0.8762763851812112
+  },
+  {
+    "id": "node/7304950728",
+    "name": "Mama Oakland",
+    "coordinates": [
+      -122.254506,
+      37.8090086
+    ],
+    "category": "food",
+    "address": "388, Grand Avenue",
+    "opening_hours": "Mo-Fr 11:30-15:00,17:00-21:00",
+    "dollar_sign": "$$",
+    "category_1": "Food & Drink",
+    "category_2": "Local favorite",
+    "description": "A foodie's hidden treasure with character and authentic taste",
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 77,
+    "distanceFromRoute": 1.3965676164141485,
+    "routeProgress": 0.8497522873048869
+  },
+  {
+    "id": "node/4245702733",
+    "name": "Petit caf\u00e9",
+    "coordinates": [
+      -122.2648721,
+      37.8188965
+    ],
+    "category": "amenity",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$$$",
+    "category_1": "Local Amenity",
+    "category_2": "Off the beaten path",
+    "description": "Enjoy this local favorite away from typical tourist routes",
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 36,
+    "distanceFromRoute": 0.3327133853867061,
+    "routeProgress": 0.6935580201619012
+  }
+]

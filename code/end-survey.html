@@ -117,13 +117,25 @@
 			</main>
 
 			<!-- Navigation wheel component will be loaded here -->
-			<div id="nav-wheel-container"></div>
+			<div class="nav-wheel-container">
+			<div class="nav-items" id="nav-items">
+				<a href="/add-gem.html" class="nav-item">
+					<div class="nav-icon">💎</div>
+					<div class="nav-label">Add a Gem</div>
+				</a>
+				<a href="/gtky.html" class="nav-item">
+					<div class="nav-icon">🗺️</div>
+					<div class="nav-label">Start a Trip</div>
+				</a>
+			</div>
+			<div class="nav-wheel-toggle" id="nav-toggle">☰</div>
+		</div>
 		</div>
 
 		<script>
 			document.addEventListener('DOMContentLoaded', function () { // Handle back button
 				document.getElementById('back-button').addEventListener('click', function () {
-					window.history.back();
+					window.location.href = "trip-select.html";
 				});
 
 				// Handle photo upload
@@ -194,10 +206,7 @@
 				// Initialize hidden values
 				crowdednessValue.value = crowdednessSlider.value;
 
-				// Load navigation wheel component if available
-				if (window.ComponentLoader) {
-					window.ComponentLoader.load('nav-wheel-container', 'navigation-wheel');
-				}
+
 
 				// Handle form submission
 				document.getElementById('add-gem-form').addEventListener('submit', function (event) {
@@ -215,7 +224,7 @@
                     alert.classList.add('show');
                     setTimeout(() => {
                         alert.classList.remove('show');
-                        window.location.href = "new-land.html";
+                        window.location.href = "index.html";
                     }, 1000);
 					//alert('Thank you for your feedback! After review, it will be added to our collection.');
                     //make card for success message
@@ -244,9 +253,10 @@
 			document.getElementById("back-button").addEventListener("click", function () {
 				const confirmExit = confirm("Are you sure you want to exit? Your changes will not be saved.");
 				if (confirmExit) {
-					window.location.href = "landing-page.html";
+					window.location.href = "index.html";
 				}
 			});
 		</script>
+		<script src="static/js/nav-wheel.js"></script>
 	</body>
 </html>

@@ -238,6 +238,12 @@ function setupWelcomeMessage(welcomeOverlay) {
     quizButton.id = 'take-quiz-btn';
     quizButton.className = 'welcome-button secondary';
     quizButton.innerHTML = '<i class="fas fa-list-check"></i> Take Preference Quiz';
+
+    // Create clear cache
+    const clearButton = document.createElement('button');
+    clearButton.id = 'clear-data-btn';
+    clearButton.className = 'welcome-button secondary';
+    clearButton.innerHTML = '<i class="fas fa-eraser"></i> Clear Gem Cache';
     
     // Add event listener for location button
     locationButton.addEventListener('click', function() {
@@ -328,11 +334,19 @@ function setupWelcomeMessage(welcomeOverlay) {
     quizButton.addEventListener('click', function() {
         window.location.href = 'gtky.html';
     });
+
+        // Add event listener for quiz button
+    clearButton.addEventListener('click', function() {
+        window.HiddenGems.data.storage.clear();
+        window.HiddenGems.log("Cleared gem cache", "cache");
+    });
+
     
     // Assemble the welcome message
     buttonsContainer.appendChild(locationButton);
     buttonsContainer.appendChild(browseButton);
     buttonsContainer.appendChild(quizButton);
+    buttonsContainer.appendChild(clearButton);
     
     welcomeContainer.appendChild(welcomeTitle);
     welcomeContainer.appendChild(welcomeSubtitle);
