@@ -329,8 +329,8 @@ function generateRouteGemsQuietly() {
             quizState.answers.destinationCoords = destinationCoords;
             
             // Save to storage
-            window.HiddenGems.data.storage.set("originCoords", originCoords);
-            window.HiddenGems.data.storage.set("destinationCoords", destinationCoords);
+            window.HiddenGems.data.storage.set("originCoords", JSON.stringify(originCoords));
+            window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
             window.HiddenGems.data.storage.set("originName", JSON.stringify(originName));
             window.HiddenGems.data.storage.set("destinationName", JSON.stringify(destinationName));
             

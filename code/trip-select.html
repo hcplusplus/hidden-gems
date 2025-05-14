@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Add a Gem - Hidden Gems</title>
+    <title>Explore a Gem - Hidden Gems</title>
     <link rel="stylesheet" href="static/styles/main.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -148,10 +148,7 @@
                     <div class="quiz-option"
                         style="font-size: 14px; font-weight: 700; color:rgb(255, 255, 255); padding: 6px 12px; margin-left: 0; background-color: #f6d375;">
                         Super Rare Gem</div>
-                    <div class="detail">
-                        <i class="fas fa-location-dot" style="color:#f6d375"></i>
-                        <span id="address">43600 Mission Blvd, Fremont, CA</span>
-                    </div>
+             
                     <div class="detail">
                         <i class="fas fa-clock" style="color:#f6d375"></i>
                         <span id="open">6:00 AM - 10:00 PM |
@@ -228,7 +225,6 @@
 
                 // Populate page with card data
                 document.getElementById('title').innerText = selectedCard.name || 'Hidden Gem';
-                document.getElementById('address').innerText = selectedCard.address || '';
                 document.getElementById('cost').innerText = selectedCard.price || '$';
 
                 // Format opening hours with a pipe separator for the UI
@@ -305,7 +301,6 @@
 
                         // Populate basic info
                         document.getElementById('title').innerText = data_text["name"];
-                        //document.getElementById('address').innerText = data_text["address"] || '';
                         //document.getElementById('cost').innerText = data_text["dollar_sign"] || '$';
                         //document.getElementById('open').innerText = data_text["opening_hours"] ? data_text["opening_hours"] + ' | ' : 'Hours not specified | ';
                         //document.getElementById('description').innerText = data_text["description"] || '';

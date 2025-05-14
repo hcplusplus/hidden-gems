@@ -1468,7 +1468,7 @@ handleGemsLoaded(event) {
   navigateToGemDetails(gem) {
     const gemId = gem.id || `gem-${this.activeIndex}`;
 
-    exploreGem(gemId);
+     
     
   
     // Process time information for trip details
@@ -1500,28 +1500,109 @@ handleGemsLoaded(event) {
     } else if (gem.latitude && gem.longitude) {
       coordinates = `${gem.latitude},${gem.longitude}`;
     }
+
+    /**
+ * Shows an exploring overlay with loading animation
+ * @param {string} gemName - Name of the gem being explored
+ */
+function showExploringOverlay(gemName) {
+    // Create overlay container
+    const overlay = document.createElement('div');
+    overlay.id = 'exploring-overlay';
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    overlay.style.zIndex = '9999';
+    overlay.style.display = 'flex';
+    overlay.style.flexDirection = 'column';
+    overlay.style.justifyContent = 'center';
+    overlay.style.alignItems = 'center';
+    overlay.style.color = 'white';
+    overlay.style.fontFamily = "'Nunito', sans-serif";
+    overlay.style.transition = 'opacity 0.3s ease';
     
-    // Create a cardData object with all relevant information directly from your data source
+    // Create exploring text
+    const title = document.createElement('h2');
+    title.textContent = `Exploring ${gemName || 'Hidden Gem'}...`;
+    title.style.margin = '0 0 20px 0';
+    title.style.fontSize = '28px';
+    title.style.fontWeight = '700';
+    title.style.textAlign = 'center';
+    
+    // Create loading spinner
+    const spinner = document.createElement('div');
+    spinner.className = 'loading-spinner';
+    spinner.style.width = '50px';
+    spinner.style.height = '50px';
+    spinner.style.border = '5px solid rgba(255, 255, 255, 0.3)';
+    spinner.style.borderRadius = '50%';
+    spinner.style.borderTop = '5px solid #f6d375';
+    spinner.style.animation = 'spin 1s linear infinite';
+    
+    // Create loading message
+    const message = document.createElement('p');
+    message.textContent = 'Preparing your adventure...';
+    message.style.margin = '20px 0 0 0';
+    message.style.fontSize = '16px';
+    message.style.opacity = '0.8';
+    
+    // Assemble the overlay
+    overlay.appendChild(title);
+    overlay.appendChild(spinner);
+    overlay.appendChild(message);
+    document.body.appendChild(overlay);
+}
+
+/**
+ * Hides the exploring overlay
+ */
+function hideExploringOverlay() {
+  const overlay = document.getElementById('exploring-overlay');
+  if (overlay) {
+    // Clear the message interval
+    if (overlay.dataset.intervalId) {
+      clearInterval(parseInt(overlay.dataset.intervalId));
+    }
+    
+    // Fade out and remove
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+      overlay.remove();
+    }, 300);
+  }
+}
+
+    // Show loading overlay
+    showExploringOverlay(gem);
+
+    // Get the review from cache
+    const review = window.HiddenGems.reviewCache[gemId];
+    
+    // Create a cardData object with all relevant information
     const cardData = {
-      id: gem.id || `gem-${gemIndex}`,
+      id: gemId,
       name: gem.name || 'Hidden Gem',
       description: gem.description || 'A hidden gem waiting to be explored.',
       coordinates: coordinates,
-      address: gem.address || '',
-      opening_hours: gem.opening_hours || '',
-      dollar_sign: gem.dollar_sign || '$',
+      openingHours: gem.opening_hours || gem.openingHours || '',
+      price: gem.dollar_sign || gem.price || '$',
       timeDisplay: timeDisplay,
       time: visitTime,
-      color: this.getGemColor(gem),
-      category_1: gem.category_1 || '',
-      category_2: gem.category_2 || '',
-      review: gem.review
-
+      gemColor: this.getGemColor(gem),
+      categories: [
+        gem.category_1 || gem.categories?.[0] || 'Outdoor',
+        gem.category_2 || gem.categories?.[1] || 'Nature'
+      ],
+      rarity: gem.rarity || 'super-rare',
+      review: review
     };
     
     // Store the card data in session storage
     window.HiddenGems.data.storage.set('selectedCard', JSON.stringify(cardData));
-
+    
     // Dispatch navigation event before redirecting
     this.dispatchEvent(new CustomEvent('navigate-to-trip-select', {
       bubbles: true,
@@ -1529,9 +1610,13 @@ handleGemsLoaded(event) {
       detail: { gem, gemId }
     }));
     
-    // Navigate to the trip-select page
-    window.location.href = "trip-select.html";
-  }
+    // Add a small delay before navigating for a smoother transition
+    setTimeout(() => {
+        window.location.href = "trip-select.html";
+    }, 600); // Short delay for better UX
+}
+
+
   
   /**
    * Show a specific card by index

@@ -1,0 +1,146 @@
+[
+  {
+    "id": "node/6970819371",
+    "name": "McBrayer's Hometown Cafe",
+    "coordinates": [
+      -122.1791623,
+      39.9274521
+    ],
+    "category": "amenity",
+    "address": null,
+    "opening_hours": null,
+    "dollar_sign": "$$",
+    "category_1": "Local Amenity",
+    "category_2": "Local favorite",
+    "description": "A local establishment with unique character and charm",
+    "rarity": "least hidden | moderately hidden | most hidden",
+    "color": "blue",
+    "time": 120
+  },
+  {
+    "id": "node/6981097639",
+    "name": "Manuel Vierra Park",
+    "coordinates": [
+      -121.6910832,
+      38.5957755
+    ],
+    "category": "leisure",
+    "description": "A hidden recreational gem frequented by locals",
+    "rarity": "moderately hidden | least hidden",
+    "color": "purple",
+    "time": 62,
+    "dollar_sign": "$$$"
+  },
+  {
+    "id": "node/368174030",
+    "name": "Tehama County Museum",
+    "coordinates": [
+      -122.123045,
+      40.0273793
+    ],
+    "category": "tourism",
+    "description": "A spectacular vista point that remains a local secret",
+    "rarity": "moderately hidden | least hidden",
+    "color": "purple",
+    "time": 86,
+    "dollar_sign": "$$"
+  },
+  {
+    "id": "node/358824571",
+    "name": "CHP Memorial Fountain",
+    "coordinates": [
+      -121.6910832,
+      38.5957755
+    ],
+    "category": "historic",
+    "description": "Step back in time at this hidden historic Memorial",
+    "rarity": "moderately hidden | least hidden",
+    "color": "purple",
+    "time": 49,
+    "dollar_sign": "$$"
+  },
+  {
+    "id": "node/358821921",
+    "name": "Butte City Community Park",
+    "coordinates": [
+      -121.5585989,
+      39.3593329
+    ],
+    "category": "leisure",
+    "description": "A hidden recreational gem frequented by locals",
+    "rarity": "moderately hidden | least hidden",
+    "color": "purple",
+    "time": 77,
+    "dollar_sign": "$$"
+  },
+  {
+    "id": "node/6970819371",
+    "name": "McBrayer's Hometown Cafe",
+    "coordinates": [
+      -122.1791623,
+      39.9274521
+    ],
+    "category": "amenity",
+    "description": "A local establishment with unique character and charm",
+    "rarity": "least hidden | moderately hidden | most hidden",
+    "color": "blue",
+    "time": 120,
+    "dollar_sign": "$$"
+  },
+  {
+    "id": "node/6981097639",
+    "name": "Manuel Vierra Park",
+    "coordinates": [
+      -121.6910832,
+      38.5957755
+    ],
+    "category": "leisure",
+    "description": "A hidden recreational gem frequented by locals",
+    "rarity": "moderately hidden | least hidden",
+    "color": "purple",
+    "time": 62,
+    "dollar_sign": "$$"
+  },
+  {
+    "id": "node/368174030",
+    "name": "Tehama County Museum",
+    "coordinates": [
+      -122.123045,
+      40.0273793
+    ],
+    "category": "tourism",
+    "description": "A spectacular vista point that remains a local secret",
+    "rarity": "moderately hidden | least hidden",
+    "color": "purple",
+    "time": 86,
+    "dollar_sign": "$$"
+  },
+  {
+    "id": "node/358824571",
+    "name": "CHP Memorial Fountain",
+    "coordinates": [
+      -121.6910832,
+      38.5957755
+    ],
+    "category": "historic",
+    "description": "Step back in time at this hidden historic Memorial",
+    "rarity": "moderately hidden | least hidden",
+    "color": "purple",
+    "time": 49,
+    "dollar_sign": "$$"
+  },
+  {
+    "id": "node/358821921",
+    "name": "Butte City Community Park",
+    "coordinates": [
+      -121.5585989,
+      39.3593329
+    ],
+    "category": "leisure",
+    "description": "A hidden recreational gem frequented by locals",
+    "rarity": "moderately hidden | least hidden",
+    "color": "purple",
+    "time": 77,
+    "dollar_sign": "$$"
+  }
+]

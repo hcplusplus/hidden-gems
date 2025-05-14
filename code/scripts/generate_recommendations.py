@@ -52,20 +52,19 @@ def track_response_time(duration, model=OLLAMA_MODEL):
 def build_recommendation_prompt(user_data):
     def fmt(field):
         return ", ".join(user_data.get(field, [])) or "None"
+    candidate_gems = user_data.get("candidates", [])
+
+   
+    gem_sample = random.sample(candidate_gems, min(20, len(candidate_gems)))
     
-    gem_sample = user_data.get("candidates", [])
-
-
-
-    #context = "\n".join([
-    #    f"{g['name']} | {g['description']} | {g['category_1']} |{g['category_2']} | {g.get('rarity', 'unknown')}" 
-    #    for g in gem_sample
-    #])
-
+    # Create detailed context for each gem WITHOUT numbering
+    context = "\n".join([
+        f"{g['name']} | {g['description']} | {g['category_1']} |{g['category_2']} | {g.get('rarity', 'unknown')}" 
+        for g in gem_sample
+    ])
+    
     return f"""
-
 You are a trip planning expert. Select 5 hidden gems from the list below that best match the user's travel preferences.
-
 User preferences:
 - From: {user_data.get('origin')}
 - To: {user_data.get('destination')}
@@ -76,33 +75,39 @@ User preferences:
 - Time Available: {user_data.get('time')}
 
 Hidden gem candidates:
-{user_data.get('candidates', [])}
+{gem_sample}
 
-Return only a JSON array with these fields for each selected gem:
+Return only a JSON array with these fields for each recommended gem:
 [
   {{
-    "id": "same as input",
-    "name": "gem name",
+    "id": "same as candidate gem id",
+    "name": "same as candidate gem name",
     "coordinates": [longitude, latitude],
     "category": "type of place",
     "description": "1-sentence description",
     "rarity": "most hidden | moderately hidden | least hidden",
-    "color": "red | purple | blue",
+    "color": "red | purple | blue", 
     "time": number of minutes it takes for the detour,
-     "dollar_sign": "price level ($, $$, $$$)"
+    "dollar_sign": "price level ($, $$, $$$)"
   }}
 ]
+
+Return ONLY the JSON array and nothing else - no explanation needed.
 """
 
 def build_review_prompt(gem):
     return f"""
 You're a helpful assistant generating a realistic review for a hidden gem based on the following information:
 
-Gem:
+Gem details:
 - Name: {gem['name']}
 - Description: {gem['description']}
 - Category: {gem['category_1']}, {gem['category_2']}
 - Rarity: {gem.get('rarity', 'unknown')}
+- Price level: {gem.get('dollar_sign', '$')}
+- Time needed to visit: {gem.get('time', 0)} minutes
+- Type of place: {gem.get('category', 'place')}
+
 
 Generate 1 short review (1-2 sentences) from a visitor.
 Return only the review as a plain string.
@@ -186,21 +191,24 @@ def list_saved_recommendations():
 def generate_recommendations():
     start_time = time.time()
     user_data = request.get_json()
-
     origin = user_data.get('origin', 'unknown')
     destination = user_data.get('destination', 'unknown')
-    
+   
     # Generate filename based on origin and destination
     filename = get_recommendations_filename(origin, destination)
     filepath = os.path.join(RECOMMENDATIONS_DIR, filename)
-    
+   
     prompt = build_recommendation_prompt(user_data)
     print("📤 Prompt to LLM:\n", prompt)
-
+    
+    # Get raw response from LLM
     response = call_ollama(prompt)
+    print("📥 Raw LLM response:\n", response)
+    
+    # Extract JSON array of indices using regex
     match = re.search(r'\[.*\]', response, re.DOTALL)
     if not match:
-        return jsonify({"error": "LLM did not return valid JSON", "raw": response}), 500
+        return jsonify({"error": "LLM did not return valid JSON indices", "raw": response}), 500
 
     try:
         selected = json.loads(match.group(0))
@@ -209,19 +217,20 @@ def generate_recommendations():
 
     with open(filepath, "w") as f:
         json.dump(selected, f, indent=2)
-    
-    # Calculate total duration
-    total_duration = time.time() - start_time
-    print(f"⏱️ Total API request processing time: {total_duration:.2f}s")
-    
-    return jsonify({
-        "recommendations": selected,
-        "meta": {
-            "processingTime": total_duration,
-            "filename": filename,
-            "filepath": filepath
-        }
-    })
+        
+        # Calculate total duration
+        total_duration = time.time() - start_time
+        print(f"⏱️ Total API request processing time: {total_duration:.2f}s")
+        
+        return jsonify({
+            "recommendations": selected,
+            "meta": {
+                "processingTime": total_duration,
+                "filename": filename,
+                "filepath": filepath
+            }
+        })
+        
 
 @app.route("/generate_review", methods=["POST"])
 def generate_review():
