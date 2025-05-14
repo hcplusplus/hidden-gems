@@ -58,7 +58,7 @@ async function initApp() {
         } else {
             // Fallback to basic map initialization if namespaced version not available
             if (typeof window.initializeMap === 'function') {
-                await window.initializeMap();
+                await window.initializeMap(pageName);
             }
         }
         

@@ -501,10 +501,10 @@ hr {
 
 /* Nav wheel container */
 .nav-wheel-container {
-  position: absolute;
-  bottom: 185px;
-  right: 15px;
-  z-index: 90;
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 1000;
 }
 
 /* Nav toggle button */
@@ -522,7 +522,7 @@ hr {
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
   transition: transform 0.3s;
   position: relative;
-  z-index: 91;
+  z-index: 101;
 }
 
 .nav-wheel-toggle:hover {
@@ -545,6 +545,7 @@ hr {
   right: 0;
   visibility: hidden;
   opacity: 0;
+  z-index:101;
   transition: all 0.3s;
 }
 
@@ -564,6 +565,7 @@ hr {
   transform: scale(0.8);
   opacity: 0;
   transition: all 0.3s;
+  z-index:101;
 }
 
 .nav-items.active .nav-item {
@@ -573,19 +575,19 @@ hr {
 
 /* Position items in a vertical stack to fit better on mobile */
 .nav-item:nth-child(1) {
-  transform: translate(-60px, -30px) scale(0.8);
+  transform: translate(-160px, 60px) scale(0.8);
 }
 
 .nav-item:nth-child(2) {
-  transform: translate(-5px, -80px) scale(0.8);
+  transform: translate(-60px, 60px) scale(0.8);
 }
 
 .nav-items.active .nav-item:nth-child(1) {
-  transform: translate(-60px, -30px) scale(1);
+  transform: translate(-160px, 60px) scale(1);
 }
 
 .nav-items.active .nav-item:nth-child(2) {
-  transform: translate(-5px, -80px) scale(1);
+  transform: translate(-60px, 60px) scale(1);
 }
 
 /* Icon styling - slightly smaller for mobile */
@@ -627,7 +629,7 @@ hr {
 
 .map-card-transition {
   position: absolute;
-  bottom: 175px;
+  bottom: 20vh;
   left: 0;
   right: 0;
   height: 20px;
@@ -640,7 +642,7 @@ hr {
 /* Swipe indicator dots */
 .swipe-indicator {
   position: absolute;
-  bottom: 175px; /* Position above the cards */
+  bottom: 20vh; /* Position above the cards */
   left: 0;
   right: 0;
   display: flex;
@@ -682,7 +684,7 @@ hr {
   }
   
   .nav-wheel-container {
-    bottom: 185px; /* Move nav wheel up */
+    bottom: 25px; /* Move nav wheel up */
   }
   
   .gem-cards-wrapper {
@@ -732,4 +734,104 @@ hr {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+		/* Welcome overlay */
+		#welcome-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			
+			background-color: rgba(0, 0, 0, 0.8);
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			z-index: 2000;
+			transition: opacity 0.5s;
+		}
+
+		.welcome-container {
+			background-color: rgba(255, 255, 255, 0.9);
+			padding: 30px;
+      max-width: 90%;
+			border-radius: 16px;
+			box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+			text-align: center;
+			animation: fadeIn 0.5s ease-out;
+		}
+
+		.welcome-title {
+			color: #222;
+			font-size: 24px;
+			font-weight: bold;
+			margin-bottom: 20px;
+		}
+
+		.welcome-subtitle {
+			color: #555;
+			font-size: 16px;
+			margin-bottom: 30px;
+		}
+
+		.welcome-buttons {
+			display: flex;
+			flex-direction: column;
+			gap: 15px;
+			margin-top: 20px;
+		}
+
+		.welcome-button {
+			padding: 14px 20px;
+			border: none;
+			border-radius: 10px;
+			font-size: 16px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s;
+		}
+
+		.welcome-button.primary {
+			background-color: #94c9ba;
+			color: white;
+		}
+
+		.welcome-button.primary:hover {
+			background-color: #7fb7a7;
+			transform: translateY(-2px);
+		}
+
+		.welcome-button.secondary {
+			background-color: #f5f5f5;
+			color: #333;
+		}
+
+		.welcome-button.secondary:hover {
+			background-color: #e0e0e0;
+			transform: translateY(-2px);
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+				transform: translateY(20px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+    /* Base container styles */
+.gem-cards-container {
+  position: relative;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height:60vh;
+  z-index: 100;
+  margin-top: 0;
 }

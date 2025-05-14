@@ -1,0 +1,102 @@
+[
+  {
+    "id": "node/358832996",
+    "name": "Jenny Lind State Historic Landmark",
+    "coordinates": [
+      -120.8707704,
+      38.0954771
+    ],
+    "category": "leisure",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$",
+    "category_1": "Recreation",
+    "category_2": "Local favorite",
+    "description": "A peaceful Park where you can escape the tourist crowds",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 104,
+    "distanceFromRoute": 0.7953774871388218,
+    "routeProgress": 0.6397370723651049
+  },
+  {
+    "id": "node/358837446",
+    "name": "Stillman Magee Park",
+    "coordinates": [
+      -121.0935547,
+      38.2038066
+    ],
+    "category": "leisure",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$",
+    "category_1": "Recreation",
+    "category_2": "Off the beaten path",
+    "description": "A peaceful Park where you can escape the tourist crowds",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 84,
+    "distanceFromRoute": 5.857386882602042,
+    "routeProgress": 0.750471390153125
+  },
+  {
+    "id": "node/358833600",
+    "name": "Columbia Historic District",
+    "coordinates": [
+      -120.4007505,
+      38.0352009
+    ],
+    "category": "leisure",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$",
+    "category_1": "Recreation",
+    "category_2": "Scenic viewpoint",
+    "description": "Relax and unwind at this local favorite recreation spot",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 82,
+    "distanceFromRoute": 23.691603127284747,
+    "routeProgress": 0.45269311811306717
+  },
+  {
+    "id": "node/358835452",
+    "name": "Oakdale Recreation Area",
+    "coordinates": [
+      -120.8704885,
+      37.7754834
+    ],
+    "category": "leisure",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$",
+    "category_1": "Recreation",
+    "category_2": "Nature escape",
+    "description": "A peaceful Park where you can escape the tourist crowds",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 114,
+    "distanceFromRoute": 27.019716657773778,
+    "routeProgress": 0.5510599650681312
+  },
+  {
+    "id": "node/4178134996",
+    "name": "Pony Expresso",
+    "coordinates": [
+      -119.9738614,
+      37.4932208
+    ],
+    "category": "amenity",
+    "address": "5182, Hwy 49 N, Mariposa, 95338",
+    "opening_hours": "",
+    "dollar_sign": "$$",
+    "category_1": "Local Amenity",
+    "category_2": "Photography spot",
+    "description": "Experience authentic Northern California at this hidden Cafe",
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 31,
+    "distanceFromRoute": 5.995387354080356,
+    "routeProgress": 0.14794532579989064
+  }
+]

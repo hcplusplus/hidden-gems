@@ -131,6 +131,29 @@ function initializeMap(pageName = 'index', center = null, zoom = null) {
   });
 }
 
+  function centerCard(gem, index) {
+        const activeIndex = index;
+        const activeGem = gem;
+
+        if (activeGem) {
+            // Use the unified coordinate utility
+            const coords = window.HiddenGems.data.coordUtils.fromGem(activeGem);
+            console.log("active gem:", activeGem)
+            console.log("active index:", activeIndex);
+            if (coords) {
+ 
+                window.map.flyTo({
+                  center: coords,
+                  zoom: window.map.getZoom()
+                });
+
+          
+            } else {
+                console.warn(`Invalid coordinates for gem at index ${activeIndex}`);
+            }
+        }
+    };
+
 /**
    * Navigate to gem details page
    * @param {Object} gem - Gem object
@@ -228,7 +251,8 @@ document.addEventListener('gemsLoaded', function(e) {
       containerId: 'gem-cards-container',
       variant: pageName,
       onCardChange: function(gem, index) {
-        console.log(`Active gem changed to: ${gem.name}`);
+        centerCard(gem, index);
+        console.log(`Card changed to gem: ${gem.name} at index ${index}`);
       },
       onMarkerHighlight: function(gem, index) {
         console.log(`Highlighting marker for: ${gem.name}`);
@@ -657,6 +681,8 @@ function initialize(pageName = 'index') {
     console.log('On index page with welcome overlay - delegating initialization to user interaction');
     return Promise.resolve(null);
   }
+
+  
 
   return initializeMap()
     .then(map => {
