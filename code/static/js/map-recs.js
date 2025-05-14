@@ -156,9 +156,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }));
 
             // Notify any components that the map is ready
-            if (typeof window.notifyMapReady === 'function') {
-                window.notifyMapReady();
-            }
+            //if (typeof window.notifyMapReady === 'function') {
+            //    window.notifyMapReady();
+            //}
             window.map.addControl(new maplibregl.NavigationControl(), 'top-left');
 
             // Keep track of generated reviews

@@ -312,35 +312,24 @@ class GemCards {
     card.innerHTML = `
       <div class="card-accent ${accentColor}"></div>
       <div class="card-header">
-        <div class="card-img-container">
-          <div class="gem-icon-container">
-            <div class="gem-icon ${gemColor}-gem"></div>
-            <div class="gem-sparkle">💎</div>
-          </div>
-        </div>
         <div class="card-title-section">
           <div class="card-title">${gem.name || 'Hidden Gem'}</div>
           <div class="card-subtitle">${categoryTags}</div>
           ${distanceText ? `<div class="card-distance"><span class="distance-icon">📍</span> ${distanceText}</div>` : ''}
         </div>
-        ${index === this.activeIndex ? '<div class="active-gem-label">ACTIVE</div>' : ''}
-      </div>
-      
-      <div class="card-meta">
+              <div class="card-meta">
         ${timeDisplay ? `<div class="meta-item time-meta"><span class="meta-icon">⏱️</span> ${timeDisplay}</div>` : ''}
         ${priceDisplay ? `<div class="meta-item price-meta ${priceDisplay.length === 1 ? 'affordable' : priceDisplay.length === 2 ? 'moderate' : 'expensive'}">${priceDisplay}</div>` : ''}
         ${gem.rarity ? `<div class="meta-item rarity-meta ${rarityClass}">${this.formatRarity(gem.rarity)}</div>` : ''}
       </div>
-      
       <div class="card-details">
-        ${address ? `<div class="detail-item address-detail"><span class="detail-icon">📍</span> ${address}</div>` : ''}
         ${openingHours ? `<div class="detail-item hours-detail"><span class="detail-icon">🕒</span> ${openingHours}</div>` : ''}
+      </div>
       </div>
       
       <div class="card-description">
         ${gem.description || 'A hidden gem waiting to be explored.'}
       </div>
-      
       
       <div class="card-actions">
         <button class="explore-now-btn">Explore Now!</button>
@@ -821,7 +810,7 @@ function createTripDistanceInfo(cardData) {
   // Extract coordinates from card data
   const coordinates = cardData.coordinates;
   let lat, lng;
-  
+
   // Parse coordinates if available
   if (coordinates) {
     try {
@@ -843,85 +832,85 @@ function createTripDistanceInfo(cardData) {
       console.warn('Error parsing coordinates:', error);
     }
   }
-  
+
   // Default values if coordinates are not available or couldn't be parsed
   const directDistance = 5; // km
   const detourDistance = 8; // km
   const addedDistance = 3; // km
-  
+
   // Calculate distances if coordinates are available
   let calculatedDirectDistance = directDistance;
   let calculatedDetourDistance = detourDistance;
   let calculatedAddedDistance = addedDistance;
-  
+
   // If we have coordinates and origin/destination from session storage, calculate actual distances
   const originCoords = JSON.parse(sessionStorage.getItem('originCoords'));
   const destinationCoords = JSON.parse(sessionStorage.getItem('destinationCoords'));
-  
+
   if (lat && lng && originCoords && destinationCoords) {
     // Calculate direct distance (origin to destination)
     calculatedDirectDistance = calculateHaversineDistance(
-      originCoords[1], originCoords[0], 
+      originCoords[1], originCoords[0],
       destinationCoords[1], destinationCoords[0]
     );
-    
+
     // Calculate detour distances
     const originToGemDistance = calculateHaversineDistance(
       originCoords[1], originCoords[0],
       lat, lng
     );
-    
+
     const gemToDestinationDistance = calculateHaversineDistance(
       lat, lng,
       destinationCoords[1], destinationCoords[0]
     );
-    
+
     // Calculate total detour distance
     calculatedDetourDistance = originToGemDistance + gemToDestinationDistance;
-    
+
     // Calculate added distance
     calculatedAddedDistance = calculatedDetourDistance - calculatedDirectDistance;
   }
-  
+
   // Format distances with appropriate units
   let formattedDetourDistance, formattedAddedDistance;
-  
+
   if (calculatedDetourDistance < 1) {
     formattedDetourDistance = `${Math.round(calculatedDetourDistance * 1000)}m`;
   } else {
     formattedDetourDistance = `${calculatedDetourDistance.toFixed(1)}km`;
   }
-  
+
   if (calculatedAddedDistance < 1) {
     formattedAddedDistance = `${Math.round(calculatedAddedDistance * 1000)}m`;
   } else {
     formattedAddedDistance = `${calculatedAddedDistance.toFixed(1)}km`;
   }
-  
+
   // Calculate time based on distances
   // Assuming average driving speed of 50 km/h
   const drivingSpeedKmPerHour = 50;
-  
+
   // Calculate direct time
   const directTimeMinutes = Math.ceil((calculatedDirectDistance / drivingSpeedKmPerHour) * 60);
-  
+
   // Calculate detour driving time
   const detourDrivingTimeMinutes = Math.ceil((calculatedDetourDistance / drivingSpeedKmPerHour) * 60);
-  
+
   // Get visit time from card data or use default
   const visitTimeMinutes = cardData.time ? parseInt(cardData.time, 10) : 30;
-  
+
   // Calculate total time (driving + visit)
   const totalTimeMinutes = detourDrivingTimeMinutes + visitTimeMinutes;
-  
+
   // Calculate extra time compared to direct route
   const extraTimeMinutes = totalTimeMinutes - directTimeMinutes;
-  
+
   // Format times
   const formattedDrivingTime = formatTime(detourDrivingTimeMinutes);
   const formattedVisitTime = formatTime(visitTimeMinutes);
   const formattedExtraTime = formatTime(extraTimeMinutes);
-  
+
   // Create HTML for the trip distance info
   return `
     <div class="trip-distance-info">
@@ -971,19 +960,19 @@ function formatTime(minutes) {
 function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
   // Convert degrees to radians
   const toRad = (value) => value * Math.PI / 180;
-  
+
   const R = 6371; // Earth's radius in kilometers
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
-  
-  const a = 
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2);
-    
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = R * c;
-  
+
   return distance;
 }
 
