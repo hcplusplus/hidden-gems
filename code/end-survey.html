@@ -7,6 +7,37 @@
 		<link rel="stylesheet" href="static/styles/main.css">
 		<link rel="stylesheet" href="static/styles/new-aesthetics.css">
 	</head>
+    <style>
+        .alert {
+            position: fixed;
+            top: 10px;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 16px 20px;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
+            transition: all 0.4s ease;
+            z-index: 9999;
+        }
+
+        .alert.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .alert .icon {
+            font-size: 1.4em;
+        }
+    </style>
 	<body>
 		<div
 			class="page-container">
@@ -79,6 +110,10 @@
 						<button type="submit" class="submit-button">Submit Gem</button>
 					</div>
 				</form>
+                <div id="success-message" class="alert hidden">
+                    <span class="icon">✅</span>
+                    <span class="message">Quiz submitted successfully!</span>
+                </div>
 			</main>
 
 			<!-- Navigation wheel component will be loaded here -->
@@ -176,7 +211,13 @@
 					console.log('Form submitted with data:', Object.fromEntries(formData));
 
 					// Show success message
-					alert('Thank you for your feedback! After review, it will be added to our collection.');
+                    const alert = document.getElementById('success-message');
+                    alert.classList.add('show');
+                    setTimeout(() => {
+                        alert.classList.remove('show');
+                        window.location.href = "new-land.html";
+                    }, 1000);
+					//alert('Thank you for your feedback! After review, it will be added to our collection.');
                     //make card for success message
 
 					// // Reset form
@@ -195,7 +236,7 @@
 					// selectedCostInput.value = '';
 					// crowdednessSlider.value = 2;
 					// crowdednessValue.value = 2;
-                    window.location.href = "new-land.html";
+                    
 				});
 			});
 		</script>

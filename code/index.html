@@ -14,9 +14,8 @@
 	<link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&display=swap" rel="stylesheet">
 	<!-- MapLibre CSS -->
 	<link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
-	<link rel="stylesheet" href="static/styles/new-aesthetics.css">
-	<link rel="stylesheet" href="static/styles/layout-fixes.css">
-	<link rel="stylesheet" href="static/styles/card-styles.css">
+	<link rel="stylesheet" href="static/styles/main.css">
+	<link rel="stylesheet" href="static/styles/gem-cards.css">
 
 
 	<script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
@@ -24,16 +23,17 @@
 
 
 	<!-- javascripts -->
-<script src="static/js/constants.js"></script>
-<script src="static/js/data-controller.js"></script>
-<script src="static/js/main.js"></script>
-<script src="static/js/gem-cards.js"></script>
-<script src="static/js/gem-canvas.js"></script>
-<script src="static/js/map-controller.js"></script>
-<script src="static/js/nav-wheel.js"></script>
-<script src="static/js/swipe.js"></script>
+	<script src="static/js/constants.js"></script>
+	<script src="static/js/data-controller.js"></script>
 
+	<script src="static/js/main.js"></script>
+	<script src="static/js/gem-cards.js"></script>
+	<script src="static/js/gem-canvas.js"></script>
+	<script src="static/js/map-controller.js"></script>
 	
+	<script src="static/js/swipe.js"></script>
+
+
 
 	<style>
 		/* Welcome overlay */
@@ -43,6 +43,7 @@
 			left: 0;
 			right: 0;
 			bottom: 0;
+			max-width: 85%;
 			background-color: rgba(0, 0, 0, 0.8);
 			display: flex;
 			flex-direction: column;
@@ -128,31 +129,42 @@
 </head>
 
 <body>
-	<div class="container">
+	<div class="page-container">
 		<div id="map"></div>
+		<div class="map-card-transition"></div>
 
 		<!-- Swipe indicators above the cards -->
-		<div class="swipe-indicator">
-			<!-- Will be populated by JavaScript -->
-		</div>
+		<div class="swipe-indicator"></div>
 
 		<!-- Cards container -->
-		<gem-cards variant="index" marker-id=".maplibregl-marker"></gem-cards>
+		<div id="gem-cards-container"></div>
 
-		<!-- Navigation wheel positioned at top right of cards-section -->
-		<nav-wheel>
-			<nav-item label="Add a Gem" icon="💎" href="/add-gem.html"></nav-item>
-			<nav-item label="Start a Trip" icon="🗺️" href="/gtky.html"></nav-item>
-		</nav-wheel>
-
-		<!-- Welcome overlay - always shown on page load -->
-		<div id="welcome-overlay">
+		<!-- Navigation wheel -->
+		<div class="nav-wheel-container">
+			<div class="nav-items" id="nav-items">
+				<a href="/add-gem.html" class="nav-item">
+					<div class="nav-icon">💎</div>
+					<div class="nav-label">Add a Gem</div>
+				</a>
+				<a href="/gtky.html" class="nav-item">
+					<div class="nav-icon">🗺️</div>
+					<div class="nav-label">Start a Trip</div>
+				</a>
+			</div>
+			<div class="nav-wheel-toggle" id="nav-toggle">☰</div>
 		</div>
+	</div>
+
+	<!-- Welcome overlay - always shown on page load -->
+	<div id="welcome-overlay"></div>
 
 
 	</div>
+	
 
-<script src="static/js/delayed-initialization.js"></script>
+
+	<script src="static/js/delayed-initialization.js"></script>
+	<script src="static/js/nav-wheel.js"></script>
 </body>
 
 </html>
