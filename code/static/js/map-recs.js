@@ -1,27 +1,6 @@
 /**
  * map-recs.js
  */
- async function loadCachedReviews() {
-    if (!window.HiddenGems.reviewCache) {
-        try {
-            const response = await fetch('static/assets/data/reviews.json');
-            if (response.ok) {
-                const reviews = await response.json();
-                window.HiddenGems.reviewCache = reviews;
-                console.log(`Loaded ${Object.keys(reviews).length} cached reviews`);
-            } else {
-                console.error('Failed to load cached reviews');
-                window.HiddenGems.reviewCache = {};
-            }
-        } catch (error) {
-            console.error('Error loading cached reviews:', error);
-            window.HiddenGems.reviewCache = {};
-        }
-    }
-    return window.HiddenGems.reviewCache;
-}
-
-
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -153,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ]);
 
         // Initialize map 
-        window.initializeMap()
+        window.initializeMap('map-recs')
             .then(map => {
                 window.clearMarkers();
                 // Set the map view to the midpoint
@@ -192,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
                 renderGems(plotGems);
-                initializeDetailCards(plotGems)
+                //initializeDetailCards(plotGems)
 
                 console.log("Map rendering complete with", window.markers.length, "markers");
 
@@ -218,8 +197,6 @@ document.addEventListener('DOMContentLoaded', function () {
    
 
         });
-
-
 
 
         // Define function to render routes
@@ -376,12 +353,27 @@ function initializeDetailCards(gems) {
     // Set the gems data
     if (typeof detailCards.setGems === 'function') {
         detailCards.setGems(gems);
+    } else {
+        // Try to access the class instance
+        if (detailCards.gemCards && typeof detailCards.gemCards.setGems === 'function') {
+            detailCards.gemCards.setGems(gems);
+        } else {
+            console.error("Cannot find setGems method on the gem-cards element");
+        }
     }
 
-    // Show the first gem
+// Show the first gem
     if (typeof detailCards.showCard === 'function') {
         detailCards.showCard(0);
+    } else if (detailCards.gemCards && typeof detailCards.gemCards.showCard === 'function') {
+        detailCards.gemCards.showCard(0);
     }
+
+    // Remove any existing card-change listeners to prevent duplicates
+    detailCards.removeEventListener('card-change', handleCardChange);
+    
+    // Add event listener for card changes
+    detailCards.addEventListener('card-change', handleCardChange);
 
     // Add event listener for card changes
     detailCards.addEventListener('card-change', function (event) {
@@ -407,6 +399,26 @@ function initializeDetailCards(gems) {
             }
         }
     });
+}
+
+ async function loadCachedReviews() {
+    if (!window.HiddenGems.reviewCache) {
+        try {
+            const response = await fetch('static/assets/data/reviews.json');
+            if (response.ok) {
+                const reviews = await response.json();
+                window.HiddenGems.reviewCache = reviews;
+                console.log(`Loaded ${Object.keys(reviews).length} cached reviews`);
+            } else {
+                console.error('Failed to load cached reviews');
+                window.HiddenGems.reviewCache = {};
+            }
+        } catch (error) {
+            console.error('Error loading cached reviews:', error);
+            window.HiddenGems.reviewCache = {};
+        }
+    }
+    return window.HiddenGems.reviewCache;
 }
 
 

@@ -1,0 +1,597 @@
+/* gem-cards.css  */
+:root {
+  --card-height: 25vh;
+}
+
+/* Base container styles */
+.gem-cards-container {
+  position: relative;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  margin-top: 0;
+}
+
+/* Cards wrapper */
+.gem-cards-wrapper {
+  position: relative;
+  height: var(--card-height);
+  transition: height 0.3s ease;
+  margin-top: -10px;
+}
+
+/* Detail variant height */
+.gem-cards-wrapper.map-recs-variant {
+  height: var(--card-height) + 50px;
+}
+
+/* Card styling with enhanced aesthetics */
+.gem-card {
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  right: 10px;
+  height: 100%;
+  background-color: white;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.15);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+  transform: translateY(20px);
+  opacity: 0;
+  visibility: hidden;
+}
+
+.gem-card.active {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.gem-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Card accent based on gem rarity/color */
+.card-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  z-index: 1;
+}
+
+.card-accent.red-accent {
+  background: linear-gradient(to right, #e74c3c, #ff9b88);
+}
+
+.card-accent.purple-accent {
+  background: linear-gradient(to right, #9b59b6, #c39bd3);
+}
+
+.card-accent.blue-accent {
+  background: linear-gradient(to right, #3498db, #7fc4f9);
+}
+
+/* Card header with improved layout */
+.card-header {
+  display: flex;
+  gap: 14px;
+  padding: 16px 16px 10px;
+  position: relative;
+}
+
+/* Enhanced gem icon container */
+.card-img-container {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #f9f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Gem icon container for sparkle effect */
+.gem-icon-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Gem icon with improved styling */
+.gem-icon {
+  position: absolute;
+  right: -6px;
+  top: -6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.gem-icon.red-gem {
+  background: linear-gradient(to bottom right, #e74c3c, #c0392b);
+}
+
+.gem-icon.purple-gem {
+  background: linear-gradient(to bottom right, #9b59b6, #8e44ad);
+}
+
+.gem-icon.blue-gem {
+  background: linear-gradient(to bottom right, #3498db, #2980b9);
+}
+
+/* Gem sparkle with animation */
+.gem-sparkle {
+  font-size: 24px;
+  opacity: 0.7;
+  animation: sparkle 3s infinite;
+}
+
+@keyframes sparkle {
+  0% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  100% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+}
+
+/* Title section with improved typography */
+.card-title-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-title {
+  font-family: 'Nunito', 'Arial', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 5px;
+  line-height: 1.2;
+}
+
+.card-subtitle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+/* Category tags with enhanced styling */
+.category-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.category-tag.primary {
+  background-color: rgba(52, 152, 219, 0.1);
+  color: #2980b9;
+}
+
+.category-tag.secondary {
+  background-color: rgba(46, 204, 113, 0.1);
+  color: #27ae60;
+}
+
+.category-tag.default {
+  background-color: rgba(149, 165, 166, 0.1);
+  color: #7f8c8d;
+}
+
+/* Distance display with icon */
+.card-distance {
+  font-size: 12px;
+  color: #777;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Meta information row with enhanced styling */
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0 16px 8px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  background-color: #f8f8f8;
+}
+
+/* Time meta styling */
+.time-meta {
+  color: #555;
+}
+
+/* Price meta styling */
+.price-meta {
+  font-weight: 600;
+}
+
+.price-meta.affordable {
+  color: #27ae60;
+}
+
+.price-meta.moderate {
+  color: #f39c12;
+}
+
+.price-meta.expensive {
+  color: #c0392b;
+}
+
+/* Rarity meta styling */
+.rarity-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rarity-meta.most-hidden {
+  color: #c0392b;
+}
+
+.rarity-meta.moderately-hidden {
+  color: #8e44ad;
+}
+
+.rarity-meta.least-hidden {
+  color: #2980b9;
+}
+
+/* Card details */
+.card-details {
+  padding: 0 16px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #555;
+}
+
+/* Card description with enhanced styling */
+.card-description {
+  flex: 1;
+  padding: 0 16px 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #444;
+  max-height: 80px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #ddd transparent;
+}
+
+/* Custom scrollbar for Webkit browsers */
+.card-description::-webkit-scrollbar {
+  width: 4px;
+}
+
+.card-description::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.card-description::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 2px;
+}
+
+/* Trip distance info */
+.trip-distance-info {
+  margin: 8px 16px;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #94c9ba;
+}
+
+.map-recs-variant .trip-distance-info {
+  display: block;
+  /* Shown in detail variant */
+}
+
+.distance-detail {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.distance-detail:last-child {
+  margin-bottom: 0;
+}
+
+.distance-icon {
+  margin-right: 8px;
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.distance-label {
+  flex: 1;
+  font-size: 14px;
+  color: #555;
+}
+
+.distance-value {
+  font-weight: bold;
+  color: #94c9ba;
+  margin-right: 4px;
+}
+
+.time-breakdown {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed #ddd;
+}
+
+.breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.breakdown-label {
+  margin-right: 10px;
+}
+
+.breakdown-value {
+  font-weight: 600;
+}
+
+/* Card actions with enhanced styling */
+.card-actions {
+  padding: 8px 16px 16px;
+  /* Hidden by default */
+  justify-content: flex-end;
+}
+
+.map-recs-variant .card-actions {
+  display: flex;
+  /* Shown in detail variant */
+}
+
+.explore-now-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #b3e6cc 0%, #8fd3b6 100%);
+  color: #333;
+  padding: 12px 24px;
+  font-family: 'Nunito', 'Arial', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(143, 211, 182, 0.3);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.explore-now-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(143, 211, 182, 0.4);
+  background: linear-gradient(135deg, #c4ebd6 0%, #9adfc1 100%);
+}
+
+.explore-now-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(143, 211, 182, 0.4);
+}
+
+.explore-now-btn:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%);
+  transition: all 0.6s ease;
+}
+
+.explore-now-btn:hover:before {
+  left: 100%;
+}
+
+/* Card navigation dots with enhanced styling */
+.card-nav-dots {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+}
+
+.nav-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.nav-dot.active {
+  background-color: #3498db;
+  transform: scale(1.3);
+  box-shadow: 0 1px 5px rgba(52, 152, 219, 0.5);
+}
+
+/* Navigation arrows with enhanced styling */
+.card-nav-arrows {
+  position: absolute;
+  bottom: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5px;
+  pointer-events: none;
+}
+
+.nav-arrow {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  pointer-events: auto;
+  transition: transform 0.2s ease;
+  z-index: 110;
+}
+
+.nav-arrow:hover {
+  transform: scale(1.1);
+}
+
+.nav-arrow:active {
+  transform: scale(0.95);
+}
+
+/* Active marker label with enhanced styling */
+.active-gem-label {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #4285F4;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Loading state for cards */
+.loading-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 20px;
+  color: #555;
+  font-size: 14px;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(52, 152, 219, 0.2);
+  border-radius: 50%;
+  border-top-color: #3498db;
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-height: 600px) {
+  .gem-cards-wrapper {
+    height: 150px;
+  }
+
+  .gem-cards-wrapper.map-recs-variant {
+    height: 170px;
+  }
+
+  .card-img-container {
+    width: 50px;
+    height: 50px;
+  }
+
+  .card-title {
+    font-size: 16px;
+  }
+
+  .card-description {
+    max-height: 60px;
+  }
+}
+
+@media (min-height: 800px) {
+  .gem-cards-wrapper {
+    height: 190px;
+  }
+
+  .gem-cards-wrapper.map-recs-variant {
+    height: 230px;
+  }
+
+  .card-img-container {
+    width: 70px;
+    height: 70px;
+  }
+
+  .card-description {
+    max-height: 100px;
+  }
+}
