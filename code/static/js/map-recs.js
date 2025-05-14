@@ -1,6 +1,26 @@
 /**
  * map-recs.js
  */
+ async function loadCachedReviews() {
+    if (!window.HiddenGems.reviewCache) {
+        try {
+            const response = await fetch('static/assets/data/reviews.json');
+            if (response.ok) {
+                const reviews = await response.json();
+                window.HiddenGems.reviewCache = reviews;
+                console.log(`Loaded ${Object.keys(reviews).length} cached reviews`);
+            } else {
+                console.error('Failed to load cached reviews');
+                window.HiddenGems.reviewCache = {};
+            }
+        } catch (error) {
+            console.error('Error loading cached reviews:', error);
+            window.HiddenGems.reviewCache = {};
+        }
+    }
+    return window.HiddenGems.reviewCache;
+}
+
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -13,6 +33,11 @@ document.addEventListener('DOMContentLoaded', function () {
     function getValidCoordinates(coords) {
         return window.HiddenGems.data.coordUtils.normalize(coords);
     }
+
+    // Create sanitized filename based on origin and destination
+            const sanitizeForFilename = (name) => {
+                return name.replace(/[^\w\s]/g, '').trim().replace(/\s+/g, '_').toLowerCase();
+            };
 
     // Get coordinates from sessionStorage
     var originCoords = JSON.parse(window.HiddenGems.data.storage.get("originCoords"));
@@ -42,12 +67,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     async function prepareGemsForPlotting() {
-        try {
-            // Create sanitized filename based on origin and destination
-            const sanitizeForFilename = (name) => {
-                return name.replace(/[^\w\s]/g, '').trim().replace(/\s+/g, '_').toLowerCase();
-            };
 
+        try {
+        // First check if we have recommendations in sessionStorage from the API
+        const storedRecommendations = sessionStorage.getItem("recommendedGems");
+        const storedSampledGems = sessionStorage.getItem("sampledGems");
+        if (storedRecommendations) {
+            console.log("Using recommendations from sessionStorage");
+            const recommendedGems = JSON.parse(storedRecommendations);
+            
+            // Find matches with all gems
+            const plotGems = [];
+            recommendedGems.forEach(recommendedGem => {
+                const matchingGem = JSON.parse(storedSampledGems).find(sampledGem =>
+                    sampledGem.id === recommendedGem.id
+                );
+
+                if (matchingGem) {
+                    plotGems.push(matchingGem);
+                }
+            });
+
+            console.log(`Found ${plotGems.length} matching gems for plotting from sessionStorage`);
+            if (plotGems.length > 0) {
+                return plotGems;
+            }
+        } else {
             const origin = sanitizeForFilename(originCity);
             const destination = sanitizeForFilename(destinationCity);
             const recommendationsFilename = `recommendations_${origin}_to_${destination}.json`;
@@ -82,31 +127,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             } catch (error) {
                 // If specific recommendations don't exist, fall back to general recommendations
-                console.log(`Falling back to default recommendations: ${error.message}`);
-                
-                const fallbackResponse = await fetch("static/assets/data/recommendations.json");
-                if (!fallbackResponse.ok) {
-                    throw new Error('Failed to load default recommendations');
-                }
-                
-                const recommendedGems = await fallbackResponse.json();
-                
-                // Find matches with all gems
-                const plotGems = [];
-                recommendedGems.forEach(recommendedGem => {
-                    const matchingGem = window.HiddenGems.data.allGems.find(sampledGem =>
-                        sampledGem.id === recommendedGem.id
-                    );
-
-                    if (matchingGem) {
-                        plotGems.push(matchingGem);
-                    }
-                });
-
-                console.log(`Found ${plotGems.length} matching gems for plotting from default recommendations`);
-                return plotGems;
+                console.log(`File of specific trip not found. `);
+                return [];
             }
-        } catch (error) {
+        }
+     } catch (error) {
             console.error("Error preparing gems for plotting:", error);
             return []; // Return empty array on error
         }
@@ -165,10 +190,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Your code to plot the gems goes here
                 console.log("Ready to plot these gems:", plotGems);
 
-                // Start preloading reviews immediately in the background
-                preloadReviews(plotGems).then(() => {
-                    console.log("All gem reviews have been preloaded");
-                });
 
                 renderGems(plotGems);
                 initializeDetailCards(plotGems)
@@ -182,37 +203,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 addBaseRoute(originCoords, destinationCoords);
 
                 // Render route for the initial active gem (assuming first one is active by default)
-                if (plotGems.length > 0) {
-                    const firstGem = plotGems[0];
-                    console.log("First gem for detour route:", firstGem);
-                    const coords = window.HiddenGems.data.coordUtils.fromGem(firstGem);
-                    if (coords) {
-                        console.log(firstGem);
-                        console.log(coords);
-                        renderDetourRoute(originCoords, destinationCoords, coords);
-                    }
-                }
+                //if (plotGems.length > 0) {
+                //    const firstGem = plotGems[0];
+                //    console.log("First gem for detour route:", firstGem);
+                //    const coords = window.HiddenGems.data.coordUtils.fromGem(firstGem);
+                //    if (coords) {
+                //        console.log(firstGem);
+                //        console.log(coords);
+                //        renderDetourRoute(originCoords, destinationCoords, coords);
+                //    }
+                //}
             });
 
-    async function loadCachedReviews() {
-    if (!window.HiddenGems.reviewCache) {
-        try {
-            const response = await fetch('static/assets/data/reviews.json');
-            if (response.ok) {
-                const reviews = await response.json();
-                window.HiddenGems.reviewCache = reviews;
-                console.log(`Loaded ${Object.keys(reviews).length} cached reviews`);
-            } else {
-                console.error('Failed to load cached reviews');
-                window.HiddenGems.reviewCache = {};
-            }
-        } catch (error) {
-            console.error('Error loading cached reviews:', error);
-            window.HiddenGems.reviewCache = {};
-        }
-    }
-    return window.HiddenGems.reviewCache;
-}
+   
 
         });
 

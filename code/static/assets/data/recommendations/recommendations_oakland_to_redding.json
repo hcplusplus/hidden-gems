@@ -1,0 +1,102 @@
+[
+  {
+    "id": "node/4245702733",
+    "name": "Petit caf\u00e9",
+    "coordinates": [
+      -122.2648721,
+      37.8188965
+    ],
+    "category": "amenity",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$$$",
+    "category_1": "Local Amenity",
+    "category_2": "Off the beaten path",
+    "description": "Enjoy this local favorite away from typical tourist routes",
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 36,
+    "distanceFromRoute": 0.6241683273528578,
+    "routeProgress": 0.005080673243909136
+  },
+  {
+    "id": "node/368169939",
+    "name": "Napa County Law Library",
+    "coordinates": [
+      -122.285628,
+      38.2975863
+    ],
+    "category": "amenity",
+    "address": "CA",
+    "opening_hours": "",
+    "dollar_sign": "$$",
+    "category_1": "Local Amenity",
+    "category_2": "Cultural experience",
+    "description": "A charming spot where you can experience local culture",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 35,
+    "distanceFromRoute": 0.6155524499742105,
+    "routeProgress": 0.17715441876559415
+  },
+  {
+    "id": "node/5678599523",
+    "name": "Lake Berryessa Viewpoint",
+    "coordinates": [
+      -122.285145,
+      38.6459898
+    ],
+    "category": "tourism",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$",
+    "category_1": "Much Loved",
+    "category_2": "Historical site",
+    "description": "Breathtaking views without the typical tourist crowds",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 47,
+    "distanceFromRoute": 1.9627416086496958,
+    "routeProgress": 0.3021524635527877
+  },
+  {
+    "id": "node/10292125550",
+    "name": "Nur Pon Salmon Run",
+    "coordinates": [
+      -122.3738077,
+      40.5698432
+    ],
+    "category": "tourism",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$",
+    "category_1": "Much Loved",
+    "category_2": "Off the beaten path",
+    "description": "Breathtaking views without the typical tourist crowds",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 36,
+    "distanceFromRoute": 1.4484847418578004,
+    "routeProgress": 0.9937979101833002
+  },
+  {
+    "id": "node/1712118646",
+    "name": "Subarama",
+    "coordinates": [
+      -122.2379773,
+      40.5636228
+    ],
+    "category": "food",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$$",
+    "category_1": "Food & Drink",
+    "category_2": "Outdoor adventure",
+    "description": "A foodie's hidden treasure with character and authentic taste",
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 60,
+    "distanceFromRoute": 12.897651265802445,
+    "routeProgress": 0.989458226202425
+  }
+]

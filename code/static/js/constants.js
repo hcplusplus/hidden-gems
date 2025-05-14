@@ -8,6 +8,10 @@ window.HiddenGems = window.HiddenGems || {};
 
 // Define application-wide constants in one place
 window.HiddenGems.constants = {
+
+    // API settings
+    NETWORK_API: ' http://192.168.7.168:5000', // Placeholder for actual API URL
+
     // Location settings
     // Default location (Berkeley, CA)
     DEFAULT_CENTER: [-122.2730, 37.8715],
