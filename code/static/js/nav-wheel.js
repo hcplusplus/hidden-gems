@@ -241,18 +241,17 @@ class NavWheel extends HTMLElement {
     
     
     // Calculate positions in a circle
-    const radius = 75; // Distance from center in pixels
+    const radius = 70; // Distance from center in pixels
     const offsetAngle = -90; // Start from top (in degrees)
     
     navItems.forEach((item, index) => {
       // Calculate angle based on index and total items
-      const angle = offsetAngle + (360 / totalItems) * index;
-      
+      const angle = [-45, 45][index];      
       // Convert angle to radians
       const radians = angle * (Math.PI / 180);
       
       // Calculate x and y positions
-      const x = Math.cos(radians) * radius;
+      const x = Math.cos(radians) * radius - 30;
       const y = Math.sin(radians) * radius;
       
       // Position the item
@@ -332,8 +331,9 @@ class NavItem extends HTMLElement {
     
     // Get attributes
     const label = this.getAttribute('label') || '';
-    const icon = this.getAttribute('icon') || '';
     const href = this.getAttribute('href') || '#';
+    const icon = this.getAttribute('icon') || '';
+
     
     // Create a completely unhidden direct HTML structure
     this.shadowRoot.innerHTML = `
@@ -356,7 +356,6 @@ class NavItem extends HTMLElement {
           cursor: pointer;
           width: 100%;
           height: 100%;
-          gap: 2px;
         }
         
         .nav-icon {
@@ -371,7 +370,8 @@ class NavItem extends HTMLElement {
           font-size: 24px;
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
           transition: transform 0.2s, background-color 0.2s;
-          gap: 2px;
+            font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+
         }
         
         .nav-icon:active {
@@ -412,7 +412,7 @@ class NavItem extends HTMLElement {
       </style>
       
       <div class="nav-item" id="nav-item">
-  <div class="nav-icon" style="
+  <div class="nav-icon" id="icon-display" style="
       background-color: #94c9ba;
       color: white;
       width: 60px;
@@ -421,12 +421,13 @@ class NavItem extends HTMLElement {
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 28px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);">💎</div>
+font-size: 28px;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+  line-height: 1;      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);"></div>
   <div class="nav-label-container">
-    <span class="nav-label-text">Add a Gem</span>
+    <span class="nav-label-text">${label}</span>
   </div>
-  <a href="/add-gem.html" class="nav-direct-link" id="direct-link"></a>
+    <a href="${href}" class="nav-direct-link" id="direct-link"></a>
 </div>
 
     `;
@@ -574,10 +575,16 @@ class NavItem extends HTMLElement {
         this._href = newValue;
       }
     }
+    else if (name === 'icon' && this.shadowRoot) {
+      const iconEl = this.shadowRoot.querySelector('.nav-icon');
+      if (iconEl) {
+        iconEl.textContent = newValue;
+      }
+    }
   }
   
   static get observedAttributes() {
-    return ['label', 'href'];
+    return ['label', 'href', 'icon'];
   }
 }
 
