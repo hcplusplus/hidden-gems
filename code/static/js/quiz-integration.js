@@ -293,7 +293,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             }
-            
+            document.getElementById("origin").value = "";
+			document.getElementById("destination").value ="";
             window.location.href = "map-recs.html";
             
         } catch (err) {
