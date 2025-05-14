@@ -44,81 +44,230 @@
             display: flex;
         }
 
-        .place-container {
-            margin: 15px 0px 0px 40px;
-        }
-
-        .title {
-            font-size: 24px;
-            font-weight: 500;
-        }
-
-        .recommendation-image {
-            width: 100%;
-            height: 200px;
-            background-color: #ddd;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .recommendation-details {
-            padding: 12px;
-        }
-
-        .detail {
-            margin-bottom: 5px;
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .recommendation-detail-icon {
-            margin-right: 3px;
-        }
-
-        .quiz-option {
+        .rarity-tag {
             display: inline-flex;
             align-items: center;
-            padding: 10px 16px;
-            margin: 0px 0px 10px 20px;
+            padding: 6px 14px;
             border-radius: 20px;
-            background-color: #ededed;
-            cursor: pointer;
-            transition: background-color 0.2s;
+            font-size: 14px;
+            font-weight: 700;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
+        #trip_mode {
+            width: 100%;
+            height: 250px;
+            margin-top: 0;
+        }
+
+
+        .time-indicator {
+            position: absolute;
+            top: 150px;
+            left: 240px;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        /* Progress bar styling */
+        .progress-container {
+            padding: 16px 16px 8px 16px;
+        }
+
+
 
         .moving-progress {
-            height: 23px;
+            height: 100%;
             width: 0%;
-            /*dynamic */
-            border-radius: 10px;
-            background-color: rgb(179, 217, 179);
+            border-radius: 6px;
+            background-color: #8cd98c;
+            transition: width 0.5s ease-in-out;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
 
-        .review-box {
-            height: 200px;
-            /* margin: 30px 30px 60px 30px; */
-            background-color: rgba(255, 255, 255, 0.637);
-            border-radius: 10px;
-            padding: 10px 10px 10px 10px;
+        .progress-marker {
+            position: absolute;
+            right: 5px;
+            top: -3px;
+            font-size: 16px;
         }
 
-        .state-change {
-            padding: 5px;
-            background-color: rgb(230, 230, 230);
+        .place-container {
+            padding: 8px 16px 16px 16px;
         }
 
-        /* Category tags with enhanced styling */
-        .rarity-tag {
+        .place-title {
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: #333;
+            line-height: 1.3;
+        }
+
+        .place-info {
             display: flex;
-            padding: 4px 8px;
-            justify-content:center;
-            border-radius: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .rarity-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            border-radius: 20px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .place-detail {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .place-detail i {
+            margin-right: 6px;
+            width: 16px;
             text-align: center;
-            margin: 0px 0px 10px 10px;
-            white-space: nowrap;
+        }
+
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .category-tag {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .category-tag.primary {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: #2980b9;
+        }
+
+        .category-tag.secondary {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: #27ae60;
+        }
+
+        .place-description {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #555;
+            margin: 16px 0;
+            padding: 0 4px;
+        }
+
+        /* Review section styling */
+        .review-container {
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 16px;
+            margin: 8px 16px 16px 16px;
+            position: relative;
+        }
+
+        .review-primary {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            color: #404040;
+        }
+
+        .review-secondary {
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            margin-top: 12px;
+            display: block;
+        }
+
+        .avatar-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            margin-right: 12px;
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .dog-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            position: absolute;
+            right: 16px;
+            bottom: 16px;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Button styling */
+        .map-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #8cd98c;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 12px 24px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(140, 217, 140, 0.3);
+            transition: all 0.2s ease;
+            text-decoration: none;
+            margin: 8px 16px 16px 16px;
+            width: calc(100% - 32px);
+        }
+
+        .map-button:hover {
+            background-color: #7ac97a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(140, 217, 140, 0.4);
+        }
+
+        .map-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(140, 217, 140, 0.2);
+        }
+
+        .map-button i {
+            margin-right: 8px;
+            font-size: 18px;
         }
 
         .category-tag.primary {
@@ -135,6 +284,165 @@
             background-color: rgba(149, 165, 166, 0.1);
             color: #7f8c8d;
         }
+
+                /* Navigation buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 0 16px 24px 16px;
+            gap: 12px;
+        }
+
+        .nav-button {
+            flex: 1;
+            height: 44px;
+            border-radius: 22px;
+            background-color: #f0f0f0;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            position: relative;
+        }
+
+        .nav-button:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        .nav-button.active {
+            background-color: #8cd98c;
+            color: white;
+        }
+
+        .nav-button i {
+            font-size: 14px;
+            margin-left: 8px;
+            color: #666;
+        }
+
+        .nav-button.active i {
+            color: white;
+        }
+        
+        .nav-button .tooltip {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 400;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 10;
+        }
+        
+        .nav-button .tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid rgba(0, 0, 0, 0.8);
+        }
+        
+        .nav-button:hover .tooltip {
+            opacity: 1;
+        }
+        /* Arrived screen styling */
+        .arrived-screen {
+            position: relative;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .arrived-banner {
+            position: absolute;
+            top: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 16px 24px;
+            background-color: #8cd98c;
+            border-radius: 16px;
+            color: white;
+            font-family: 'Cherry Bomb One', system-ui;
+            font-size: 28px;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: translateX(-50%) scale(1);
+            }
+
+            50% {
+                transform: translateX(-50%) scale(1.05);
+            }
+
+            100% {
+                transform: translateX(-50%) scale(1);
+            }
+        }
+
+        .feedback-button {
+            display: block;
+            width: calc(100% - 32px);
+            margin: 16px auto;
+            padding: 14px 0;
+            border-radius: 30px;
+            background-color: #8cd98c;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(140, 217, 140, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .feedback-button:hover {
+            background-color: #7ac97a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(140, 217, 140, 0.4);
+        }
+
+        .feedback-note {
+            font-size: 13px;
+            text-align: center;
+            color: #666;
+            margin: 0 24px 24px;
+            line-height: 1.5;
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 600px) {
+            .page-container {
+                max-width: 600px;
+                margin: 0 auto;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                min-height: 100vh;
+            }
+        }
     </style>
 
 </head>
@@ -147,6 +455,7 @@
                 color: black; font-weight: 600;">
             ← Back
         </button>
+
         <div class="flex flex-column" id="progressContainer">
             <div>
                 <img src="static/assets/red_trip_mode.jpg" style="width:100%;height:250px;margin-top:0px" id="trip_mode"
@@ -167,17 +476,19 @@
             </div>
 
 
-            <div class="place-container">
+            <!-- Place details -->
+<div class="place-container">
                 <div>
                     <div class="title" id="title" style="font-weight: 800; font-size: xx-large;"></div>
                 </div>
 
                 <div style="margin-right: 40px">
-                    <div class="rarity-tag" id="rarity">
+                    <div id="rarity" class="rarity-tag">
+                        
                         Super Rare Gem</div>
-
-                    <div class="detail">
-                        <i class="fas fa-clock" id="clock-detail"></i>
+             
+                    <div class="detail" id="clock-detail">
+                        <i class="fas fa-clock" style="color:#f6d375"></i>
                         <span id="open">6:00 AM - 10:00 PM |
                         </span>
                         <span id="cost">
@@ -210,20 +521,36 @@
                     <image src="static/assets/dog.jpg"
                         style="width:60px; height:60px; margin-left:190px; margin-top:5px"></image>
                 </div>
-                <button style="background-color: rgb(153, 206, 153); margin-top: 30px; margin-left: 40px"
-                    onclick="goToSpecificLocation()">Open in Google Maps</button>
 
             </div>
-            <div style="margin: 20px 50px 30px 10px; text-align: right;">
-                <button class="state-change" id="state-1">
-                    <i class="fas fa-arrow-right"></i>
+
+            <!-- Google Maps button -->
+            <button class="map-button" onclick="goToSpecificLocation()">
+                <i class="fas fa-map-marker-alt"></i> Open in Google Maps
+            </button>
+
+            <div style="margin: 8px 16px 8px 16px; text-align: center;">
+                <p style="font-size: 14px; color: #666; margin-bottom: 8px;">
+                    Need to adjust your trip time?
+                </p>
+            </div>
+
+            <!-- Navigation buttons -->
+            <div class="nav-buttons">
+                <button class="nav-button" id="state-1">
+                    Speed Up
+                    <i class="fas fa-fast-forward"></i>
+                    <span class="tooltip">Skip ahead or accelerate your journey</span>
                 </button>
-                <button class="state-change" id="state-2">
-                    <i class="fas fa-arrow-right"></i>
+                <button class="nav-button" id="state-2">
+                    Arrive Now
+                    <i class="fas fa-flag-checkered"></i>
+                    <span class="tooltip">Jump to your destination immediately</span>
                 </button>
-                <span style="font-size: 12px; font-weight: 300;">for demo</span>
             </div>
         </div>
+
+        <!-- Arrived screen -->
         <div id="nextScreen" style="display: none;" class="fade">
             <image src="static/assets/arrived.jpg" style="width:100%;height:auto;" />
             <div style="position: absolute; top: 200px; left: 60px; padding: 10px; background-color:rgb(138, 207, 138); border-radius: 16px; border-color: rgb(40, 40, 40); color: white; font-family: 'Cherry Bomb One', system-ui; font-size: 34px; font-weight: 600;"
@@ -240,6 +567,7 @@
 
         </div>
     </div>
+
 
     <script>
         function title(str) {
@@ -324,104 +652,150 @@
                 if (selectedCard.coordinates) {
                     window.HiddenGems.data.storage.set('coordinates', selectedCard.coordinates);
                 }
-            } else {
-                // Fall back to fetching from JSON if no data in session storage
-                let data_text = {};
-                fetch('static/assets/data/gem.json')
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Fetched data from JSON:', data);
-                        data_text = data[0];
-
-                        // Populate basic info
-                        document.getElementById('title').innerText = data_text["name"];
-                        //document.getElementById('cost').innerText = data_text["dollar_sign"] || '$';
-                        //document.getElementById('open').innerText = data_text["opening_hours"] ? data_text["opening_hours"] + ' | ' : 'Hours not specified | ';
-                        //document.getElementById('description').innerText = data_text["description"] || '';
-                        document.getElementById('category-1').innerText = data_text["category"] || 'Category';
-                        //document.getElementById('category-2').innerText = data_text["category_2"] || 'Category';
-                        document.getElementById('review').innerText = data_text["review"] ? `"${data_text["review"]}"` : '';
-                        //document.getElementById('time-left').innerText = data_text["time"] || '1 hr 30 left';
-
-                        const color = data_text["color"] || 'red';
-                        document.getElementById('trip_mode').src = `./assets/${color}_trip_mode.jpg`;
-
-
-                    })
-                    .catch(error => console.error('Error loading JSON:', error));
             }
-        });
 
-        let latitude = 0;
-        let longitude = 0;
-        // if (navigator.geolocation) {
-        //     navigator.geolocation.getCurrentPosition(
-        //         (position) => {
-        //             latitude = position.coords.latitude;
-        //             longitude = position.coords.longitude;
-        //             console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
 
-        //         },
-        //         (error) => {
-        //             console.error("Error getting location:", error);
-        //         }
-        //     );
-        // } else {
-        //     console.error("Geolocation is not supported by this browser.");
-        // }
-
-        // console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-
-        //demo functionality buttons: real progress bar functionality has NOT been implemented
-        document.getElementById('state-1').onclick = function () {
+            // Get required DOM elements
             const progressBar = document.getElementById('moving-progress');
-            progressBar.style.width = 20 + '%';
-            document.getElementById('time-left').innerText = "30 min left";
-        }
+            const timeLeftDisplay = document.getElementById('time-left');
+            const state1Button = document.getElementById('state-1');
+            const state2Button = document.getElementById('state-2');
 
-        document.getElementById('state-2').onclick = function () {
-            //for demo video make progress bar fill slowly 
-            // progressBar.style.width = 100 + '%';
-            const progressBar = document.getElementById('moving-progress');
-            let progress = 0;
+            // Trip simulation variables
+            let totalTripDuration = 90; // Trip duration in minutes (1 hr 30 min)
+            let elapsedTime = 0; // Elapsed time in minutes
+            let progress = 0; // Progress percentage (0-100)
+            let isTripActive = false;
+            let tripInterval;
+            let animationSpeed = 1; // Speed multiplier
 
-            const interval = setInterval(() => {
-                if (progress >= 100) {
-                    clearInterval(interval); // stop once full
-                    console.log('Done!');
-                    return;
+
+
+            // Random fluctuations to simulate real driving
+            function getRandomFluctuation() {
+                return Math.random() * 0.4 - 0.2; // Random value between -0.2 and 0.2
+            }
+
+            // Format time display function
+            function formatTimeLeft(minutes) {
+                if (minutes <= 0) return "Arrived!";
+
+                if (minutes >= 60) {
+                    const hours = Math.floor(minutes / 60);
+                    const mins = Math.floor(minutes % 60);
+                    return `${hours} hr ${mins} min left`;
+                } else {
+                    return `${Math.floor(minutes)} min left`;
                 }
-                progress += 1; // increase this number to fill faster
+            }
+
+            // Function to update progress bar with smoothing
+            function updateProgress() {
+                // Add a small random fluctuation to simulate real driving conditions
+                const fluctuation = getRandomFluctuation();
+                elapsedTime += (1 * animationSpeed) + fluctuation;
+
+                // Ensure progress doesn't exceed 100%
+                progress = Math.min((elapsedTime / totalTripDuration) * 100, 100);
+
+                // Apply smooth transition effect
                 progressBar.style.width = progress + '%';
 
-                if (progress >= 100) {
-                    document.getElementById('time-left').innerText = "Arrived!";
-                    document.getElementById('time-left').style.marginLeft = "15px";
+                // Update time left display
+                const minutesLeft = Math.max(totalTripDuration - elapsedTime, 0);
+                timeLeftDisplay.innerText = formatTimeLeft(minutesLeft);
 
+                // When arrived
+                if (progress >= 100) {
+                    // Center the "Arrived!" text
+                    timeLeftDisplay.style.left = "50%";
+                    timeLeftDisplay.style.transform = "translateX(-50%)";
+
+                    // Trigger confetti
                     confetti({
                         particleCount: 250,
                         spread: 70,
                         origin: { y: 0.6 }
                     });
+
+                    // Stop the interval
+                    clearInterval(tripInterval);
+
+                    // Show next screen after a short delay
                     setTimeout(() => {
                         showNextScreen();
-                    }, 700);
+                    }, 1200);
                 }
-            }, 50); // interval in ms; lower = faster fill
-        }
+            }
+
+            // Function to start the trip simulation
+            function startTrip() {
+                if (!isTripActive) {
+                    isTripActive = true;
+
+                    // Initial progress update
+                    updateProgress();
+
+                    // Update progress every 300ms
+                    tripInterval = setInterval(updateProgress, 300);
+                }
+            }
+
+            // Speed up button - first stage
+            state1Button.onclick = function () {
+                // Visual feedback for button click
+                state1Button.classList.add('active');
+                setTimeout(() => state1Button.classList.remove('active'), 300);
+
+                // Accelerate to 40% if below that, otherwise increase speed
+                if (progress < 40) {
+                    elapsedTime = totalTripDuration * 0.4;
+                    updateProgress();
+                } else {
+                    // Increase animation speed
+                    animationSpeed = 2;
+
+                    // Update button to show it's active
+                    state1Button.classList.add('active');
+
+                    // Reset after 5 seconds
+                    setTimeout(() => {
+                        animationSpeed = 1;
+                        state1Button.classList.remove('active');
+                    }, 5000);
+                }
+            };
+
+            // Almost there button - major acceleration
+            state2Button.onclick = function () {
+                // Visual feedback for button click
+                state2Button.classList.add('active');
+
+                // If below 80%, jump to 80%
+                if (progress < 80) {
+                    elapsedTime = totalTripDuration * 0.8;
+                    updateProgress();
+
+                    // Reset visual feedback after a short delay
+                    setTimeout(() => {
+                        state2Button.classList.remove('active');
+                    }, 500);
+                } else {
+                    // Set to completed
+                    elapsedTime = totalTripDuration;
+                    updateProgress();
+                }
+            };
+
+            // Start the trip after a short delay
+            setTimeout(startTrip, 1500);
 
 
-        document.getElementById('state-1').onclick = function () {
-            const progressBar = document.getElementById('moving-progress');
-            progressBar.style.width = 20 + '%';
-            document.getElementById('time-left').innerText = "30 min left";
-        }
 
-        //after progress is 100%, image of finish fills the page and put button to feedback quiz 
-        function showNextScreen() {
-            document.getElementById('progressContainer').style.display = 'none';
-            document.getElementById('nextScreen').style.display = 'block';
-        }
+
+
+
+        });
 
         function goBack() {
             if (document.getElementById('progressContainer').style.display == 'none') {
@@ -438,16 +812,36 @@
 
 
 
+        // Function to open location in Google Maps
         function goToSpecificLocation() {
-            const coordinates = window.HiddenGems.data.storage.get('coordinates');
-            const url = `https://www.google.com/maps?q=${coordinates}`;
-            window.open(url, "_blank");
+            const coordinates = window.HiddenGems && window.HiddenGems.data &&
+                window.HiddenGems.data.storage ?
+                window.HiddenGems.data.storage.get('coordinates') : null;
+            // swap to lat long
+            if (coordinates) {
+                long = coordinates[0];
+                lat = coordinates[1];
+                const latLong = `${lat},${long}`;
+                const url = `https://www.google.com/maps?q=${latLong}`;
+                window.open(url, "_blank");
+            } else {
+                // Fallback if coordinates not available
+                window.open("https://www.google.com/maps", "_blank");
+            }
         }
 
-        // after progress is 100%, image of finish fills the page and put button to feedback quiz
+        // Function to show arrived screen
         function showNextScreen() {
             document.getElementById('progressContainer').style.display = 'none';
+
+            // Fade in animation
+            const nextScreen = document.getElementById('nextScreen');
+            nextScreen.style.opacity = '0';
             nextScreen.style.display = 'block';
+
+            setTimeout(() => {
+                nextScreen.style.opacity = '1';
+            }, 50);
         }
 
         function goBack() {
@@ -459,9 +853,7 @@
         }
 
 
-        // function updateProgress(percent) {
-
-        // }</script>
+    </script>
 </body>
 
 </html>
