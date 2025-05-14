@@ -130,12 +130,14 @@ def build_recommendation_prompt(user_data):
     
     # Create detailed context for each gem WITH indexing
     context = "\n".join([
-        f"{i}. {g['name']} | {g['description']} | {g['category_1']} |{g['category_2']} | {g.get('rarity', 'unknown')}" 
+        f"{i}. {g['name']} | {g['coordinates']} | {g['description']} | {g['category_1']} |{g['category_2']} | {g.get('rarity', 'unknown')}" 
         for i, g in enumerate(gem_sample)
     ])
     
     return f"""
 You are a trip planning expert. Select 5 unique hidden gems from the list below that best match the user's travel preferences.
+The gems should be evenly distributed coordinates. 
+
 User preferences:
 - From: {user_data.get('origin')}
 - To: {user_data.get('destination')}

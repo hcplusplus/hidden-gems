@@ -4,7 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
-     // Load cached reviews at startup
+    // Load cached reviews at startup
     loadCachedReviews().then(() => {
         console.log('Reviews cache initialized');
     });
@@ -14,9 +14,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Create sanitized filename based on origin and destination
-            const sanitizeForFilename = (name) => {
-                return name.replace(/[^\w\s]/g, '').trim().replace(/\s+/g, '_').toLowerCase();
-            };
+    const sanitizeForFilename = (name) => {
+        return name.replace(/[^\w\s]/g, '').trim().replace(/\s+/g, '_').toLowerCase();
+    };
 
     // Get coordinates from sessionStorage
     var originCoords = JSON.parse(window.HiddenGems.data.storage.get("originCoords"));
@@ -48,69 +48,69 @@ document.addEventListener('DOMContentLoaded', function () {
     async function prepareGemsForPlotting() {
 
         try {
-        // First check if we have recommendations in sessionStorage from the API
-        const storedRecommendations = sessionStorage.getItem("recommendedGems");
-        const storedSampledGems = sessionStorage.getItem("sampledGems");
-        if (storedRecommendations) {
-            console.log("Using recommendations from sessionStorage");
-            const recommendedGems = JSON.parse(storedRecommendations);
-            
-            // Find matches with all gems
-            const plotGems = [];
-            recommendedGems.forEach(recommendedGem => {
-                const matchingGem = JSON.parse(storedSampledGems).find(sampledGem =>
-                    sampledGem.id === recommendedGem.id
-                );
+            // First check if we have recommendations in sessionStorage from the API
+            const storedRecommendations = sessionStorage.getItem("recommendedGems");
+            const storedSampledGems = sessionStorage.getItem("sampledGems");
+            if (storedRecommendations) {
+                console.log("Using recommendations from sessionStorage");
+                const recommendedGems = JSON.parse(storedRecommendations);
 
-                if (matchingGem) {
-                    plotGems.push(matchingGem);
-                }
-            });
+                // Find matches with all gems
+                const plotGems = [];
+                recommendedGems.forEach(recommendedGem => {
+                    const matchingGem = JSON.parse(storedSampledGems).find(sampledGem =>
+                        sampledGem.id === recommendedGem.id
+                    );
 
-            console.log(`Found ${plotGems.length} matching gems for plotting from sessionStorage`);
-            if (plotGems.length > 0) {
-                return plotGems;
-            }
-        } else {
-            const origin = sanitizeForFilename(originCity);
-            const destination = sanitizeForFilename(destinationCity);
-            const recommendationsFilename = `recommendations_${origin}_to_${destination}.json`;
-            
-            console.log(`Looking for recommendations file: ${recommendationsFilename}`);
+                    if (matchingGem) {
+                        plotGems.push(matchingGem);
+                    }
+                });
 
-            // First try to fetch specific recommendation file for this trip
-            try {
-                const response = await fetch(`/static/assets/data/recommendations/${recommendationsFilename}`);
-                
-                if (response.ok) {
-                    const recommendedGems = await response.json();
-                    console.log(`Successfully loaded trip-specific recommendations for ${originCity} to ${destinationCity}`);
-                    
-                    // Find matches with all gems
-                    const plotGems = [];
-                    recommendedGems.forEach(recommendedGem => {
-                        const matchingGem = window.HiddenGems.data.allGems.find(sampledGem =>
-                            sampledGem.id === recommendedGem.id
-                        );
-
-                        if (matchingGem) {
-                            plotGems.push(matchingGem);
-                        }
-                    });
-
-                    console.log(`Found ${plotGems.length} matching gems for plotting`);
+                console.log(`Found ${plotGems.length} matching gems for plotting from sessionStorage`);
+                if (plotGems.length > 0) {
                     return plotGems;
-                } else {
-                    console.log(`Trip-specific recommendations not found, falling back to default recommendations`);
-                    throw new Error('Trip-specific recommendations not found');
                 }
-            } catch (error) {
-                // If specific recommendations don't exist, fall back to general recommendations
-                console.log(`File of specific trip not found. `);
-                return [];
+            } else {
+                const origin = sanitizeForFilename(originCity);
+                const destination = sanitizeForFilename(destinationCity);
+                const recommendationsFilename = `recommendations_${origin}_to_${destination}.json`;
+
+                console.log(`Looking for recommendations file: ${recommendationsFilename}`);
+
+                // First try to fetch specific recommendation file for this trip
+                try {
+                    const response = await fetch(`/static/assets/data/recommendations/${recommendationsFilename}`);
+
+                    if (response.ok) {
+                        const recommendedGems = await response.json();
+                        console.log(`Successfully loaded trip-specific recommendations for ${originCity} to ${destinationCity}`);
+
+                        // Find matches with all gems
+                        const plotGems = [];
+                        recommendedGems.forEach(recommendedGem => {
+                            const matchingGem = window.HiddenGems.data.allGems.find(sampledGem =>
+                                sampledGem.id === recommendedGem.id
+                            );
+
+                            if (matchingGem) {
+                                plotGems.push(matchingGem);
+                            }
+                        });
+
+                        console.log(`Found ${plotGems.length} matching gems for plotting`);
+                        return plotGems;
+                    } else {
+                        console.log(`Trip-specific recommendations not found, falling back to default recommendations`);
+                        throw new Error('Trip-specific recommendations not found');
+                    }
+                } catch (error) {
+                    // If specific recommendations don't exist, fall back to general recommendations
+                    console.log(`File of specific trip not found. `);
+                    return [];
+                }
             }
-        }
-     } catch (error) {
+        } catch (error) {
             console.error("Error preparing gems for plotting:", error);
             return []; // Return empty array on error
         }
@@ -169,6 +169,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Your code to plot the gems goes here
                 console.log("Ready to plot these gems:", plotGems);
 
+                // Sort the plotGems by their position along the route from origin to destination
+                plotGems.sort((a, b) => {
+                    // Calculate progress along the route for gem A
+                    const progressA = a.routeProgress;
+
+                    // Calculate progress along the route for gem B
+                    const progressB = b.routeProgress;
+
+                    // Sort by progress (0 = at origin, 1 = at destination)
+                    return progressA - progressB;
+                });
+
 
                 renderGems(plotGems);
                 //initializeDetailCards(plotGems)
@@ -194,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 //}
             });
 
-   
+
 
         });
 
@@ -362,7 +374,7 @@ function initializeDetailCards(gems) {
         }
     }
 
-// Show the first gem
+    // Show the first gem
     if (typeof detailCards.showCard === 'function') {
         detailCards.showCard(0);
     } else if (detailCards.gemCards && typeof detailCards.gemCards.showCard === 'function') {
@@ -371,7 +383,7 @@ function initializeDetailCards(gems) {
 
     // Remove any existing card-change listeners to prevent duplicates
     detailCards.removeEventListener('card-change', handleCardChange);
-    
+
     // Add event listener for card changes
     detailCards.addEventListener('card-change', handleCardChange);
 
@@ -386,10 +398,10 @@ function initializeDetailCards(gems) {
             console.log("active gem:", activeGem)
             console.log("active index:", activeIndex);
             if (coords) {
- 
+
                 window.map.flyTo({
-                  center: coords,
-                  zoom: window.map.getZoom()
+                    center: coords,
+                    zoom: window.map.getZoom()
                 });
 
                 // Update the route for the active gem
@@ -401,7 +413,7 @@ function initializeDetailCards(gems) {
     });
 }
 
- async function loadCachedReviews() {
+async function loadCachedReviews() {
     if (!window.HiddenGems.reviewCache) {
         try {
             const response = await fetch('static/assets/data/reviews.json');
