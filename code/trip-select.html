@@ -1,859 +1,826 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Explore a Gem - Hidden Gems</title>
-    <link rel="stylesheet" href="static/styles/main.css">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
-        rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="static/js/data-controller.js"></script>
-    <script src="static/js/trip-distance-calculator.js"></script>
-
-
-    <style>
-        *,
-        *::before,
-        *::after {
-            font-family: inherit;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Nunito', sans-serif;
-        }
-
-        .fade {
-            opacity: 1;
-            transition: opacity 1s ease;
-        }
-
-        .progress-bar {
-            height: 23px;
-            border-radius: 10px;
-            margin: 0px 40px 10px 40px;
-            background-color: rgb(226, 226, 226);
-            display: flex;
-        }
-
-        .rarity-tag {
-            display: inline-flex;
-            align-items: center;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 700;
-            margin-right: 10px;
-            margin-bottom: 10px;
-            color: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        #trip_mode {
-            width: 100%;
-            height: 250px;
-            margin-top: 0;
-        }
-
-
-        .time-indicator {
-            position: absolute;
-            top: 150px;
-            left: 240px;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 20px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-            z-index: 10;
-        }
-
-        /* Progress bar styling */
-        .progress-container {
-            padding: 16px 16px 8px 16px;
-        }
-
-
-
-        .moving-progress {
-            height: 100%;
-            width: 0%;
-            border-radius: 6px;
-            background-color: #8cd98c;
-            transition: width 0.5s ease-in-out;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .progress-marker {
-            position: absolute;
-            right: 5px;
-            top: -3px;
-            font-size: 16px;
-        }
-
-        .place-container {
-            padding: 8px 16px 16px 16px;
-        }
-
-        .place-title {
-            font-size: 26px;
-            font-weight: 800;
-            margin-bottom: 12px;
-            color: #333;
-            line-height: 1.3;
-        }
-
-        .place-info {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .rarity-tag {
-            display: inline-flex;
-            align-items: center;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 700;
-            margin-right: 10px;
-            margin-bottom: 10px;
-            color: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .place-detail {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            margin-bottom: 8px;
-            color: #555;
-        }
-
-        .place-detail i {
-            margin-right: 6px;
-            width: 16px;
-            text-align: center;
-        }
-
-        .categories {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 12px 0;
-        }
-
-        .category-tag {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 16px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .category-tag.primary {
-            background-color: rgba(52, 152, 219, 0.1);
-            color: #2980b9;
-        }
-
-        .category-tag.secondary {
-            background-color: rgba(46, 204, 113, 0.1);
-            color: #27ae60;
-        }
-
-        .place-description {
-            font-size: 15px;
-            line-height: 1.6;
-            color: #555;
-            margin: 16px 0;
-            padding: 0 4px;
-        }
-
-        /* Review section styling */
-        .review-container {
-            background-color: #fff;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            padding: 16px;
-            margin: 8px 16px 16px 16px;
-            position: relative;
-        }
-
-        .review-primary {
-            font-size: 16px;
-            font-weight: 600;
-            line-height: 1.5;
-            margin-bottom: 16px;
-            color: #404040;
-        }
-
-        .review-secondary {
-            font-size: 14px;
-            font-weight: 500;
-            color: #666;
-            margin-top: 12px;
-            display: block;
-        }
-
-        .avatar-container {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            margin-right: 12px;
-            object-fit: cover;
-            border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .dog-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            position: absolute;
-            right: 16px;
-            bottom: 16px;
-            border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Button styling */
-        .map-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #8cd98c;
-            color: white;
-            font-weight: 600;
-            font-size: 16px;
-            padding: 12px 24px;
-            border-radius: 30px;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(140, 217, 140, 0.3);
-            transition: all 0.2s ease;
-            text-decoration: none;
-            margin: 8px 16px 16px 16px;
-            width: calc(100% - 32px);
-        }
-
-        .map-button:hover {
-            background-color: #7ac97a;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(140, 217, 140, 0.4);
-        }
-
-        .map-button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(140, 217, 140, 0.2);
-        }
-
-        .map-button i {
-            margin-right: 8px;
-            font-size: 18px;
-        }
-
-        .category-tag.primary {
-            background-color: rgba(52, 152, 219, 0.1);
-            color: #2980b9;
-        }
-
-        .category-tag.secondary {
-            background-color: rgba(46, 204, 113, 0.1);
-            color: #27ae60;
-        }
-
-        .category-tag.default {
-            background-color: rgba(149, 165, 166, 0.1);
-            color: #7f8c8d;
-        }
-
-                /* Navigation buttons */
-        .nav-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin: 0 16px 24px 16px;
-            gap: 12px;
-        }
-
-        .nav-button {
-            flex: 1;
-            height: 44px;
-            border-radius: 22px;
-            background-color: #f0f0f0;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            font-size: 14px;
-            font-weight: 600;
-            color: #555;
-            position: relative;
-        }
-
-        .nav-button:hover {
-            background-color: #e0e0e0;
-            transform: translateY(-2px);
-        }
-
-        .nav-button.active {
-            background-color: #8cd98c;
-            color: white;
-        }
-
-        .nav-button i {
-            font-size: 14px;
-            margin-left: 8px;
-            color: #666;
-        }
-
-        .nav-button.active i {
-            color: white;
-        }
-        
-        .nav-button .tooltip {
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 400;
-            white-space: nowrap;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.2s;
-            z-index: 10;
-        }
-        
-        .nav-button .tooltip::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 6px solid rgba(0, 0, 0, 0.8);
-        }
-        
-        .nav-button:hover .tooltip {
-            opacity: 1;
-        }
-        /* Arrived screen styling */
-        .arrived-screen {
-            position: relative;
-            opacity: 0;
-            transition: opacity 0.8s ease;
-        }
-
-        .arrived-banner {
-            position: absolute;
-            top: 200px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 16px 24px;
-            background-color: #8cd98c;
-            border-radius: 16px;
-            color: white;
-            font-family: 'Cherry Bomb One', system-ui;
-            font-size: 28px;
-            font-weight: 600;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: translateX(-50%) scale(1);
-            }
-
-            50% {
-                transform: translateX(-50%) scale(1.05);
-            }
-
-            100% {
-                transform: translateX(-50%) scale(1);
-            }
-        }
-
-        .feedback-button {
-            display: block;
-            width: calc(100% - 32px);
-            margin: 16px auto;
-            padding: 14px 0;
-            border-radius: 30px;
-            background-color: #8cd98c;
-            color: white;
-            font-weight: 600;
-            font-size: 16px;
-            text-align: center;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(140, 217, 140, 0.3);
-            transition: all 0.2s ease;
-        }
-
-        .feedback-button:hover {
-            background-color: #7ac97a;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(140, 217, 140, 0.4);
-        }
-
-        .feedback-note {
-            font-size: 13px;
-            text-align: center;
-            color: #666;
-            margin: 0 24px 24px;
-            line-height: 1.5;
-        }
-
-        /* Responsive adjustments */
-        @media (min-width: 600px) {
-            .page-container {
-                max-width: 600px;
-                margin: 0 auto;
-                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-                min-height: 100vh;
-            }
-        }
-    </style>
-
-</head>
-
-<body>
-    <div class="page-container">
-        <button onclick="goBack()" style="
-                z-index: 1000; font-size: 20px;
-                background: none; border: none; cursor: pointer;
-                color: black; font-weight: 600;">
-            ← Back
-        </button>
-
-        <div class="flex flex-column" id="progressContainer">
-            <div>
-                <img src="static/assets/red_trip_mode.jpg" style="width:100%;height:250px;margin-top:0px" id="trip_mode"
-                    alt="cover" />
-                <div style="position: absolute; top: 150px; left: 240px; color: white; font-size: 20px; font-weight: 600;"
-                    id="time-left">
-                    1 hr 30 left
-                </div>
-            </div>
-            <div>
-                <div class="progress-bar">
-                    <div class="moving-progress" id="moving-progress">
-                        <!-- progress div -->
-                    </div>
-                    <span style="margin-left: 280px; position: absolute; right: 45;">🏁</span>
-
-                </div>
-            </div>
-
-
-            <!-- Place details -->
-<div class="place-container">
-                <div>
-                    <div class="title" id="title" style="font-weight: 800; font-size: xx-large;"></div>
-                </div>
-
-                <div style="margin-right: 40px">
-                    <div id="rarity" class="rarity-tag">
-                        
-                        Super Rare Gem</div>
-             
-                    <div class="detail" id="clock-detail">
-                        <i class="fas fa-clock" style="color:#f6d375"></i>
-                        <span id="open">6:00 AM - 10:00 PM |
-                        </span>
-                        <span id="cost">
-                            $
-                        </span>
-
-                    </div>
-                    <div style="display: flex; gap: 8px; margin-top: 3px; margin-left:5px">
-                        <div class="category-tag primary" id="category-1">
-                            Outdoor</div>
-                        <div class="category-tag secondary" id="category-2">
-                            Nature</div>
-                    </div>
-                    <hr>
-                    <span
-                        style="font-size: 13px; font-weight:500; display:block; margin-top:0px; margin-right: 40px; margin-left: 10px"
-                        id="description">This is a small pond with a small trail and a lot of good views and good photos
-                    </span>
-                </div>
-
-
-                <div class="review-box">
-                    <image src="static/assets/avataaars.jpg" style="width:60px; height:60px;"></image>
-                    <span style="font-size: 16px; font-weight: 700;" id="review">"This trail has amazing views
-                        especially for sunset."</span>
-                    <span
-                        style="font-size: 14px; font-weight: 500; text-align: center; display: block; margin-top: 10px;">"Dog
-                        friendly!"</span>
-
-                    <image src="static/assets/dog.jpg"
-                        style="width:60px; height:60px; margin-left:190px; margin-top:5px"></image>
-                </div>
-
-            </div>
-
-            <!-- Google Maps button -->
-            <button class="map-button" onclick="goToSpecificLocation()">
-                <i class="fas fa-map-marker-alt"></i> Open in Google Maps
-            </button>
-
-            <div style="margin: 8px 16px 8px 16px; text-align: center;">
-                <p style="font-size: 14px; color: #666; margin-bottom: 8px;">
-                    Need to adjust your trip time?
-                </p>
-            </div>
-
-            <!-- Navigation buttons -->
-            <div class="nav-buttons">
-                <button class="nav-button" id="state-1">
-                    Speed Up
-                    <i class="fas fa-fast-forward"></i>
-                    <span class="tooltip">Skip ahead or accelerate your journey</span>
-                </button>
-                <button class="nav-button" id="state-2">
-                    Arrive Now
-                    <i class="fas fa-flag-checkered"></i>
-                    <span class="tooltip">Jump to your destination immediately</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Arrived screen -->
-        <div id="nextScreen" style="display: none;" class="fade">
-            <image src="static/assets/arrived.jpg" style="width:100%;height:auto;" />
-            <div style="position: absolute; top: 200px; left: 60px; padding: 10px; background-color:rgb(138, 207, 138); border-radius: 16px; border-color: rgb(40, 40, 40); color: white; font-family: 'Cherry Bomb One', system-ui; font-size: 34px; font-weight: 600;"
-                id="arrived">
-                You've Arrived!!
-            </div>
-            <div class="flex flex-column" style="margin-left: 40px; margin-right: 40px;">
-                <button onclick="feedbackForm()" style="margin-top: 10px; margin-bottom: 10px;">Tell us about this
-                    gem!</button>
-                <span style="font-size: 12px; text-align:center; margin-bottom: 10px">We're so proud that you've
-                    uncovered this gem! Remember to come back after you've visited. If it was truly a gem, tell us about
-                    it!</span>
-            </div>
-
-        </div>
-    </div>
-
-
-    <script>
-        function title(str) {
-            return str.replace(/(^|\s)\S/g, function (t) { return t.toUpperCase() });
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-
-            const selectedCard = JSON.parse(window.HiddenGems.data.storage.get('selectedCard'));
-
-            if (selectedCard) {
-
-
-                // If we have data in session storage, use that instead of fetching
-                console.log('Using data from session storage:', selectedCard);
-
-                // Populate page with card data
-                document.getElementById('title').innerText = selectedCard.name || 'Hidden Gem';
-                document.getElementById('cost').innerText = selectedCard.price || '$';
-
-                // Format opening hours with a pipe separator for the UI
-                const openingHoursText = selectedCard.openingHours ? selectedCard.openingHours + ' | ' : 'Hours not specified | ';
-                document.getElementById('open').innerText = openingHoursText;
-
-                document.getElementById('description').innerText = selectedCard.description || 'A hidden gem waiting to be explored.';
-
-                // Set categories if available
-                if (selectedCard.categories && selectedCard.categories.length > 0) {
-                    document.getElementById('category-1').innerText = selectedCard.categories[0] || 'Category';
-                    if (selectedCard.categories.length > 1) {
-                        document.getElementById('category-2').innerText = selectedCard.categories[1] || 'Category';
-                    } else {
-                        document.getElementById('category-2').style.display = 'none';
-                    }
-                }
-
-                // Set review if available
-                if (selectedCard.review) {
-                    document.getElementById('review').innerText = `"${selectedCard.review}"`;
-                }
-
-                // Set colors
-
-                const rarityElement = document.getElementById('rarity');
-                rarityElement.style.backgroundColor = selectedCard.gemColor;
-                const clockElement = document.getElementById('clock-detail');
-                clockElement.style.color = selectedCard.gemColor;
-
-                if (rarityElement && selectedCard.rarity) {
-                    rarityElement.innerText = title(selectedCard.rarity);
-                }
-
-                // Set time left if available
-                if (selectedCard.timeDisplay) {
-                    document.getElementById('time-left').innerText = selectedCard.timeDisplay;
-                }
-
-                // Set gem color for the trip image
-                const gemColor = selectedCard.gemColor || 'red';
-                document.getElementById('trip_mode').src = `static/assets/${gemColor}_trip_mode.jpg`;
-
-                // Add trip distance info styles to document head
-                const style = document.createElement('style');
-                style.textContent = tripInfoStyles;
-                document.head.appendChild(style);
-
-                // Add trip distance info section after description
-                const descriptionElement = document.querySelector('#description');
-                if (descriptionElement && descriptionElement.parentNode) {
-                    const tripInfoHTML = createTripDistanceInfo(selectedCard);
-                    const tripInfoContainer = document.createElement('div');
-                    tripInfoContainer.innerHTML = tripInfoHTML;
-
-                    // Insert after the description's parent div
-                    descriptionElement.parentNode.parentNode.insertBefore(
-                        tripInfoContainer,
-                        descriptionElement.parentNode.nextSibling
-                    );
-                }
-
-                // Save coordinates for Google Maps
-                if (selectedCard.coordinates) {
-                    window.HiddenGems.data.storage.set('coordinates', selectedCard.coordinates);
-                }
-            }
-
-
-            // Get required DOM elements
-            const progressBar = document.getElementById('moving-progress');
-            const timeLeftDisplay = document.getElementById('time-left');
-            const state1Button = document.getElementById('state-1');
-            const state2Button = document.getElementById('state-2');
-
-            // Trip simulation variables
-            let totalTripDuration = 90; // Trip duration in minutes (1 hr 30 min)
-            let elapsedTime = 0; // Elapsed time in minutes
-            let progress = 0; // Progress percentage (0-100)
-            let isTripActive = false;
-            let tripInterval;
-            let animationSpeed = 1; // Speed multiplier
-
-
-
-            // Random fluctuations to simulate real driving
-            function getRandomFluctuation() {
-                return Math.random() * 0.4 - 0.2; // Random value between -0.2 and 0.2
-            }
-
-            // Format time display function
-            function formatTimeLeft(minutes) {
-                if (minutes <= 0) return "Arrived!";
-
-                if (minutes >= 60) {
-                    const hours = Math.floor(minutes / 60);
-                    const mins = Math.floor(minutes % 60);
-                    return `${hours} hr ${mins} min left`;
-                } else {
-                    return `${Math.floor(minutes)} min left`;
-                }
-            }
-
-            // Function to update progress bar with smoothing
-            function updateProgress() {
-                // Add a small random fluctuation to simulate real driving conditions
-                const fluctuation = getRandomFluctuation();
-                elapsedTime += (1 * animationSpeed) + fluctuation;
-
-                // Ensure progress doesn't exceed 100%
-                progress = Math.min((elapsedTime / totalTripDuration) * 100, 100);
-
-                // Apply smooth transition effect
-                progressBar.style.width = progress + '%';
-
-                // Update time left display
-                const minutesLeft = Math.max(totalTripDuration - elapsedTime, 0);
-                timeLeftDisplay.innerText = formatTimeLeft(minutesLeft);
-
-                // When arrived
-                if (progress >= 100) {
-                    // Center the "Arrived!" text
-                    timeLeftDisplay.style.left = "50%";
-                    timeLeftDisplay.style.transform = "translateX(-50%)";
-
-                    // Trigger confetti
-                    confetti({
-                        particleCount: 250,
-                        spread: 70,
-                        origin: { y: 0.6 }
-                    });
-
-                    // Stop the interval
-                    clearInterval(tripInterval);
-
-                    // Show next screen after a short delay
-                    setTimeout(() => {
-                        showNextScreen();
-                    }, 1200);
-                }
-            }
-
-            // Function to start the trip simulation
-            function startTrip() {
-                if (!isTripActive) {
-                    isTripActive = true;
-
-                    // Initial progress update
-                    updateProgress();
-
-                    // Update progress every 300ms
-                    tripInterval = setInterval(updateProgress, 300);
-                }
-            }
-
-            // Speed up button - first stage
-            state1Button.onclick = function () {
-                // Visual feedback for button click
-                state1Button.classList.add('active');
-                setTimeout(() => state1Button.classList.remove('active'), 300);
-
-                // Accelerate to 40% if below that, otherwise increase speed
-                if (progress < 40) {
-                    elapsedTime = totalTripDuration * 0.4;
-                    updateProgress();
-                } else {
-                    // Increase animation speed
-                    animationSpeed = 2;
-
-                    // Update button to show it's active
-                    state1Button.classList.add('active');
-
-                    // Reset after 5 seconds
-                    setTimeout(() => {
-                        animationSpeed = 1;
-                        state1Button.classList.remove('active');
-                    }, 5000);
-                }
-            };
-
-            // Almost there button - major acceleration
-            state2Button.onclick = function () {
-                // Visual feedback for button click
-                state2Button.classList.add('active');
-
-                // If below 80%, jump to 80%
-                if (progress < 80) {
-                    elapsedTime = totalTripDuration * 0.8;
-                    updateProgress();
-
-                    // Reset visual feedback after a short delay
-                    setTimeout(() => {
-                        state2Button.classList.remove('active');
-                    }, 500);
-                } else {
-                    // Set to completed
-                    elapsedTime = totalTripDuration;
-                    updateProgress();
-                }
-            };
-
-            // Start the trip after a short delay
-            setTimeout(startTrip, 1500);
-
-
-
-
-
-
-        });
-
-        function goBack() {
-            if (document.getElementById('progressContainer').style.display == 'none') {
-                document.getElementById('nextScreen').style.display = 'none';
-                document.getElementById('progressContainer').style.display = 'block';
-            } else {
-                window.location.href = "map-recs.html?skipWelcome=1";
-            }
-        }
-
-        function feedbackForm() {
-            window.location.href = "end-survey.html";
-        }
-
-
-
-        // Function to open location in Google Maps
-        function goToSpecificLocation() {
-            const coordinates = window.HiddenGems && window.HiddenGems.data &&
-                window.HiddenGems.data.storage ?
-                window.HiddenGems.data.storage.get('coordinates') : null;
-            // swap to lat long
-            if (coordinates) {
-                long = coordinates[0];
-                lat = coordinates[1];
-                const latLong = `${lat},${long}`;
-                const url = `https://www.google.com/maps?q=${latLong}`;
-                window.open(url, "_blank");
-            } else {
-                // Fallback if coordinates not available
-                window.open("https://www.google.com/maps", "_blank");
-            }
-        }
-
-        // Function to show arrived screen
-        function showNextScreen() {
-            document.getElementById('progressContainer').style.display = 'none';
-
-            // Fade in animation
-            const nextScreen = document.getElementById('nextScreen');
-            nextScreen.style.opacity = '0';
-            nextScreen.style.display = 'block';
-
-            setTimeout(() => {
-                nextScreen.style.opacity = '1';
-            }, 50);
-        }
-
-        function goBack() {
-            window.location.href = "map-recs.html?skipWelcome=1";
-        }
-
-        function feedbackForm() {
-            window.location.href = "end-survey.html";
-        }
-
-
-    </script>
-</body>
-
-</html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+		<title>Explore a Gem - Hidden Gems</title>
+		<link rel="stylesheet" href="static/styles/main.css">
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&display=swap" rel="stylesheet">
+		<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+		<script src="static/js/data-controller.js"></script>
+		<script src="static/js/trip-distance-calculator.js"></script>
+
+
+		<style>
+			*,
+			*::before,
+			*::after {
+				font-family: inherit;
+				box-sizing: border-box;
+			}
+
+			body {
+				font-family: 'Nunito', sans-serif;
+			}
+
+			.fade {
+				opacity: 1;
+				transition: opacity 1s ease;
+			}
+
+			.progress-bar {
+				height: 23px;
+				border-radius: 10px;
+				margin: 0 40px 10px;
+				background-color: rgb(226, 226, 226);
+				display: flex;
+			}
+
+			.rarity-tag {
+				display: inline-flex;
+				align-items: center;
+				padding: 6px 14px;
+				border-radius: 20px;
+				font-size: 14px;
+				font-weight: 700;
+				margin-right: 10px;
+				margin-bottom: 10px;
+				color: white;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			}
+
+			#trip_mode {
+				width: 100%;
+				height: 250px;
+				margin-top: 0;
+			}
+
+
+			.time-indicator {
+				position: absolute;
+				top: 150px;
+				left: 240px;
+				transform: translateX(-50%);
+				background-color: rgba(0, 0, 0, 0.7);
+				color: white;
+				padding: 8px 16px;
+				border-radius: 20px;
+				font-weight: 600;
+				font-size: 20px;
+				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+				z-index: 10;
+			}
+
+			/* Progress bar styling */
+			.progress-container {
+				padding: 16px 16px 8px;
+			}
+
+
+			.moving-progress {
+				height: 100%;
+				width: 0;
+				border-radius: 6px;
+				background-color: #8cd98c;
+				transition: width 0.5s ease-in-out;
+				box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+			}
+
+			.progress-marker {
+				position: absolute;
+				right: 5px;
+				top: -3px;
+				font-size: 16px;
+			}
+
+			.place-container {
+				padding: 8px 16px 16px;
+			}
+
+			.place-title {
+				font-size: 26px;
+				font-weight: 800;
+				margin-bottom: 12px;
+				color: #333;
+				line-height: 1.3;
+			}
+
+			.place-info {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				margin-bottom: 16px;
+			}
+
+			.rarity-tag {
+				display: inline-flex;
+				align-items: center;
+				padding: 6px 14px;
+				border-radius: 20px;
+				font-size: 14px;
+				font-weight: 700;
+				margin-right: 10px;
+				margin-bottom: 10px;
+				color: white;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			}
+
+			.place-detail {
+				display: flex;
+				align-items: center;
+				font-size: 14px;
+				margin-bottom: 8px;
+				color: #555;
+			}
+
+			.place-detail i {
+				margin-right: 6px;
+				width: 16px;
+				text-align: center;
+			}
+
+			.categories {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+				margin: 12px 0;
+			}
+
+			.category-tag {
+				display: inline-block;
+				padding: 6px 12px;
+				border-radius: 16px;
+				font-size: 13px;
+				font-weight: 600;
+			}
+
+			.category-tag.primary {
+				background-color: rgba(52, 152, 219, 0.1);
+				color: #2980b9;
+			}
+
+			.category-tag.secondary {
+				background-color: rgba(46, 204, 113, 0.1);
+				color: #27ae60;
+			}
+
+			.place-description {
+				font-size: 15px;
+				line-height: 1.6;
+				color: #555;
+				margin: 16px 0;
+				padding: 0 4px;
+			}
+
+			/* Review section styling */
+			.review-container {
+				background-color: #fff;
+				border-radius: 16px;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+				padding: 16px;
+				margin: 8px 16px 16px;
+				position: relative;
+			}
+
+			.review-primary {
+				font-size: 16px;
+				font-weight: 600;
+				line-height: 1.5;
+				margin-bottom: 16px;
+				color: #404040;
+			}
+
+			.review-secondary {
+				font-size: 14px;
+				font-weight: 500;
+				color: #666;
+				margin-top: 12px;
+				display: block;
+			}
+
+			.avatar-container {
+				display: flex;
+				align-items: center;
+				margin-bottom: 12px;
+			}
+
+			.avatar {
+				width: 48px;
+				height: 48px;
+				border-radius: 50%;
+				margin-right: 12px;
+				object-fit: cover;
+				border: 2px solid white;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			}
+
+			.dog-avatar {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				position: absolute;
+				right: 16px;
+				bottom: 16px;
+				border: 2px solid white;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			}
+
+			/* Button styling */
+			.map-button {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background-color: #8cd98c;
+				color: white;
+				font-weight: 600;
+				font-size: 16px;
+				padding: 12px 24px;
+				border-radius: 30px;
+				border: none;
+				cursor: pointer;
+				box-shadow: 0 4px 8px rgba(140, 217, 140, 0.3);
+				transition: all 0.2s ease;
+				text-decoration: none;
+				margin: 8px 16px 16px;
+				width: calc(100% - 32px);
+			}
+
+			.map-button:hover {
+				background-color: #7ac97a;
+				transform: translateY(-2px);
+				box-shadow: 0 6px 12px rgba(140, 217, 140, 0.4);
+			}
+
+			.map-button:active {
+				transform: translateY(0);
+				box-shadow: 0 2px 4px rgba(140, 217, 140, 0.2);
+			}
+
+			.map-button i {
+				margin-right: 8px;
+				font-size: 18px;
+			}
+
+			.category-tag.primary {
+				background-color: rgba(52, 152, 219, 0.1);
+				color: #2980b9;
+			}
+
+			.category-tag.secondary {
+				background-color: rgba(46, 204, 113, 0.1);
+				color: #27ae60;
+			}
+
+			.category-tag.default {
+				background-color: rgba(149, 165, 166, 0.1);
+				color: #7f8c8d;
+			}
+
+			/* Navigation buttons */
+			.nav-buttons {
+				display: flex;
+				justify-content: space-between;
+				margin: 0 16px 24px;
+				gap: 12px;
+			}
+
+			.nav-button {
+				flex: 1;
+				height: 44px;
+				border-radius: 22px;
+				background-color: #f0f0f0;
+				border: none;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				transition: all 0.2s;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+				font-size: 14px;
+				font-weight: 600;
+				color: #555;
+				position: relative;
+			}
+
+			.nav-button:hover {
+				background-color: #e0e0e0;
+				transform: translateY(-2px);
+			}
+
+			.nav-button.active {
+				background-color: #8cd98c;
+				color: white;
+			}
+
+			.nav-button i {
+				font-size: 14px;
+				margin-left: 8px;
+				color: #666;
+			}
+
+			.nav-button.active i {
+				color: white;
+			}
+
+			.nav-button .tooltip {
+				position: absolute;
+				top: -40px;
+				left: 50%;
+				transform: translateX(-50%);
+				background-color: rgba(0, 0, 0, 0.8);
+				color: white;
+				padding: 6px 10px;
+				border-radius: 6px;
+				font-size: 12px;
+				font-weight: 400;
+				white-space: nowrap;
+				pointer-events: none;
+				opacity: 0;
+				transition: opacity 0.2s;
+				z-index: 10;
+			}
+
+			.nav-button .tooltip::after {
+				content: '';
+				position: absolute;
+				bottom: -5px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 0;
+				height: 0;
+				border-left: 6px solid transparent;
+				border-right: 6px solid transparent;
+				border-top: 6px solid rgba(0, 0, 0, 0.8);
+			}
+
+			.nav-button:hover .tooltip {
+				opacity: 1;
+			}
+			/* Arrived screen styling */
+			.arrived-screen {
+				position: relative;
+				opacity: 0;
+				transition: opacity 0.8s ease;
+			}
+
+			.arrived-banner {
+				position: absolute;
+				top: 200px;
+				left: 50%;
+				transform: translateX(-50%);
+				padding: 16px 24px;
+				background-color: #8cd98c;
+				border-radius: 16px;
+				color: white;
+				font-family: 'Cherry Bomb One', system-ui;
+				font-size: 28px;
+				font-weight: 600;
+				text-align: center;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+				animation: pulse 2s infinite;
+			}
+
+			@keyframes pulse {
+				0% {
+					transform: translateX(-50%) scale(1);
+				}
+
+				50% {
+					transform: translateX(-50%) scale(1.05);
+				}
+
+				100% {
+					transform: translateX(-50%) scale(1);
+				}
+			}
+
+			.feedback-button {
+				display: block;
+				width: calc(100% - 32px);
+				margin: 16px auto;
+				padding: 14px 0;
+				border-radius: 30px;
+				background-color: #8cd98c;
+				color: white;
+				font-weight: 600;
+				font-size: 16px;
+				text-align: center;
+				border: none;
+				cursor: pointer;
+				box-shadow: 0 4px 8px rgba(140, 217, 140, 0.3);
+				transition: all 0.2s ease;
+			}
+
+			.feedback-button:hover {
+				background-color: #7ac97a;
+				transform: translateY(-2px);
+				box-shadow: 0 6px 12px rgba(140, 217, 140, 0.4);
+			}
+
+			.feedback-note {
+				font-size: 13px;
+				text-align: center;
+				color: #666;
+				margin: 0 24px 24px;
+				line-height: 1.5;
+			}
+
+			/* Responsive adjustments */
+			@media(min-width: 600px) {
+				.page-container {
+					max-width: 600px;
+					margin: 0 auto;
+					box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+					min-height: 100vh;
+				}
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<div class="page-container">
+			<button onclick="goBack()" style="
+																														                z-index: 1000; font-size: 20px;
+																														                background: none; border: none; cursor: pointer;
+																														                color: black; font-weight: 600;">
+				← Back
+			</button>
+
+			<div class="flex flex-column" id="progressContainer">
+				<div>
+					<img src="static/assets/red_trip_mode.jpg" style="width:100%;height:250px;margin-top:0px" id="trip_mode" alt="cover"/>
+					<div style="position: absolute; top: 155px; left: 240px; color: white; font-size: 15px; font-weight: 600;" id="time-left">
+						1 hr 30 left
+					</div>
+				</div>
+				<div>
+					<div class="progress-bar">
+						<div
+							class="moving-progress" id="moving-progress"><!-- progress div -->
+						</div>
+						<span style="margin-left: 280px; position: absolute; right: 45;">🏁</span>
+
+					</div>
+				</div>
+
+
+				<!-- Place details -->
+				<div class="place-container">
+					<div>
+						<div class="title" id="title" style="font-weight: 800; font-size: xx-large;"></div>
+					</div>
+
+					<div style="margin-right: 40px">
+						<div id="rarity" class="rarity-tag">
+
+							Super Rare Gem</div>
+
+						<div class="detail" id="clock-detail">
+							<i class="fas fa-clock" style="color:#f6d375"></i>
+							<span id="open">6:00 AM - 10:00 PM |
+							</span>
+							<span id="cost">
+								$
+							</span>
+
+						</div>
+						<div style="display: flex; gap: 8px; margin-top: 3px; margin-left:5px">
+							<div class="category-tag primary" id="category-1">
+								Outdoor</div>
+							<div class="category-tag secondary" id="category-2">
+								Nature</div>
+						</div>
+						<hr>
+						<span style="font-size: 13px; font-weight:500; display:block; margin-top:0px; margin-right: 40px; margin-left: 10px" id="description">This is a small pond with a small trail and a lot of good views and good photos
+						</span>
+					</div>
+
+
+					<div class="review-box">
+						<image src="static/assets/avataaars.jpg" style="width:60px; height:60px;"></image>
+					<span style="font-size: 16px; font-weight: 700;" id="review">"This trail has amazing views
+																																				                        especially for sunset."</span>
+					<span style="font-size: 14px; font-weight: 500; text-align: center; display: block; margin-top: 10px;">"Dog
+																																				                        friendly!"</span>
+
+					<image src="static/assets/dog.jpg" style="width:60px; height:60px; margin-left:190px; margin-top:5px"></image>
+			</div>
+
+		</div>
+
+		<!-- Google Maps button -->
+		<button class="map-button" onclick="goToSpecificLocation()">
+			<i class="fas fa-map-marker-alt"></i>
+			Open in Google Maps
+		</button>
+
+		<div style="margin: 8px 16px 8px 16px; text-align: center;">
+			<p style="font-size: 14px; color: #666; margin-bottom: 8px;">
+				Need to adjust your trip time?
+			</p>
+		</div>
+
+		<!-- Navigation buttons -->
+		<div class="nav-buttons">
+			<button class="nav-button" id="state-1">
+				Speed Up
+				<i class="fas fa-fast-forward"></i>
+				<span class="tooltip">Skip ahead or accelerate your journey</span>
+			</button>
+			<button class="nav-button" id="state-2">
+				Arrive Now
+				<i class="fas fa-flag-checkered"></i>
+				<span class="tooltip">Jump to your destination immediately</span>
+			</button>
+		</div>
+	</body>
+</html></div><!-- Arrived screen --><div id="nextScreen" style="display: none;" class="fade">
+<image src="static/assets/arrived.jpg" style="width:100%;height:auto;"/>
+<div style="position: absolute; top: 200px; left: 60px; padding: 10px; background-color:rgb(138, 207, 138); border-radius: 16px; border-color: rgb(40, 40, 40); color: white; font-family: 'Cherry Bomb One', system-ui; font-size: 34px; font-weight: 600;" id="arrived">
+	You've Arrived!!
+</div>
+<div class="flex flex-column" style="margin-left: 40px; margin-right: 40px;">
+	<button onclick="feedbackForm()" style="margin-top: 10px; margin-bottom: 10px;">Tell us about this
+												                    gem!</button>
+	<span style="font-size: 12px; text-align:center; margin-bottom: 10px">We're so proud that you've
+												                    uncovered this gem! Remember to come back after you've visited. If it was truly a gem, tell us about
+												                    it!</span>
+</div></div></div><script>function title(str) {
+	return str.replace(/(^|\s)\S/g, function (t) {
+		return t.toUpperCase()
+	});
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+
+	const selectedCard = JSON.parse(window.HiddenGems.data.storage.get('selectedCard'));
+
+	if (selectedCard) { // If we have data in session storage, use that instead of fetching
+		console.log('Using data from session storage:', selectedCard);
+
+		// Populate page with card data
+		document.getElementById('title').innerText = selectedCard.name || 'Hidden Gem';
+		document.getElementById('cost').innerText = selectedCard.price || '$';
+
+		// Format opening hours with a pipe separator for the UI
+		const openingHoursText = selectedCard.openingHours ? selectedCard.openingHours + ' | ' : 'Hours not specified | ';
+		document.getElementById('open').innerText = openingHoursText;
+
+		document.getElementById('description').innerText = selectedCard.description || 'A hidden gem waiting to be explored.';
+
+		// Set categories if available
+		if (selectedCard.categories && selectedCard.categories.length > 0) {
+			document.getElementById('category-1').innerText = selectedCard.categories[0] || 'Category';
+			if (selectedCard.categories.length > 1) {
+				document.getElementById('category-2').innerText = selectedCard.categories[1] || 'Category';
+			} else {
+				document.getElementById('category-2').style.display = 'none';
+			}
+		}
+
+		// Set review if available
+		if (selectedCard.review) {
+			document.getElementById('review').innerText = `"${
+				selectedCard.review
+			}"`;
+		}
+
+		// Set colors
+
+		const rarityElement = document.getElementById('rarity');
+		rarityElement.style.backgroundColor = selectedCard.gemColor;
+		const clockElement = document.getElementById('clock-detail');
+		clockElement.style.color = selectedCard.gemColor;
+
+		if (rarityElement && selectedCard.rarity) {
+			rarityElement.innerText = title(selectedCard.rarity);
+		}
+
+		// Set time left if available
+		if (selectedCard.timeDisplay) {
+			document.getElementById('time-left').innerText = selectedCard.timeDisplay;
+		}
+
+		// Set gem color for the trip image
+		const gemColor = selectedCard.gemColor || 'red';
+		document.getElementById('trip_mode').src = `static/assets/${gemColor}_trip_mode.jpg`;
+
+		// Add trip distance info styles to document head
+		const style = document.createElement('style');
+		style.textContent = tripInfoStyles;
+		document.head.appendChild(style);
+
+		// Add trip distance info section after description
+		const descriptionElement = document.querySelector('#description');
+		if (descriptionElement && descriptionElement.parentNode) {
+			const tripInfoHTML = createTripDistanceInfo(selectedCard);
+			const tripInfoContainer = document.createElement('div');
+			tripInfoContainer.innerHTML = tripInfoHTML;
+
+			// Insert after the description's parent div
+			descriptionElement.parentNode.parentNode.insertBefore(tripInfoContainer, descriptionElement.parentNode.nextSibling);
+		}
+
+		// Save coordinates for Google Maps
+		if (selectedCard.coordinates) {
+			window.HiddenGems.data.storage.set('coordinates', selectedCard.coordinates);
+		}
+	}
+
+
+	// Get required DOM elements
+	const progressBar = document.getElementById('moving-progress');
+	const timeLeftDisplay = document.getElementById('time-left');
+	const state1Button = document.getElementById('state-1');
+	const state2Button = document.getElementById('state-2');
+
+	// Trip simulation variables
+	let totalTripDuration = 90; // Trip duration in minutes (1 hr 30 min)
+	let elapsedTime = 0; // Elapsed time in minutes
+	let progress = 0; // Progress percentage (0-100)
+	let isTripActive = false;
+	let tripInterval;
+	let animationSpeed = 1;
+	// Speed multiplier
+
+
+	// Random fluctuations to simulate real driving
+	function getRandomFluctuation() {
+		return Math.random() * 0.4 - 0.2; // Random value between -0.2 and 0.2
+	}
+
+	// Format time display function
+	function formatTimeLeft(minutes) {
+		if (minutes <= 0) 
+			return "Arrived!";
+		
+
+
+		if (minutes >= 60) {
+			const hours = Math.floor(minutes / 60);
+			const mins = Math.floor(minutes % 60);
+			return `${hours} hr ${mins} min left`;
+		} else {
+			return `${
+				Math.floor(minutes)
+			} min left`;
+		}
+	}
+
+	// Function to update progress bar with smoothing
+	function updateProgress() { // Add a small random fluctuation to simulate real driving conditions
+		const fluctuation = getRandomFluctuation();
+		elapsedTime += (1 * animationSpeed) + fluctuation;
+
+		// Ensure progress doesn't exceed 100%
+		progress = Math.min((elapsedTime / totalTripDuration) * 100, 100);
+
+		// Apply smooth transition effect
+		progressBar.style.width = progress + '%';
+
+		// Update time left display
+		const minutesLeft = Math.max(totalTripDuration - elapsedTime, 0);
+		timeLeftDisplay.innerText = formatTimeLeft(minutesLeft);
+
+		// When arrived
+		if (progress >= 100) { // Center the "Arrived!" text
+			timeLeftDisplay.style.left = "50%";
+			timeLeftDisplay.style.transform = "translateX(-50%)";
+
+			// Trigger confetti
+			confetti({
+				particleCount: 250,
+				spread: 70,
+				origin: {
+					y: 0.6
+				}
+			});
+
+			// Stop the interval
+			clearInterval(tripInterval);
+
+			// Show next screen after a short delay
+			setTimeout(() => {
+				showNextScreen();
+			}, 1200);
+		}
+	}
+
+	// Function to start the trip simulation
+	function startTrip() {
+		if (! isTripActive) {
+			isTripActive = true;
+
+			// Initial progress update
+			updateProgress();
+
+			// Update progress every 300ms
+			tripInterval = setInterval(updateProgress, 300);
+		}
+	}
+
+	// Speed up button - first stage
+	state1Button.onclick = function () { // Visual feedback for button click
+		state1Button.classList.add('active');
+		setTimeout(() => state1Button.classList.remove('active'), 300);
+
+		// Accelerate to 40% if below that, otherwise increase speed
+		if (progress < 40) {
+			elapsedTime = totalTripDuration * 0.4;
+			updateProgress();
+		} else { // Increase animation speed
+			animationSpeed = 2;
+
+			// Update button to show it's active
+			state1Button.classList.add('active');
+
+			// Reset after 5 seconds
+			setTimeout(() => {
+				animationSpeed = 1;
+				state1Button.classList.remove('active');
+			}, 5000);
+		}
+	};
+
+	// Almost there button - major acceleration
+	state2Button.onclick = function () { // Visual feedback for button click
+		state2Button.classList.add('active');
+
+		// If below 80%, jump to 80%
+		if (progress < 80) {
+			elapsedTime = totalTripDuration * 0.8;
+			updateProgress();
+
+			// Reset visual feedback after a short delay
+			setTimeout(() => {
+				state2Button.classList.remove('active');
+			}, 500);
+		} else { // Set to completed
+			elapsedTime = totalTripDuration;
+			updateProgress();
+		}
+	};
+
+	// Start the trip after a short delay
+	setTimeout(startTrip, 1500);
+
+
+});
+
+function goBack() {
+	if (document.getElementById('progressContainer').style.display == 'none') {
+		document.getElementById('nextScreen').style.display = 'none';
+		document.getElementById('progressContainer').style.display = 'block';
+	} else {
+		window.location.href = "map-recs.html?skipWelcome=1";
+	}
+}
+
+function feedbackForm() {
+	window.location.href = "end-survey.html";
+}
+
+
+// Function to open location in Google Maps
+function goToSpecificLocation() {
+	const coordinates = window.HiddenGems && window.HiddenGems.data && window.HiddenGems.data.storage ? window.HiddenGems.data.storage.get('coordinates') : null;
+	// swap to lat long
+	if (coordinates) {
+		long = coordinates[0];
+		lat = coordinates[1];
+		const latLong = `${lat},${long}`;
+		const url = `https://www.google.com/maps?q=${latLong}`;
+		window.open(url, "_blank");
+	} else { // Fallback if coordinates not available
+		window.open("https://www.google.com/maps", "_blank");
+	}
+}
+
+// Function to show arrived screen
+function showNextScreen() {
+	document.getElementById('progressContainer').style.display = 'none';
+
+	// Fade in animation
+	const nextScreen = document.getElementById('nextScreen');
+	nextScreen.style.opacity = '0';
+	nextScreen.style.display = 'block';
+
+	setTimeout(() => {
+		nextScreen.style.opacity = '1';
+	}, 50);
+}
+
+function goBack() {
+	window.location.href = "map-recs.html?skipWelcome=1";
+}
+
+function feedbackForm() {
+	window.location.href = "end-survey.html";
+}</script></body></html>
