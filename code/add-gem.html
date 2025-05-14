@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Add a Gem - Hidden Gems</title>
+    <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
     <style>
         /* Retain existing styles */
         * {
@@ -206,16 +207,14 @@
         .map-container {
             position: relative;
             width: 100%;
-            height: 200px;
+            height: 250px;
             border-radius: 12px;
             overflow: hidden;
-            background: #f4f4f4;
         }
 
         #location-map {
             width: 100%;
             height: 100%;
-            background: #eee url('https://via.placeholder.com/400x200') center/cover;
         }
 
         .map-pin {
@@ -226,6 +225,9 @@
             font-size: 30px;
             color: #94c9ba;
             text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            pointer-events: none;
+            z-index: 2;
+            cursor: move;
         }
 
         .location-methods {
@@ -543,6 +545,52 @@
             background: #94c9ba;
             color: white;
         }
+
+        /* Location details */
+        .location-details {
+            background: #f8fbf9;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        /* Loading indicator */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(148, 201, 186, 0.3);
+            border-radius: 50%;
+            border-top-color: #94c9ba;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 5px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* MapLibre specific styles */
+        .maplibregl-ctrl-attrib-inner {
+            font-size: 10px; 
+        }
+
+        .maplibregl-marker {
+            cursor: move;
+        }
+
+        .maplibregl-ctrl-bottom-right {
+            display: none; /* Hide attribution for cleaner UI */
+        }
+
+        /* Custom marker style */
+        .custom-marker {
+            background-image: url("data:image/svg+xml,%3Csvg width='36' height='36' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%2394c9ba' d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z'/%3E%3C/svg%3E");
+            background-size: cover;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -636,20 +684,18 @@
                         <label>Choose a location method</label>
                         <div class="location-methods">
                             <div class="location-method active" data-method="map">Pin on Map</div>
-                            <div class="location-method" data-method="address">Enter Address</div>
                             <div class="location-method" data-method="current">Use My Location</div>
                         </div>
                         
-                        <div class="location-section" id="map-method" style="margin-top: 12px;">
+                        <div class="location-section" id="map-section" style="margin-top: 12px;">
                             <p class="form-note">Drag the map or tap to place your pin.</p>
                             <div class="map-container">
                                 <div id="location-map"></div>
-                                <div class="map-pin">📍</div>
+                                <div class="map-pin" id="map-pin">📍</div>
                             </div>
-                        </div>
-
-                        <div class="location-section" id="address-method" style="display: none; margin-top: 12px;">
-                            <input type="text" id="gem-location" name="location" placeholder="Enter address or coordinates">
+                            <div class="location-details" id="location-details" style="margin-top: 10px; font-size: 14px; color: #666;">
+                                <p>Selected coordinates: <span id="coordinates-display">Not selected</span></p>
+                            </div>
                         </div>
 
                         <input type="hidden" id="lat-lng" name="coordinates">
@@ -858,6 +904,7 @@
         </div>
     </div>
 
+    <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Step navigation
@@ -866,6 +913,12 @@
             const progressBar = document.getElementById('progress-bar');
             let currentStep = 1;
             const totalSteps = steps.length;
+            
+            // Map and location variables
+            let map;
+            let marker;
+            let currentLat = 37.7749; // Default to San Francisco
+            let currentLng = -122.4194;
 
             // Update progress bar
             function updateProgress() {
@@ -891,6 +944,143 @@
                 
                 currentStep = stepNumber;
                 updateProgress();
+                
+                // Initialize map when step 2 is shown
+                if (stepNumber === 2 && !map) {
+                    initMap();
+                }
+            }
+            
+            // Initialize MapLibre GL
+            function initMap() {
+                // Define a free tile source - OpenStreetMap
+                const osmTiles = {
+                    'type': 'raster',
+                    'tiles': [
+                        'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                    ],
+                    'tileSize': 256,
+                    'attribution': '© OpenStreetMap contributors'
+                };
+
+                // Initialize the map
+                map = new maplibregl.Map({
+                    container: 'location-map',
+                    style: {
+                        'version': 8,
+                        'sources': {
+                            'osm': osmTiles
+                        },
+                        'layers': [
+                            {
+                                'id': 'osm',
+                                'type': 'raster',
+                                'source': 'osm',
+                                'minzoom': 0,
+                                'maxzoom': 19
+                            }
+                        ]
+                    },
+                    center: [currentLng, currentLat],
+                    zoom: 13,
+                    attributionControl: false,
+                    cooperativeGestures: true // For better mobile experience
+                });
+
+                // Add zoom and rotation controls to the map
+                map.addControl(new maplibregl.NavigationControl({
+                    showCompass: false,
+                    showZoom: true,
+                    visualizePitch: false
+                }), 'top-right');
+                
+                // Wait for map to load before adding marker
+                map.on('load', function() {
+                    // Create a marker element
+                    const el = document.createElement('div');
+                    el.className = 'custom-marker';
+                    
+                    // Add marker to map
+                    marker = new maplibregl.Marker({
+                        element: el,
+                        draggable: true
+                    })
+                        .setLngLat([currentLng, currentLat])
+                        .addTo(map);
+                    
+                    // Update coordinates when marker is dragged
+                    marker.on('dragend', function() {
+                        const lngLat = marker.getLngLat();
+                        currentLng = lngLat.lng;
+                        currentLat = lngLat.lat;
+                        updateCoordinatesDisplay();
+                    });
+                    
+                    // Allow clicking on map to move marker
+                    map.on('click', function(e) {
+                        marker.setLngLat(e.lngLat);
+                        currentLng = e.lngLat.lng;
+                        currentLat = e.lngLat.lat;
+                        updateCoordinatesDisplay();
+                    });
+                    
+                    updateCoordinatesDisplay();
+                });
+                
+                // Hide the pin element since we're using a real marker
+                document.getElementById('map-pin').style.display = 'none';
+            }
+            
+            // Use geolocation to get user's current position
+            function getUserLocation() {
+                const coordsDisplay = document.getElementById('coordinates-display');
+                coordsDisplay.innerHTML = '<span>Finding your location... <span class="loading"></span></span>';
+                
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            currentLat = position.coords.latitude;
+                            currentLng = position.coords.longitude;
+                            
+                            // Update the map and marker
+                            if (map && marker) {
+                                map.flyTo({
+                                    center: [currentLng, currentLat],
+                                    zoom: 15,
+                                    essential: true
+                                });
+                                marker.setLngLat([currentLng, currentLat]);
+                                updateCoordinatesDisplay();
+                            }
+                        },
+                        function(error) {
+                            console.error('Error getting location:', error);
+                            coordsDisplay.textContent = 'Could not get your location. Please use the map.';
+                        },
+                        {
+                            enableHighAccuracy: true,
+                            timeout: 10000,
+                            maximumAge: 0
+                        }
+                    );
+                } else {
+                    coordsDisplay.textContent = 'Geolocation is not supported by this browser.';
+                }
+            }
+            
+            // Update the coordinates display
+            function updateCoordinatesDisplay() {
+                const coordsDisplay = document.getElementById('coordinates-display');
+                const latLngInput = document.getElementById('lat-lng');
+                
+                // Format to 6 decimal places
+                const formattedLat = currentLat.toFixed(6);
+                const formattedLng = currentLng.toFixed(6);
+                
+                coordsDisplay.textContent = `${formattedLat}, ${formattedLng}`;
+                latLngInput.value = `${formattedLat},${formattedLng}`;
             }
 
             // Next button handlers
@@ -913,7 +1103,14 @@
             });
 
             document.getElementById('next-2').addEventListener('click', function() {
-                // For demo purposes, we'll skip validation on location
+                // Validate location is selected
+                const coordinates = document.getElementById('lat-lng').value;
+                
+                if (!coordinates) {
+                    alert('Please select a location on the map');
+                    return;
+                }
+                
                 showStep(3);
             });
 
@@ -1091,29 +1288,8 @@
                     
                     const selectedMethod = this.getAttribute('data-method');
                     
-                    // Hide all methods
-                    document.getElementById('map-method').style.display = 'none';
-                    document.getElementById('address-method').style.display = 'none';
-                    
-                    // Show selected method
-                    if (selectedMethod === 'map') {
-                        document.getElementById('map-method').style.display = 'block';
-                    } else if (selectedMethod === 'address') {
-                        document.getElementById('address-method').style.display = 'block';
-                    } else if (selectedMethod === 'current') {
-                        // Use current location (would use geolocation API)
-                        if (navigator.geolocation) {
-                            navigator.geolocation.getCurrentPosition(position => {
-                                document.getElementById('lat-lng').value = 
-                                    `${position.coords.latitude},${position.coords.longitude}`;
-                                alert(`Location set to: ${position.coords.latitude}, ${position.coords.longitude}`);
-                            }, error => {
-                                console.error('Error getting location:', error);
-                                alert('Could not get your current location. Please try another method.');
-                            });
-                        } else {
-                            alert('Geolocation is not supported by this browser. Please try another method.');
-                        }
+                    if (selectedMethod === 'current') {
+                        getUserLocation();
                     }
                 });
             });
