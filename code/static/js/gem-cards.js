@@ -299,18 +299,57 @@ class GemCards extends HTMLElement {
 }
 
 .explore-now-btn {
-  /* Make button more visible for debugging */
-  background: red;
-  color: white;
-  padding: 8px 16px;
-  /* Other styles */
+  background: linear-gradient(135deg, #b3e6cc 0%, #8fd3b6 100%);
+  color: #333;
+  padding: 12px 24px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(143, 211, 182, 0.3);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
-        
-        .explore-now-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-          background: linear-gradient(to right, #222, #444);
-        }
+
+.explore-now-btn:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+  transition: all 0.6s ease;
+}
+
+.explore-now-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(143, 211, 182, 0.4);
+  background: linear-gradient(135deg, #c4ebd6 0%, #9adfc1 100%);
+}
+
+.explore-now-btn:hover:before {
+  left: 100%;
+}
+
+.explore-now-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(143, 211, 182, 0.4);
+}
+
+/* Optional: Add an icon to the button */
+.explore-now-btn i {
+  margin-right: 8px;
+  font-size: 18px;
+}
         
         /* Swipe indicator dots */
         .swipe-indicator {
