@@ -19,10 +19,12 @@ Before running the webpage, make sure to open your terminal and run this command
 ```
 
 **Alternative**
-: To use OpenAI instead of Ollama
-```ssh
-    export OPENAI_API_KEY = <Your OpenAI API Key>
+: To use tinyllama instead of Mistral7B
+
+```bash
+    python3 code/scripts/precache_recommendations.py
 ```
+
 then
 ```bash
     python3 code/scripts/hidden_gems_generator.py
