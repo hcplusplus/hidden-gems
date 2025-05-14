@@ -135,7 +135,7 @@ def build_recommendation_prompt(user_data):
     ])
     
     return f"""
-You are a trip planning expert. Select 5 hidden gems from the list below that best match the user's travel preferences.
+You are a trip planning expert. Select 5 unique hidden gems from the list below that best match the user's travel preferences.
 User preferences:
 - From: {user_data.get('origin')}
 - To: {user_data.get('destination')}
@@ -146,7 +146,7 @@ User preferences:
 - Time Available: {user_data.get('time')}
 Hidden gem candidates:
 {context}
-Return ONLY the 0-based indices of your 5 recommended gems as a JSON array of integers.
+Return ONLY the 0-based indices of 5 recommended gems as a JSON array of 5 unique integers.
 Example: [5, 0, 14, 9, 3]
 Do not include any explanations or additional text. Do not return the example array.
 """
