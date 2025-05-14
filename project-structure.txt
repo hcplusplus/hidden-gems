@@ -1,34 +1,56 @@
 code
-├── index.html                  # Home/landing page
+├── index.html                  # home page
 ├── add-gem.html                # add gem page
 ├── end-survey.html             # survey about gem for user
 ├── map-recs.html               # the recommended gems plotted 
-├── select-success.html         # 
-├── gtky.html                   # Onboarding quiz page
-├── trip-select.html            # Gem recommendations page
-├── add-gem.html                # Form to add a gem
+├── select-success.html         # page after trip is complete
+├── gtky.html                   # describe your trip/yourself quiz page
+├── trip-select.html            # investigating a recommended gem page
+├── add-gem.html                # form to add a gem
 │
-├── static/css/
-│   ├── add-gem.css             # add gem styles
-│   ├── main.css                # Common styles
-│   ├── map.css                 # map styles
-│   ├── navigation-wheel.css    # Navigation wheel styles
-│   |── quiz.css                # Quiz styles
-│   ├── recommendation-card.css # Recommendation card styles
+├── static/styles/
+│   ├── add-gem.css             
+│   ├── card-styles.css      
+│   ├── layout-fixes.css       
+│   ├── loading-styles.css      
+│   ├── main.css               
+│   ├── new-aestheics.css      
+│   |── quiz.css              
 │
 ├── static/js/
-│   ├── main.js                 # Common functionality
-│   ├── add-gem.js              # add gem functionality
-│   ├── nav-wheel.js            # Navigation wheel functionality
-│   ├── card-controller.js      # Recommendation card functionality
-│   ├── quiz.js                 # Quiz functionality
-│   ├── map-controller.js       # Map display and interaction
-│   ├── preferences.js          # user preferences display and functionality
-│   ├── swipe.js                # swipe functionality
+│   ├── constants.js                    # Common functionality
+│   ├── data-controller.js              # add gem functionality
+│   ├── delayed-initialization.js       # Navigation wheel functionality
+│   ├── gem-canvas.js                   # Recommendation card functionality
+│   ├── gem-cards.js                    # Quiz functionality
+│   ├── layout-fixes.js                 # user preferences display and functionality
+│   ├── main.js                         # user preferences display and functionality
+│   ├── map-controller.js               # Map display and interaction
+│   ├── map-recs.js                     # user preferences display and functionality
+│   ├── nav-wheel.js                    # user preferences display and functionality
+│   ├── quiz-integration.js             # user preferences display and functionality
+│   ├── route-canvas.js                 # user preferences display and functionality
+│   ├── swipe.js                        # swipe functionality
+│   ├── trip-distance-caluclator.js     # user preferences display and functionality
 │
 │
-├── static/assets/
-│   ├── images/
-│   ├── icons/                  # UI icons
-│   └── data/                   # JSON data files
-│       ├── hidden_gems.json    # gem data
+├── static/assets/                      # misc images, data, icons to use in app
+│   ├── icons/                          # gem icons
+│   └── data/                           # JSON data files
+│       ├── hidden_gems.json            # high quality CA gems subset
+│       recommendations/                # cached recommendations 
+│       reviews/                        # cached gem reviews    
+|
+|
+├── scripts/
+│   ├── chain_filter.py                 # filters out chains, franchises
+│   ├── content_generator.py            # RNG content generator to fill in OSM missing data
+│   ├── download_osm_data_ca_subset.py  # downlaods OSM data and formats it into hidden_gems.json
+│   ├── generate_recommendations.py     # API endpoints for LLM generated recomemended gems given user's preferences & route
+│   ├── generate_reviews.py             # API endpoints for LLM generated reviews
+│   ├── hidden_gems_generator.py        #         
+│   ├── hidden_gems_generator_local.py  #
+│   ├── manage_response_times.py        # keeps track of LLM response times for optimizing UX while waiting for results      
+│   ├── setup_usability_tests.sh        # precaches gems along routes & reviews to anticipate user actions during testing
+│   ├── simple_response_seed.py         # simulates LLM response data 
+│   └── simulate_trips.py               # simulates trips within bounding box for popular cities

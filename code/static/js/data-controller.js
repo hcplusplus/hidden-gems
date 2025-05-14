@@ -128,14 +128,19 @@ window.HiddenGems.data = {
     else if (options.center && options.center.length === 2) {
       // Filter by distance from center
       const radius = options.radius || 30;
+      const normalizedCenter = this.coordUtils.normalize(options.center);
+      
+      if (!normalizedCenter) {
+        return Promise.reject(new Error('Invalid center coordinates'));
+      }
       
       filteredGems = this.allGems.filter(gem => {
-        const coords = gem.coords || gem.coordinates;
-        if (!coords || coords.length !== 2) return false;
+        const coords = this.coordUtils.fromGem(gem);
+        if (!coords) return false;
         
         // Calculate distance from center
         const distance = this.utils.calculateDistance(
-          options.center[1], options.center[0],
+          normalizedCenter[1], normalizedCenter[0],
           coords[1], coords[0]
         );
         
@@ -338,7 +343,7 @@ window.HiddenGems.data = {
   },
   
   /**
-   * Find nearby gems based on geolocation
+   * Find nearby gems based on geolocation or default location
    * @param {string} pageName - Name of the page for gem sample
    * @param {number} [sampleSize] - Number of gems to sample (default: 10)
    * @param {number} [radius] - Radius in kilometers (default: 30)
@@ -350,29 +355,38 @@ window.HiddenGems.data = {
         reject(new Error('Page name is required'));
         return;
       }
-
-      if (pageName === "index") {
-        const defaultLocation = window.HiddenGems.constants.DEFAULT_CENTER;
-            
-            this.getRegionalGems({
-              regionName: 'default',
-              center: defaultLocation,
-              radius: radius
-            })
-            .then(() => {
-              // Get a page sample
-              return this.getPageGems({
-                regionName: 'default',
-                pageName: pageName,
-                sampleSize: sampleSize,
-                forceNew: true
-              });
-            })
-            .then(resolve)
-            .catch(reject);
-      }
-
       
+      // Check if we're using a default location (Berkeley) instead of geolocation
+      // First check for stored preference in local storage
+      const shouldUseGeolocation = localStorage.getItem('locationPermissionGranted') === 'true';
+      const storedCoords = this.storage.get('defaultCoords');
+      
+      // If we have defaultCoords and are not using geolocation, use those
+      if (storedCoords && !shouldUseGeolocation) {
+        console.log('Using stored default coordinates instead of requesting location');
+        
+        // Create a region based on default location
+        this.getRegionalGems({
+          regionName: 'default',
+          center: storedCoords,
+          radius: radius
+        })
+        .then(() => {
+          // Get a page sample
+          return this.getPageGems({
+            regionName: 'default',
+            pageName: pageName,
+            sampleSize: sampleSize,
+            forceNew: true
+          });
+        })
+        .then(resolve)
+        .catch(reject);
+        
+        return;
+      }
+      
+      // If we're using geolocation, proceed with current logic
       this.showLoading('Finding your location...');
       
       if (navigator.geolocation) {
@@ -381,13 +395,14 @@ window.HiddenGems.data = {
           (position) => {
             const userLocation = [position.coords.longitude, position.coords.latitude];
             
-            // Store user location
-            this.storage.set('userLocation', userLocation);
+            // Normalize and store user location
+            const normalizedLocation = this.coordUtils.normalize(userLocation);
+            this.storage.set('userLocation', normalizedLocation);
             
             // Create a region based on user location
             this.getRegionalGems({
               regionName: 'nearby',
-              center: userLocation,
+              center: normalizedLocation,
               radius: radius
             })
             .then(() => {
@@ -402,7 +417,7 @@ window.HiddenGems.data = {
             .then(resolve)
             .catch(reject);
           },
-          // Error callback
+          // Error callback - use default coordinates
           (error) => {
             console.error('Geolocation error:', error);
             
@@ -433,11 +448,11 @@ window.HiddenGems.data = {
           }
         );
       } else {
-        // Geolocation not supported
+        // Geolocation not supported - use default location
         console.warn('Geolocation not supported by this browser');
         
-        // Use default location (San Francisco)
-        const defaultLocation =  window.HiddenGems.constants.DEFAULT_CENTER;
+        // Use default location (Berkeley/SF)
+        const defaultLocation = window.HiddenGems.constants.DEFAULT_CENTER;
         
         this.getRegionalGems({
           regionName: 'default',
@@ -459,114 +474,295 @@ window.HiddenGems.data = {
     });
   },
   
-  /**
-   * Filter gems along a route for road trip planning
-   * @param {string} pageName - Name of the page for gem sample
-   * @param {Array} originCoords - Origin coordinates [lng, lat]
-   * @param {Array} destinationCoords - Destination coordinates [lng, lat]
-   * @param {number} [bufferDistanceKm] - Buffer distance in kilometers (default: 30)
-   * @param {number} [sampleSize] - Number of gems to sample (default: 10)
-   * @returns {Promise} Promise that resolves with gems
-   */
-  findGemsAlongRoute: function(pageName, originCoords, destinationCoords, bufferDistanceKm = 30, sampleSize = 10) {
-    if (!pageName || !originCoords || !destinationCoords) {
-      return Promise.reject(new Error('Page name, origin, and destination are required'));
-    }
-    
-    // Create a region filter function for route
-    const routeFilterFn = (gem) => {
-      const coords = gem.coords || gem.coordinates;
-      if (!coords || coords.length !== 2) return false;
-      
-      // Calculate distance to route line
-      const distanceToRoute = this.distanceToLineSegment(
-        coords, originCoords, destinationCoords
-      );
-      
-      // Save distance to gem for sorting
-      gem.distanceFromRoute = distanceToRoute;
-      
-      // Return true if within buffer distance
-      return distanceToRoute <= bufferDistanceKm;
-    };
-    
-    // Define unique region name based on origin/destination
-    const regionName = `route_${originCoords.join('_')}_${destinationCoords.join('_')}`;
-    
-    // Store route info
-    this.storage.set('currentRoute', {
-      origin: originCoords,
-      destination: destinationCoords,
-      bufferDistance: bufferDistanceKm
-    });
-    
-    return this.getRegionalGems({
-      regionName: regionName,
-      filterFn: routeFilterFn
-    })
-    .then(() => {
-      // Get a page sample
-      return this.getPageGems({
-        regionName: regionName,
-        pageName: pageName,
-        sampleSize: sampleSize,
-        forceNew: true
-      });
-    });
-  },
-  
-  /**
- * Show loading indicator with safety checks for document.body
- * @param {string} message - Message to display
+/**
+ * Find gems along a route for road trip planning with improved distribution
+ * @param {string} pageName - Name of the page for gem sample
+ * @param {Array} originCoords - Origin coordinates [lng, lat]
+ * @param {Array} destinationCoords - Destination coordinates [lng, lat]
+ * @param {number} [bufferDistanceKm] - Buffer distance in kilometers (default: 30)
+ * @param {number} [sampleSize] - Number of gems to sample (default: 10)
+ * @param {string} [originName] - Name of origin location (for region naming)
+ * @param {string} [destinationName] - Name of destination location (for region naming)
+ * @returns {Promise} Promise that resolves with gems
  */
-showLoading: function(message) {
-  // First check if document and body are available
-  if (!document || !document.body) {
-    console.log('Loading indicator requested but document.body not available yet:', message);
-    
-    // Return a dummy element that won't cause errors
-    return {
-      remove: function() {},
-      style: {}
-    };
+findGemsAlongRoute: function(pageName, originCoords, destinationCoords, bufferDistanceKm = 30, sampleSize = 10, originName = '', destinationName = '') {
+  if (!pageName || !originCoords || !destinationCoords) {
+    console.log(pageName, originCoords, destinationCoords);
+    return Promise.reject(new Error('Page name, origin, and destination are required'));
   }
   
-  let loadingEl = document.getElementById('gems-loading');
+  // Normalize coordinates
+  const normalizedOrigin = this.coordUtils.normalize(originCoords);
+  const normalizedDestination = this.coordUtils.normalize(destinationCoords);
   
-  if (!loadingEl) {
-    loadingEl = document.createElement('div');
-    loadingEl.id = 'gems-loading';
-    loadingEl.style.position = 'fixed';
-    loadingEl.style.top = '50%';
-    loadingEl.style.left = '50%';
-    loadingEl.style.transform = 'translate(-50%, -50%)';
-    loadingEl.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-    loadingEl.style.color = 'white';
-    loadingEl.style.padding = '15px 20px';
-    loadingEl.style.borderRadius = '5px';
-    loadingEl.style.zIndex = '2000';
-    
-    document.body.appendChild(loadingEl);
+  if (!normalizedOrigin || !normalizedDestination) {
+    return Promise.reject(new Error('Invalid coordinates'));
   }
   
-  loadingEl.innerHTML = message;
-  loadingEl.style.display = 'block';
+  // Create a region filter function for route
+  const routeFilterFn = (gem) => {
+    const coords = this.coordUtils.fromGem(gem);
+    if (!coords) return false;
+    
+    // Calculate progress along the route (0 = at origin, 1 = at destination)
+    const routeProgress = this.getPointProgressAlongRoute(
+      coords, normalizedOrigin, normalizedDestination
+    );
+    
+    // Calculate distance to route line
+    const distanceToRoute = this.distanceToLineSegment(
+      coords, normalizedOrigin, normalizedDestination
+    );
+    
+    // Save these values to gem for sorting and displaying
+    gem.distanceFromRoute = distanceToRoute;
+    gem.routeProgress = routeProgress;
+    
+    // Return true if:
+    // 1. Within buffer distance of the route
+    // 2. Between origin and destination (progress between 0 and 1)
+    // 3. Not too close to origin or destination (optional, adjust as needed)
+    return distanceToRoute <= bufferDistanceKm && 
+           routeProgress >= 0 && 
+           routeProgress <= 1;
+  };
   
-  return loadingEl;
+  // Define unique region name based on origin/destination names if provided
+  // Fall back to coordinates if names aren't provided
+  let regionName;
+  
+  if (originName && destinationName) {
+    // Clean up names for storage key usage (replace spaces, special chars)
+    const cleanOriginName = originName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+    const cleanDestName = destinationName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+    regionName = `route_${cleanOriginName}_to_${cleanDestName}`;
+    
+    // Store the original names for display
+    this.storage.set('originName', originName);
+    this.storage.set('destinationName', destinationName);
+  }
+  
+  console.log(`Finding gems along route from ${originName || 'origin'} to ${destinationName || 'destination'}`);
+  
+  // Store route info
+  this.storage.set('currentRoute', {
+    origin: normalizedOrigin,
+    destination: normalizedDestination,
+    originName: originName,
+    destinationName: destinationName,
+    bufferDistance: bufferDistanceKm
+  });
+  
+  // Create a specific storage key for the complete set of gems along this route
+  const routeGemsKey = `route_gems_${regionName}`;
+  
+  // First check if we already have the complete set in session storage
+  const existingRouteGems = this.storage.getSession(routeGemsKey);
+  
+  if (existingRouteGems && existingRouteGems.length > 0) {
+    console.log(`Found ${existingRouteGems.length} existing gems for route ${regionName} in session storage`);
+    
+    // Use the existing route gems, just create a new sample
+    const distributedGems = this.getEvenlyDistributedGems(existingRouteGems, sampleSize);
+    
+    // Store as page gems
+    this.pageGems = distributedGems;
+    this.storage.setSession(`page_${pageName}`, distributedGems);
+    
+    console.log(`Created route page sample "${pageName}" with ${distributedGems.length} evenly distributed gems from existing route data`);
+    return Promise.resolve(distributedGems);
+  }
+  
+  // If no existing route gems, get them using the filter
+  return this.getRegionalGems({
+    regionName: regionName,
+    filterFn: routeFilterFn
+  })
+  .then(regionGems => {
+    // Sort gems by their progress along the route
+    regionGems.sort((a, b) => a.routeProgress - b.routeProgress);
+    
+    // Store the complete set of filtered gems BEFORE sampling
+    this.storage.setSession(routeGemsKey, regionGems);
+    console.log(`Stored ${regionGems.length} complete route gems to session storage with key: ${routeGemsKey}`);
+    
+    // Ensure even distribution by dividing the route into segments
+    return this.getEvenlyDistributedGems(regionGems, sampleSize);
+  })
+  .then(distributedGems => {
+    // Store as page gems
+    this.pageGems = distributedGems;
+    this.storage.setSession(`page_${pageName}`, distributedGems);
+    
+    console.log(`Created route page sample "${pageName}" with ${distributedGems.length} evenly distributed gems`);
+    return distributedGems;
+  });
 },
 
 /**
- * Hide loading indicator with safety checks
+ * Get point's progress along a route (0 = origin, 1 = destination)
+ * @param {Array} point - [lng, lat] coordinates of the point
+ * @param {Array} routeStart - [lng, lat] coordinates of route start
+ * @param {Array} routeEnd - [lng, lat] coordinates of route end
+ * @return {number} Progress along route (can be negative or >1 if outside route)
  */
-hideLoading: function() {
-  // Check if document is available
-  if (!document) return;
+getPointProgressAlongRoute: function(point, routeStart, routeEnd) {
+  // Convert to Cartesian coordinates for simplicity
+  const p = [point[0], point[1]];
+  const v = [routeStart[0], routeStart[1]];
+  const w = [routeEnd[0], routeEnd[1]];
   
-  const loadingEl = document.getElementById('gems-loading');
-  if (loadingEl) {
-    loadingEl.style.display = 'none';
-  }
+  // Calculate the route vector
+  const routeVector = [w[0] - v[0], w[1] - v[1]];
+  const routeLength = Math.sqrt(Math.pow(routeVector[0], 2) + Math.pow(routeVector[1], 2));
+  
+  // If route length is zero, return 0
+  if (routeLength === 0) return 0;
+  
+  // Calculate the point-to-start vector
+  const pointVector = [p[0] - v[0], p[1] - v[1]];
+  
+  // Calculate the dot product
+  const dotProduct = pointVector[0] * routeVector[0] + pointVector[1] * routeVector[1];
+  
+  // Calculate progress (projection of point onto route divided by route length)
+  return dotProduct / (routeLength * routeLength);
 },
+
+/**
+ * Evenly distribute gems along a route
+ * @param {Array} routeGems - Gems sorted by route progress
+ * @param {number} sampleSize - Number of gems to sample
+ * @returns {Array} Evenly distributed gems
+ */
+getEvenlyDistributedGems: function(routeGems, sampleSize) {
+  const result = [];
+  
+  // If we have fewer gems than the sample size, return all of them
+  if (routeGems.length <= sampleSize) {
+    return routeGems;
+  }
+  
+  // Divide the route into segments
+  const numSegments = sampleSize;
+  const segmentSize = 1.0 / numSegments;
+  
+  // Initialize an array to hold gems for each segment
+  const segmentGems = Array(numSegments).fill().map(() => []);
+  
+  // Assign each gem to its segment
+  routeGems.forEach(gem => {
+    const segmentIndex = Math.min(
+      Math.floor(gem.routeProgress / segmentSize),
+      numSegments - 1
+    );
+    
+    // Only add to valid segments (should always be true with our filter)
+    if (segmentIndex >= 0 && segmentIndex < numSegments) {
+      segmentGems[segmentIndex].push(gem);
+    }
+  });
+  
+  // For each segment, select the gem closest to the center of the segment
+  // or a random gem if no clear center exists
+  segmentGems.forEach((gems, segmentIndex) => {
+    if (gems.length === 0) {
+      // If no gems in this segment, try to borrow from adjacent segments
+      // This helps ensure we get as close to sampleSize gems as possible
+      return;
+    }
+    
+    // Calculate the ideal progress for this segment's center
+    const idealProgress = (segmentIndex + 0.5) * segmentSize;
+    
+    // Find the gem closest to the ideal progress
+    let closestGem = gems[0];
+    let closestDistance = Math.abs(gems[0].routeProgress - idealProgress);
+    
+    for (let i = 1; i < gems.length; i++) {
+      const distance = Math.abs(gems[i].routeProgress - idealProgress);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestGem = gems[i];
+      }
+    }
+    
+    result.push(closestGem);
+  });
+  
+  // If some segments had no gems, we might have fewer than sampleSize
+  // Fill in with remaining gems to reach the sample size if possible
+  if (result.length < sampleSize) {
+    // Find gems that are not already in the result
+    const unusedGems = routeGems.filter(gem => !result.includes(gem));
+    
+    // Sort by distance to route (smaller is better)
+    unusedGems.sort((a, b) => a.distanceFromRoute - b.distanceFromRoute);
+    
+    // Add gems until we reach the sample size or run out of gems
+    while (result.length < sampleSize && unusedGems.length > 0) {
+      result.push(unusedGems.shift());
+    }
+    
+    // Final sort by route progress to maintain order
+    result.sort((a, b) => a.routeProgress - b.routeProgress);
+  }
+  
+  return result;
+},
+  
+  /**
+   * Show loading indicator with safety checks for document.body
+   * @param {string} message - Message to display
+   */
+  showLoading: function(message) {
+    // First check if document and body are available
+    if (!document || !document.body) {
+      console.log('Loading indicator requested but document.body not available yet:', message);
+      
+      // Return a dummy element that won't cause errors
+      return {
+        remove: function() {},
+        style: {}
+      };
+    }
+    
+    let loadingEl = document.getElementById('gems-loading');
+    
+    if (!loadingEl) {
+      loadingEl = document.createElement('div');
+      loadingEl.id = 'gems-loading';
+      loadingEl.style.position = 'fixed';
+      loadingEl.style.top = '50%';
+      loadingEl.style.left = '50%';
+      loadingEl.style.transform = 'translate(-50%, -50%)';
+      loadingEl.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+      loadingEl.style.color = 'white';
+      loadingEl.style.padding = '15px 20px';
+      loadingEl.style.borderRadius = '5px';
+      loadingEl.style.zIndex = '2000';
+      
+      document.body.appendChild(loadingEl);
+    }
+    
+    loadingEl.innerHTML = message;
+    loadingEl.style.display = 'block';
+    
+    return loadingEl;
+  },
+  
+  /**
+   * Hide loading indicator with safety checks
+   */
+  hideLoading: function() {
+    // Check if document is available
+    if (!document) return;
+    
+    const loadingEl = document.getElementById('gems-loading');
+    if (loadingEl) {
+      loadingEl.style.display = 'none';
+    }
+  },
   
   /**
    * Calculate the distance from a point to a line segment
@@ -607,78 +803,11 @@ hideLoading: function() {
     );
   },
   
-  // Utility functions
-  utils: {
-    /**
-     * Calculate distance between two points in kilometers
-     * @param {number} lat1 - Latitude of first point
-     * @param {number} lon1 - Longitude of first point
-     * @param {number} lat2 - Latitude of second point
-     * @param {number} lon2 - Longitude of second point
-     * @returns {number} Distance in kilometers
-     */
-    calculateDistance: function(lat1, lon1, lat2, lon2) {
-      const R = 6371; // Earth's radius in kilometers
-      const dLat = this.toRadians(lat2 - lat1);
-      const dLon = this.toRadians(lon2 - lon1);
-      
-      const a = 
-        Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.cos(this.toRadians(lat1)) * Math.cos(this.toRadians(lat2)) * 
-        Math.sin(dLon/2) * Math.sin(dLon/2);
-      
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-      return R * c;
-    },
-    
-    /**
-     * Convert degrees to radians
-     * @param {number} degrees - Angle in degrees
-     * @returns {number} Angle in radians
-     */
-    toRadians: function(degrees) {
-      return degrees * Math.PI / 180;
-    },
-    
-    /**
-     * Fisher-Yates shuffle algorithm
-     * @param {Array} array - Array to shuffle
-     * @returns {Array} New shuffled array (original not modified)
-     */
-    shuffleArray: function(array) {
-      const newArray = [...array];
-      for (let i = newArray.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-      }
-      return newArray;
-    },
-    
-    /**
-     * Take a random sample from an array
-     * @param {Array} array - Source array
-     * @param {number} size - Sample size
-     * @returns {Array} New array with random samples
-     */
-    sampleArray: function(array, size) {
-      // If size is greater than array length, return the shuffled array
-      if (size >= array.length) {
-        return this.shuffleArray(array);
-      }
-      
-      // Otherwise, take a random sample
-      const shuffled = this.shuffleArray(array);
-      return shuffled.slice(0, size);
-    }
-  }
-};
-
-/**
- * Enhanced coordinate handling utility
- * This will standardize all coordinate operations throughout the application
- */
-function createCoordinateUtility() {
-  return {
+  /**
+   * Coordinate handling utilities
+   * Standardized coordinate operations throughout the application
+   */
+  coordUtils: {
     /**
      * Normalize coordinates to ensure consistent [lng, lat] format
      * @param {Array|Object} coords - Input coordinates
@@ -769,17 +898,249 @@ function createCoordinateUtility() {
       console.log(`[Coordinates ${label}]:`, coords ? 
                  `[${coords[0].toFixed(6)}, ${coords[1].toFixed(6)}]` : 'Invalid');
     }
-  };
-}
+  },
+  
+  // Utility functions
+  utils: {
+    /**
+     * Calculate distance between two points in kilometers
+     * @param {number} lat1 - Latitude of first point
+     * @param {number} lon1 - Longitude of first point
+     * @param {number} lat2 - Latitude of second point
+     * @param {number} lon2 - Longitude of second point
+     * @returns {number} Distance in kilometers
+     */
+    calculateDistance: function(lat1, lon1, lat2, lon2) {
+      const R = 6371; // Earth's radius in kilometers
+      const dLat = this.toRadians(lat2 - lat1);
+      const dLon = this.toRadians(lon2 - lon1);
+      
+      const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(this.toRadians(lat1)) * Math.cos(this.toRadians(lat2)) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+      
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    },
+    
+    /**
+     * Convert degrees to radians
+     * @param {number} degrees - Angle in degrees
+     * @returns {number} Angle in radians
+     */
+    toRadians: function(degrees) {
+      return degrees * Math.PI / 180;
+    },
+    
+    /**
+     * Fisher-Yates shuffle algorithm
+     * @param {Array} array - Array to shuffle
+     * @returns {Array} New shuffled array (original not modified)
+     */
+    shuffleArray: function(array) {
+      const newArray = [...array];
+      for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+      }
+      return newArray;
+    },
+    
+    /**
+     * Take a random sample from an array
+     * @param {Array} array - Source array
+     * @param {number} size - Sample size
+     * @returns {Array} New array with random samples
+     */
+    sampleArray: function(array, size) {
+      // If size is greater than array length, return the shuffled array
+      if (size >= array.length) {
+        return this.shuffleArray(array);
+      }
+      
+      // Otherwise, take a random sample
+      const shuffled = this.shuffleArray(array);
+      return shuffled.slice(0, size);
+    }
+  }, 
 
-// Create the utility
-const coordUtil = createCoordinateUtility();
-// Attach to the HiddenGems namespace
-window.HiddenGems.coordUtil = coordUtil;
+  /**
+ * Clear cached route data and related gems
+ * @param {boolean} [clearAllRouteData=false] - Whether to clear all route-related data
+ * @param {boolean} [clearAllGems=false] - Whether to clear all gem data (use with caution)
+ * @returns {boolean} Success status
+ */
+clearRouteCache: function(clearAllRouteData = false, clearAllGems = false) {
+  console.log('Clearing route cache...');
+  const storage = window.HiddenGems.data.storage;
+  
+  try {
+    // Clear current route data
+    storage.remove('currentRoute');
+    
+    // Get all storage keys
+    const allLocalStorageKeys = Object.keys(localStorage);
+    const allSessionStorageKeys = Object.keys(sessionStorage);
+    
+    // Clear route-specific regional gems
+    const routeRegionPattern = /^hiddenGems_route_/;
+    allLocalStorageKeys.forEach(key => {
+      if (routeRegionPattern.test(key) || (clearAllRouteData && key.includes('route'))) {
+        localStorage.removeItem(key);
+        console.log(`Cleared route cache: ${key}`);
+      }
+    });
+    
+    // Clear route-specific page gems from session storage
+    const routePagePattern = /^hiddenGems_page_route/;
+    allSessionStorageKeys.forEach(key => {
+      if (routePagePattern.test(key) || (clearAllRouteData && key.includes('route'))) {
+        sessionStorage.removeItem(key);
+        console.log(`Cleared route page cache: ${key}`);
+      }
+    });
+    
+    // If requested, clear all gem data (use with caution)
+    if (clearAllGems) {
+      storage.remove('allGems');
+      
+      // Clear all region data
+      allLocalStorageKeys.forEach(key => {
+        if (key.startsWith('hiddenGems_region_')) {
+          localStorage.removeItem(key);
+          console.log(`Cleared region cache: ${key}`);
+        }
+      });
+      
+      // Clear all page data
+      allSessionStorageKeys.forEach(key => {
+        if (key.startsWith('hiddenGems_page_')) {
+          sessionStorage.removeItem(key);
+          console.log(`Cleared page cache: ${key}`);
+        }
+      });
+      
+      // Reset state
+      window.HiddenGems.data.allGemsLoaded = false;
+      window.HiddenGems.data.regionGems = {};
+      window.HiddenGems.data.pageGems = [];
+    }
+    
+    console.log('Route cache cleared successfully');
+    return true;
+  } catch (error) {
+    console.error('Error clearing route cache:', error);
+    return false;
+  }
+},
+
+/**
+ * Modified clearRouteCache function to handle city-named routes
+ */
+clearRouteCache: function(clearAllRouteData = false, clearAllGems = false) {
+  console.log('Clearing route cache...');
+  const storage = window.HiddenGems.data.storage;
+  
+  try {
+    // Clear current route data and route name data
+    storage.remove('currentRoute');
+    storage.remove('routeOriginName');
+    storage.remove('routeDestinationName');
+    storage.remove('originName');
+    storage.remove('destinationName');
+    
+    // Get all storage keys
+    const allLocalStorageKeys = Object.keys(localStorage);
+    const allSessionStorageKeys = Object.keys(sessionStorage);
+    
+    // Clear route-specific regional gems (now includes name-based patterns)
+    const routeRegionPattern = /^hiddenGems_route_/;
+    allLocalStorageKeys.forEach(key => {
+      if (routeRegionPattern.test(key) || (clearAllRouteData && key.includes('route'))) {
+        localStorage.removeItem(key);
+        console.log(`Cleared route cache: ${key}`);
+      }
+    });
+    
+    // Clear route-specific page gems from session storage
+    const routePagePattern = /^hiddenGems_page_route/;
+    allSessionStorageKeys.forEach(key => {
+      if (routePagePattern.test(key) || key === 'routeInfo' || 
+          key === 'backgroundRouteGems' || (clearAllRouteData && key.includes('route'))) {
+        sessionStorage.removeItem(key);
+        console.log(`Cleared route page cache: ${key}`);
+      }
+    });
+    
+    // If requested, clear all gem data (use with caution)
+    if (clearAllGems) {
+      storage.remove('allGems');
+      
+      // Clear all region data
+      allLocalStorageKeys.forEach(key => {
+        if (key.startsWith('hiddenGems_region_')) {
+          localStorage.removeItem(key);
+          console.log(`Cleared region cache: ${key}`);
+        }
+      });
+      
+      // Clear all page data
+      allSessionStorageKeys.forEach(key => {
+        if (key.startsWith('hiddenGems_page_')) {
+          sessionStorage.removeItem(key);
+          console.log(`Cleared page cache: ${key}`);
+        }
+      });
+      
+      // Reset state
+      window.HiddenGems.data.allGemsLoaded = false;
+      window.HiddenGems.data.regionGems = {};
+      window.HiddenGems.data.pageGems = [];
+    }
+    
+    console.log('Route cache cleared successfully');
+    return true;
+  } catch (error) {
+    console.error('Error clearing route cache:', error);
+    return false;
+  }
+},
+
+/**
+ * Refresh route data with city name-based region naming
+ * @param {string} pageName - Name of the page for gem sample
+ * @param {Array} originCoords - Origin coordinates [lng, lat]
+ * @param {string} originName - Name of origin location
+ * @param {Array} destinationCoords - Destination coordinates [lng, lat]
+ * @param {string} destinationName - Name of destination location
+ * @param {number} [bufferDistanceKm] - Buffer distance in kilometers (default: 30)
+ * @param {number} [sampleSize] - Number of gems to sample (default: 10)
+ * @returns {Promise} Promise that resolves with refreshed gems
+ */
+refreshRouteGems: function(pageName, originCoords, originName, destinationCoords, destinationName, bufferDistanceKm = 30, sampleSize = 10) {
+  // First clear the route cache
+  this.clearRouteCache();
+  
+  // Store the city names
+  this.storage.set('originName', originName);
+  this.storage.set('destinationName', destinationName);
+  
+  // Then find new gems along the route
+  return this.findGemsAlongRoute(
+    pageName, 
+    originCoords, 
+    destinationCoords, 
+    bufferDistanceKm, 
+    sampleSize,
+    originName,
+    destinationName
+  );
+}
+};
 
 /**
  * Safe initialization for data controller
- * Replace the current initialization code at the bottom of data-controller.js
  */
 
 // Safely initialize the data controller when the DOM is ready
@@ -882,61 +1243,6 @@ window.loadGems = function(options = {}) {
         return [];
       });
   }
-};
-
-window.findNearbyGems = function() {
-  console.log('Legacy findNearbyGems function called');
-  
-  return new Promise((resolve, reject) => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        // Success callback
-        (position) => {
-          const userLocation = [position.coords.longitude, position.coords.latitude];
-          
-          // Store user location
-          window.HiddenGems.data.storage.set('userLocation', JSON.stringify(userLocation));
-          window.HiddenGems.data.storage.set('userLocation', JSON.stringify(userLocation));
-          
-          // Load gems near user location
-          window.loadGems({
-            center: userLocation,
-            radius: window.HiddenGems.constants.DEFAULT_RADIUS,
-            limit: window.HiddenGems.constants.DEFAULT_LIMIT,
-            random: true
-          }).then(resolve).catch(reject);
-        },
-        // Error callback
-        (error) => {
-          console.error('Geolocation error:', error);
-          
-          // Use default location
-          const defaultLocation = window.HiddenGems.constants.DEFAULT_CENTER;
-          
-          window.loadGems({
-            center: defaultLocation,
-            random: true
-          }).then(resolve).catch(reject);
-        },
-        // Options
-        {
-          enableHighAccuracy: false,
-          timeout: 8000,
-          maximumAge: 60000
-        }
-      );
-    } else {
-      // Geolocation not supported
-      console.warn('Geolocation not supported, using default location');
-      
-      const defaultLocation = window.HiddenGems.constants.DEFAULT_CENTER;
-      
-      window.loadGems({
-        center: defaultLocation,
-        random: true
-      }).then(resolve).catch(reject);
-    }
-  });
 };
 
 // Call the safe initialization function

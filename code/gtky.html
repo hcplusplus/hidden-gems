@@ -4,11 +4,14 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Getting to Know You - Hidden Gems</title>
+		<script src="static/js/constants.js"></script>
 		<script src="static/js/data-controller.js"></script>
 	
-		<link rel="stylesheet" href="static/styles/new-aesthetics.css">
+		<link rel="stylesheet" href="static/styles/main.css">
 		<link rel="stylesheet" href="static/styles/quiz.css">
+
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 
 
 
@@ -17,8 +20,8 @@
 		<div
 			class="quiz-container">
 			<!-- Quiz Header -->
-			<div class="quiz-header">
-				<button class="close-button" id="close-quiz" styles="font-size:12px">Return to Nearby Gems</button>
+<div class="quiz-header">
+				<button class="close-button" id="close-quiz" style="font-size:20px" onclick="history.back()">Back</button>
 				<div class="quiz-title">Find Hidden Gems</div>
 				<div style="width:40px"></div>
 				<!-- Spacer for centering title -->
@@ -80,29 +83,7 @@
 					</div>
 				</div>
 
-				<!-- <div class="option-group">
-					<div class="option-title">Maximum detour distance</div>
-					<div class="option-flex">
-						<div class="option-button" data-value="5">
-							<span class="activity-icon">🔄</span>
-							Minimal (5 miles)
-						</div>
-						<div class="option-button" data-value="15">
-							<span class="activity-icon">🔄</span>
-							Small (15 miles)
-						</div>
-						<div class="option-button" data-value="30">
-							<span class="activity-icon">🔄</span>
-							Medium (30 miles)
-						</div>
-						<div class="option-button" data-value="50+">
-							<span class="activity-icon">🔄</span>
-							Any Distance
-						</div>
-					</div>
-				</div> -->
-
-				<p class="footer-note">We'll adjust recommendations based on your available time and detour preferences.</p>
+				<p class="footer-note">We'll adjust recommendations based on your available time.</p>
 			</div>
 
 			<!-- Step 3: Accessibility & Effort Level -->
@@ -254,10 +235,7 @@
 
 		
 		<div class="loading-overlay" id="loading-overlay">
-			<div style="text-align:center;">
-				<div class="spinner"></div>
-				<p style="margin-top: 12px; font-size: 16px; color: #333;">Generating your gems...</p>
-			</div>
+		
 		</div>
 		<script src="static/js/quiz-integration.js"></script>
 	</body>
