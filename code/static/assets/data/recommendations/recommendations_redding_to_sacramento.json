@@ -1,0 +1,102 @@
+[
+  {
+    "id": "node/2392156810",
+    "name": "Toyota Amphitheatre",
+    "coordinates": [
+      -121.512912,
+      39.0311465
+    ],
+    "category": "amenity",
+    "address": "2677, Forty Mile Road, Wheatland, CA, 95692",
+    "opening_hours": "",
+    "dollar_sign": "$$",
+    "category_1": "Local Amenity",
+    "category_2": "Peaceful retreat",
+    "description": "A local establishment with unique character and charm",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 49,
+    "distanceFromRoute": 15.16101172622561,
+    "routeProgress": 0.8094910848403595
+  },
+  {
+    "id": "node/455315272",
+    "name": "Little Shrine",
+    "coordinates": [
+      -121.9375626,
+      39.1156178
+    ],
+    "category": "historic",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$$",
+    "category_1": "Historical Site",
+    "category_2": "Historical site",
+    "description": "A historical treasure with rich stories and few tourists",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 32,
+    "distanceFromRoute": 16.948491990133206,
+    "routeProgress": 0.6954227854375241
+  },
+  {
+    "id": "node/358760694",
+    "name": "Ajax Field",
+    "coordinates": [
+      -122.1919262,
+      39.5143266
+    ],
+    "category": "leisure",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$",
+    "category_1": "Recreation",
+    "category_2": "Hidden gem",
+    "description": "Relax and unwind at this local favorite recreation spot",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 97,
+    "distanceFromRoute": 23.137738267328718,
+    "routeProgress": 0.4824862208369608
+  },
+  {
+    "id": "node/358820219",
+    "name": "Maidu Park",
+    "coordinates": [
+      -121.247727,
+      38.734624
+    ],
+    "category": "leisure",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$",
+    "category_1": "Recreation",
+    "category_2": "Peaceful retreat",
+    "description": "A peaceful Park where you can escape the tourist crowds",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 110,
+    "distanceFromRoute": 26.25214686025348,
+    "routeProgress": 0.9819906027178349
+  },
+  {
+    "id": "node/10292125550",
+    "name": "Nur Pon Salmon Run",
+    "coordinates": [
+      -122.3738077,
+      40.5698432
+    ],
+    "category": "tourism",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$",
+    "category_1": "Much Loved",
+    "category_2": "Off the beaten path",
+    "description": "Breathtaking views without the typical tourist crowds",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 36,
+    "distanceFromRoute": 0.8554930324813965,
+    "routeProgress": 0.010182787469973942
+  }
+]

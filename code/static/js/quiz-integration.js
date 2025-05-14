@@ -22,7 +22,7 @@ console.log("Using API URL:", API_URL);
 
 // Constants for time estimation
 const LLM_CONFIG = {
-    baseTimeSeconds: 120,     // Base time for inference
+    baseTimeSeconds: 60,     // Base time for inference
     variabilityFactor: 0.1,
     progressSteps: [        // Artificial progress steps for smoother UX
         { percent: 0, message: "Initializing..." },
@@ -665,7 +665,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     originCoords,
                     destinationCoords,
                     30,
-                    10,  // Standard sample size
+                    30,  // Standard sample size
                     originName,
                     destinationName
                 );
