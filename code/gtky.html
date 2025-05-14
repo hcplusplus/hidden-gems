@@ -6,7 +6,7 @@
 		<title>Getting to Know You - Hidden Gems</title>
 		<script src="static/js/constants.js"></script>
 		<script src="static/js/data-controller.js"></script>
-	
+
 		<link rel="stylesheet" href="static/styles/main.css">
 		<link rel="stylesheet" href="static/styles/quiz.css">
 		<link rel="stylesheet" href="static/styles/loading-styles.css">
@@ -14,14 +14,12 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 
-
-
 	</head>
 	<body>
 		<div
 			class="quiz-container">
 			<!-- Quiz Header -->
-<div class="quiz-header">
+			<div class="quiz-header">
 				<button class="close-button" id="close-quiz" style="font-size:20px" onclick="history.back()">Back</button>
 				<div class="quiz-title">Find Hidden Gems</div>
 				<div style="width:40px"></div>
@@ -40,8 +38,9 @@
 
 				<form class="quiz-form">
 					<label for="origin">From*</label>
-					<button type ="button" class="flex" id="get-location" style="height:40px; padding: 8px; background-color: white; color:#666; font-size: 13px">
-						<i class="fas fa-location-dot" style="color:#c9e9d5; margin-right: 10px"></i>  Use my current location
+					<button type="button" class="flex" id="get-location" style="height:40px; padding: 8px; background-color: white; color:#666; font-size: 13px">
+						<i class="fas fa-location-dot" style="color:#c9e9d5; margin-right: 10px"></i>
+						Use my current location
 					</button>
 					<input type="text" id="origin" placeholder="Enter starting location">
 					<div class="error-message" id="origin-error">Please enter a starting location</div>
@@ -132,13 +131,13 @@
 					</div>
 				</div>
 				<!-- Add to Accessibility & Effort Level (Step 3) at the end of the accessibility options -->
-<div class="option-button" data-value="other-accessibility" id="other-accessibility-button">
-    <span class="activity-icon">➕</span>
-    Other Needs
-</div>
-<div class="other-input-container" id="other-accessibility-container" style="display: none; margin-top: 10px;">
-    <input type="text" id="other-accessibility-input" placeholder="Tell us about your specific needs..." class="other-input">
-</div>
+				<div class="option-button" data-value="other-accessibility" id="other-accessibility-button" style="margin-top: 15px;">
+					<span class="activity-icon">➕</span>
+					Other Needs
+				</div>
+				<div class="other-input-container" id="other-accessibility-container" style="display: none; margin-top: 10px;">
+					<input type="text" id="other-accessibility-input" placeholder="Tell us about your specific needs..." class="other-input">
+				</div>
 				<p class="footer-note">We'll make sure the recommended spots match your physical preferences and needs.</p>
 			</div>
 
@@ -208,23 +207,20 @@
 				</div>
 
 				<!-- Add to Activity Preferences (Step 4) at the end of the options -->
-<div class="option-group" id="other-activities-group" style="margin-top: 15px;">
-    <div class="option-title">Other activities or interests?</div>
-    <div class="option-button" data-value="other-activity" id="other-activity-button">
-        <span class="activity-icon">➕</span>
-        Other
-    </div>
-    <div class="other-input-container" id="other-activity-container" style="display: none; margin-top: 10px;">
-        <input type="text" id="other-activity-input" placeholder="Tell us what else you enjoy..." class="other-input">
-    </div>
-</div>
+				<div class="option-group" id="other-activities-group" style="margin-top: 15px;">
+					<div class="option-title">Other activities or interests?</div>
+					<div class="option-button" data-value="other-activity" id="other-activity-button">
+						<span class="activity-icon">➕</span>
+						Other
+					</div>
+					<div class="other-input-container" id="other-activity-container" style="display: none; margin-top: 10px;">
+						<input type="text" id="other-activity-input" placeholder="Tell us what else you enjoy..." class="other-input">
+					</div>
+				</div>
 
 				<p class="footer-note">We'll customize your hidden gem recommendations based on your activity preferences.</p>
 			</div>
 
-			
-
-			
 
 			<!-- Quiz Navigation -->
 			<div class="quiz-navigation">
@@ -234,10 +230,7 @@
 		</div>
 
 
-		
-		<div class="loading-overlay" id="loading-overlay">
-		
-		</div>
+		<div class="loading-overlay" id="loading-overlay"></div>
 		<script src="static/js/quiz-integration.js"></script>
 	</body>
 </html>
