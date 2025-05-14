@@ -300,7 +300,7 @@ class GemCards extends HTMLElement {
 
 .explore-now-btn {
   /* Make button more visible for debugging */
-  background: red;
+  background: green;
   color: white;
   padding: 8px 16px;
   /* Other styles */
