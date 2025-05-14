@@ -1,434 +1,1154 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Add a Gem - Hidden Gems</title>
+    <style>
+        /* Retain existing styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
 
-		<title>Add a Gem - Hidden Gems</title>
-		<link rel="stylesheet" href="static/styles/main.css">
-		<link rel="stylesheet" href="static/styles/new-aesthetics.css">
-	</head>
-	<body>
-		<div
-			class="page-container">
-			<!-- Header -->
-			<header class="page-header">
-				<button class="back-button" id="back-button">←</button>
-				<h1 class="page-title">Add a Gem</h1>
-				<div class="header-spacer"></div>
-			</header>
+        html, body {
+            height: 100%;
+        }
 
-			<main class="form-container">
-				<p class="form-intro">Share your hidden gem with the community. The best discoveries come from travelers like you!</p>
+        body {
+            background: linear-gradient(to bottom, #eaf6f2, #ffffff);
+            color: #333;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-				<form
-					id="add-gem-form">
-					<!-- Gem Title -->
-					<div class="form-group">
-						<label for="gem-title">Gem Title*</label>
-						<input type="text" id="gem-title" name="title" placeholder="Name of this hidden gem" required>
-					</div>
+        /* Page Container */
+        .page-container {
+            max-width: 430px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 80px; /* Space for bottom nav */
+        }
 
-					<!-- Location -->
-					<div class="form-group">
-						<label for="gem-location">Location*</label>
-						<div class="location-input-container">
-							<input type="text" id="gem-location" name="location" placeholder="Enter address or coordinates" required>
-							<button type="button" id="use-my-location" class="location-button">
-								<span class="location-icon">📍</span>
-							</button>
-						</div>
-						<div class="map-placeholder" id="location-map">
-							<div class="map-message">Map will appear here after entering a location</div>
-						</div>
-					</div>
+        /* Header */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: white;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
 
-					<!-- Photos & Videos -->
-					<div class="form-group">
-						<label>Add Photos/Videos</label>
-						<div class="photo-upload-container">
-							<div class="photo-upload-box" id="photo-upload">
-								<span class="upload-icon">+</span>
-								<span class="upload-text">Upload</span>
-							</div>
-							<input type="file" id="photo-input" name="photos" accept="image/*" multiple style="display: none;">
-						</div>
-						<div class="photo-preview" id="photo-preview"></div>
-					</div>
+        /* Title */
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            flex-grow: 1;
+            color: #333;
+            margin-bottom: 0;
+        }
 
-					<!-- Gem Type -->
-					<div class="form-group">
-						<label>Gem Type*</label>
-						<div class="tag-options">
-							<div class="tag-option" data-value="viewpoint">
-								<span class="tag-icon">🌄</span>
-								Viewpoint
-							</div>
-							<div class="tag-option" data-value="hidden-beach">
-								<span class="tag-icon">🏖️</span>
-								Hidden Beach
-							</div>
-							<div class="tag-option" data-value="historic-site">
-								<span class="tag-icon">🏛️</span>
-								Historic Site
-							</div>
-							<div class="tag-option" data-value="local-eatery">
-								<span class="tag-icon">🍽️</span>
-								Local Eatery
-							</div>
-							<div class="tag-option" data-value="natural-wonder">
-								<span class="tag-icon">🌲</span>
-								Natural Wonder
-							</div>
-							<div class="tag-option" data-value="secret-trail">
-								<span class="tag-icon">🥾</span>
-								Secret Trail
-							</div>
-							<div class="tag-option" data-value="winery">
-								<span class="tag-icon">🍷</span>
-								Winery
-							</div>
-							<div class="tag-option" data-value="coffee-shop">
-								<span class="tag-icon">☕</span>
-								Coffee Shop
-							</div>
-						</div>
-					</div>
+        /* Back button */
+        .back-button, .close-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #666;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-					<!-- Activities -->
-					<div class="form-group">
-						<label>Activities</label>
-						<div class="tag-options">
-							<div class="tag-option" data-value="hiking">
-								<span class="tag-icon">🥾</span>
-								Hiking
-							</div>
-							<div class="tag-option" data-value="photography">
-								<span class="tag-icon">📸</span>
-								Photography
-							</div>
-							<div class="tag-option" data-value="swimming">
-								<span class="tag-icon">🏊</span>
-								Swimming
-							</div>
-							<div class="tag-option" data-value="picnicking">
-								<span class="tag-icon">🧺</span>
-								Picnicking
-							</div>
-							<div class="tag-option" data-value="wildlife">
-								<span class="tag-icon">🦊</span>
-								Wildlife
-							</div>
-							<div class="tag-option" data-value="wine-tasting">
-								<span class="tag-icon">🍷</span>
-								Wine Tasting
-							</div>
-							<div class="tag-option" data-value="relaxing">
-								<span class="tag-icon">😌</span>
-								Relaxing
-							</div>
-							<div class="tag-option" data-value="dining">
-								<span class="tag-icon">🍴</span>
-								Dining
-							</div>
-						</div>
-					</div>
+        /* Form container */
+        .form-container {
+            padding: 16px;
+        }
 
-					<!-- Accessibility -->
-					<div class="form-group">
-						<label>Accessibility Level*</label>
-						<div class="radio-options">
-							<label class="radio-option">
-								<input type="radio" name="accessibility" value="easy" required>
-								<span class="radio-text">Easy (no hiking)</span>
-							</label>
-							<label class="radio-option">
-								<input type="radio" name="accessibility" value="moderate">
-								<span class="radio-text">Moderate (short walks)</span>
-							</label>
-							<label class="radio-option">
-								<input type="radio" name="accessibility" value="difficult">
-								<span class="radio-text">Difficult (hiking required)</span>
-							</label>
-						</div>
-					</div>
+        /* Progress indicator */
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            position: relative;
+        }
 
-					<!-- Cost -->
-					<div class="form-group">
-						<label>Cost*</label>
-						<div class="cost-options">
-							<div class="cost-option" data-value="free">Free</div>
-							<div class="cost-option" data-value="$">$</div>
-							<div class="cost-option" data-value="$$">$$</div>
-							<div class="cost-option" data-value="$$$">$$$</div>
-						</div>
-						<input type="hidden" name="cost" id="selected-cost">
-					</div>
-					<!-- Visit Duration -->
-					<div class="form-group">
-						<label>Typical Visit Duration*</label>
-						<select name="duration" required>
-							<option value="">Select duration</option>
-							<option value="30min">Less than 30 minutes</option>
-							<option value="30-60min">30-60 minutes</option>
-							<option value="1-2hours">1-2 hours</option>
-							<option value="2-4hours">2-4 hours</option>
-							<option value="4+hours">4+ hours</option>
-						</select>
-					</div>
+        .progress-bar {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 3px;
+            background: #cfe9e1;
+            width: 100%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
 
-					<!-- Crowdedness -->
-					<div class="form-group">
-						<label>How crowded is this place?*</label>
-						<div class="slider-container">
-							<input type="range" min="1" max="5" value="2" class="range-slider" id="crowdedness-slider">
-							<div class="slider-labels">
-								<span>Never crowded</span>
-								<span>Sometimes busy</span>
-								<span>Very crowded</span>
-							</div>
-						</div>
-						<input type="hidden" name="crowdedness" id="crowdedness-value">
-					</div>
+        .progress-filled {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: #94c9ba;
+            transition: width 0.3s;
+        }
 
-					<!-- Best Time -->
-					<div class="form-group">
-						<label>Best Time to Visit</label>
-						<div class="tag-options">
-							<div class="tag-option" data-value="morning">
-								<span class="tag-icon">🌅</span>
-								Morning
-							</div>
-							<div class="tag-option" data-value="afternoon">
-								<span class="tag-icon">☀️</span>
-								Afternoon
-							</div>
-							<div class="tag-option" data-value="evening">
-								<span class="tag-icon">🌇</span>
-								Evening
-							</div>
-							<div class="tag-option" data-value="weekday">
-								<span class="tag-icon">📅</span>
-								Weekday
-							</div>
-							<div class="tag-option" data-value="weekend">
-								<span class="tag-icon">🎉</span>
-								Weekend
-							</div>
-						</div>
-					</div>
+        .step-indicator {
+            width: 30px;
+            height: 30px;
+            background: white;
+            border: 2px solid #94c9ba;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
 
-					<!-- Amenities -->
-					<div class="form-group">
-						<label>Available Amenities</label>
-						<div class="checkbox-options">
-							<label class="checkbox-option">
-								<input type="checkbox" name="amenities" value="parking">
-								<span class="checkbox-text">Parking</span>
-							</label>
-							<label class="checkbox-option">
-								<input type="checkbox" name="amenities" value="restrooms">
-								<span class="checkbox-text">Restrooms</span>
-							</label>
-							<label class="checkbox-option">
-								<input type="checkbox" name="amenities" value="food">
-								<span class="checkbox-text">Food/Drinks</span>
-							</label>
-							<label class="checkbox-option">
-								<input type="checkbox" name="amenities" value="wheelchair">
-								<span class="checkbox-text">Wheelchair Accessible</span>
-							</label>
-							<label class="checkbox-option">
-								<input type="checkbox" name="amenities" value="picnic">
-								<span class="checkbox-text">Picnic Area</span>
-							</label>
-						</div>
-					</div>
+        .step-indicator.active {
+            background: #94c9ba;
+            color: white;
+        }
 
-					<!-- Description -->
-					<div class="form-group">
-						<label for="gem-description">Description*</label>
-						<textarea id="gem-description" name="description" rows="4" placeholder="What makes this place special? Include any tips for visiting." required></textarea>
-					</div>
+        .step-indicator.completed {
+            background: #94c9ba;
+            color: white;
+        }
 
-					<!-- Is it Hidden? -->
-					<div class="form-group">
-						<label class="highlight-label">Is this place a true hidden gem?</label>
-						<p class="form-note">A hidden gem is a high-quality location that's not widely known or visited by most travelers.</p>
-						<div class="radio-options highlight-options">
-							<label class="radio-option">
-								<input type="radio" name="is_hidden" value="yes" required>
-								<span class="radio-text">Yes, it's a true hidden gem!</span>
-							</label>
-							<label class="radio-option">
-								<input type="radio" name="is_hidden" value="no">
-								<span class="radio-text">No, it's somewhat well-known</span>
-							</label>
-						</div>
-					</div>
+        .step-indicator.completed::after {
+            content: "✓";
+            font-size: 14px;
+        }
 
-					<!-- Submit Button -->
-					<div class="form-actions">
-						<button type="submit" class="submit-button">Submit Gem</button>
-					</div>
-				</form>
-			</main>
+        /* Form step pages */
+        .form-step {
+            display: none;
+        }
 
-			<!-- Navigation wheel component will be loaded here -->
-			<div id="nav-wheel-container"></div>
-		</div>
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
 
-		<script>
-			document.addEventListener('DOMContentLoaded', function () { // Handle back button
-				document.getElementById('back-button').addEventListener('click', function () {
-					window.history.back();
-				});
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
 
-				// Handle photo upload
-				const photoUpload = document.getElementById('photo-upload');
-				const photoInput = document.getElementById('photo-input');
-				const photoPreview = document.getElementById('photo-preview');
+        /* Form groups */
+        .form-group {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
 
-				photoUpload.addEventListener('click', function () {
-					photoInput.click();
-				});
+        /* Form intro */
+        .form-intro {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
 
-				photoInput.addEventListener('change', function () {
-					photoPreview.innerHTML = '';
+        /* Labels */
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
 
-					if (this.files) {
-						Array.from(this.files).forEach(file => {
-							const reader = new FileReader();
+        /* Inputs, selects, textareas */
+        input[type="text"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background: #f8f8f8;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            box-shadow: inset 0 0 2px rgba(0,0,0,0.05);
+        }
 
-							reader.onload = function (e) {
-								const previewItem = document.createElement('div');
-								previewItem.className = 'preview-item';
-								previewItem.innerHTML = `
-                                <img src="${
-									e.target.result
-								}" alt="Preview">
+        input[type="text"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            background: #eef5f2;
+        }
+
+        /* Location section */
+        .location-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #f4f4f4;
+        }
+
+        #location-map {
+            width: 100%;
+            height: 100%;
+            background: #eee url('https://via.placeholder.com/400x200') center/cover;
+        }
+
+        .map-pin {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -100%);
+            font-size: 30px;
+            color: #94c9ba;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .location-methods {
+            display: flex;
+            gap: 10px;
+        }
+
+        .location-method {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background: #f0f5f3;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .location-method.active {
+            background: #94c9ba;
+            color: white;
+        }
+
+        /* Media uploads */
+        .photo-upload-container {
+            display: flex;
+            gap: 12px;
+        }
+
+        .photo-upload-box {
+            width: 72px;
+            height: 72px;
+            background: #f4f7f6;
+            border: 2px dashed #cce2dc;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #88a3a0;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .upload-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .photo-preview {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .preview-item {
+            position: relative;
+            width: 72px;
+            height: 72px;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-photo {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 20px;
+            height: 20px;
+            background: rgba(0,0,0,0.6);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Tag Options */
+        .tag-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .tag-option {
+            background: #f0f5f3;
+            color: #333;
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .tag-icon {
+            margin-right: 6px;
+        }
+
+        .tag-option.selected {
+            background: #94c9ba;
+            color: white;
+        }
+
+        /* Radio / Checkbox Options */
+        .radio-options,
+        .checkbox-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .radio-option,
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .radio-text,
+        .checkbox-text {
+            font-size: 14px;
+        }
+
+        /* Cost Options */
+        .cost-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .cost-option {
+            width: 48px;
+            height: 48px;
+            background: #f0f5f3;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .cost-option.selected {
+            background: #94c9ba;
+            color: white;
+        }
+
+        /* Range slider */
+        .slider-container {
+            margin-top: 8px;
+        }
+
+        .range-slider {
+            width: 100%;
+            height: 6px;
+            background: #cfe9e1;
+            border-radius: 3px;
+            -webkit-appearance: none;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #94c9ba;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Slider labels */
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Form Navigation */
+        .form-nav {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .nav-button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .back-nav {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .next-nav, .submit-nav {
+            background: #94c9ba;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .back-nav:hover {
+            background: #d0d0d0;
+        }
+
+        .next-nav:hover, .submit-nav:hover {
+            background: #7fb7a7;
+        }
+
+        /* Step title */
+        .step-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #333;
+        }
+
+        /* Form note */
+        .form-note {
+            font-size: 13px;
+            color: #666;
+            margin-top: 4px;
+            margin-bottom: 10px;
+        }
+
+        /* Highlight label */
+        .highlight-label {
+            color: #94c9ba;
+            font-weight: 600;
+        }
+
+        /* Confirmation modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            width: 80%;
+            max-width: 350px;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .modal-message {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .modal-cancel {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .modal-confirm {
+            background: #94c9ba;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Header -->
+        <header class="page-header">
+            <button class="close-button" id="close-button">×</button>
+            <h1 class="page-title">Add a Hidden Gem</h1>
+            <div style="width: 32px;"></div>
+        </header>
+
+        <!-- Progress Indicator -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-filled" id="progress-bar" style="width: 20%;"></div>
+            </div>
+            <div class="step-indicator active" data-step="1">1</div>
+            <div class="step-indicator" data-step="2">2</div>
+            <div class="step-indicator" data-step="3">3</div>
+            <div class="step-indicator" data-step="4">4</div>
+        </div>
+
+        <div class="form-container">
+            <form id="add-gem-form">
+                <!-- Step 1: Basic Information -->
+                <div class="form-step active" id="step-1">
+                    <h2 class="step-title">Basic Information</h2>
+                    <p class="form-intro">Let's start with the essentials about your hidden gem.</p>
+
+                    <!-- Gem Title -->
+                    <div class="form-group">
+                        <label for="gem-title">Gem Title*</label>
+                        <input type="text" id="gem-title" name="title" placeholder="Name of this hidden gem" required>
+                    </div>
+
+                    <!-- Gem Type -->
+                    <div class="form-group">
+                        <label>Gem Type*</label>
+                        <div class="tag-options">
+                            <div class="tag-option" data-value="viewpoint">
+                                <span class="tag-icon">🌄</span>Viewpoint
+                            </div>
+                            <div class="tag-option" data-value="hidden-beach">
+                                <span class="tag-icon">🏖️</span>Hidden Beach
+                            </div>
+                            <div class="tag-option" data-value="historic-site">
+                                <span class="tag-icon">🏛️</span>Historic Site
+                            </div>
+                            <div class="tag-option" data-value="local-eatery">
+                                <span class="tag-icon">🍽️</span>Local Eatery
+                            </div>
+                            <div class="tag-option" data-value="natural-wonder">
+                                <span class="tag-icon">🌲</span>Natural Wonder
+                            </div>
+                            <div class="tag-option" data-value="secret-trail">
+                                <span class="tag-icon">🥾</span>Secret Trail
+                            </div>
+                            <div class="tag-option" data-value="winery">
+                                <span class="tag-icon">🍷</span>Winery
+                            </div>
+                            <div class="tag-option" data-value="coffee-shop">
+                                <span class="tag-icon">☕</span>Coffee Shop
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Photos & Videos -->
+                    <div class="form-group">
+                        <label>Add Photos/Videos</label>
+                        <div class="photo-upload-container">
+                            <div class="photo-upload-box" id="photo-upload">
+                                <span class="upload-icon">+</span>
+                                <span class="upload-text">Upload</span>
+                            </div>
+                            <input type="file" id="photo-input" name="photos" accept="image/*" multiple style="display: none;">
+                        </div>
+                        <div class="photo-preview" id="photo-preview"></div>
+                    </div>
+
+                    <div class="form-nav">
+                        <button type="button" class="nav-button next-nav" id="next-1">Continue</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Location -->
+                <div class="form-step" id="step-2">
+                    <h2 class="step-title">Location</h2>
+                    <p class="form-intro">Tell us where your hidden gem is located.</p>
+
+                    <div class="form-group">
+                        <label>Choose a location method</label>
+                        <div class="location-methods">
+                            <div class="location-method active" data-method="map">Pin on Map</div>
+                            <div class="location-method" data-method="address">Enter Address</div>
+                            <div class="location-method" data-method="current">Use My Location</div>
+                        </div>
+                        
+                        <div class="location-section" id="map-method" style="margin-top: 12px;">
+                            <p class="form-note">Drag the map or tap to place your pin.</p>
+                            <div class="map-container">
+                                <div id="location-map"></div>
+                                <div class="map-pin">📍</div>
+                            </div>
+                        </div>
+
+                        <div class="location-section" id="address-method" style="display: none; margin-top: 12px;">
+                            <input type="text" id="gem-location" name="location" placeholder="Enter address or coordinates">
+                        </div>
+
+                        <input type="hidden" id="lat-lng" name="coordinates">
+                    </div>
+
+                    <div class="form-nav">
+                        <button type="button" class="nav-button back-nav" id="back-2">Back</button>
+                        <button type="button" class="nav-button next-nav" id="next-2">Continue</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Details -->
+                <div class="form-step" id="step-3">
+                    <h2 class="step-title">Details</h2>
+                    <p class="form-intro">Tell us more about this place.</p>
+
+                    <!-- Activities -->
+                    <div class="form-group">
+                        <label>Activities</label>
+                        <div class="tag-options">
+                            <div class="tag-option" data-value="hiking">
+                                <span class="tag-icon">🥾</span>Hiking
+                            </div>
+                            <div class="tag-option" data-value="photography">
+                                <span class="tag-icon">📸</span>Photography
+                            </div>
+                            <div class="tag-option" data-value="swimming">
+                                <span class="tag-icon">🏊</span>Swimming
+                            </div>
+                            <div class="tag-option" data-value="picnicking">
+                                <span class="tag-icon">🧺</span>Picnicking
+                            </div>
+                            <div class="tag-option" data-value="wildlife">
+                                <span class="tag-icon">🦊</span>Wildlife
+                            </div>
+                            <div class="tag-option" data-value="wine-tasting">
+                                <span class="tag-icon">🍷</span>Wine Tasting
+                            </div>
+                            <div class="tag-option" data-value="relaxing">
+                                <span class="tag-icon">😌</span>Relaxing
+                            </div>
+                            <div class="tag-option" data-value="dining">
+                                <span class="tag-icon">🍴</span>Dining
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accessibility -->
+                    <div class="form-group">
+                        <label>Accessibility Level*</label>
+                        <div class="radio-options">
+                            <label class="radio-option">
+                                <input type="radio" name="accessibility" value="easy" required>
+                                <span class="radio-text">Easy (no hiking)</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="accessibility" value="moderate">
+                                <span class="radio-text">Moderate (short walks)</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="accessibility" value="difficult">
+                                <span class="radio-text">Difficult (hiking required)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Cost -->
+                    <div class="form-group">
+                        <label>Cost*</label>
+                        <div class="cost-options">
+                            <div class="cost-option" data-value="free">Free</div>
+                            <div class="cost-option" data-value="$">$</div>
+                            <div class="cost-option" data-value="$$">$$</div>
+                            <div class="cost-option" data-value="$$$">$$$</div>
+                        </div>
+                        <input type="hidden" name="cost" id="selected-cost">
+                    </div>
+
+                    <!-- Visit Duration -->
+                    <div class="form-group">
+                        <label>Typical Visit Duration*</label>
+                        <select name="duration" required>
+                            <option value="">Select duration</option>
+                            <option value="30min">Less than 30 minutes</option>
+                            <option value="30-60min">30-60 minutes</option>
+                            <option value="1-2hours">1-2 hours</option>
+                            <option value="2-4hours">2-4 hours</option>
+                            <option value="4+hours">4+ hours</option>
+                        </select>
+                    </div>
+
+                    <div class="form-nav">
+                        <button type="button" class="nav-button back-nav" id="back-3">Back</button>
+                        <button type="button" class="nav-button next-nav" id="next-3">Continue</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Final Details -->
+                <div class="form-step" id="step-4">
+                    <h2 class="step-title">Final Details</h2>
+                    <p class="form-intro">Almost done! Just a few more things to help others enjoy this gem.</p>
+
+                    <!-- Crowdedness -->
+                    <div class="form-group">
+                        <label>How crowded is this place?*</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="5" value="2" class="range-slider" id="crowdedness-slider">
+                            <div class="slider-labels">
+                                <span>Never crowded</span>
+                                <span>Sometimes busy</span>
+                                <span>Very crowded</span>
+                            </div>
+                        </div>
+                        <input type="hidden" name="crowdedness" id="crowdedness-value" value="2">
+                    </div>
+
+                    <!-- Best Time -->
+                    <div class="form-group">
+                        <label>Best Time to Visit</label>
+                        <div class="tag-options">
+                            <div class="tag-option" data-value="morning">
+                                <span class="tag-icon">🌅</span>Morning
+                            </div>
+                            <div class="tag-option" data-value="afternoon">
+                                <span class="tag-icon">☀️</span>Afternoon
+                            </div>
+                            <div class="tag-option" data-value="evening">
+                                <span class="tag-icon">🌇</span>Evening
+                            </div>
+                            <div class="tag-option" data-value="weekday">
+                                <span class="tag-icon">📅</span>Weekday
+                            </div>
+                            <div class="tag-option" data-value="weekend">
+                                <span class="tag-icon">🎉</span>Weekend
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Amenities -->
+                    <div class="form-group">
+                        <label>Available Amenities</label>
+                        <div class="checkbox-options">
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="amenities" value="parking">
+                                <span class="checkbox-text">Parking</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="amenities" value="restrooms">
+                                <span class="checkbox-text">Restrooms</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="amenities" value="food">
+                                <span class="checkbox-text">Food/Drinks</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="amenities" value="wheelchair">
+                                <span class="checkbox-text">Wheelchair Accessible</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="amenities" value="picnic">
+                                <span class="checkbox-text">Picnic Area</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="gem-description">Description*</label>
+                        <textarea id="gem-description" name="description" rows="4" placeholder="What makes this place special? Include any tips for visiting." required></textarea>
+                    </div>
+
+                    <!-- Is it Hidden? -->
+                    <div class="form-group">
+                        <label class="highlight-label">Is this place a true hidden gem?</label>
+                        <p class="form-note">A hidden gem is a high-quality location that's not widely known or visited by most travelers.</p>
+                        <div class="radio-options highlight-options">
+                            <label class="radio-option">
+                                <input type="radio" name="is_hidden" value="yes" required>
+                                <span class="radio-text">Yes, it's a true hidden gem!</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="is_hidden" value="no">
+                                <span class="radio-text">No, it's somewhat well-known</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-nav">
+                        <button type="button" class="nav-button back-nav" id="back-4">Back</button>
+                        <button type="submit" class="nav-button submit-nav">Submit Gem</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Exit Confirmation Modal -->
+    <div class="modal" id="exit-modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Exit without saving?</h3>
+            <p class="modal-message">Your gem information will not be saved. Are you sure you want to exit?</p>
+            <div class="modal-actions">
+                <button class="modal-button modal-cancel" id="modal-cancel">Cancel</button>
+                <button class="modal-button modal-confirm" id="modal-confirm">Exit</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Step navigation
+            const steps = document.querySelectorAll('.form-step');
+            const stepIndicators = document.querySelectorAll('.step-indicator');
+            const progressBar = document.getElementById('progress-bar');
+            let currentStep = 1;
+            const totalSteps = steps.length;
+
+            // Update progress bar
+            function updateProgress() {
+                const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
+
+            // Show a specific step
+            function showStep(stepNumber) {
+                steps.forEach(step => step.classList.remove('active'));
+                document.getElementById(`step-${stepNumber}`).classList.add('active');
+                
+                stepIndicators.forEach(indicator => {
+                    const step = parseInt(indicator.getAttribute('data-step'));
+                    indicator.classList.remove('active', 'completed');
+                    
+                    if (step === stepNumber) {
+                        indicator.classList.add('active');
+                    } else if (step < stepNumber) {
+                        indicator.classList.add('completed');
+                    }
+                });
+                
+                currentStep = stepNumber;
+                updateProgress();
+            }
+
+            // Next button handlers
+            document.getElementById('next-1').addEventListener('click', function() {
+                // Basic validation for step 1
+                const title = document.getElementById('gem-title').value;
+                const gemType = document.querySelector('.form-group:nth-of-type(2) .tag-option.selected');
+                
+                if (!title) {
+                    alert('Please enter a title for your gem');
+                    return;
+                }
+                
+                if (!gemType) {
+                    alert('Please select a gem type');
+                    return;
+                }
+                
+                showStep(2);
+            });
+
+            document.getElementById('next-2').addEventListener('click', function() {
+                // For demo purposes, we'll skip validation on location
+                showStep(3);
+            });
+
+            document.getElementById('next-3').addEventListener('click', function() {
+                // Validate required fields in step 3
+                if (!document.querySelector('input[name="accessibility"]:checked')) {
+                    alert('Please select an accessibility level');
+                    return;
+                }
+                
+                if (!document.getElementById('selected-cost').value) {
+                    alert('Please select a cost level');
+                    return;
+                }
+                
+                if (!document.querySelector('select[name="duration"]').value) {
+                    alert('Please select a typical visit duration');
+                    return;
+                }
+                
+                showStep(4);
+            });
+
+            // Back button handlers
+            document.getElementById('back-2').addEventListener('click', function() {
+                showStep(1);
+            });
+
+            document.getElementById('back-3').addEventListener('click', function() {
+                showStep(2);
+            });
+
+            document.getElementById('back-4').addEventListener('click', function() {
+                showStep(3);
+            });
+
+            // Form submission
+            document.getElementById('add-gem-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                // Final validation
+                if (!document.getElementById('crowdedness-value').value) {
+                    alert('Please indicate how crowded this place is');
+                    return;
+                }
+                
+                if (!document.getElementById('gem-description').value) {
+                    alert('Please provide a description');
+                    return;
+                }
+                
+                if (!document.querySelector('input[name="is_hidden"]:checked')) {
+                    alert('Please indicate if this is a true hidden gem');
+                    return;
+                }
+                
+                // Collect all form data
+                const formData = new FormData(this);
+                
+                // Add gem type
+                const selectedGemType = document.querySelector('.form-step:nth-of-type(1) .tag-option.selected');
+                if (selectedGemType) {
+                    formData.append('gemType', selectedGemType.getAttribute('data-value'));
+                }
+                
+                // Add activities
+                const selectedActivities = Array.from(
+                    document.querySelectorAll('.form-step:nth-of-type(3) .tag-options .tag-option.selected')
+                ).map(el => el.getAttribute('data-value'));
+                formData.append('activities', JSON.stringify(selectedActivities));
+                
+                // Add best times
+                const selectedTimes = Array.from(
+                    document.querySelectorAll('.form-step:nth-of-type(4) .tag-options .tag-option.selected')
+                ).map(el => el.getAttribute('data-value'));
+                formData.append('bestTimes', JSON.stringify(selectedTimes));
+                
+                // For demo, just log and show success
+                console.log('Form submitted with data:', Object.fromEntries(formData));
+                alert('Thank you for submitting a hidden gem! After review, it will be added to our collection.');
+                
+                // Reset form and go back to step 1
+                this.reset();
+                document.querySelectorAll('.tag-option.selected').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                document.querySelectorAll('.cost-option.selected').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                document.getElementById('photo-preview').innerHTML = '';
+                document.getElementById('selected-cost').value = '';
+                document.getElementById('crowdedness-slider').value = 2;
+                document.getElementById('crowdedness-value').value = 2;
+                
+                showStep(1);
+            });
+
+            // Handle tag selection
+            const tagOptions = document.querySelectorAll('.tag-option');
+            tagOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const parentGroup = this.closest('.form-group');
+                    
+                    // If it's Gem Type (in step 1), it's single select
+                    if (parentGroup.querySelector('label').textContent.includes('Gem Type')) {
+                        parentGroup.querySelectorAll('.tag-option').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        this.classList.add('selected');
+                    } else {
+                        // Toggle for multi-select groups
+                        this.classList.toggle('selected');
+                    }
+                });
+            });
+
+            // Handle cost selection
+            const costOptions = document.querySelectorAll('.cost-option');
+            const selectedCostInput = document.getElementById('selected-cost');
+            costOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    costOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedCostInput.value = this.getAttribute('data-value');
+                });
+            });
+
+            // Handle crowdedness slider
+            const crowdednessSlider = document.getElementById('crowdedness-slider');
+            const crowdednessValue = document.getElementById('crowdedness-value');
+            crowdednessSlider.addEventListener('input', function() {
+                crowdednessValue.value = this.value;
+            });
+
+            // Handle photo upload
+            const photoUpload = document.getElementById('photo-upload');
+            const photoInput = document.getElementById('photo-input');
+            const photoPreview = document.getElementById('photo-preview');
+
+            photoUpload.addEventListener('click', function() {
+                photoInput.click();
+            });
+
+            photoInput.addEventListener('change', function() {
+                if (this.files) {
+                    Array.from(this.files).forEach(file => {
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            const previewItem = document.createElement('div');
+                            previewItem.className = 'preview-item';
+                            previewItem.innerHTML = `
+                                <img src="${e.target.result}" alt="Preview">
                                 <button type="button" class="remove-photo">×</button>
                             `;
-								photoPreview.appendChild(previewItem);
+                            photoPreview.appendChild(previewItem);
+                            
+                            // Handle photo removal
+                            previewItem.querySelector('.remove-photo').addEventListener('click', function() {
+                                previewItem.remove();
+                            });
+                        };
+                        
+                        reader.readAsDataURL(file);
+                    });
+                }
+            });
 
-								// Handle photo removal
-								previewItem.querySelector('.remove-photo').addEventListener('click', function () {
-									previewItem.remove();
-								});
-							};
+            // Handle location method selection
+            const locationMethods = document.querySelectorAll('.location-method');
+            locationMethods.forEach(method => {
+                method.addEventListener('click', function() {
+                    locationMethods.forEach(m => m.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const selectedMethod = this.getAttribute('data-method');
+                    
+                    // Hide all methods
+                    document.getElementById('map-method').style.display = 'none';
+                    document.getElementById('address-method').style.display = 'none';
+                    
+                    // Show selected method
+                    if (selectedMethod === 'map') {
+                        document.getElementById('map-method').style.display = 'block';
+                    } else if (selectedMethod === 'address') {
+                        document.getElementById('address-method').style.display = 'block';
+                    } else if (selectedMethod === 'current') {
+                        // Use current location (would use geolocation API)
+                        if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(position => {
+                                document.getElementById('lat-lng').value = 
+                                    `${position.coords.latitude},${position.coords.longitude}`;
+                                alert(`Location set to: ${position.coords.latitude}, ${position.coords.longitude}`);
+                            }, error => {
+                                console.error('Error getting location:', error);
+                                alert('Could not get your current location. Please try another method.');
+                            });
+                        } else {
+                            alert('Geolocation is not supported by this browser. Please try another method.');
+                        }
+                    }
+                });
+            });
 
-							reader.readAsDataURL(file);
-						});
-					}
-				});
+            // Exit confirmation
+            const exitModal = document.getElementById('exit-modal');
+            const closeButton = document.getElementById('close-button');
+            
+            closeButton.addEventListener('click', function() {
+                exitModal.classList.add('active');
+            });
+            
+            document.getElementById('modal-cancel').addEventListener('click', function() {
+                exitModal.classList.remove('active');
+            });
+            
+            document.getElementById('modal-confirm').addEventListener('click', function() {
+                window.location.href = "index.html";
+            });
 
-				// Handle tag selection
-				const tagOptions = document.querySelectorAll('.tag-option');
+            // Step indicators click to navigate
+            stepIndicators.forEach(indicator => {
+                indicator.addEventListener('click', function() {
+                    const stepNumber = parseInt(this.getAttribute('data-step'));
+                    
+                    // Only allow navigating to steps we've already visited
+                    if (stepNumber < currentStep) {
+                        showStep(stepNumber);
+                    }
+                });
+            });
 
-				tagOptions.forEach(option => {
-					option.addEventListener('click', function () {
-						const parentGroup = this.closest('.form-group');
-
-						// If it's a single select group (gem type)
-						if (parentGroup.querySelector('label').textContent.includes('Gem Type')) { // Deselect other options in this group
-							parentGroup.querySelectorAll('.tag-option').forEach(opt => {
-								opt.classList.remove('selected');
-							});
-							this.classList.add('selected');
-						} else { // Toggle selection for multi-select groups
-							this.classList.toggle('selected');
-						}
-					});
-				});
-
-				// Handle cost selection
-				const costOptions = document.querySelectorAll('.cost-option');
-				const selectedCostInput = document.getElementById('selected-cost');
-
-				costOptions.forEach(option => {
-					option.addEventListener('click', function () {
-						costOptions.forEach(opt => opt.classList.remove('selected'));
-						this.classList.add('selected');
-						selectedCostInput.value = this.getAttribute('data-value');
-					});
-				});
-
-				// Handle crowdedness slider
-				const crowdednessSlider = document.getElementById('crowdedness-slider');
-				const crowdednessValue = document.getElementById('crowdedness-value');
-
-				crowdednessSlider.addEventListener('input', function () {
-					crowdednessValue.value = this.value;
-				});
-
-				// Initialize hidden values
-				crowdednessValue.value = crowdednessSlider.value;
-
-				// Load navigation wheel component if available
-				if (window.ComponentLoader) {
-					window.ComponentLoader.load('nav-wheel-container', 'navigation-wheel');
-				}
-
-				// Handle form submission
-				document.getElementById('add-gem-form').addEventListener('submit', function (event) {
-					event.preventDefault();
-
-					// Validate gem type selection
-					const gemTypeGroup = document.querySelector('.form-group:nth-of-type(4)');
-					const selectedGemType = gemTypeGroup.querySelector('.tag-option.selected');
-
-					if (! selectedGemType) {
-						alert('Please select a gem type');
-						return;
-					}
-
-					// Get all form values
-					const formData = new FormData(this);
-
-					// Add gem type
-					formData.append('gemType', selectedGemType.getAttribute('data-value'));
-
-					// Add activities
-					const selectedActivities = Array.from(document.querySelectorAll('.form-group:nth-of-type(5) .tag-option.selected')).map(el => el.getAttribute('data-value'));
-					formData.append('activities', JSON.stringify(selectedActivities));
-
-					// Add best times
-					const selectedTimes = Array.from(document.querySelectorAll('.form-group:nth-of-type(9) .tag-option.selected')).map(el => el.getAttribute('data-value'));
-					formData.append('bestTimes', JSON.stringify(selectedTimes));
-
-					// In a real app, we would send this data to the server
-					// For this demo, we'll just log it and show a success message
-					console.log('Form submitted with data:', Object.fromEntries(formData));
-
-					// Show success message
-					alert('Thank you for submitting a hidden gem! After review, it will be added to our collection.');
-
-					// Reset form
-					this.reset();
-
-					// Reset UI state
-					document.querySelectorAll('.tag-option.selected').forEach(el => {
-						el.classList.remove('selected');
-					});
-
-					document.querySelectorAll('.cost-option.selected').forEach(el => {
-						el.classList.remove('selected');
-					});
-
-					photoPreview.innerHTML = '';
-					selectedCostInput.value = '';
-					crowdednessSlider.value = 2;
-					crowdednessValue.value = 2;
-				});
-			});
-		</script>
-		<script>
-			document.getElementById("back-button").addEventListener("click", function () {
-				const confirmExit = confirm("Are you sure you want to exit? Your changes will not be saved.");
-				if (confirmExit) {
-					window.location.href = "index.html";
-				}
-			});
-		</script>
-	</body>
+            // Initialize with first step
+            showStep(1);
+        });
+    </script>
+</body>
 </html>
