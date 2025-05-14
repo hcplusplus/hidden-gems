@@ -123,8 +123,8 @@ class LLMProgressIndicator {
         // Make sure the overlay is visible
         overlayElement.style.display = 'flex';
 
-        // Update progress every 2 seconds
-        this.intervalId = setInterval(() => this.updateProgress(), 2000);
+        // Update progress every 5 seconds
+        this.intervalId = setInterval(() => this.updateProgress(), 5000);
     }
 
     /**
@@ -582,7 +582,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Show loading overlay immediately for user feedback
         if (overlay) {
-            //overlay.style.display = "flex";
+            overlay.style.display = "flex";
 
             // Use the progress indicator instead of simple loading message
             progressIndicator.start(overlay);
