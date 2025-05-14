@@ -1,83 +1,63 @@
 [
   {
-    "id": "node/2392156810",
-    "name": "Toyota Amphitheatre",
+    "id": "node/358778951",
+    "name": "William B Ide Adobe State Historical Monumen",
     "coordinates": [
-      -121.512912,
-      39.0311465
-    ],
-    "category": "amenity",
-    "address": "2677, Forty Mile Road, Wheatland, CA, 95692",
-    "opening_hours": "",
-    "dollar_sign": "$$",
-    "category_1": "Local Amenity",
-    "category_2": "Peaceful retreat",
-    "description": "A local establishment with unique character and charm",
-    "rarity": "moderately hidden",
-    "color": "purple",
-    "time": 49,
-    "distanceFromRoute": 15.16101172622561,
-    "routeProgress": 0.8094910848403595
-  },
-  {
-    "id": "node/455315272",
-    "name": "Little Shrine",
-    "coordinates": [
-      -121.9375626,
-      39.1156178
-    ],
-    "category": "historic",
-    "address": "",
-    "opening_hours": "",
-    "dollar_sign": "$$",
-    "category_1": "Historical Site",
-    "category_2": "Historical site",
-    "description": "A historical treasure with rich stories and few tourists",
-    "rarity": "moderately hidden",
-    "color": "purple",
-    "time": 32,
-    "distanceFromRoute": 16.948491990133206,
-    "routeProgress": 0.6954227854375241
-  },
-  {
-    "id": "node/358760694",
-    "name": "Ajax Field",
-    "coordinates": [
-      -122.1919262,
-      39.5143266
+      -122.2261082,
+      40.1970997
     ],
     "category": "leisure",
     "address": "",
     "opening_hours": "",
     "dollar_sign": "$",
     "category_1": "Recreation",
-    "category_2": "Hidden gem",
+    "category_2": "Photography spot",
     "description": "Relax and unwind at this local favorite recreation spot",
     "rarity": "moderately hidden",
     "color": "purple",
     "time": 97,
-    "distanceFromRoute": 23.137738267328718,
-    "routeProgress": 0.4824862208369608
+    "distanceFromRoute": 0.7138981509902702,
+    "routeProgress": 0.19249530611990792
   },
   {
-    "id": "node/358820219",
-    "name": "Maidu Park",
+    "id": "node/358776058",
+    "name": "Sacramento National Wildlife Refuge",
     "coordinates": [
-      -121.247727,
-      38.734624
+      -122.1660902,
+      39.4084959
     ],
     "category": "leisure",
     "address": "",
     "opening_hours": "",
     "dollar_sign": "$",
     "category_1": "Recreation",
-    "category_2": "Peaceful retreat",
+    "category_2": "Photography spot",
+    "description": "Enjoy leisure activities in this tranquil setting",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 113,
+    "distanceFromRoute": 24.9441317298641,
+    "routeProgress": 0.5312548501507979
+  },
+  {
+    "id": "node/11454810369",
+    "name": "Meadow Wood Trail Park",
+    "coordinates": [
+      -122.3699546,
+      40.5144703
+    ],
+    "category": "leisure",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$",
+    "category_1": "Recreation",
+    "category_2": "Scenic viewpoint",
     "description": "A peaceful Park where you can escape the tourist crowds",
     "rarity": "moderately hidden",
     "color": "purple",
-    "time": 110,
-    "distanceFromRoute": 26.25214686025348,
-    "routeProgress": 0.9819906027178349
+    "time": 91,
+    "distanceFromRoute": 0.85508046705153,
+    "routeProgress": 0.033902087558357295
   },
   {
     "id": "node/10292125550",
@@ -98,5 +78,25 @@
     "time": 36,
     "distanceFromRoute": 0.8554930324813965,
     "routeProgress": 0.010182787469973942
+  },
+  {
+    "id": "node/10856370666",
+    "name": "amphitheater",
+    "coordinates": [
+      -122.4977624,
+      40.4933485
+    ],
+    "category": "amenity",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$",
+    "category_1": "Local Amenity",
+    "category_2": "Outdoor adventure",
+    "description": "Enjoy this local favorite away from typical tourist routes",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 38,
+    "distanceFromRoute": 12.071973603210342,
+    "routeProgress": 0.0189063269810046
   }
 ]
