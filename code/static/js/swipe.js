@@ -11,7 +11,7 @@ HiddenGems.swipe = {
     startX: 0,
     currentX: 0,
     isDragging: false,
-    threshold: 80, // Minimum distance to trigger swipe
+    threshold: 50, // Minimum distance to trigger swipe
     
     /**
      * Initialize swipe handling for gem cards

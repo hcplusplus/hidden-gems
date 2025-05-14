@@ -406,101 +406,153 @@ class GemCards {
   }
 
   /**
-   * Show a specific card by index
-   * @param {number} index - Index of the card to show
-   */
-  showCard(index) {
-    if (!this.gems.length) return;
+ * Show a specific card by index with smooth animation
+ * @param {number} index - Index of the card to show
+ * @param {string} direction - Direction of animation ('left' or 'right')
+ */
+showCard(index, direction = null) {
+  if (!this.gems.length) return;
 
-    // Prevent recursive calls
-    if (window._showingCard) return;
-    window._showingCard = true;
+  // Prevent recursive calls
+  if (window._showingCard) return;
+  window._showingCard = true;
 
-    // Keep index within bounds
-    if (index < 0) index = 0;
-    if (index >= this.gems.length) index = this.gems.length - 1;
-
-    // Update active index
-    this.activeIndex = index;
-
-    // Update global reference for compatibility
-    if (window.HiddenGems && window.HiddenGems.map) {
-      window.HiddenGems.map.activeGemIndex = index;
-    }
-    window.activeGemIndex = index;
-
-    // Update cards
-    const cards = this.wrapper.querySelectorAll('.gem-card');
-    cards.forEach((card, i) => {
-      if (i === index) {
-        card.classList.add('active');
-
-        // Apply variant class to active card
-        if (this.variant && !card.classList.contains(`${this.variant}-variant`)) {
-          card.classList.add(`${this.variant}-variant`);
-        }
-
-        // Add active label if not present
-        //if (!card.querySelector('.active-gem-label')) {
-        //  const label = document.createElement('div');
-        //  label.className = 'active-gem-label';
-        //  label.textContent = 'ACTIVE';
-        //  card.querySelector('.card-header').appendChild(label);
-        //}
-      } else {
-        card.classList.remove('active');
-
-        // Remove active label if present
-        //const label = card.querySelector('.active-gem-label');
-        //if (label) label.remove();
-      }
+  // Keep index within bounds
+  if (index < 0) index = 0;
+  if (index >= this.gems.length) index = this.gems.length - 1;
   
-    });
-
-    // Update navigation dots
-    const dots = this.dotsContainer.querySelectorAll('.nav-dot');
-    dots.forEach((dot, i) => {
-      dot.classList.toggle('active', i === index);
-    });
-
-    // Update trip distance info if in map-recs variant
-    if (this.variant === 'map-recs') {
-      this.updateTripDistanceInfo();
+  // If the card is already active, just reset any transforms
+  if (index === this.activeIndex) {
+    const activeCard = this.wrapper.querySelector('.gem-card.active');
+    if (activeCard) {
+      activeCard.style.transition = 'transform 0.3s ease';
+      activeCard.style.transform = 'translateX(0)';
     }
-
-    // Highlight marker
-    this.highlightMarker(index);
-
-    // Call callback
-    this.onCardChange(this.gems[index], index);
-
-    // Dispatch event for compatibility
-    this.container.dispatchEvent(new CustomEvent('card-change', {
-      bubbles: true,
-      detail: { index, gem: this.gems[index] }
-    }));
-
-    // Clear recursive protection
-    setTimeout(() => {
-      window._showingCard = false;
-    }, 50);
+    window._showingCard = false;
+    return;
   }
+  
+  // Determine direction if not specified
+  if (!direction) {
+    direction = index > this.activeIndex ? 'left' : 'right';
+    // Handle wrap-around
+    if (this.activeIndex === this.gems.length - 1 && index === 0) {
+      direction = 'left';
+    } else if (this.activeIndex === 0 && index === this.gems.length - 1) {
+      direction = 'right';
+    }
+  }
+  
+  // Get current active card
+  const currentActiveCard = this.wrapper.querySelector('.gem-card.active');
+  const cards = this.wrapper.querySelectorAll('.gem-card');
+  
+  // Get the next card that will become active
+  const nextActiveCard = cards[index];
+  
+  if (currentActiveCard && nextActiveCard) {
+    // Disable transitions initially
+    cards.forEach(card => {
+      card.style.transition = 'none';
+    });
+    
+    // Position the new card off-screen
+    nextActiveCard.style.transform = direction === 'left' ? 
+      'translateX(100%)' : 'translateX(-100%)';
+    
+    // Update the active class immediately 
+    currentActiveCard.classList.remove('active');
+    nextActiveCard.classList.add('active');
+    
+    // Apply variant class to active card if needed
+    if (this.variant && !nextActiveCard.classList.contains(`${this.variant}-variant`)) {
+      nextActiveCard.classList.add(`${this.variant}-variant`);
+    }
+    
+    // Force a reflow to ensure the transforms take effect
+    void nextActiveCard.offsetWidth;
+    
+    // Now animate both cards
+    requestAnimationFrame(() => {
+      // Enable transitions
+      cards.forEach(card => {
+        card.style.transition = 'transform 0.3s ease';
+      });
+      
+      // Move current card off-screen
+      currentActiveCard.style.transform = direction === 'left' ? 
+        'translateX(-100%)' : 'translateX(100%)';
+      
+      // Move new card into view
+      nextActiveCard.style.transform = 'translateX(0)';
+      
+      // Update active index
+      this.activeIndex = index;
+      
+      // Update global reference for compatibility
+      if (window.HiddenGems && window.HiddenGems.map) {
+        window.HiddenGems.map.activeGemIndex = index;
+      }
+      window.activeGemIndex = index;
+      
+      // Update navigation dots
+      const dots = this.dotsContainer.querySelectorAll('.nav-dot');
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+      
+      // After animation completes, clean up
+      setTimeout(() => {
+        // Reset transform for non-active cards
+        cards.forEach(card => {
+          if (!card.classList.contains('active')) {
+            card.style.transform = '';
+          }
+        });
+        
+        // Update trip distance info if in map-recs variant
+        if (this.variant === 'map-recs') {
+          this.updateTripDistanceInfo();
+        }
+        
+        // Highlight marker
+        this.highlightMarker(index);
+        
+        // Call callback
+        this.onCardChange(this.gems[index], index);
+        
+        // Dispatch event for compatibility
+        this.container.dispatchEvent(new CustomEvent('card-change', {
+          bubbles: true,
+          detail: { index, gem: this.gems[index] }
+        }));
+        
+        // Clear recursive protection
+        window._showingCard = false;
+      }, 300);
+    });
+  } else {
+    // Fallback if cards not found
+    this.activeIndex = index;
+    window._showingCard = false;
+  }
+}
 
   /**
-   * Show the next card
-   */
-  showNextCard() {
-    const nextIndex = (this.activeIndex + 1) % this.gems.length;
-    this.showCard(nextIndex);
-  }
+ * Show the next card
+ */
+showNextCard() {
+  const nextIndex = (this.activeIndex + 1) % this.gems.length;
+  this.showCard(nextIndex, 'left');
+}
 
-  /**
-   * Show the previous card
-   */
-  showPrevCard() {
-    const prevIndex = (this.activeIndex - 1 + this.gems.length) % this.gems.length;
-    this.showCard(prevIndex);
-  }
+/**
+ * Show the previous card
+ */
+showPrevCard() {
+  const prevIndex = (this.activeIndex - 1 + this.gems.length) % this.gems.length;
+  this.showCard(prevIndex, 'right');
+}
 
   /**
    * Highlight the corresponding map marker
@@ -634,42 +686,116 @@ class GemCards {
     }
   }
 
-  /**
-   * Handle touch end event
-   * @param {TouchEvent} e - Touch event
-   */
-  handleTouchEnd(e) {
-    if (!this.isDragging) return;
+ /**
+ * Handle touch end event
+ * @param {TouchEvent} e - Touch event
+ */
+handleTouchEnd(e) {
+  if (!this.isDragging) return;
 
-    // Reset transition
-    const activeCard = this.wrapper.querySelector('.gem-card.active');
-    if (activeCard) {
-      activeCard.style.transition = 'transform 0.3s ease';
+  // Calculate swipe
+  const offsetX = this.currentX - this.touchStartX;
+  
+  // Get active card
+  const activeCard = this.wrapper.querySelector('.gem-card.active');
+  
+  if (activeCard && Math.abs(offsetX) > this.swipeThreshold) {
+    // Determine which direction we're swiping
+    const isNext = offsetX < 0;
+    const nextIndex = isNext ? 
+      (this.activeIndex + 1) % this.gems.length : 
+      (this.activeIndex - 1 + this.gems.length) % this.gems.length;
+    
+    // Instead of animating out completely then changing, 
+    // we'll change the card immediately but with a transform
+    
+    // Immediately update the active index but don't animate cards yet
+    this.activeIndex = nextIndex;
+    
+    // Update global reference
+    if (window.HiddenGems && window.HiddenGems.map) {
+      window.HiddenGems.map.activeGemIndex = nextIndex;
     }
-
-    // Calculate swipe
-    const offsetX = this.currentX - this.touchStartX;
-
-    if (Math.abs(offsetX) > this.swipeThreshold) {
-      if (offsetX > 0) {
-        // Swiped right - go to previous
-        this.showPrevCard();
+    window.activeGemIndex = nextIndex;
+    
+    // Update card classes without animation
+    const cards = this.wrapper.querySelectorAll('.gem-card');
+    cards.forEach((card, i) => {
+      if (i === nextIndex) {
+        card.classList.add('active');
+        // Position the new active card just off screen in the direction we're coming from
+        card.style.transition = 'none';
+        card.style.transform = isNext ? 
+          'translateX(100%)' : 'translateX(-100%)';
+        
+        // Force a reflow to ensure the transform takes effect
+        void card.offsetWidth;
       } else {
-        // Swiped left - go to next
-        this.showNextCard();
+        card.classList.remove('active');
       }
-    } else {
-      // Not enough swipe distance, reset position
-      if (activeCard) {
-        activeCard.style.transform = 'translateX(0)';
+    });
+    
+    // Update navigation dots
+    const dots = this.dotsContainer.querySelectorAll('.nav-dot');
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === nextIndex);
+    });
+    
+    // Now animate both cards to their new positions
+    requestAnimationFrame(() => {
+      // Enable transitions
+      cards.forEach(card => {
+        card.style.transition = 'transform 0.3s ease';
+      });
+      
+      // Move old card off screen
+      activeCard.style.transform = isNext ? 
+        'translateX(-100%)' : 'translateX(100%)';
+      
+      // Move new active card into view
+      const newActiveCard = this.wrapper.querySelector('.gem-card.active');
+      if (newActiveCard) {
+        newActiveCard.style.transform = 'translateX(0)';
       }
-    }
-
-    // Reset variables
-    this.isDragging = false;
-    this.touchStartX = null;
-    this.touchStartY = null;
+      
+      // After animation completes, clean up
+      setTimeout(() => {
+        // Reset all transforms
+        cards.forEach(card => {
+          if (!card.classList.contains('active')) {
+            card.style.transform = '';
+          }
+        });
+        
+        // Update trip distance info if in map-recs variant
+        if (this.variant === 'map-recs') {
+          this.updateTripDistanceInfo();
+        }
+        
+        // Highlight marker
+        this.highlightMarker(nextIndex);
+        
+        // Call callback
+        this.onCardChange(this.gems[nextIndex], nextIndex);
+        
+        // Dispatch event for compatibility
+        this.container.dispatchEvent(new CustomEvent('card-change', {
+          bubbles: true,
+          detail: { index: nextIndex, gem: this.gems[nextIndex] }
+        }));
+      }, 300);
+    });
+  } else if (activeCard) {
+    // Not enough swipe distance, reset position
+    activeCard.style.transition = 'transform 0.3s ease';
+    activeCard.style.transform = 'translateX(0)';
   }
+
+  // Reset variables
+  this.isDragging = false;
+  this.touchStartX = null;
+  this.touchStartY = null;
+}
 
   /**
    * Create category tags HTML
