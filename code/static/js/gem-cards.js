@@ -299,18 +299,57 @@ class GemCards extends HTMLElement {
 }
 
 .explore-now-btn {
-  /* Make button more visible for debugging */
-  background: red;
-  color: white;
-  padding: 8px 16px;
-  /* Other styles */
+  background: linear-gradient(135deg, #b3e6cc 0%, #8fd3b6 100%);
+  color: #333;
+  padding: 12px 24px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(143, 211, 182, 0.3);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
-        
-        .explore-now-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-          background: linear-gradient(to right, #222, #444);
-        }
+
+.explore-now-btn:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+  transition: all 0.6s ease;
+}
+
+.explore-now-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(143, 211, 182, 0.4);
+  background: linear-gradient(135deg, #c4ebd6 0%, #9adfc1 100%);
+}
+
+.explore-now-btn:hover:before {
+  left: 100%;
+}
+
+.explore-now-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(143, 211, 182, 0.4);
+}
+
+/* Optional: Add an icon to the button */
+.explore-now-btn i {
+  margin-right: 8px;
+  font-size: 18px;
+}
         
         /* Swipe indicator dots */
         .swipe-indicator {
@@ -1468,7 +1507,7 @@ handleGemsLoaded(event) {
   navigateToGemDetails(gem) {
     const gemId = gem.id || `gem-${this.activeIndex}`;
 
-    exploreGem(gemId);
+     
     
   
     // Process time information for trip details
@@ -1500,28 +1539,109 @@ handleGemsLoaded(event) {
     } else if (gem.latitude && gem.longitude) {
       coordinates = `${gem.latitude},${gem.longitude}`;
     }
+
+    /**
+ * Shows an exploring overlay with loading animation
+ * @param {string} gemName - Name of the gem being explored
+ */
+function showExploringOverlay(gemName) {
+    // Create overlay container
+    const overlay = document.createElement('div');
+    overlay.id = 'exploring-overlay';
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    overlay.style.zIndex = '9999';
+    overlay.style.display = 'flex';
+    overlay.style.flexDirection = 'column';
+    overlay.style.justifyContent = 'center';
+    overlay.style.alignItems = 'center';
+    overlay.style.color = 'white';
+    overlay.style.fontFamily = "'Nunito', sans-serif";
+    overlay.style.transition = 'opacity 0.3s ease';
     
-    // Create a cardData object with all relevant information directly from your data source
+    // Create exploring text
+    const title = document.createElement('h2');
+    title.textContent = `Exploring ${gemName || 'Hidden Gem'}...`;
+    title.style.margin = '0 0 20px 0';
+    title.style.fontSize = '28px';
+    title.style.fontWeight = '700';
+    title.style.textAlign = 'center';
+    
+    // Create loading spinner
+    const spinner = document.createElement('div');
+    spinner.className = 'loading-spinner';
+    spinner.style.width = '50px';
+    spinner.style.height = '50px';
+    spinner.style.border = '5px solid rgba(255, 255, 255, 0.3)';
+    spinner.style.borderRadius = '50%';
+    spinner.style.borderTop = '5px solid #f6d375';
+    spinner.style.animation = 'spin 1s linear infinite';
+    
+    // Create loading message
+    const message = document.createElement('p');
+    message.textContent = 'Preparing your adventure...';
+    message.style.margin = '20px 0 0 0';
+    message.style.fontSize = '16px';
+    message.style.opacity = '0.8';
+    
+    // Assemble the overlay
+    overlay.appendChild(title);
+    overlay.appendChild(spinner);
+    overlay.appendChild(message);
+    document.body.appendChild(overlay);
+}
+
+/**
+ * Hides the exploring overlay
+ */
+function hideExploringOverlay() {
+  const overlay = document.getElementById('exploring-overlay');
+  if (overlay) {
+    // Clear the message interval
+    if (overlay.dataset.intervalId) {
+      clearInterval(parseInt(overlay.dataset.intervalId));
+    }
+    
+    // Fade out and remove
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+      overlay.remove();
+    }, 300);
+  }
+}
+
+    // Show loading overlay
+    showExploringOverlay(gem);
+
+    // Get the review from cache
+    const review = window.HiddenGems.reviewCache[gemId];
+    
+    // Create a cardData object with all relevant information
     const cardData = {
-      id: gem.id || `gem-${gemIndex}`,
+      id: gemId,
       name: gem.name || 'Hidden Gem',
       description: gem.description || 'A hidden gem waiting to be explored.',
       coordinates: coordinates,
-      address: gem.address || '',
-      opening_hours: gem.opening_hours || '',
-      dollar_sign: gem.dollar_sign || '$',
+      openingHours: gem.opening_hours || gem.openingHours || '',
+      price: gem.dollar_sign || gem.price || '$',
       timeDisplay: timeDisplay,
       time: visitTime,
-      color: this.getGemColor(gem),
-      category_1: gem.category_1 || '',
-      category_2: gem.category_2 || '',
-      review: gem.review
-
+      gemColor: this.getGemColor(gem),
+      categories: [
+        gem.category_1 || gem.categories?.[0] || 'Outdoor',
+        gem.category_2 || gem.categories?.[1] || 'Nature'
+      ],
+      rarity: gem.rarity || 'super-rare',
+      review: review
     };
     
     // Store the card data in session storage
     window.HiddenGems.data.storage.set('selectedCard', JSON.stringify(cardData));
-
+    
     // Dispatch navigation event before redirecting
     this.dispatchEvent(new CustomEvent('navigate-to-trip-select', {
       bubbles: true,
@@ -1529,9 +1649,13 @@ handleGemsLoaded(event) {
       detail: { gem, gemId }
     }));
     
-    // Navigate to the trip-select page
-    window.location.href = "trip-select.html";
-  }
+    // Add a small delay before navigating for a smoother transition
+    setTimeout(() => {
+        window.location.href = "trip-select.html";
+    }, 600); // Short delay for better UX
+}
+
+
   
   /**
    * Show a specific card by index

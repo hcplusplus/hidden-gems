@@ -5,7 +5,10 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
-
+     // Load cached reviews at startup
+    loadCachedReviews().then(() => {
+        console.log('Reviews cache initialized');
+    });
 
     function getValidCoordinates(coords) {
         return window.HiddenGems.data.coordUtils.normalize(coords);
@@ -154,11 +157,18 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             window.map.addControl(new maplibregl.NavigationControl(), 'top-left');
 
+            // Keep track of generated reviews
+            window.HiddenGems.reviewCache = window.HiddenGems.reviewCache || {};
 
             // Call the function and handle the result
             prepareGemsForPlotting().then(plotGems => {
                 // Your code to plot the gems goes here
                 console.log("Ready to plot these gems:", plotGems);
+
+                // Start preloading reviews immediately in the background
+                preloadReviews(plotGems).then(() => {
+                    console.log("All gem reviews have been preloaded");
+                });
 
                 renderGems(plotGems);
                 initializeDetailCards(plotGems)
@@ -184,7 +194,29 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
 
+    async function loadCachedReviews() {
+    if (!window.HiddenGems.reviewCache) {
+        try {
+            const response = await fetch('static/assets/data/reviews.json');
+            if (response.ok) {
+                const reviews = await response.json();
+                window.HiddenGems.reviewCache = reviews;
+                console.log(`Loaded ${Object.keys(reviews).length} cached reviews`);
+            } else {
+                console.error('Failed to load cached reviews');
+                window.HiddenGems.reviewCache = {};
+            }
+        } catch (error) {
+            console.error('Error loading cached reviews:', error);
+            window.HiddenGems.reviewCache = {};
+        }
+    }
+    return window.HiddenGems.reviewCache;
+}
+
         });
+
+
 
 
         // Define function to render routes
@@ -356,7 +388,8 @@ function initializeDetailCards(gems) {
         if (activeGem) {
             // Use the unified coordinate utility
             const coords = window.HiddenGems.data.coordUtils.fromGem(activeGem);
-
+            console.log("active gem:", activeGem)
+            console.log("active index:", activeIndex);
             if (coords) {
  
                 window.map.flyTo({

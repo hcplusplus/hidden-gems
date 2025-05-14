@@ -199,10 +199,9 @@ function loadGemsWithDataController(pageName, center, buffer = 10, sampleSize = 
       // If on index page and center coordinates provided, find gems near that location
       else if (center && center.length === 2) {
         window.map.setCenter(center);
-        const safeRadius = radius || window.HiddenGems.constants.DEFAULT_RADIUS;
+        const safeRadius = window.HiddenGems.constants.DEFAULT_RADIUS;
         const safeSampleSize = sampleSize || window.HiddenGems.constants.DEFAULT_LIMIT;
-        const safeCenter = center || window.HiddenGems.constants.DEFAULT_CENTER;
-        safeCenter = window.HiddenGems.data.coordUtils.normalize(safeCenter);
+        const safeCenter = window.HiddenGems.data.coordUtils.normalize(center);
         console.log(`Finding gems near center [${safeCenter}] with radius ${safeRadius}km`);
 
         return window.HiddenGems.data.getRegionalGems({
@@ -221,7 +220,6 @@ function loadGemsWithDataController(pageName, center, buffer = 10, sampleSize = 
       }
       // Default: Try to find gems near the user with geolocation
       else {
-        //console.log(`Finding nearby gems for ${pageName} using geolocation`);
 
         return window.HiddenGems.data.findNearbyGems(
           pageName || 'current-page',
