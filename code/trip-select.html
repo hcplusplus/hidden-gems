@@ -17,7 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="static/js/data-controller.js"></script>
     <script src="static/js/trip-distance-calculator.js"></script>
-    
+
 
     <style>
         *,
@@ -107,6 +107,34 @@
             padding: 5px;
             background-color: rgb(230, 230, 230);
         }
+
+        /* Category tags with enhanced styling */
+        .rarity-tag {
+            display: flex;
+            padding: 4px 8px;
+            justify-content:center;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            margin: 0px 0px 10px 10px;
+            white-space: nowrap;
+        }
+
+        .category-tag.primary {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: #2980b9;
+        }
+
+        .category-tag.secondary {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: #27ae60;
+        }
+
+        .category-tag.default {
+            background-color: rgba(149, 165, 166, 0.1);
+            color: #7f8c8d;
+        }
     </style>
 
 </head>
@@ -145,12 +173,11 @@
                 </div>
 
                 <div style="margin-right: 40px">
-                    <div class="quiz-option"
-                        style="font-size: 14px; font-weight: 700; color:rgb(255, 255, 255); padding: 6px 12px; margin-left: 0; background-color: #f6d375;">
+                    <div class="rarity-tag" id="rarity">
                         Super Rare Gem</div>
-             
+
                     <div class="detail">
-                        <i class="fas fa-clock" style="color:#f6d375"></i>
+                        <i class="fas fa-clock" id="clock-detail"></i>
                         <span id="open">6:00 AM - 10:00 PM |
                         </span>
                         <span id="cost">
@@ -159,9 +186,9 @@
 
                     </div>
                     <div style="display: flex; gap: 8px; margin-top: 3px; margin-left:5px">
-                        <div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;" id="category-1">
+                        <div class="category-tag primary" id="category-1">
                             Outdoor</div>
-                        <div class="quiz-option" style="font-size: 12px; padding: 6px 12px; margin: 0;" id="category-2">
+                        <div class="category-tag secondary" id="category-2">
                             Nature</div>
                     </div>
                     <hr>
@@ -215,11 +242,17 @@
     </div>
 
     <script>
+        function title(str) {
+            return str.replace(/(^|\s)\S/g, function (t) { return t.toUpperCase() });
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
 
             const selectedCard = JSON.parse(window.HiddenGems.data.storage.get('selectedCard'));
 
             if (selectedCard) {
+
+
                 // If we have data in session storage, use that instead of fetching
                 console.log('Using data from session storage:', selectedCard);
 
@@ -248,14 +281,15 @@
                     document.getElementById('review').innerText = `"${selectedCard.review}"`;
                 }
 
-                // Set rarity label if available
-                const rarityElement = document.querySelector('.quiz-option[style*="background-color: #f6d375"]');
+                // Set colors
+
+                const rarityElement = document.getElementById('rarity');
+                rarityElement.style.backgroundColor = selectedCard.gemColor;
+                const clockElement = document.getElementById('clock-detail');
+                clockElement.style.color = selectedCard.gemColor;
+
                 if (rarityElement && selectedCard.rarity) {
-                    let rarityText = 'Gem';
-                    if (selectedCard.rarity === 'rare') rarityText = 'Rare Gem';
-                    if (selectedCard.rarity === 'super-rare') rarityText = 'Super Rare Gem';
-                    if (selectedCard.rarity === 'ultra-rare') rarityText = 'Ultra Rare Gem';
-                    rarityElement.innerText = rarityText;
+                    rarityElement.innerText = title(selectedCard.rarity);
                 }
 
                 // Set time left if available
@@ -349,31 +383,31 @@
             //for demo video make progress bar fill slowly 
             // progressBar.style.width = 100 + '%';
             const progressBar = document.getElementById('moving-progress');
-                let progress = 0;
+            let progress = 0;
 
-                const interval = setInterval(() => {
-                    if (progress >= 100) {
-                        clearInterval(interval); // stop once full
-                        console.log('Done!');
-                        return;
-                    }
-                    progress += 1; // increase this number to fill faster
-                    progressBar.style.width = progress + '%';
+            const interval = setInterval(() => {
+                if (progress >= 100) {
+                    clearInterval(interval); // stop once full
+                    console.log('Done!');
+                    return;
+                }
+                progress += 1; // increase this number to fill faster
+                progressBar.style.width = progress + '%';
 
-                    if (progress >= 100) {
-                        document.getElementById('time-left').innerText = "Arrived!";
-                        document.getElementById('time-left').style.marginLeft = "15px";
+                if (progress >= 100) {
+                    document.getElementById('time-left').innerText = "Arrived!";
+                    document.getElementById('time-left').style.marginLeft = "15px";
 
-                        confetti({
-                            particleCount: 250,
-                            spread: 70,
-                            origin: { y: 0.6 }
-                        });
-                        setTimeout(() => {
-                            showNextScreen();
-                        }, 700);
-                    }
-                }, 50); // interval in ms; lower = faster fill
+                    confetti({
+                        particleCount: 250,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                    setTimeout(() => {
+                        showNextScreen();
+                    }, 700);
+                }
+            }, 50); // interval in ms; lower = faster fill
         }
 
 

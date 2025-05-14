@@ -116,35 +116,13 @@ function updateNavItemPositions() {
   // Positioning based on number of items
   if (count === 2) {
     // Two items, position at angles
-    items[0].style.transform = 'translate(-60px, -30px) scale(0.8)';
-    items[1].style.transform = 'translate(-5px, -80px) scale(0.8)';
+    items[0].style.transform = 'translate(-60px, -5px) scale(0.8)';
+    items[1].style.transform = 'translate(-90px, -10px) scale(0.8)';
     
     if (navItems.classList.contains('active')) {
-      items[0].style.transform = 'translate(-60px, -30px) scale(1)';
-      items[1].style.transform = 'translate(-5px, -80px) scale(1)';
+      items[0].style.transform = 'translate(-60px, -5px) scale(1)';
+      items[1].style.transform = 'translate(-90px, -10px) scale(1)';
     }
-  } else {
-    // More items, arrange in a semicircle
-    const radius = 80; // Distance from center
-    const startAngle = -180; // Start from left
-    const endAngle = 0; // End at top
-    
-    items.forEach((item, index) => {
-      // Calculate angle based on position
-      const angle = startAngle + (endAngle - startAngle) * (index / (count - 1));
-      const radians = angle * Math.PI / 180;
-      
-      // Calculate position
-      const x = Math.cos(radians) * radius;
-      const y = Math.sin(radians) * radius;
-      
-      // Set transform
-      item.style.transform = `translate(${x}px, ${y}px) scale(0.8)`;
-      
-      if (navItems.classList.contains('active')) {
-        item.style.transform = `translate(${x}px, ${y}px) scale(1)`;
-      }
-    });
   }
   
   // Update active styles

@@ -276,6 +276,7 @@ class GemCards {
       card.classList.add(`${this.variant}-variant`);
     }
 
+
     card.dataset.index = index;
     card.dataset.gemId = gem.id || `gem-${index}`;
 
@@ -308,6 +309,13 @@ class GemCards {
       }
     }
 
+      // Only show explore button if not index-variant
+    const showExploreButton = this.variant !== 'index';
+    const exploreButtonHtml = showExploreButton ? 
+      `<div class="card-actions">
+        <button class="explore-now-btn">Explore Now!</button>
+      </div>` : '';
+
     // Create card HTML
     card.innerHTML = `
       <div class="card-accent ${accentColor}"></div>
@@ -321,19 +329,18 @@ class GemCards {
         ${timeDisplay ? `<div class="meta-item time-meta"><span class="meta-icon">⏱️</span> ${timeDisplay}</div>` : ''}
         ${priceDisplay ? `<div class="meta-item price-meta ${priceDisplay.length === 1 ? 'affordable' : priceDisplay.length === 2 ? 'moderate' : 'expensive'}">${priceDisplay}</div>` : ''}
         ${gem.rarity ? `<div class="meta-item rarity-meta ${rarityClass}">${this.formatRarity(gem.rarity)}</div>` : ''}
-      </div>
-      <div class="card-details">
         ${openingHours ? `<div class="detail-item hours-detail"><span class="detail-icon">🕒</span> ${openingHours}</div>` : ''}
-      </div>
+       
+        </div>
+        ${exploreButtonHtml}
       </div>
       
       <div class="card-description">
         ${gem.description || 'A hidden gem waiting to be explored.'}
+       
       </div>
       
-      <div class="card-actions">
-        <button class="explore-now-btn">Explore Now!</button>
-      </div>
+
     `;
 
     // Add click event listener to card
@@ -434,19 +441,20 @@ class GemCards {
         }
 
         // Add active label if not present
-        if (!card.querySelector('.active-gem-label')) {
-          const label = document.createElement('div');
-          label.className = 'active-gem-label';
-          label.textContent = 'ACTIVE';
-          card.querySelector('.card-header').appendChild(label);
-        }
+        //if (!card.querySelector('.active-gem-label')) {
+        //  const label = document.createElement('div');
+        //  label.className = 'active-gem-label';
+        //  label.textContent = 'ACTIVE';
+        //  card.querySelector('.card-header').appendChild(label);
+        //}
       } else {
         card.classList.remove('active');
 
         // Remove active label if present
-        const label = card.querySelector('.active-gem-label');
-        if (label) label.remove();
+        //const label = card.querySelector('.active-gem-label');
+        //if (label) label.remove();
       }
+  
     });
 
     // Update navigation dots
