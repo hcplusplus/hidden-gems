@@ -415,6 +415,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const otherAccessibilityContainer = document.getElementById('other-accessibility-container');
     const otherAccessibilityInput = document.getElementById('other-accessibility-input');
 
+    
+    
+
     // Set up the "Other" option toggles
     if (otherActivityButton) {
         otherActivityButton.addEventListener('click', function () {
@@ -436,6 +439,32 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+
+  const getLocationButton = document.getElementById('get-location');
+    if (getLocationButton) {
+        getLocationButton.addEventListener('click', function() {
+            let origincoords;
+            document.getElementById("origin").value = "Current Location";
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+                        origincoords = [longitude, latitude];
+                        sessionStorage.setItem("originCoords", JSON.stringify(origincoords));
+                    },
+                    (error) => {
+                        throw new Error("Error getting location:", error);
+                    }
+                );
+            } else {
+                throw new Error("Geolocation is not supported by this browser.");
+            }
+				
+        });
+    }
+    
     /**
      * Update the progress bar
      */
@@ -537,7 +566,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 const selectedTime = document.querySelector('input[name="time"]:checked');
                 quizState.answers.time = selectedTime ? selectedTime.value : '';
 
-
                 return true;
         }
 
@@ -565,6 +593,38 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         try {
+            //if my location then don't use geocode 
+            if (document.getElementById("origin").value != "Current Location" && sessionStorage.getItem("originCoords") == null) { 
+                const [originCoords, destinationCoords] = await Promise.all([
+                    geocode(userData.origin),
+                    geocode(userData.destination)
+                ]);
+
+                console.log("originCoords:", originCoords);
+                console.log("destinationCoords:", destinationCoords);
+
+                if (!originCoords || !destinationCoords) 
+                    throw new Error("Geocoding failed");
+                
+                userData.originCoords = originCoords;
+                userData.destinationCoords = destinationCoords;	
+                window.HiddenGems.data.storage.set("originCoords", JSON.stringify(originCoords));
+                window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
+            } else {
+                const [destinationCoords] = await Promise.all([
+                    geocode(userData.destination)
+                ]);
+                console.log("destinationCoords:", destinationCoords);
+                if (!destinationCoords) 
+                    throw new Error("Geocoding failed");
+                userData.destinationCoords = destinationCoords;
+                window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
+                console.log("check");
+            }
+            // Save to sessionStorage
+            window.HiddenGems.data.storage.set("userPreferences", JSON.stringify(userData));
+        }
+            
             // Get city names
             const originName = userData.origin;
             const destinationName = userData.destination;
@@ -589,37 +649,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
-            // If no gems found, or if coordinates are missing, we need to generate them now
-            if (sampledGems.length === 0 || !originCoords || !destinationCoords) {
-                // Update loading message
-                if (document.getElementById("loading-message")) {
-                    document.getElementById("loading-message").textContent = "Finding your locations...";
-                }
+            // If no gems are cached for this route, we need to generate them now
+            if (sampledGems.length === 0) {
 
                 console.log("No pre-generated gems found, generating now");
-
-                // If coordinates are missing, geocode them now
-                if (!originCoords || !destinationCoords) {
-                    [originCoords, destinationCoords] = await Promise.all([
-                        geocode(originName),
-                        geocode(destinationName)
-                    ]);
-
-                    if (!originCoords || !destinationCoords) {
-                        throw new Error("Geocoding failed. Please check your location names.");
-                    }
-
-                    // Update user data
-                    userData.originCoords = originCoords;
-                    userData.destinationCoords = destinationCoords;
-
-                    // Save to storage
-                    window.HiddenGems.data.storage.set("originCoords", JSON.stringify(originCoords));
-                    window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
                     window.HiddenGems.data.storage.set("originName", JSON.stringify(originName));
                     window.HiddenGems.data.storage.set("destinationName", JSON.stringify(destinationName));
                 }
-
 
                 // Generate gems
                 if (typeof window.HiddenGems.data.findGemsAlongRoute === 'function') {
@@ -770,7 +806,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
             }
-
+  
+            // clear the locations before moving on
+            document.getElementById("origin").value = "";
+			      document.getElementById("destination").value ="";
             window.location.href = "map-recs.html";
 
         } catch (err) {
@@ -804,6 +843,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (closeButton) {
         closeButton.addEventListener('click', function () {
             if (confirm('Are you sure you want to exit the quiz? Your progress will be lost.')) {
+                document.getElementById("origin").value = "";
+				document.getElementById("destination").value ="";
                 window.location.href = "index.html?skipWelcome=1";
             }
         });
@@ -824,6 +865,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // 1. Effort level buttons (first group in step 3) - single select
             if (['easy', 'moderate', 'challenging'].includes(value)) {
+                if (this.classList.contains('selected')) {
+                    this.classList.remove('selected');
+                    return;
+                }
                 document.querySelectorAll('.option-button[data-value="easy"], .option-button[data-value="moderate"], .option-button[data-value="challenging"]')
                     .forEach(btn => btn.classList.remove('selected'));
             }
@@ -853,7 +898,11 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             // Toggle selection of clicked button
-            this.classList.toggle('selected');
+            if (this.classList.contains('selected')) {
+                this.classList.remove('selected');
+              } else {
+                this.classList.add('selected');
+              }
         });
     });
 

@@ -320,23 +320,23 @@
 
         let latitude = 0;
         let longitude = 0;
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    latitude = position.coords.latitude;
-                    longitude = position.coords.longitude;
-                    console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+        // if (navigator.geolocation) {
+        //     navigator.geolocation.getCurrentPosition(
+        //         (position) => {
+        //             latitude = position.coords.latitude;
+        //             longitude = position.coords.longitude;
+        //             console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
 
-                },
-                (error) => {
-                    console.error("Error getting location:", error);
-                }
-            );
-        } else {
-            console.error("Geolocation is not supported by this browser.");
-        }
+        //         },
+        //         (error) => {
+        //             console.error("Error getting location:", error);
+        //         }
+        //     );
+        // } else {
+        //     console.error("Geolocation is not supported by this browser.");
+        // }
 
-        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+        // console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
 
         //demo functionality buttons: real progress bar functionality has NOT been implemented
         document.getElementById('state-1').onclick = function () {
@@ -346,20 +346,34 @@
         }
 
         document.getElementById('state-2').onclick = function () {
+            //for demo video make progress bar fill slowly 
+            // progressBar.style.width = 100 + '%';
             const progressBar = document.getElementById('moving-progress');
-            progressBar.style.width = 100 + '%';
-            document.getElementById('time-left').innerText = "Arrived!";
-            document.getElementById('time-left').style.marginLeft = "15px";
+                let progress = 0;
 
-            confetti({
-                particleCount: 250,
-                spread: 70,
-                origin: { y: 0.6 }
-            });
-            setTimeout(() => {
-                showNextScreen();
-            }, 800);
+                const interval = setInterval(() => {
+                    if (progress >= 100) {
+                        clearInterval(interval); // stop once full
+                        console.log('Done!');
+                        return;
+                    }
+                    progress += 1; // increase this number to fill faster
+                    progressBar.style.width = progress + '%';
 
+                    if (progress >= 100) {
+                        document.getElementById('time-left').innerText = "Arrived!";
+                        document.getElementById('time-left').style.marginLeft = "15px";
+
+                        confetti({
+                            particleCount: 250,
+                            spread: 70,
+                            origin: { y: 0.6 }
+                        });
+                        setTimeout(() => {
+                            showNextScreen();
+                        }, 700);
+                    }
+                }, 50); // interval in ms; lower = faster fill
         }
 
 
