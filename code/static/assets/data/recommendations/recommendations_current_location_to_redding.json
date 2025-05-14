@@ -1,102 +1,102 @@
 [
   {
-    "id": "node/7025219451",
-    "name": "Sobon Estate Museum",
+    "id": "node/11454810369",
+    "name": "Meadow Wood Trail Park",
     "coordinates": [
-      -120.7555111,
-      38.5324064
+      -122.3699546,
+      40.5144703
     ],
-    "category": "tourism",
-    "address": "14430, Shenandoah Road",
-    "opening_hours": "",
-    "dollar_sign": "$$",
-    "category_1": "Much Loved",
-    "category_2": "Nature escape",
-    "description": "A spectacular vista point that remains a local secret",
-    "rarity": "moderately hidden",
-    "color": "purple",
-    "time": 50,
-    "distanceFromRoute": 0.8024235108276748,
-    "routeProgress": 0.38279431053195223
-  },
-  {
-    "id": "node/8093377957",
-    "name": "Fountain",
-    "coordinates": [
-      -122.1841333,
-      40.1849318
-    ],
-    "category": "historic",
+    "category": "leisure",
     "address": "",
     "opening_hours": "",
     "dollar_sign": "$",
-    "category_1": "Historical Site",
-    "category_2": "Unique find",
-    "description": "Experience the past in this atmospheric historical site",
+    "category_1": "Recreation",
+    "category_2": "Scenic viewpoint",
+    "description": "A peaceful Park where you can escape the tourist crowds",
     "rarity": "moderately hidden",
     "color": "purple",
-    "time": 34,
-    "distanceFromRoute": 8.283909354179666,
-    "routeProgress": 0.8957438348427375
+    "time": 91,
+    "distanceFromRoute": 2.638984680073916,
+    "routeProgress": 0.9835830856488931
   },
   {
-    "id": "node/12183082307",
-    "name": "Mark Twain Bret Harte Trail - Chinese Camp",
+    "id": "node/358827901",
+    "name": "Diamond Spring State Historic Landmark",
     "coordinates": [
-      -120.431313,
-      37.870956
+      -120.8163245,
+      38.6949037
     ],
-    "category": "historic",
+    "category": "leisure",
     "address": "",
     "opening_hours": "",
-    "dollar_sign": "$$",
-    "category_1": "Historical Site",
-    "category_2": "Off the beaten path",
-    "description": "Step back in time at this hidden historic Memorial",
-    "rarity": "moderately hidden",
-    "color": "purple",
-    "time": 47,
-    "distanceFromRoute": 14.421861568142239,
-    "routeProgress": 0.21359894877579932
-  },
-  {
-    "id": "node/3192087372",
-    "name": "Sierra Nevada Logging Museum",
-    "coordinates": [
-      -120.3441539,
-      38.265755
-    ],
-    "category": "tourism",
-    "address": "2148, Dunbar Road, Arnold, 95223",
-    "opening_hours": "Th-Su 12:00-16:00",
     "dollar_sign": "$",
-    "category_1": "Much Loved",
+    "category_1": "Recreation",
     "category_2": "Peaceful retreat",
-    "description": "Capture amazing photos at this hidden viewpoint",
+    "description": "A peaceful Park where you can escape the tourist crowds",
     "rarity": "moderately hidden",
     "color": "purple",
-    "time": 38,
-    "distanceFromRoute": 16.077339053784122,
-    "routeProgress": 0.2736470811601072
+    "time": 78,
+    "distanceFromRoute": 5.954535451468923,
+    "routeProgress": 0.42161330330436997
   },
   {
-    "id": "node/3369841098",
-    "name": "Peet\u2019s Tea & Coffee",
+    "id": "node/358819182",
+    "name": "Ridgeway Park",
     "coordinates": [
-      -121.0677052,
-      38.6462124
+      -122.3069767,
+      40.1466305
     ],
-    "category": "amenity",
+    "category": "leisure",
     "address": "",
     "opening_hours": "",
-    "dollar_sign": "$$$",
-    "category_1": "Local Amenity",
-    "category_2": "Unique find",
-    "description": "A gem of a Cafe that tourists rarely discover",
-    "rarity": "least hidden",
-    "color": "blue",
-    "time": 55,
-    "distanceFromRoute": 16.07842278237286,
-    "routeProgress": 0.4493074655121105
+    "dollar_sign": "$",
+    "category_1": "Recreation",
+    "category_2": "Scenic viewpoint",
+    "description": "Relax and unwind at this local favorite recreation spot",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 66,
+    "distanceFromRoute": 19.80033354222372,
+    "routeProgress": 0.9066036060046505
+  },
+  {
+    "id": "node/358827224",
+    "name": "Soldiers Memorial Park",
+    "coordinates": [
+      -120.6315963,
+      38.4424102
+    ],
+    "category": "leisure",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$",
+    "category_1": "Recreation",
+    "category_2": "Historical site",
+    "description": "Experience authentic local culture at this laid-back spot",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 62,
+    "distanceFromRoute": 4.814311109522216,
+    "routeProgress": 0.3481329437035456
+  },
+  {
+    "id": "node/358824588",
+    "name": "Palermo Park",
+    "coordinates": [
+      -121.5441357,
+      39.4326654
+    ],
+    "category": "leisure",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$",
+    "category_1": "Recreation",
+    "category_2": "Local favorite",
+    "description": "A hidden recreational gem frequented by locals",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 95,
+    "distanceFromRoute": 4.9562272475297995,
+    "routeProgress": 0.6637464835961964
   }
 ]
