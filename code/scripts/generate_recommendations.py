@@ -298,6 +298,7 @@ def generate_recommendations():
         
         # If using fallback, skip the LLM call completely
         if use_fallback:
+            request_start_time = time.time()
             # Apply scoring and filtering based on user preferences
             filtered_gems = filter_gems_by_preferences(candidate_gems, user_data)
             
@@ -306,6 +307,21 @@ def generate_recommendations():
             
             total_duration = time.time() - start_time
             print(f"⏱️ Total API request processing time (fallback): {total_duration:.2f}s")
+
+            # Calculate how long the processing took so far
+            processing_duration = time.time() - request_start_time
+
+            # Calculate how much longer we need to wait to reach 30 seconds
+            remaining_time = max(0, 30.0 - processing_duration)
+
+            # Add the artificial delay
+            if remaining_time > 0:
+                print(f"Adding artificial delay of {remaining_time:.2f}s for fallback method")
+                time.sleep(remaining_time)
+
+            # Recalculate the total duration after the delay
+            total_duration = time.time() - start_time
+            print(f"⏱️ Total API request processing time (fallback with delay): {total_duration:.2f}s")
             
             # Save the recommendations to file
             try:

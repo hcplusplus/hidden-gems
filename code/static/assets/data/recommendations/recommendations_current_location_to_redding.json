@@ -1,0 +1,102 @@
+[
+  {
+    "id": "node/7025219451",
+    "name": "Sobon Estate Museum",
+    "coordinates": [
+      -120.7555111,
+      38.5324064
+    ],
+    "category": "tourism",
+    "address": "14430, Shenandoah Road",
+    "opening_hours": "",
+    "dollar_sign": "$$",
+    "category_1": "Much Loved",
+    "category_2": "Nature escape",
+    "description": "A spectacular vista point that remains a local secret",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 50,
+    "distanceFromRoute": 0.8024235108276748,
+    "routeProgress": 0.38279431053195223
+  },
+  {
+    "id": "node/8093377957",
+    "name": "Fountain",
+    "coordinates": [
+      -122.1841333,
+      40.1849318
+    ],
+    "category": "historic",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$",
+    "category_1": "Historical Site",
+    "category_2": "Unique find",
+    "description": "Experience the past in this atmospheric historical site",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 34,
+    "distanceFromRoute": 8.283909354179666,
+    "routeProgress": 0.8957438348427375
+  },
+  {
+    "id": "node/12183082307",
+    "name": "Mark Twain Bret Harte Trail - Chinese Camp",
+    "coordinates": [
+      -120.431313,
+      37.870956
+    ],
+    "category": "historic",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$$",
+    "category_1": "Historical Site",
+    "category_2": "Off the beaten path",
+    "description": "Step back in time at this hidden historic Memorial",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 47,
+    "distanceFromRoute": 14.421861568142239,
+    "routeProgress": 0.21359894877579932
+  },
+  {
+    "id": "node/3192087372",
+    "name": "Sierra Nevada Logging Museum",
+    "coordinates": [
+      -120.3441539,
+      38.265755
+    ],
+    "category": "tourism",
+    "address": "2148, Dunbar Road, Arnold, 95223",
+    "opening_hours": "Th-Su 12:00-16:00",
+    "dollar_sign": "$",
+    "category_1": "Much Loved",
+    "category_2": "Peaceful retreat",
+    "description": "Capture amazing photos at this hidden viewpoint",
+    "rarity": "moderately hidden",
+    "color": "purple",
+    "time": 38,
+    "distanceFromRoute": 16.077339053784122,
+    "routeProgress": 0.2736470811601072
+  },
+  {
+    "id": "node/3369841098",
+    "name": "Peet\u2019s Tea & Coffee",
+    "coordinates": [
+      -121.0677052,
+      38.6462124
+    ],
+    "category": "amenity",
+    "address": "",
+    "opening_hours": "",
+    "dollar_sign": "$$$",
+    "category_1": "Local Amenity",
+    "category_2": "Unique find",
+    "description": "A gem of a Cafe that tourists rarely discover",
+    "rarity": "least hidden",
+    "color": "blue",
+    "time": 55,
+    "distanceFromRoute": 16.07842278237286,
+    "routeProgress": 0.4493074655121105
+  }
+]
