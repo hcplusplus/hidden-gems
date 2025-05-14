@@ -415,9 +415,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const otherAccessibilityContainer = document.getElementById('other-accessibility-container');
     const otherAccessibilityInput = document.getElementById('other-accessibility-input');
 
-
-
-
     // Set up the "Other" option toggles
     if (otherActivityButton) {
         otherActivityButton.addEventListener('click', function () {
@@ -439,10 +436,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-
-    const getLocationButton = document.getElementById('get-location');
+  const getLocationButton = document.getElementById('get-location');
     if (getLocationButton) {
-        getLocationButton.addEventListener('click', function () {
+        getLocationButton.addEventListener('click', function() {
             let origincoords;
             document.getElementById("origin").value = "Current Location";
             if (navigator.geolocation) {
@@ -464,7 +460,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         });
     }
-
+    
     /**
      * Update the progress bar
      */
@@ -594,7 +590,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         try {
             //if my location then don't use geocode 
-            if (document.getElementById("origin").value != "Current Location" && sessionStorage.getItem("originCoords") == null) {
+
+            if (document.getElementById("origin").value != "Current Location" && sessionStorage.getItem("originCoords") == null) { 
                 const [originCoords, destinationCoords] = await Promise.all([
                     geocode(userData.origin),
                     geocode(userData.destination)
@@ -615,6 +612,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     geocode(userData.destination)
                 ]);
                 console.log("destinationCoords:", destinationCoords);
+
                 if (!destinationCoords)
                     throw new Error("Geocoding failed");
                 userData.destinationCoords = destinationCoords;
@@ -839,6 +837,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
         }
+
 
         if (closeButton) {
             closeButton.addEventListener('click', function () {
