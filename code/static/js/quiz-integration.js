@@ -307,6 +307,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function roundCoords(coord) {
+        return [
+          parseFloat(coord[0].toFixed(6)),
+          parseFloat(coord[1].toFixed(6))
+        ];
+      }
     /**
      * Generate route gems quietly in the background
      * This function runs asynchronously without blocking the UI
@@ -327,17 +333,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 const destinationName = quizState.answers.destination;
 
                 // Geocode the origin and destination
-                const [originCoords, destinationCoords] = await Promise.all([
-                    geocode(quizState.answers.origin),
+
+                let originCoords = JSON.parse(window.HiddenGems.data.storage.get("originCoords"));
+
+                if (document.getElementById("origin").value != "Current Location") {
+                    originCoords = await Promise.all([
+                        geocode(quizState.answers.origin),
+                    ]);
+                }
+
+                let destinationCoords = await Promise.all([
                     geocode(quizState.answers.destination)
                 ]);
-
+                    
                 console.log("Geocoded coordinates:", { origin: originCoords, destination: destinationCoords });
 
                 if (!originCoords || !destinationCoords) {
                     console.error("Background geocoding failed for one or both locations");
                     return;
                 }
+
+                originCoords = roundCoords(originCoords[0]);
+                destinationCoords = roundCoords(destinationCoords[0]);
 
                 // Store coordinates in quiz state
                 quizState.answers.originCoords = originCoords;
@@ -348,7 +365,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
                 window.HiddenGems.data.storage.set("originName", JSON.stringify(originName));
                 window.HiddenGems.data.storage.set("destinationName", JSON.stringify(destinationName));
+                 
+                // make sure both sets of coordinates are in same decimal format
 
+                console.log("check", originCoords);
+                console.log("check", destinationCoords);
 
                 // Find gems along the route
                 if (typeof window.HiddenGems.data.findGemsAlongRoute === 'function') {
@@ -447,8 +468,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         const latitude = position.coords.latitude;
                         const longitude = position.coords.longitude;
                         console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-                        origincoords = [longitude, latitude];
-                        sessionStorage.setItem("originCoords", JSON.stringify(origincoords));
+                        origincoords = [[longitude, latitude]];
+                        window.HiddenGems.data.storage.set("originCoords", JSON.stringify(origincoords));
                     },
                     (error) => {
                         throw new Error("Error getting location:", error);
@@ -588,42 +609,43 @@ document.addEventListener('DOMContentLoaded', function () {
             progressIndicator.start(overlay);
         }
 
-        try {
-            //if my location then don't use geocode 
+        // try {
+        //     //if my location then don't use geocode 
 
-            if (document.getElementById("origin").value != "Current Location" && sessionStorage.getItem("originCoords") == null) { 
-                const [originCoords, destinationCoords] = await Promise.all([
-                    geocode(userData.origin),
-                    geocode(userData.destination)
-                ]);
+        //     if (document.getElementById("origin").value != "Current Location" && sessionStorage.getItem("originCoords") == null) { 
+        //         const [originCoords, destinationCoords] = await Promise.all([
+        //             geocode(userData.origin),
+        //             geocode(userData.destination)
+        //         ]);
 
-                console.log("originCoords:", originCoords);
-                console.log("destinationCoords:", destinationCoords);
+        //         console.log("originCoords:", originCoords);
+        //         console.log("destinationCoords:", destinationCoords);
 
-                if (!originCoords || !destinationCoords)
-                    throw new Error("Geocoding failed");
+        //         if (!originCoords || !destinationCoords)
+        //             throw new Error("Geocoding failed");
 
-                userData.originCoords = originCoords;
-                userData.destinationCoords = destinationCoords;
-                window.HiddenGems.data.storage.set("originCoords", JSON.stringify(originCoords));
-                window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
-            } else {
-                const [destinationCoords] = await Promise.all([
-                    geocode(userData.destination)
-                ]);
-                console.log("destinationCoords:", destinationCoords);
+        //         userData.originCoords = originCoords;
+        //         userData.destinationCoords = destinationCoords;
+        //         window.HiddenGems.data.storage.set("originCoords", JSON.stringify(originCoords));
+        //         window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
+        //     } else {
+        //         const [destinationCoords] = await Promise.all([
+        //             geocode(userData.destination)
+        //         ]);
+        //         console.log("destinationCoords:", destinationCoords);
 
-                if (!destinationCoords)
-                    throw new Error("Geocoding failed");
-                userData.destinationCoords = destinationCoords;
-                window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
-                console.log("check");
-            }
-            // Save to sessionStorage
-            window.HiddenGems.data.storage.set("userPreferences", JSON.stringify(userData));
-        } catch (error) {
-            console.error("Error in geocoding:", error);
-        }
+        //         if (!destinationCoords)
+        //             throw new Error("Geocoding failed");
+        //         userData.originCoords = window.HiddenGems.data.storage.get("originCoords");
+        //         userData.destinationCoords = destinationCoords;
+        //         window.HiddenGems.data.storage.set("destinationCoords", JSON.stringify(destinationCoords));
+        //         console.log("check");
+        //     }
+        //     // Save to sessionStorage
+        //     window.HiddenGems.data.storage.set("userPreferences", JSON.stringify(userData));
+        // } catch (error) {
+        //     console.error("Error in geocoding:", error);
+        // }
 
         try {
             // Get city names
@@ -632,7 +654,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // First check if we have the pre-generated route gems
             let sampledGems = [];
-            let originCoords = userData.originCoords;
+            let originCoords = JSON.parse(window.HiddenGems.data.storage.get("originCoords"));
             let destinationCoords = userData.destinationCoords;
 
 
@@ -760,6 +782,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Short delay before redirecting for better UX
                 setTimeout(() => {
+                    document.getElementById("origin").value = "";
+                    document.getElementById("destination").value = "";
                     window.location.href = "map-recs.html";
                 }, 500);
 
@@ -794,9 +818,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 // clear the locations before moving on
-                document.getElementById("origin").value = "";
-                document.getElementById("destination").value = "";
-                window.location.href = "map-recs.html";
+                //window.location.href = "map-recs.html";
 
             } catch (err) {
                 console.error("Error in quiz processing:", err);
